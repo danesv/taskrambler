@@ -1,0 +1,424 @@
+2012-02-23 17:40:00 +0100 Georg Hopp 
+
+	* add cookie header again (HEAD, origin/master, origin/HEAD, master)
+
+2012-02-23 16:41:36 +0100 Georg Hopp 
+
+	* optmize header search
+
+2012-02-23 13:02:23 +0100 Georg Hopp 
+
+	* changed all string operation within header handling with fixed length mem operations, preventing multiple iterations over these strings. In theory this should improve performance in reality it seems that it is worse...CHECK WHY
+
+2012-02-23 00:05:25 +0100 Georg Hopp 
+
+	* fix initialization of search value
+
+2012-02-22 21:50:21 +0100 Georg Hopp 
+
+	* ed
+
+2012-02-22 21:49:52 +0100 Georg Hopp 
+
+	* structural changes for worker/process. @TODO actually i have no idea why this happens.
+
+2012-02-22 12:19:40 +0100 Georg Hopp 
+
+	* fix memory problems occured with latest changes
+
+2012-02-22 09:03:40 +0100 Georg Hopp 
+
+	* fixed bug in keep-alive check arised by implementation if #10
+
+2012-02-22 08:51:05 +0100 Georg Hopp 
+
+	* add forgotten jquery assets
+
+2012-02-22 08:48:43 +0100 Georg Hopp 
+
+	* closes #10: values for header ids are now stored in a char ** making multiple values for one id possible. Additionally added a jquery action that delivers the jquery java script and use it on the me action
+
+2012-02-21 13:01:38 +0100 Georg Hopp 
+
+	* now when a constructor returns -1 the new call will in turn call the destructor effectively freeing all resources. ATTENTION: now the destructor has to be aware that it might be called with a not completely initialized object. To make this more ease there is the FREE makro with the corresponding ffree that does NULL pointer checking and the destructor checks for NULL pointer too. Additionally the handle_accept now handles _SC_OPEN_MAX - 10 connections. The 10 are reserved for internal usage.
+
+2012-02-21 09:45:01 +0100 Georg Hopp 
+
+	* now a child is spawned and writes random values in a shared memory segment. These values will be shown in the me action
+
+2012-02-20 21:36:55 +0100 Georg Hopp 
+
+	* some code cleanups...no changes in the logic
+
+2012-02-20 18:08:23 +0100 Georg Hopp 
+
+	* move sdbm implementation in one file.
+
+2012-02-20 17:16:44 +0100 Georg Hopp 
+
+	* changed /**/ single line comments to //
+
+2012-02-20 14:55:46 +0100 Georg Hopp 
+
+	* start documenting this whole stuff...well at least add a copyright information in each file
+
+2012-02-20 10:10:29 +0100 Georg Hopp 
+
+	* first very crude, not complete, experimental 304 test implementation
+
+2012-02-20 07:55:06 +0100 Georg Hopp 
+
+	* disconnect on invalid request line
+
+2012-02-19 20:12:40 +0100 Georg Hopp 
+
+	* now incomplete requests should no longer block the complete server. Tested with \'echo -en "GET / HTTP\r\nConn" | nc -w 600 localhost 11212\' and then doing requests from my browser. @TODO: cleanup those stuff, check if a not correctly response reading would block the server.
+
+2012-02-19 18:28:30 +0100 Georg Hopp 
+
+	* increase writebuffer size a lot.
+
+2012-02-19 18:15:55 +0100 Georg Hopp 
+
+	* fixed the non keep-alive performance issue as well as i lower memory usage by using a single read and write circular buffer for every connection. @TODO: i noticed a server hang while getting large data (my image) with non keep-alive connections. Additionally an incomplete keep-alive request might stop the server now as the lock on the read buffer will not be released.
+
+2012-02-19 15:41:48 +0100 Georg Hopp 
+
+	* another try with the shmen trick...this time use MAP_ANONYMOUS ... as GNU extension.
+
+2012-02-19 14:33:42 +0100 Georg Hopp 
+
+	* Merge remote branch 'origin/master'
+
+2012-02-19 12:13:52 +0100 Georg Hopp 
+
+	* added missing header file to repo
+
+2012-02-19 11:35:15 +0100 Georg Hopp 
+
+	* another try with a shared memory based ringbuffer...this performs well for keep-alive sessions but is much slower without. actually i am not sure why but most likely the shared memory setup is quite expensive. @TODO: make a profiling.
+
+2012-02-18 21:08:32 +0100 Georg Hopp 
+
+	* fix inf loop. @TODO: This whole handling has to be cleaned.
+
+2012-02-18 20:50:01 +0100 Georg Hopp 
+
+	* this change hopefully makes the shm trick work on amd64
+
+2012-02-18 20:12:27 +0100 Georg Hopp 
+
+	* lots of changes but primarily change the request parser to use a ringbuffer. The ringbuffer is implemented using the shared memory trick.
+
+2012-02-15 12:30:33 +0100 Georg Hopp 
+
+	* some more cleanups in the server code. Removing not needed header includes
+
+2012-02-15 12:17:39 +0100 Georg Hopp 
+
+	* Merge branch 'master' of 192.168.100.2:/var/lib/git/server
+
+2012-02-15 12:17:00 +0100 Georg Hopp 
+
+	* now the separated http worker works. Changed some size_t to ssize_t as i use -1 and -2 es error indicator in my server and fixed caculation of remainig buffer size in reader
+
+2012-02-15 09:38:32 +0100 Georg Hopp 
+
+	* separated the server completely from the http processing
+
+2012-02-15 06:19:52 +0100 Georg Hopp 
+
+	* add subject/observer interface
+
+2012-02-15 06:19:52 +0100 Georg Hopp 
+
+	* add subject/observer interface
+
+2012-02-15 04:55:46 +0100 Georg Hopp 
+
+	* fix infinite busy loop in run
+
+2012-02-15 04:44:38 +0100 Georg Hopp 
+
+	* dynamically get and free buffer for response write pipe now
+
+2012-02-14 21:32:38 +0100 Georg Hopp 
+
+	* increase write buffer
+
+2012-02-13 21:27:47 +0100 Georg Hopp 
+
+	* use one dynamic buffer less and save at least one write on small responses
+
+2012-02-13 18:25:36 +0100 Georg Hopp 
+
+	* removed generated docs
+
+2012-02-13 17:55:52 +0100 Georg Hopp 
+
+	* fixed bug in new response handling
+
+2012-02-13 17:29:35 +0100 Georg Hopp 
+
+	* better response handling but still buggy with stream piping
+
+2012-02-13 09:46:39 +0100 Georg Hopp 
+
+	* now load image from actual server
+
+2012-02-13 09:39:21 +0100 Georg Hopp 
+
+	* first working version of content delivery from file....very crude... @TODO: rewrite complete response handline.
+
+2012-02-12 20:39:12 +0100 Georg Hopp 
+
+	* more generalizing of response writing (implemented a response writer...now it should be possible to implement a stream writer for images
+
+2012-02-12 12:43:56 +0100 Georg Hopp 
+
+	* make http request and response childs of a common parent http message
+
+2012-02-12 04:13:54 +0100 Georg Hopp 
+
+	* remove now obsoleted header_sort
+
+2012-02-12 04:05:38 +0100 Georg Hopp 
+
+	* change response to tree based header storage and make everything work.
+
+2012-02-12 00:05:13 +0100 Georg Hopp 
+
+	* changed header hashing to use btree (GNU only). @TODO: make this conditional for other systems. Removed the qsort calls on server->fds making O(2nlogn) to O(n)
+
+2012-02-11 13:52:32 +0100 Georg Hopp 
+
+	* daemonize testserver now
+
+2012-02-11 12:47:01 +0100 Georg Hopp 
+
+	* fix seaks and hangs after adding response object (mostly not related with the response object but how i integated it into serverRun
+
+2012-02-10 19:57:57 +0100 Georg Hopp 
+
+	* started a response handler and changed serverRun to use it for its response
+
+2012-02-10 12:42:04 +0100 Georg Hopp 
+
+	* fixed bug at server destructor
+
+2012-02-10 09:59:41 +0100 Georg Hopp 
+
+	* reset keep_live flag on connection close
+
+2012-02-10 09:52:27 +0100 Georg Hopp 
+
+	* made a first cruel handling for keep-alive and non keep-alive requests. @TODO: this MUST BE cleaned
+
+2012-02-10 08:14:31 +0100 Georg Hopp 
+
+	* now only use keep-alive....
+
+2012-02-10 06:36:43 +0100 Georg Hopp 
+
+	* moved request_parser.h and request_queue.h in separeate request subfolder
+
+2012-02-10 06:22:39 +0100 Georg Hopp 
+
+	* fix rather nasty reentrance bug
+
+2012-02-10 05:52:50 +0100 Georg Hopp 
+
+	* fix bug that arose in rewrite of header get and results in an ugly memory leak, as well as no headers would be found any more
+
+2012-02-10 00:27:51 +0100 Georg Hopp 
+
+	* fix memory leak created while changing things
+
+2012-02-09 22:39:08 +0100 Georg Hopp 
+
+	* updated docs
+
+2012-02-09 22:34:32 +0100 Georg Hopp 
+
+	* start split of request parser
+
+2012-02-09 11:44:17 +0100 Georg Hopp 
+
+	* no more request body debig output
+
+2012-02-09 11:32:28 +0100 Georg Hopp 
+
+	* add missing header_get to repo and build header hash only from lowercase letters now as it seems header identifier should be case insensitive
+
+2012-02-09 09:34:21 +0100 Georg Hopp 
+
+	* access to headers via hash, read body (actually only with content-length header should also look for content-encoding)
+
+2012-02-08 16:51:49 +0100 Georg Hopp 
+
+	* fix handling of remote close - i should have another eye on this...there still seems to be something wrong.
+
+2012-02-08 15:04:52 +0100 Georg Hopp 
+
+	* fixed some warnings
+
+2012-02-08 13:12:59 +0100 Georg Hopp 
+
+	* changed documentation
+
+2012-02-08 13:05:23 +0100 Georg Hopp 
+
+	* added first generated documentation
+
+2012-02-08 12:14:44 +0100 Georg Hopp 
+
+	* oops commit...forgot to add request_queue.c
+
+2012-02-08 11:52:30 +0100 Georg Hopp 
+
+	* found the file handle lost...made a first workaround and added an todo.
+
+2012-02-08 10:21:04 +0100 Georg Hopp 
+
+	* changed request handling. @TODO: I still seem to have the problem that the file handles are not closed and freed correctly as the service refuses connections after about a 1000.
+
+2012-02-07 14:20:00 +0100 Georg Hopp 
+
+	* now stuff seems to work correct even if read does not provide a complete request (tested with telnet)
+
+2012-02-07 13:41:49 +0100 Georg Hopp 
+
+	* now each HttpRequestParser initializes its own request queue and enqueus completed requests there. The server now gets the queue and prints completed requests.
+
+2012-02-07 11:12:30 +0100 Georg Hopp 
+
+	* started filling out a request object with the parser
+
+2012-02-07 09:29:59 +0100 Georg Hopp 
+
+	* porformance improvement in parsing process (no longer do alloc and free on each line)
+
+2012-02-07 08:52:18 +0100 Georg Hopp 
+
+	* basic request parsing (line by line) implemented
+
+2012-02-06 16:08:13 +0100 Georg Hopp 
+
+	* split server implementation for readability
+
+2012-02-06 11:35:40 +0100 Georg Hopp 
+
+	* free reader (HttpRequestParser) when connection is closed
+
+2012-02-06 11:20:00 +0100 Georg Hopp 
+
+	* add StreamReader interface, modify HttpRequestParser and Server to use it
+
+2012-02-06 11:15:00 +0100 Georg Hopp 
+
+	* add missing include to stdarg.h
+
+2012-02-06 10:45:33 +0100 Georg Hopp 
+
+	* implement clone selector
+
+2012-02-06 10:43:59 +0100 Georg Hopp 
+
+	* add ability to call interface methods with return value
+
+2012-02-06 02:37:55 +0100 Georg Hopp 
+
+	* make build system work again
+
+2012-02-06 02:37:24 +0100 Georg Hopp 
+
+	* remove inline stuff for now ... add carefully again later perhaps
+
+2012-02-06 00:57:26 +0100 Georg Hopp 
+
+	* and also mod conigure.ac
+
+2012-02-06 00:55:44 +0100 Georg Hopp 
+
+	* makefile modification for new class stuff
+
+2012-02-05 22:55:16 +0100 Georg Hopp 
+
+	* changed class tool. Now multiple interface per class are supported as well as simple inheritence.
+
+2012-02-05 22:47:10 +0100 Georg Hopp 
+
+	* some latest work
+
+2012-02-05 22:44:59 +0100 Georg Hopp 
+
+	* added some documentation
+
+2012-02-05 22:42:37 +0100 Georg Hopp 
+
+	* changes related to server code
+
+2012-01-19 16:41:41 +0100 Georg Hopp 
+
+	* added some valueable thought about cclass and how this structure might evolve to a real class
+
+2012-01-18 07:52:07 +0100 Georg Hopp 
+
+	* add testserver and did some fixes not shown by my incomplete tests
+
+2012-01-17 15:40:07 +0100 Georg Hopp 
+
+	* more notes
+
+2012-01-17 15:04:33 +0100 Georg Hopp 
+
+	* add some thought
+
+2012-01-17 14:49:49 +0100 Georg Hopp 
+
+	* changed from select(UNIX) to poll(POSIX)
+
+2012-01-16 18:39:01 +0100 Georg Hopp 
+
+	* work on server_run
+
+2012-01-16 17:05:57 +0100 Georg Hopp 
+
+	* move test under docs dir
+
+2012-01-16 17:05:08 +0100 Georg Hopp 
+
+	* simply copy signal handling code from gameserver project
+
+2012-01-16 16:04:11 +0100 Georg Hopp 
+
+	* more work on socket handling stuff... @TODO think about renaming it to connection as it only handles TCP sockets
+
+2012-01-16 13:48:05 +0100 Georg Hopp 
+
+	* add info text about file handle passing and ported more stuff from my old server structure
+
+2012-01-16 08:05:15 +0100 Georg Hopp 
+
+	* reflect changes in configure.ac
+
+2012-01-13 22:46:45 +0100 Georg Hopp 
+
+	* add daemonize code from other project. (Might be integrated in a future class but i am not sure right now
+
+2012-01-13 22:16:17 +0100 Georg Hopp 
+
+	* logger now works and has some basic testing
+
+2012-01-13 22:15:03 +0100 Georg Hopp 
+
+	* change cclass so that the internal structure is no longer visible by the rest of the code
+
+2012-01-13 16:06:02 +0100 Georg Hopp 
+
+	* some fixes on first logger tests
+
+2012-01-13 15:54:22 +0100 Georg Hopp 
+
+	* initial checkin
+
