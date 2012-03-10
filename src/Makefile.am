@@ -58,7 +58,7 @@ AM_CFLAGS = -Wall -I ../include/
 
 bin_PROGRAMS = taskrambler
 
-taskrambler_SOURCES = webgameserver.c \
+taskrambler_SOURCES = taskrambler.c \
 			$(IFACE) $(SOCKET) $(SERVER) $(LOGGER) $(MSG) $(REQ) \
 			$(WRITER) $(RESP) $(HEADER) $(PARSER) $(WORKER) $(CB) \
 			$(UTILS) $(MSGQ) $(SESSION) $(STREAM)

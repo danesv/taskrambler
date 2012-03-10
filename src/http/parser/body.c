@@ -28,7 +28,7 @@
 #include "http/parser.h"
 #include "cbuf.h"
 
-#define MAX(a,b)	(((a) > (b))? (a) : (b))
+#define MIN(a,b)	(((a) < (b))? (a) : (b))
 
 size_t
 httpParserBody(HttpParser this, const char * buf, size_t nbuf)
@@ -37,7 +37,7 @@ httpParserBody(HttpParser this, const char * buf, size_t nbuf)
 	HttpMessage current = this->current;
 
 	if (current->dbody < current->nbody) {
-		len = MAX(current->nbody - current->dbody, nbuf);
+		len = MIN(current->nbody - current->dbody, nbuf);
 
 		memcpy(current->body, buf, len);
 

@@ -120,23 +120,24 @@ httpParserParse(void * _this, Stream st)
 				break;
 
 			case HTTP_MESSAGE_HEADERS_DONE:
-				{
-					cbufIncRead(
-							this->buffer,
-							httpParserBody(
-								this,
-								cbufGetRead(this->buffer),
-								this->buffer->bused));
-
-					if (cbufIsEmpty(this->buffer)) {
-						cbufRelease(this->buffer);
-						this->ourLock = FALSE;
-					}
-
-					if (this->current->dbody == this->current->nbody) {
-						this->state = HTTP_MESSAGE_DONE;
-					}
+				if (this->current->dbody == this->current->nbody) {
+					this->state = HTTP_MESSAGE_DONE;
+					break;
 				}
+
+				if (cbufIsEmpty(this->buffer)) {
+					cbufRelease(this->buffer);
+					this->ourLock = FALSE;
+					cont = 0;
+					break;
+				}
+
+				cbufIncRead(
+						this->buffer,
+						httpParserBody(
+							this,
+							cbufGetRead(this->buffer),
+							this->buffer->bused));
 				break;
 
 			case HTTP_MESSAGE_DONE:

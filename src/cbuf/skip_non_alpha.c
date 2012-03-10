@@ -27,7 +27,7 @@
 void
 cbufSkipNonAlpha(Cbuf this)
 {
-	while(0 > this->bused && isalpha(*cbufGetRead(this)))
+	while(0 < this->bused && !isalpha(*cbufGetRead(this)))
 		cbufIncRead(this, 1);
 }
 
