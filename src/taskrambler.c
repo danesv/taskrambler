@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,11 +38,13 @@
 #include "server.h"
 #include "logger.h"
 #include "http/worker.h"
+#include "auth/ldap.h"
 
 #include "interface/class.h"
 #include "interface/logger.h"
 
 #include "utils/signalHandling.h"
+#include "utils/memory.h"
 
 #define DEFAULT_SECS	10
 //#define DEFAULT_USECS	(1000000 / HZ * 2)
@@ -126,6 +128,7 @@ main()
 		default:
 			{
 				Logger     logger;
+				AuthLdap   auth;
 				HttpWorker worker;
 				Server     server;
 
@@ -135,8 +138,11 @@ main()
 				shm_unlink("/fooshm");
 				close(shm);
 
-				logger = new(LoggerStderr, LOGGER_DEBUG);
-				worker = new(HttpWorker, "testserver", value);
+				logger = new(LoggerSyslog, LOGGER_DEBUG);
+				auth   = new(AuthLdap,
+						"ldap://localhost/",
+						CSTRA("ou=user,dc=yabrog,dc=weird-web-workers,dc=org"));
+				worker = new(HttpWorker, "testserver", value, auth);
 				server = new(Server, logger, worker, 11212, SOMAXCONN);
 
 				//daemonize();
@@ -184,6 +190,7 @@ main()
 
 				if (NULL != server) delete(server);
 				if (NULL != worker) delete(worker);
+				if (NULL != auth)   delete(auth);
 				if (NULL != logger) delete(logger);
 			}
 

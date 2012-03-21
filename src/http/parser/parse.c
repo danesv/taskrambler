@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,10 +23,17 @@
 #include <stdlib.h>
 
 #include "http/parser.h"
+#include "http/header.h"
 #include "interface/class.h"
 #include "interface/http_intro.h"
 #include "cbuf.h"
 #include "stream.h"
+
+#include "utils/memory.h"
+#include "commons.h"
+
+#define MIN(a,b)	((a)<(b)? (a) : (b))
+
 
 ssize_t
 httpParserParse(void * _this, Stream st)
@@ -92,6 +99,7 @@ httpParserParse(void * _this, Stream st)
 					this->ourLock = FALSE;
 					return -1;
 				}
+				httpParserRequestVars(this);
 
 				this->state = HTTP_MESSAGE_INTRO_DONE;
 				break;
@@ -141,6 +149,23 @@ httpParserParse(void * _this, Stream st)
 				break;
 
 			case HTTP_MESSAGE_DONE:
+				{
+					HttpHeader enc = hashGet(
+							this->current->header,
+							CSTRA("content-type"));
+
+					/**
+					 * do we have form data??
+					 */
+					if (NULL != enc && 0 == strncasecmp(
+								"application/x-www-form-urlencoded",
+								enc->value[0],
+								MIN(sizeof("application/x-www-form-urlencoded")-1,
+									enc->nvalue[0]))) {
+						//!> then parse them...
+						httpParserPostVars(this);
+					}
+
 				/**
 				 * enqueue current request
 				 */
@@ -151,7 +176,7 @@ httpParserParse(void * _this, Stream st)
 				 * prepare for next request
 				 */
 				this->state = HTTP_MESSAGE_GARBAGE;
-
+				}
 				break;
 
 			default:

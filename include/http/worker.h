@@ -5,7 +5,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,6 +52,8 @@ CLASS(HttpWorker) {
 	HttpWriter writer;
 	Session    session;
 	Session  * sroot;
+
+	void *     auth;
 };
 
 #endif // __HTTP_WORKER_H__

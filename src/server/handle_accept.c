@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,10 +43,12 @@ serverHandleAccept(Server this, unsigned int i)
 		return -1;
 	}
 
+	acc = socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
+
+	if (-1 != acc->handle) {
 	switch(i) {
 		case 0:
 			// no SSL
-			acc = socketAccept(this->sock, &remoteAddr);
 			st = new(Stream, STREAM_FD, acc->handle);
 			break;
 
@@ -54,7 +56,6 @@ serverHandleAccept(Server this, unsigned int i)
 			// SSL
 			{
 				SSL * ssl = SSL_new(this->ctx);
-				acc = socketAccept(this->sockSSL, &remoteAddr);
 				SSL_set_fd(ssl, acc->handle);
 				SSL_accept(ssl);
 				st = new(Stream, STREAM_SSL, ssl);
@@ -65,7 +66,6 @@ serverHandleAccept(Server this, unsigned int i)
 			break;
 	}
 
-	if (-1 != acc->handle) {
 		// save the socket handle
 		(this->conns)[acc->handle].sock   = acc; 
 

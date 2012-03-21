@@ -6,7 +6,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +41,6 @@ CLASS(HttpHeader) {
 	size_t        size;				//!< full size of this header
 };
 
-HttpHeader httpHeaderAdd(const HttpHeader *, HttpHeader);
-HttpHeader httpHeaderGet(const HttpHeader *, const char *, size_t);
 size_t     httpHeaderToString(HttpHeader, char *);
 
 #endif // __HTTP_HEADER_H__

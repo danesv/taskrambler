@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,16 +31,17 @@ void
 serverCloseConn(Server this, unsigned int i)
 {
 	int    fd = (this->fds)[i].fd;
-	Stream st = (this->conns[(this->fds)[i].fd]).stream;
+	Stream st = (this->conns[fd]).stream;
 
 	delete((this->conns)[fd].sock);
 	delete((this->conns)[fd].worker);
 
 	if (NULL != st && STREAM_SSL == st->type) {
 		SSL_shutdown((st->handle).ssl);
+		SSL_free((st->handle).ssl);
 	}
 
-	delete((this->conns)[fd].stream);
+	delete(st);
 
 	memset(&(this->fds[i]), 0, sizeof(struct pollfd));
 }

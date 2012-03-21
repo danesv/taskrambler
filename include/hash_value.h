@@ -1,12 +1,10 @@
 /**
  * \file
- * Get a header from a tree containing headers by its name.
- * The key for the tree is the hased lowercase header identifier.
  *
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,30 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <search.h>
-#include <stdlib.h>
+#ifndef __HASH_VALUE_H__
+#define __HASH_VALUE_H__
 
-#include "http/header.h"
-#include "utils/hash.h"
+#include <sys/types.h>
 
-static
-inline
-int
-comp(const void * _a, const void * _b)
-{
-	const unsigned long * a = _a;
-	HttpHeader            b = (HttpHeader)_b;
-	return (*a < b->hash)? -1 : (*a > b->hash)? 1 : 0;
-}
+#include "class.h"
 
-HttpHeader
-httpHeaderGet(const HttpHeader * root, const char * name, size_t nname)
-{
-	unsigned long hash = sdbm((const unsigned char*)name, nname);
+CLASS(HashValue) {
+	unsigned long hash;
 
-	HttpHeader * found  = tfind(&hash, (void**)root, comp);
+	char *        key;
+	void *        value;
 
-	return (NULL != found)? *found : NULL;
-}
+	size_t        nkey;
+	size_t        nvalue;
+};
+
+#endif // __HASH_VALUE_H__
 
 // vim: set ts=4 sw=4:

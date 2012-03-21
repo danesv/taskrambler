@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #include "http/parser.h"
 #include "cbuf.h"
 
-#define MIN(a,b)	(((a) < (b))? (a) : (b))
+#include "commons.h"
 
 size_t
 httpParserBody(HttpParser this, const char * buf, size_t nbuf)

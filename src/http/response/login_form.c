@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 #include "http/header.h"
 
 #include "utils/memory.h"
+#include "hash.h"
 
 #define RESP_DATA "<form action=\"/me/\" method=\"POST\">" \
 	"<input name=\"username\" type=\"text\" />" \
@@ -49,7 +50,7 @@ httpResponseLoginForm()
 	response = new(HttpResponse, "HTTP/1.1", 200, "OK");
 	message  = (HttpMessage)response;
 
-	httpHeaderAdd(&(message->header),
+	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"), CSTRA("text/html")));
 
 	message->type  = HTTP_MESSAGE_BUFFERED;

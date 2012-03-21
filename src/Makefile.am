@@ -6,6 +6,8 @@ IFACE  = interface/class.c interface/stream_reader.c interface/logger.c \
 	 interface/subject.c interface/observer.c interface.c
 SOCKET = socket.c socket/accept.c socket/connect.c socket/listen.c
 STREAM = stream.c stream/read.c stream/write.c
+HASH   = hash.c hash/add.c hash/get.c hash/delete.c \
+	 hash/each.c interface/hashable.c hash_value.c
 SERVER = server.c server/run.c server/close_conn.c server/poll.c \
 	 server/handle_accept.c server/read.c server/write.c
 LOGGER = logger.c logger/stderr.c logger/syslog.c
@@ -30,13 +32,15 @@ RESP   = http/response.c \
 	 http/response/403.c \
 	 http/response/login_form.c \
 	 http/response/asset.c \
-	 http/response/me.c \
-	 http/response/randval.c
+	 http/response/randval.c \
+	 http/response/session.c
 PARSER = http/parser.c \
 	 http/parser/parse.c \
 	 http/parser/new_message.c \
 	 http/parser/header.c \
-	 http/parser/body.c
+	 http/parser/body.c \
+	 http/parser/request_vars.c \
+	 http/parser/post_vars.c
 WRITER = http/writer.c \
 	 http/writer/write.c
 WORKER = http/worker.c \
@@ -44,7 +48,7 @@ WORKER = http/worker.c \
 	 http/worker/write.c \
 	 http/worker/get_asset.c \
 	 http/worker/add_common_header.c
-HEADER = http/header.c http/header/get.c http/header/add.c \
+HEADER = http/header.c \
 	 http/header/to_string.c
 SESSION = session.c session/add.c session/get.c session/delete.c
 UTILS  = utils/hash.c \
@@ -52,15 +56,16 @@ UTILS  = utils/hash.c \
 	 utils/http.c \
 	 utils/daemonize.c \
 	 utils/signalHandling.c
+AUTH   = interface/auth.c auth/ldap.c credential.c
 
 
 AM_CFLAGS = -Wall -I ../include/
 
-bin_PROGRAMS = taskrambler
+bin_PROGRAMS = webgameserver
 
-taskrambler_SOURCES = taskrambler.c \
+webgameserver_SOURCES = webgameserver.c \
 			$(IFACE) $(SOCKET) $(SERVER) $(LOGGER) $(MSG) $(REQ) \
 			$(WRITER) $(RESP) $(HEADER) $(PARSER) $(WORKER) $(CB) \
-			$(UTILS) $(MSGQ) $(SESSION) $(STREAM)
-taskrambler_CFLAGS  = -Wall -I ../include/
-taskrambler_LDFLAGS = -lrt -lssl
+			$(UTILS) $(MSGQ) $(SESSION) $(STREAM) $(HASH) $(AUTH)
+webgameserver_CFLAGS  = -Wall -I ../include/
+webgameserver_LDFLAGS = -lrt -lssl -lldap

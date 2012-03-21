@@ -5,7 +5,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #define __HTTP_MESSAGE__
 
 #include "class.h"
-#include "http/header.h"
+#include "hash.h"
 #include "stream.h"
 
 typedef enum e_HttpMessageType {
@@ -37,7 +37,8 @@ typedef enum e_HttpMessageType {
 CLASS(HttpMessage) {
 	char *          version;
 
-	HttpHeader      header;
+	Hash            header;
+	Hash            cookies;
 
 	HttpMessageType type;
 	Stream          handle;

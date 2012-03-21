@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include "utils/memory.h"
 
 #include "commons.h"
+#include "hash.h"
 
 char
 httpMessageHasKeepAlive(HttpMessage message)
@@ -39,7 +40,7 @@ httpMessageHasKeepAlive(HttpMessage message)
 	size_t      size;
 	char *      value;
 
-	header = httpHeaderGet(&(message->header), CSTRA("connection"));
+	header = hashGet(message->header, CSTRA("connection"));
 
 	if (NULL == header) {
 		return 0;

@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <sys/time.h>
 
 #include "class.h"
 #include "interface/class.h"
+#include "interface/auth.h"
 
 #include "http/worker.h"
+#include "http/header.h"
 #include "http/message.h"
 #include "http/request.h"
 #include "http/response.h"
@@ -36,11 +40,18 @@
 #include "http/parser.h"
 #include "session.h"
 #include "stream.h"
+#include "hash_value.h"
+#include "hash.h"
+#include "credential.h"
 
 #include "utils/memory.h"
+#include "hash.h"
+#include "commons.h"
+
 
 HttpMessage httpWorkerGetAsset(HttpRequest, const char *, const char *, size_t);
 void        httpWorkerAddCommonHeader(HttpMessage, HttpMessage);
+
 
 ssize_t
 httpWorkerProcess(HttpWorker this, Stream st)
@@ -56,25 +67,20 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			HttpMessage  rmessage = reqq->msgs[i];
 			HttpRequest  request  = (HttpRequest)(reqq->msgs[i]);
 			HttpMessage  response = NULL;
-			HttpHeader   cookie   = httpHeaderGet(
-					&(rmessage->header),
-					CSTRA("cookie"));
 
-			if (NULL == this->session && NULL != cookie) {
-				int i;
-
-				for (i=0; i<cookie->cvalue; i++) {
-					char * sidstr = strstr(cookie->value[i], "sid");
+			/**
+			 * \todo store the cookie count in the request to make a simple
+			 * check possible to prevent this lookup if no cookies exists
+			 * at all
+			 */
+			if (NULL == this->session) {
+				HashValue sidstr = hashGet(request->cookies, CSTRA("sid"));
 
 					if (NULL != sidstr) {
 						unsigned long sid;
 
-						sidstr = strchr(sidstr, '=')+1;
-						sid    = strtoul(sidstr, NULL, 10);
-
+					sid = strtoul((char*)(sidstr->value), NULL, 10);
 						this->session = sessionGet(this->sroot, sid);
-						break;
-					}
 				}
 			}
 
@@ -88,43 +94,92 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			}
 
 			if (0 == strcmp("POST", request->method)) {
-				if (0 == strcmp("/me/", request->uri)) {
-					char * delim = memchr(rmessage->body, '=', rmessage->nbody);
-					char * val;
-					size_t nkey, nval;
+				if (0 == strcmp("/login/", request->path)) {
 					char   buffer[200];
 					size_t nbuf;
 
-					nkey = delim - rmessage->body - 1;
-					*delim = 0;
-					val  = delim + 1;
-					nval = rmessage->nbody - (val - rmessage->body);
+					HashValue username = hashGet(request->post, CSTRA("username"));
+					HashValue password = hashGet(request->post, CSTRA("password"));
 
+					/**
+					 * \todo This is an application authorization not an HTTP
+					 * authorization...anyway think about sending HTTP 401
+					 * messages if authorization is required and think about
+					 * sending the credentials via header as described in the
+					 * HTTP protocol. Most likely this will lead to hacky thing
+					 * with javascript as i am not sure how far this is implemented
+					 * within browsers.
+					 * Anyway, for now we simply ignore a failed login within the
+					 * response except that no session is initialized. We send
+					 * an empty 200 OK
+					 */
+					if (NULL == password || NULL == username) {
+						response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
+					}
+
+					if (NULL == response) {
+						Credential cred = new(Credential,
+								CRED_PASSWORD,
+								(char*)(username->value), username->nvalue,
+								(char*)(password->value), password->nvalue);
+
+						if (!authenticate(this->auth, cred)) {
+							response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
+						} else {
+							if (NULL == this->session) {
 					this->session = sessionAdd(
 							this->sroot,
-							new(Session, val, nval));
-					nbuf = sprintf(buffer, "sid=%lu;Path=/", this->session->id);
+										new(Session,
+											username->value,
+											username->nvalue));
+							} else {
+								this->session->username = malloc(username->nvalue + 1);
+								this->session->username[username->nvalue] = 0;
+								memcpy(this->session->username,
+										username->value,
+										username->nvalue);
+							}
 
-					response = (HttpMessage)httpResponseMe(this->session->username);
+							nbuf = sprintf(buffer,
+									"sid=%lu;Path=/",
+									this->session->id);
 
-					httpHeaderAdd(
-							&(response->header),
-							new(HttpHeader, CSTRA("Set-Cookie"), buffer, nbuf));
+							response = (HttpMessage)httpResponseSession(
+									this->session);
+
+							hashAdd(response->header,
+									new(HttpHeader,
+										CSTRA("Set-Cookie"),
+										buffer, nbuf));
+						}
+						delete(cred);
+					}
 				}
 			}
 
 			if (0 == strcmp("GET", request->method)) {
 
-				if (0 == strcmp("/login/", request->uri)) {
-					response = (HttpMessage)httpResponseLoginForm();
+				if (0 == strcmp("/", request->path)) {
+					response = httpWorkerGetAsset(
+							request,
+							"./assets/html/main.html",
+							CSTRA("text/html"));
 				}
 
-				if (0 == strcmp("/me/", request->uri)) {
-					char * uname = (NULL != this->session)? this->session->username : "";
-					response = (HttpMessage)httpResponseMe(uname);
+				if (0 == strcmp("/sessinfo/", request->path)) {
+					response = (HttpMessage)httpResponseSession(this->session);
 				}
 
-				if (0 == strcmp("/randval/", request->uri)) {
+				if (0 == strcmp("/sess/", request->path)) {
+					if (NULL == this->session) {
+						this->session = sessionAdd(
+								this->sroot,
+								new(Session, NULL, 0));
+					}
+					response = (HttpMessage)httpResponseSession(this->session);
+				}
+
+				if (0 == strcmp("/randval/", request->path)) {
 					if (NULL != this->session) {
 						response = (HttpMessage)httpResponseRandval(
 								this->val->timestamp,
@@ -134,18 +189,46 @@ httpWorkerProcess(HttpWorker this, Stream st)
 					}
 				}
 
-				if (0 == strcmp("/image/", request->uri)) {
+				if (0 == strcmp("/image/me", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
-							"./assets/waldschrat.jpg",
+							"./assets/image/waldschrat.jpg",
 							CSTRA("image/jpeg"));
 				}
 
-				if (0 == strcmp("/jquery/", request->uri)) {
+				if (0 == strcmp("/assets/js/jquery", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
-							"./assets/jquery-1.7.1.min.js",
+							"./assets/js/jquery-1.7.1.min.js",
 							CSTRA("text/javascript"));
+				}
+
+				if (0 == strcmp("/assets/js/serverval", request->path)) {
+					response = httpWorkerGetAsset(
+							request,
+							"./assets/js/serverval.js",
+							CSTRA("text/javascript"));
+				}
+
+				if (0 == strcmp("/assets/js/session", request->path)) {
+					response = httpWorkerGetAsset(
+							request,
+							"./assets/js/session.js",
+							CSTRA("text/javascript"));
+				}
+
+				if (0 == strcmp("/assets/js/init", request->path)) {
+					response = httpWorkerGetAsset(
+							request,
+							"./assets/js/init.js",
+							CSTRA("text/javascript"));
+				}
+
+				if (0 == strcmp("/assets/style/common", request->path)) {
+					response = httpWorkerGetAsset(
+							request,
+							"./assets/style/common.css",
+							CSTRA("text/css"));
 				}
 			}
 

@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,10 @@
 #include "interface/class.h"
 
 #include "utils/memory.h"
+
+
+void serverCloseConn(Server, unsigned int);
+
 
 static
 int
@@ -102,18 +106,9 @@ serverDtor(void * _this)
     int    i;
 
     for (i=0; i<this->nfds; i++) {
-		if (this->sock->handle != (this->fds)[i].fd) {
-			Stream st = (this->conns[(this->fds)[i].fd]).stream;
-
-			delete((this->conns[(this->fds)[i].fd]).sock);
-			delete((this->conns[(this->fds)[i].fd]).worker);
-
-			if (NULL != st && STREAM_SSL == st->type) {
-				SSL_shutdown((st->handle).ssl);
-				SSL_free((st->handle).ssl);
-			}
-
-			delete((this->conns[(this->fds)[i].fd]).stream);
+		if (this->sock->handle != (this->fds)[i].fd &&
+				this->sockSSL->handle != (this->fds)[i].fd) {
+			serverCloseConn(this, i);
 		}
     }
 
@@ -122,6 +117,7 @@ serverDtor(void * _this)
 
 	delete(this->sock);
 	delete(this->sockSSL);
+
 	SSL_CTX_free(this->ctx);
 	ERR_free_strings();
 }

@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@
 #include "http/header.h"
 #include "http/parser.h"
 #include "http/message.h"
+#include "http/request.h"
+#include "hash.h"
+#include "hash_value.h"
 
 void
 httpParserHeader(
@@ -59,8 +62,43 @@ httpParserHeader(
 		current->dbody = 0;
 	}
 
-	httpHeaderAdd(
-			&(current->header),
+	if (0 == strncasecmp("cookie", name, nname-1)) {
+		HttpRequest request = (HttpRequest)this->current;
+		char *  pair = value;
+		ssize_t togo = lend - value;
+
+		while(NULL != pair && 0 < togo) {
+			char * key    = pair;
+			char * eqsign;
+			char * val;
+			size_t nval;
+
+			for (; *key == ' ' && key < lend; key++, togo--);
+			eqsign = memchr(key, '=', togo);
+
+			if (NULL == eqsign) {
+				break;
+			}
+
+			togo -= (eqsign - key);
+			pair  = memchr(eqsign, ';', togo);
+
+			if (NULL == pair) {
+				pair = (char *)lend;
+			}
+
+			nval = pair-eqsign-1;
+			val  = (0 != nval)? eqsign+1 : NULL;
+
+			hashAdd(request->cookies,
+					new(HashValue, key, eqsign-key, val, nval));
+
+			pair++;
+			togo -= (pair - eqsign);
+		}
+	}
+
+	hashAdd(current->header,
 			new(HttpHeader, name, nname, value, lend - value));
 }
 

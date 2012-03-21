@@ -4,10 +4,9 @@
 .deps/
 Makefile
 Makefile.in
+/config*
 m4/
 /docs/
-/config.*
-/configure
 /INSTALL
 *.m4
 /autom4te.cache/

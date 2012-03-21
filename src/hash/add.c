@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,49 +21,34 @@
  */
 
 #include <search.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include "class.h"
+#include "hash.h"
+#include "interface/hashable.h"
 #include "interface/class.h"
-#include "http/header.h"
-#include "utils/hash.h"
 
 static
 inline
 int
-comp(const void * _a, const void * _b)
+hashAddComp(const void * a, const void * b)
 {
-	HttpHeader a = (HttpHeader)_a;
-	HttpHeader b = (HttpHeader)_b;
-	return (a->hash < b->hash)? -1 : (a->hash > b->hash)? 1 : 0;
+	return hashableGetHash((void*)b) - hashableGetHash((void*)a);
 }
 
-HttpHeader
-httpHeaderAdd(const HttpHeader * root, HttpHeader header)
+void *
+hashAdd(Hash this, void * operand)
 {
-	HttpHeader * _found = tsearch(header, (void **)root, comp);
-	HttpHeader   found;
+	void * found = tsearch(operand, &(this->root), hashAddComp);
 
-	if (NULL == _found) {
+	if (NULL == found) {
 		return NULL;
 	}
 
-	found = *_found;
-	
-	if (found != header) {
-		if (found->cvalue >= N_VALUES) {
-			return NULL;
-		}
-		(found->nvalue)[found->cvalue]    = (header->nvalue)[0];
-		(found->value)[(found->cvalue)++] = (header->value)[0];
-		found->size += header->size;
-		(header->value)[0] = NULL;
-		delete(header);
+	if (operand != *(void**)found) {
+		hashableHandleDouble(*(void**)found, operand);
+		delete(operand);
 	}
 
-	return found;
+	return *(void**)found;
 }
 
 // vim: set ts=4 sw=4:

@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,15 +27,16 @@
 #include "http/response.h"
 #include "http/header.h"
 #include "interface/http_intro.h"
+#include "hash.h"
 
 static char * string;
 
+static
+inline
 void
-addHeaderString(const void * node, const VISIT which, const int depth)
+addHeaderString(const void * node)
 {
-	if (endorder == which || leaf == which) {
-		string += httpHeaderToString(*(HttpHeader *)node, string);
-	}
+	string += httpHeaderToString((HttpHeader)node, string);
 }
 
 char *
@@ -45,7 +46,7 @@ httpMessageHeaderToString(HttpMessage response, char * _string)
 
 	string = httpIntroToString(response, _string);
 
-	twalk(message->header, addHeaderString);
+	hashEach(message->header, addHeaderString);
 
 	*string++ = '\r';
 	*string++ = '\n';

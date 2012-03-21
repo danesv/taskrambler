@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,6 +64,8 @@ httpWorkerCtor(void * _this, va_list * params)
 
 	this->sroot  = &(this->session);
 
+	this->auth   = va_arg(* params, void *);
+
 	return 0;
 }
 
@@ -106,6 +108,7 @@ httpWorkerClone(void * _this, void * _base)
 	this->writer = new(HttpWriter, base->wbuf);
 
 	this->sroot  = &(base->session);
+	this->auth   = base->auth;
 }
 
 ssize_t httpWorkerProcess(void *, Stream);

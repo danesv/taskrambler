@@ -5,7 +5,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include "class.h"
 #include "interface/class.h"
 #include "http/header.h"
+#include "interface/hashable.h"
 
 #include "utils/hash.h"
 #include "utils/memory.h"
@@ -72,7 +73,35 @@ httpHeaderDtor(void * _this)
 	}
 }
 
+static
+unsigned long
+httpHeaderGetHash(void * _this)
+{
+	HttpHeader this = _this;
+
+	return this->hash;
+}
+
+static
+void
+httpHeaderHandleDouble(void * _this, void * _double)
+{
+	HttpHeader this = _this;
+	HttpHeader doub = _double;
+
+	if (this->cvalue >= N_VALUES) {
+		//! \todo do dome error logging...or change to HEAP
+		return;
+	}
+
+	(this->nvalue)[this->cvalue]    = (doub->nvalue)[0];
+	(this->value)[(this->cvalue)++] = (doub->value)[0];
+	this->size += doub->size;
+	(doub->value)[0] = NULL;
+}
+
 INIT_IFACE(Class, httpHeaderCtor, httpHeaderDtor, NULL);
-CREATE_CLASS(HttpHeader, NULL, IFACE(Class));
+INIT_IFACE(Hashable, httpHeaderGetHash, httpHeaderHandleDouble);
+CREATE_CLASS(HttpHeader, NULL, IFACE(Class), IFACE(Hashable));
 
 // vim: set ts=4 sw=4:

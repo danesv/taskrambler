@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright (C) 2012  Georg Hopp
+ * Copyright © 2012  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,17 +28,16 @@
 #include "http/response.h"
 #include "http/header.h"
 #include "interface/http_intro.h"
+#include "hash.h"
 
 static size_t size;
 
 static
 inline
 void
-addHeaderSize(const void * node, const VISIT which, const int depth)
+addHeaderSize(const void * node)
 {
-	if (endorder == which || leaf == which) {
-		size += (*(HttpHeader *)node)->size;
-	}
+	size += ((HttpHeader)node)->size;
 }
 
 size_t
@@ -46,7 +45,7 @@ httpMessageHeaderSizeGet(HttpMessage message)
 {
 	size = httpIntroSizeGet(message);
 
-	twalk(message->header, addHeaderSize);
+	hashEach(message->header, addHeaderSize);
 	size += 2;
 
 	return size;
