@@ -40,7 +40,7 @@
 #include "http/worker.h"
 #include "auth/ldap.h"
 
-#include "interface/class.h"
+#include "class.h"
 #include "interface/logger.h"
 
 #include "utils/signalHandling.h"

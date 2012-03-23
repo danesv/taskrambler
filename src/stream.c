@@ -24,7 +24,6 @@
 #include <openssl/ssl.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "stream.h"
 
 

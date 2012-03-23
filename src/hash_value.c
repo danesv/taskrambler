@@ -29,7 +29,7 @@
 #include "utils/hash.h"
 #include "utils/memory.h"
 #include "commons.h"
-#include "interface/class.h"
+#include "class.h"
 #include "interface/hashable.h"
 
 static

@@ -27,7 +27,6 @@
 #include <sys/types.h>
 
 #include "class.h"
-#include "interface/class.h"
 
 #include "http/response.h"
 #include "http/message.h"

@@ -26,7 +26,7 @@
 #include <sys/types.h>
 
 #include "cookie.h"
-#include "interface/class.h"
+#include "class.h"
 #include "interface/hashable"
 
 #include "utils/hash.h"

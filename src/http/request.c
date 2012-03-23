@@ -26,7 +26,6 @@
 #include <sys/types.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "interface/http_intro.h"
 
 #include "http/request.h"

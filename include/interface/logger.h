@@ -26,7 +26,7 @@
 
 #include <stdarg.h>
 
-#include "interface.h"
+#include "class.h"
 #include "logger.h"
 
 typedef void (* fptr_log)(void *, logger_level, const char * const);

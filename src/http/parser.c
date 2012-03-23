@@ -25,7 +25,6 @@
 #include <stdarg.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "interface/stream_reader.h"
 
 #include "http/parser.h"

@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 #include "socket.h"
-#include "interface/class.h"
+#include "class.h"
 #include "interface/logger.h"
 
 Sock

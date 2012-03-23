@@ -25,7 +25,6 @@
 #include <sys/types.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "http/header.h"
 #include "http/parser.h"
 #include "http/message.h"

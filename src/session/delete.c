@@ -23,7 +23,7 @@
 #include <search.h>
 
 #include "session.h"
-#include "interface/class.h"
+#include "class.h"
 
 
 static

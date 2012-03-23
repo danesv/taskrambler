@@ -24,7 +24,6 @@
 #include <sys/stat.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "http/message.h"
 #include "http/writer.h"
 #include "cbuf.h"

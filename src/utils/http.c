@@ -28,7 +28,7 @@
 #include "http/request.h"
 #include "http/response.h"
 
-#include "interface/class.h"
+#include "class.h"
 
 #include "commons.h"
 

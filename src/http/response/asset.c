@@ -28,7 +28,6 @@
 #include <sys/types.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "stream.h"
 
 #include "http/response.h"

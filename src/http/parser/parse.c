@@ -24,7 +24,7 @@
 
 #include "http/parser.h"
 #include "http/header.h"
-#include "interface/class.h"
+#include "class.h"
 #include "interface/http_intro.h"
 #include "cbuf.h"
 #include "stream.h"

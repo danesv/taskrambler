@@ -34,7 +34,6 @@
 #include "http/parser.h"
 #include "http/writer.h"
 
-#include "interface/class.h"
 #include "interface/stream_reader.h"
 #include "interface/stream_writer.h"
 

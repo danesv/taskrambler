@@ -27,7 +27,6 @@
 
 #include "credential.h"
 #include "class.h"
-#include "interface/class.h"
 
 #include "utils/memory.h"
 

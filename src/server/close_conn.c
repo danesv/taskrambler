@@ -24,7 +24,7 @@
 #include <string.h>
 
 #include "server.h"
-#include "interface/class.h"
+#include "class.h"
 #include "stream.h"
 
 void

@@ -24,7 +24,7 @@
 #ifndef __INTERFACE_HASHABLE_H__
 #define __INTERFACE_HASHABLE_H__
 
-#include "interface.h"
+#include "class.h"
 
 typedef unsigned long (* fptr_hashableGetHash)(void *);
 typedef void          (* fptr_hashableHandleDouble)(void *, void *);

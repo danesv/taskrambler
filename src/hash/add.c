@@ -24,7 +24,7 @@
 
 #include "hash.h"
 #include "interface/hashable.h"
-#include "interface/class.h"
+#include "class.h"
 
 static
 inline

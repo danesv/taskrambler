@@ -23,7 +23,6 @@
 #include <stdarg.h>
 
 #include "class.h"
-#include "interface/class.h"
 
 #include "http/message/queue.h"
 

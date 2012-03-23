@@ -24,8 +24,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "class.h"
-#include "interface/class.h"
+#include "class/class.h"
+#include "class/interface/class.h"
 
 const
 struct interface i_Class = {

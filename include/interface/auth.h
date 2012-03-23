@@ -30,7 +30,7 @@
 
 #include <stdarg.h>
 
-#include "interface.h"
+#include "class.h"
 #include "credential.h"
 
 typedef int (* fptr_authenticate)(void *, Credential);

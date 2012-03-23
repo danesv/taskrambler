@@ -28,7 +28,7 @@
 #include "http/request.h"
 #include "hash_value.h"
 #include "hash.h"
-#include "interface/class.h"
+#include "class.h"
 
 void
 httpParserRequestVars(HttpParser this)

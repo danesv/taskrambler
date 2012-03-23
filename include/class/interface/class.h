@@ -23,13 +23,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __INTERFACE_CLASS_H__
-#define __INTERFACE_CLASS_H__
+#ifndef __CLASS_INTERFACE_CLASS_H__
+#define __CLASS_INTERFACE_CLASS_H__
 
 #include <stdarg.h>
 
-#include "class.h"
-#include "interface.h"
+#include "class/class.h"
+#include "class/interface.h"
 
 typedef int  (* fptr_ctor)(void *, va_list *);
 typedef void (* fptr_dtor)(void *);
@@ -52,6 +52,6 @@ extern void * classClone(void *);
 #define delete(object)		classDelete((void **)&(object))
 #define clone(object)		classClone((void *)(object))
 
-#endif // __INTERFACE_CLASS_H__
+#endif // __CLASS_INTERFACE_CLASS_H__
 
 // vim: set ts=4 sw=4:

@@ -27,7 +27,6 @@
 
 #include "hash.h"
 #include "class.h"
-#include "interface/class.h"
 
 static
 int

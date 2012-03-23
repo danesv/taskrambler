@@ -25,7 +25,6 @@
 #include <string.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "http/header.h"
 #include "interface/hashable.h"
 

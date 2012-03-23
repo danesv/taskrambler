@@ -23,7 +23,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 
-#include "interface.h"
+#include "class/interface.h"
 #include "commons.h"
 
 static

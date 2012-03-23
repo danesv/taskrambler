@@ -28,7 +28,7 @@
 
 #include "http/worker.h"
 #include "server.h"
-#include "interface/class.h"
+#include "class.h"
 #include "interface/logger.h"
 #include "stream.h"
 

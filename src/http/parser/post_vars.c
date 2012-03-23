@@ -27,7 +27,7 @@
 #include "http/request.h"
 #include "hash_value.h"
 #include "hash.h"
-#include "interface/class.h"
+#include "class.h"
 
 /**
  * \todo this is very similar to other pair parsing

@@ -34,7 +34,6 @@
 #include <fcntl.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "utils/memory.h"
 
 #include "cbuf.h"

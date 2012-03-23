@@ -31,7 +31,6 @@
 #include <unistd.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "hash.h"
 #include "http/message.h"
 #include "utils/memory.h"

@@ -31,7 +31,6 @@
 #include "server.h"
 #include "socket.h"
 #include "logger.h"
-#include "interface/class.h"
 
 #include "utils/memory.h"
 

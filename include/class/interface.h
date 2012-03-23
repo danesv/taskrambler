@@ -24,8 +24,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __INTERFACE_H__
-#define __INTERFACE_H__
+#ifndef __CLASS_INTERFACE_H__
+#define __CLASS_INTERFACE_H__
 
 #include <sys/types.h>
 
@@ -54,6 +54,6 @@ typedef struct iface_impl * iface_impl_ptr;
 
 extern iface_ptr interfaceGet(iface_impl_ptr, const iface_ptr);
 
-#endif // __INTERFACE_H__
+#endif // __CLASS_INTERFACE_H__
 
 // vim: set ts=4 sw=4:

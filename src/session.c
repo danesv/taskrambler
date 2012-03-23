@@ -29,7 +29,6 @@
 
 #include "session.h"
 #include "class.h"
-#include "interface/class.h"
 
 #include "utils/hash.h"
 #include "utils/memory.h"

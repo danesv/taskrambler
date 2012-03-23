@@ -28,7 +28,6 @@
 #include <sys/time.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "interface/auth.h"
 
 #include "http/worker.h"

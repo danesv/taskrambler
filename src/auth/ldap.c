@@ -29,7 +29,6 @@
 #include "auth/ldap.h"
 #include "class.h"
 #include "credential.h"
-#include "interface/class.h"
 #include "interface/auth.h"
 
 #include "utils/memory.h"

@@ -27,7 +27,6 @@
 #include <stdio.h>
 
 #include "class.h"
-#include "interface/class.h"
 #include "interface/http_intro.h"
 
 #include "http/response.h"

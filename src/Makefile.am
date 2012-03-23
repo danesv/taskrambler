@@ -1,8 +1,8 @@
 ACLOCAL_AMFLAGS = -I m4
 
-IFACE   = interface/class.c interface/stream_reader.c interface/logger.c \
+IFACE   = interface/stream_reader.c interface/logger.c \
           interface/stream_writer.c interface/http_intro.c \
-          interface/subject.c interface/observer.c interface.c
+          interface/subject.c interface/observer.c
 SOCKET  = socket.c socket/accept.c socket/connect.c socket/listen.c
 STREAM  = stream.c stream/read.c stream/write.c
 HASH    = hash.c hash/add.c hash/get.c hash/delete.c \
@@ -67,4 +67,6 @@ taskrambler_SOURCES = taskrambler.c \
 			$(WRITER) $(RESP) $(HEADER) $(PARSER) $(WORKER) $(CB) \
 			$(UTILS) $(MSGQ) $(SESSION) $(STREAM) $(HASH) $(AUTH)
 taskrambler_CFLAGS  = -Wall -I ../include/
-taskrambler_LDFLAGS = -lrt -lssl -lldap
+taskrambler_LDFLAGS = -L./class -lclass -lrt -lssl -lldap
+
+SUBDIRS = class
