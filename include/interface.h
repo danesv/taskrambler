@@ -36,7 +36,7 @@
 	static const struct i_##name i_##name##_impl = {&i_##name,__VA_ARGS__}
 
 #define NUMARGS(...)	(sizeof((const void*[]){__VA_ARGS__})/sizeof(void*))
-#define INIT_IMPL(...)	{NUMARGS(__VA_ARGS__), 0, {__VA_ARGS__}}
+#define INIT_IFACE_IMPL(...)	{NUMARGS(__VA_ARGS__), 0, {__VA_ARGS__}}
 
 
 struct interface {
@@ -52,7 +52,7 @@ struct iface_impl {
 };
 typedef struct iface_impl * iface_impl_ptr;
 
-extern struct interface * interfaceGet(iface_impl_ptr, const iface_ptr);
+extern iface_ptr interfaceGet(iface_impl_ptr, const iface_ptr);
 
 #endif // __INTERFACE_H__
 

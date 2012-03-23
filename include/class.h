@@ -40,9 +40,9 @@
 
 #define CLASS_MAGIC    0xFEFE
 
-#define CLASS(name)                    \
-	struct c_##name;                   \
-	typedef struct c_##name * name;    \
+#define CLASS(name)                      \
+	struct c_##name;                     \
+	typedef struct c_##name * name;      \
 	extern struct class * const _##name; \
 	struct c_##name
 
@@ -50,75 +50,68 @@
 	const char _[sizeof(struct c_##parent)]
 
 #define _NULL	NULL
-#define CREATE_CLASS(name,_parent,...) \
-	static struct class c_##name;      \
-	static void _classInit_(void) {    \
-		c_##name.parent = _##_parent;  \
-		c_##name.init   = NULL;        \
-	}                                  \
-	static struct class c_##name = {   \
-		CLASS_MAGIC,                   \
-		NULL,                          \
-		sizeof(struct c_##name),       \
-		_classInit_,                   \
-		INIT_IMPL(__VA_ARGS__)         \
+#define CREATE_CLASS(name,_parent,...)      \
+	static struct class c_##name;           \
+	static class_ptr _classInit_(void) {    \
+		c_##name.parent = _##_parent;       \
+		c_##name.init   = NULL;             \
+		return &c_##name;                   \
+	}                                       \
+	static struct class c_##name = {        \
+		CLASS_MAGIC,                        \
+		NULL,                               \
+		sizeof(struct c_##name),            \
+		_classInit_,                        \
+		INIT_IFACE_IMPL(__VA_ARGS__)        \
 	}; struct class * const _##name = &c_##name
 
-#define GET_CLASS(object)			(*(class_ptr *)((object) - sizeof(void*)))
+#define INIT_CLASS(class)			((class)->init? (class)->init() : (class))
+#define GET_CLASS(object)			(INIT_CLASS(*(class_ptr *)((object) - sizeof(void*))))
 #define IFACE_GET(class,iface)		(interfaceGet(&((class)->impl),(iface)))
-#define IFACE_EXISTS(class,iface)	(NULL != IFACE_GET((class),(iface)))
+#define HAS_PARENT(class)			(NULL != ((class)->parent) &&  INIT_CLASS((class)->parent))
 
 /**
  * \todo actually i use gcc feature ## for variadoc... think about
  * a way to make this standard.
  */
-#define _CALL(object,_iface,method,...)                                           \
-	do {                                                                          \
-		class_ptr class = GET_CLASS((object));                                \
-		if (class->init) class->init();                                           \
-		iface = (struct i_##_iface *)IFACE_GET(class, &i_##_iface);      \
-		while ((NULL == iface || NULL == iface->method) && HAS_PARENT(class)) {   \
-			class = class->parent;                                                \
-			if (class->init) class->init();                                       \
-			iface = (struct i_##_iface *)IFACE_GET(class, &i_##_iface);  \
-		};                                                                        \
-		assert(NULL != iface->method);                                            \
+#define _CALL(_class,_iface,method,...)                                         \
+	do {                                                                        \
+		class_ptr class = _class;                                               \
+		iface = (struct i_##_iface *)IFACE_GET(class, &i_##_iface);             \
+		while ((NULL == iface || NULL == iface->method) && HAS_PARENT(class)) { \
+			class = class->parent;                                              \
+			iface = (struct i_##_iface *)IFACE_GET(class, &i_##_iface);         \
+		}                                                                       \
+		assert(NULL != iface->method);                                          \
 	} while(0)
 
-#define CALL(object,_iface,method,...)                \
-	do {                                              \
-		struct i_##_iface * iface;                    \
-		_CALL(object, _iface, method, ##__VA_ARGS__); \
-		iface->method(object, ##__VA_ARGS__);         \
+#define CALL(object,_iface,method,...)                           \
+	do {                                                         \
+		struct i_##_iface * iface;                               \
+		_CALL(GET_CLASS(object), _iface, method, ##__VA_ARGS__); \
+		iface->method(object, ##__VA_ARGS__);                    \
 	} while(0)
 
-#define RETCALL(object,_iface,method,ret,...)         \
-	do {                                              \
-		struct i_##_iface * iface;                    \
-		_CALL(object, _iface, method, ##__VA_ARGS__); \
-		ret = iface->method(object, ##__VA_ARGS__);   \
+#define RETCALL(object,_iface,method,ret,...)                    \
+	do {                                                         \
+		struct i_##_iface * iface;                               \
+		_CALL(GET_CLASS(object), _iface, method, ##__VA_ARGS__); \
+		ret = iface->method(object, ##__VA_ARGS__);              \
 	} while(0)
 
-#define PARENTCALL(object,_iface,method,...)                                  \
-	do {                                                                      \
-		struct i_##_iface * iface;                                            \
-		class_ptr class = GET_CLASS((object));                            \
-		if (class->init) class->init();                                       \
-		assert(HAS_PARENT(class));                                            \
-		class = class->parent;                                                \
-		if (class->init) class->init();                                       \
-		iface = (struct i_##_iface *)IFACE_GET(class, &i_##_iface);  \
-		assert(NULL != iface->method);                                        \
-		iface->method(object, ##__VA_ARGS__);                                 \
+#define PARENTCALL(object,_iface,method,...)                    \
+	do {                                                        \
+		struct i_##_iface * iface;                              \
+		class_ptr pc_class = GET_CLASS((object));               \
+		assert(HAS_PARENT(pc_class));                           \
+		_CALL(pc_class->parent, _iface, method, ##__VA_ARGS__); \
+		iface->method(object, ##__VA_ARGS__);                   \
 	} while(0)
 
-
-#define HAS_PARENT(class)			(NULL != ((class)->parent))
-
-typedef void (* fptr_classInit)(void);
 
 struct class;
 typedef struct class * class_ptr;
+typedef class_ptr (* fptr_classInit)(void);
 struct class {
 	const int         magic;
 	class_ptr         parent;

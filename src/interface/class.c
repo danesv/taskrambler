@@ -40,8 +40,6 @@ classNew(class_ptr class, ...)
 	va_list params;
 	int     ret;
 
-	if (class->init)	class->init();
-
 	* (class_ptr *)object = class;
 	object += sizeof(void*);
 

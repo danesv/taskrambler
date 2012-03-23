@@ -3,8 +3,9 @@
 
 AC_PREREQ([2.68])
 AC_INIT([taskrambler], [0.0.1], [Georg Hopp <georg@steffers.org>])
-AM_INIT_AUTOMAKE
-AC_COPYRIGHT([Copyright (C) 2012 Georg Hopp])
+AM_INIT_AUTOMAKE([subdir-objects])
+AM_SILENT_RULES([yes])
+AC_COPYRIGHT([Copyright © 2012 Georg Hopp])
 AC_REVISION([$Revision: 0.01 $])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
 AC_CONFIG_HEADERS([config.h])

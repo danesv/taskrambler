@@ -40,25 +40,25 @@ comp(const void * _a, const void * _b)
  * this one is important in selector functions to get the correct interface
  * implementation of a class.
  */
-struct interface *
+iface_ptr
 interfaceGet(iface_impl_ptr iface_impl, const iface_ptr _iface)
 {
 	const iface_ptr * iface = &_iface;
-	void *            dummy;
+	iface_ptr *       found;
 
     if (! iface_impl->simpl) {
         qsort((void**)(iface_impl->impl), iface_impl->nimpl, sizeof(iface_ptr), comp);
         iface_impl->simpl=TRUE;
     }
 
-    dummy = bsearch(
+    found = bsearch(
 			&iface,
 			iface_impl->impl,
 			iface_impl->nimpl,
 			sizeof(iface_ptr),
 			comp);
 
-	return dummy? *(struct interface **)dummy : dummy;
+	return found? *found : (iface_ptr)NULL;
 }
 
 // vim: set ts=4 sw=4:

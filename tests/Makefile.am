@@ -1,5 +1,4 @@
 ACLOCAL_AMFLAGS = -I m4
-AUTOMAKE_OPTIONS = subdir-objects
 
 TESTS_ENVIRONMENT = valgrind --error-exitcode=123 --leak-check=full --quiet
 TESTS = cclassTest loggerTest socketTest serverTest

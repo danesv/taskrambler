@@ -1,6 +1,10 @@
 /**
  * \file
  * mock/class.h: definitions for my mock to test my oop stuff
+ *
+ * \author Georg Hopp <georg@steffers.org>
+ *
+ * \copyright
  * Copyright (C) 2011  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
