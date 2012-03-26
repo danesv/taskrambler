@@ -21,7 +21,7 @@
  */
 
 #include "server.h"
-#include "interface/logger.h"
+#include "logger.h"
 #include "interface/stream_writer.h"
 
 void serverCloseConn(Server, unsigned int);

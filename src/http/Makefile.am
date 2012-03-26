@@ -37,5 +37,5 @@ HEADER = header.c \
 noinst_LIBRARIES = libhttp.a
 
 libhttp_a_SOURCES = $(MSG) $(MSGQ) $(REQ) $(RESP) $(PARSER) $(WRITER) \
-		    $(WORKER) $(HEADER)
+		    $(WORKER) $(HEADER) interface/http_intro.c
 libhttp_a_CFLAGS  = -Wall -I ../../include/

@@ -1,5 +1,6 @@
 /**
  * \file
+ * The logger interface.
  *
  * \author	Georg Hopp
  *
@@ -20,32 +21,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
-#include "interface/http_intro.h"
+#ifndef __LOGGER_INTERFACE_LOGGER_H__
+#define __LOGGER_INTERFACE_LOGGER_H__
 
-const struct interface i_HttpIntro = {
-	"httpIntro",
-	2
+#include <stdarg.h>
+
+#include "class.h"
+#include "logger.h"
+
+typedef void (* fptr_log)(void *, logger_level, const char * const);
+
+extern const struct interface i_Logger;
+
+struct i_Logger {
+	const struct interface * const _;
+	fptr_log                       log;
 };
 
-size_t
-httpIntroSizeGet(void * object)
-{
-	size_t ret;
+extern void loggerLog(void *, logger_level, const char * const, ...);
 
-	RETCALL(object, HttpIntro, sizeGet, ret);
-
-	return ret;
-}
-
-char *
-httpIntroToString(void * object, char * string)
-{
-	char * ret;
-
-	RETCALL(object, HttpIntro, toString, ret, string);
-
-	return ret;
-}
+#endif // __LOGGER_INTERFACE_LOGGER_H__
 
 // vim: set ts=4 sw=4:

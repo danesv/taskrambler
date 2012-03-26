@@ -22,12 +22,13 @@
 
 #include <stdlib.h>
 
-#include "http/parser.h"
-#include "http/header.h"
 #include "class.h"
-#include "interface/http_intro.h"
 #include "cbuf.h"
 #include "stream.h"
+
+#include "http/parser.h"
+#include "http/header.h"
+#include "http/interface/http_intro.h"
 
 #include "utils/memory.h"
 #include "commons.h"

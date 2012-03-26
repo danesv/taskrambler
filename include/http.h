@@ -10,6 +10,7 @@
 #include "http/parser.h"
 #include "http/writer.h"
 #include "http/worker.h"
+#include "http/interface/http_intro.h"
 
 #endif // __HTTP_H__
 

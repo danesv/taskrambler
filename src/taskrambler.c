@@ -41,7 +41,7 @@
 #include "auth.h"
 
 #include "class.h"
-#include "interface/logger.h"
+#include "logger.h"
 
 #include "utils/signalHandling.h"
 #include "utils/memory.h"

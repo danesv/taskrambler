@@ -1,5 +1,7 @@
 /**
  * \file
+ * A generic logger class and two extended classes, One that logs to
+ * stderr and one that logs to the system syslog.
  *
  * \author	Georg Hopp
  *
@@ -20,23 +22,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
-#include "stream.h"
-#include "interface/stream_reader.h"
+#ifndef __LOGGER_LOGGER_H__
+#define __LOGGER_LOGGER_H__
 
-const struct interface i_StreamReader = {
-	"streamReader",
-	1
+#include "class.h"
+
+typedef enum logger_level {
+	LOGGER_DEBUG=0,
+	LOGGER_INFO,
+	LOGGER_NOTICE,
+	LOGGER_WARNING,
+	LOGGER_ERR,
+	LOGGER_CRIT,
+	LOGGER_ALERT,
+	LOGGER_EMERG
+} logger_level;
+
+extern const char * const logger_level_str[];
+
+CLASS(Logger) {
+	logger_level min_level;
 };
 
-ssize_t
-streamReaderRead(void * object, Stream st)
-{
-	ssize_t ret;
+CLASS(LoggerStderr) {
+	EXTENDS(Logger);
+};
 
-	RETCALL(object, StreamReader, read, ret, st);
+CLASS(LoggerSyslog) {
+	EXTENDS(Logger);
+};
 
-	return ret;
-}
+#endif // __LOGGER_LOGGER_H__
 
 // vim: set ts=4 sw=4:

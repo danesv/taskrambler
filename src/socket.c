@@ -27,7 +27,6 @@
 #include "socket.h"
 #include "logger.h"
 #include "class.h"
-#include "interface/logger.h"
 
 static
 int

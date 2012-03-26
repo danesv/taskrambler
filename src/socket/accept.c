@@ -25,7 +25,7 @@
 
 #include "socket.h"
 #include "class.h"
-#include "interface/logger.h"
+#include "logger.h"
 
 Sock
 socketAccept(Sock this, char (*remoteAddr)[16])

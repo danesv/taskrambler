@@ -24,8 +24,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "logger.h"
-#include "interface/logger.h"
+#include "logger/logger.h"
+#include "logger/interface/logger.h"
 
 const struct interface i_Logger = {
 	"logger",

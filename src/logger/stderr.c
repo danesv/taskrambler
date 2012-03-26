@@ -22,8 +22,8 @@
 
 #include <stdio.h>
 
-#include "logger.h"
-#include "interface/logger.h"
+#include "logger/logger.h"
+#include "logger/interface/logger.h"
 
 static
 void

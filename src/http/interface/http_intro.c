@@ -20,38 +20,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdarg.h>
-
-#include "logger.h"
 #include "class.h"
-#include "interface/logger.h"
+#include "http/interface/http_intro.h"
 
-const
-char * const
-logger_level_str[] = {
-	"DEBUG",
-	"INFO",
-	"NOTICE",
-	"WARNING",
-	"ERR",
-	"CRIT",
-	"ALERT",
-	"EMERG"
+const struct interface i_HttpIntro = {
+	"httpIntro",
+	2
 };
 
-static
-int
-loggerCtor(void * _this, va_list * params)
+size_t
+httpIntroSizeGet(void * object)
 {
-	Logger this = _this;
-	this->min_level = va_arg(*params, int);
+	size_t ret;
 
-	return 0;
+	RETCALL(object, HttpIntro, sizeGet, ret);
+
+	return ret;
 }
 
-static void loggerDtor(void * _this) {}
+char *
+httpIntroToString(void * object, char * string)
+{
+	char * ret;
 
-INIT_IFACE(Class, loggerCtor, loggerDtor, NULL);
-CREATE_CLASS(Logger, NULL, IFACE(Class));
+	RETCALL(object, HttpIntro, toString, ret, string);
+
+	return ret;
+}
 
 // vim: set ts=4 sw=4:

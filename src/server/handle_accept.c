@@ -29,7 +29,7 @@
 #include "http/worker.h"
 #include "server.h"
 #include "class.h"
-#include "interface/logger.h"
+#include "logger.h"
 #include "stream.h"
 
 int

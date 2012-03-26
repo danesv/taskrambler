@@ -21,7 +21,7 @@
  */
 
 #include "server.h"
-#include "interface/logger.h"
+#include "logger.h"
 
 #include "utils/signalHandling.h"
 

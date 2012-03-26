@@ -1,6 +1,5 @@
 /**
  * \file
- * The logger interface.
  *
  * \author	Georg Hopp
  *
@@ -21,25 +20,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __INTERFACE_LOGGER_H__
-#define __INTERFACE_LOGGER_H__
-
 #include <stdarg.h>
 
 #include "class.h"
-#include "logger.h"
+#include "logger/logger.h"
+#include "logger/interface/logger.h"
 
-typedef void (* fptr_log)(void *, logger_level, const char * const);
-
-extern const struct interface i_Logger;
-
-struct i_Logger {
-	const struct interface * const _;
-	fptr_log                       log;
+const
+char * const
+logger_level_str[] = {
+	"DEBUG",
+	"INFO",
+	"NOTICE",
+	"WARNING",
+	"ERR",
+	"CRIT",
+	"ALERT",
+	"EMERG"
 };
 
-extern void loggerLog(void *, logger_level, const char * const, ...);
+static
+int
+loggerCtor(void * _this, va_list * params)
+{
+	Logger this = _this;
+	this->min_level = va_arg(*params, int);
 
-#endif // __INTERFACE_LOGGER_H__
+	return 0;
+}
+
+static void loggerDtor(void * _this) {}
+
+INIT_IFACE(Class, loggerCtor, loggerDtor, NULL);
+CREATE_CLASS(Logger, NULL, IFACE(Class));
 
 // vim: set ts=4 sw=4:
