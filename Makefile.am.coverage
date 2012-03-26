@@ -1,7 +1,7 @@
 
 # Coverage targets
 
-if HAVE_GCOV
+#if HAVE_GCOV
 
   .PHONY: clean-gcda
   clean-gcda:
@@ -24,4 +24,4 @@ if HAVE_GCOV
   
   clean-local: clean-coverage-html
 
-endif # HAVE_GCOV
+#endif # HAVE_GCOV

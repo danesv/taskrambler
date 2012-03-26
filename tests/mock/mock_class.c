@@ -18,54 +18,55 @@
  */
 
 #include <assert.h>
-#include <json/json.h>
+#include <stdarg.h>
 
-#include "cclass.h"
 #include "class.h"
+#include "mock_class.h"
 
 char _called;
 
-INIT_CLASS(MOCK_CLASS);
-
-__construct(MOCK_CLASS)
+void
+_reset()
 {
+    _called = 0;
+}
+
+static
+inline
+int
+mockCtor(void * _this, va_list * params)
+{
+    MockClass this = _this;
+
     _called = 1;
     this->value = va_arg(* params, int);
+
+    return 0;
 }
 
-__jsonConst(MOCK_CLASS)
-{
-    _called = 1;
-    assert(json_type_int == json_object_get_type(json));
-
-    this->value = json_object_get_int(json);
-}
-
-__clear(MOCK_CLASS) {}
-
-__destruct(MOCK_CLASS)
+static
+inline
+void
+mockDtor(void * _this)
 {
     _called = 1;
 }
 
-__toJson(MOCK_CLASS)
-{
-    *json   = json_object_new_int(this->value);
-    _called = 1;
-}
+INIT_IFACE(Class, mockCtor, mockDtor, NULL);
+CREATE_CLASS(MockClass, NULL, IFACE(Class));
 
 /**
  * ~~~ method implementations ~~~~~~~~
  */
 
 int
-mock_class_getValue(MOCK_CLASS this)
+mockClassGetValue(MockClass this)
 {
     return this->value;
 }
 
 void
-mock_class_setValue(MOCK_CLASS this, int value)
+mockClassSetValue(MockClass this, int value)
 {
     this->value = value;
 }
@@ -76,13 +77,7 @@ mock_class_setValue(MOCK_CLASS this, int value)
 void *
 getConstruct()
 {
-    return __construct;
-}
-
-void *
-getJsonConst()
-{
-    return __jsonConst;
+    return mockCtor;
 }
 
 // vim: set et ts=4 sw=4:

@@ -50,19 +50,19 @@
 	const char _[sizeof(struct c_##parent)]
 
 #define _NULL	NULL
-#define CREATE_CLASS(name,_parent,...)      \
-	static struct class c_##name;           \
-	static class_ptr _classInit_(void) {    \
-		c_##name.parent = _##_parent;       \
-		c_##name.init   = NULL;             \
-		return &c_##name;                   \
-	}                                       \
-	static struct class c_##name = {        \
-		CLASS_MAGIC,                        \
-		NULL,                               \
-		sizeof(struct c_##name),            \
-		_classInit_,                        \
-		INIT_IFACE_IMPL(__VA_ARGS__)        \
+#define CREATE_CLASS(name,_parent,...)              \
+	static struct class c_##name;                   \
+	static class_ptr _classInit##name##_(void) {    \
+		c_##name.parent = _##_parent;               \
+		c_##name.init   = NULL;                     \
+		return &c_##name;                           \
+	}                                               \
+	static struct class c_##name = {                \
+		CLASS_MAGIC,                                \
+		NULL,                                       \
+		sizeof(struct c_##name),                    \
+		_classInit##name##_,                        \
+		INIT_IFACE_IMPL(__VA_ARGS__)                \
 	}; struct class * const _##name = &c_##name
 
 #define INIT_CLASS(class)			((class)->init? (class)->init() : (class))

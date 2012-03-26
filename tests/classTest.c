@@ -18,15 +18,15 @@
  */
 #include <stdio.h>
 #include <sys/types.h>
-#include <json/json.h>
 
 #include "runtest.h"
-#include "mock/class.h"
-#include "cclass.h"
+#include "mock/mock_class.h"
+
+#include "class.h"
 
 const char testname[] = "cclassTest";
 
-MOCK_CLASS mock = NULL;
+MockClass mock = NULL;
 
 static
 int
@@ -45,7 +45,7 @@ __tearDown()
 {
     if (NULL != mock) {
         ASSERT_OBJECT(mock);
-        delete(&mock);
+        delete(mock);
     }
 
     return TEST_OK;
@@ -56,27 +56,11 @@ static
 int
 testNew(void)
 {
-    mock = new(MOCK_CLASS, 123);
+    mock = new(MockClass, 123);
 
     ASSERT_OBJECT_NOT_NULL(mock);
     ASSERT_EQUAL(1, _called);
-    ASSERT_EQUAL(123, mock_class_getValue(mock));
-
-    return TEST_OK;
-}
-
-static
-int
-testNewFromJson(void)
-{
-    struct json_object * json = json_object_new_int(123);
-
-    mock = newFromJson(MOCK_CLASS, json);
-    json_object_put(json);
-
-    ASSERT_OBJECT_NOT_NULL(mock);
-    ASSERT_EQUAL(1, _called);
-    ASSERT_EQUAL(123, mock_class_getValue(mock));
+    ASSERT_EQUAL(123, mockClassGetValue(mock));
 
     return TEST_OK;
 }
@@ -85,12 +69,12 @@ static
 int
 testDelete(void)
 {
-    mock = new(MOCK_CLASS, 123);
+    mock = new(MockClass, 123);
 
     ASSERT_NOT_NULL(mock);
 
     _reset();
-    delete(&mock);
+    delete(mock);
 
     ASSERT_NULL(mock);
     ASSERT_EQUAL(1, _called);
@@ -98,33 +82,9 @@ testDelete(void)
     return TEST_OK;
 }
 
-static
-int
-testToJson(void)
-{
-    struct json_object * json = NULL;
-    mock = new(MOCK_CLASS, 123);
-    int value;
-
-    _reset();
-    toJson(mock, &json);
-
-    ASSERT_NOT_NULL(json);
-
-    value = json_object_get_int(json);
-    json_object_put(json);
-
-    ASSERT_EQUAL(123, value);
-    ASSERT_EQUAL(1, _called);
-
-    return TEST_OK;
-}
-
 const testfunc tests[] = {
     testNew,
-    testNewFromJson,
     testDelete,
-    testToJson
 };
 const size_t count = FUNCS_COUNT(tests);
 

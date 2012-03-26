@@ -130,6 +130,7 @@ extern int (* const tearDown)();
 
 int isMemNull(void * _mem, size_t size);
 int isObjectNull(void * _object);
+int isObject(void * _object);
 
 #endif//__RUNTEST_h__
 // vim: set et ts=4 sw=4:

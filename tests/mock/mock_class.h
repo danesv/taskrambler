@@ -20,25 +20,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef __MOCK_CLASS_H__
-#define __MOCK_CLASS_H__
+#ifndef __MOCK_MOCK_CLASS_H__
+#define __MOCK_MOCK_CLASS_H__
 
-#include "cclass.h"
+#include "class.h"
 
 extern char _called;
 
 #ifndef _RESET
 #define _RESET
-void
-inline
-_reset()
-{
-    _called = 0;
-}
-#endif//_RESET
+void _reset();
+#endif // _RESET
 
 
-CLASS(MOCK_CLASS) {
+CLASS(MockClass) {
     int value;
 };
 
@@ -46,8 +41,9 @@ CLASS(MOCK_CLASS) {
  * ~~~ method declarations ~~~~~~~~
  */
 
-int  mock_class_getValue(MOCK_CLASS this);
-void mock_class_setValue(MOCK_CLASS this, int value);
+int  mockClassGetValue(MockClass this);
+void mockClassSetValue(MockClass this, int value);
 
-#endif//__MOCK_CLASS_H__
+#endif//__MOCK_MOCK_CLASS_H__
+
 // vim: set et ts=4 sw=4:

@@ -4,7 +4,8 @@
 AC_PREREQ([2.68])
 AC_INIT([taskrambler], [0.0.1], [Georg Hopp <georg@steffers.org>])
 LT_INIT
-AM_INIT_AUTOMAKE([subdir-objects])
+AM_INIT_AUTOMAKE
+#AM_INIT_AUTOMAKE([subdir-objects])
 AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2012 Georg Hopp])
 AC_REVISION([$Revision: 0.01 $])

@@ -22,7 +22,7 @@
 #include <sys/types.h>
 
 #include "runtest.h"
-#include "cclass.h"
+#include "class.h"
 
 
 #define TEST_OK_CHAR		'.'
@@ -37,15 +37,23 @@ const char results[3] = {
 };
 
 int
-isObjectNull(void * _object)
+isObject(void * object)
 {
-    const CCLASS * class = _object - sizeof(CCLASS);
+    class_ptr class = GET_CLASS(object);
 
-    if (! isObject(_object)) {
+    return (class->magic == CLASS_MAGIC);
+}
+
+int
+isObjectNull(void * object)
+{
+    class_ptr class = GET_CLASS(object);
+
+    if (! isObject(object)) {
         return 0;
     }
 
-    return isMemNull(_object, (*class)->size);
+    return isMemNull(object, class->object_size);
 }
 
 int
