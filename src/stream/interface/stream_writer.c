@@ -21,20 +21,21 @@
  */
 
 #include "class.h"
-#include "stream.h"
-#include "interface/stream_reader.h"
 
-const struct interface i_StreamReader = {
-	"streamReader",
+#include "stream/stream.h"
+#include "stream/interface/writer.h"
+
+const struct interface i_StreamWriter = {
+	"streamWriter",
 	1
 };
 
 ssize_t
-streamReaderRead(void * object, Stream st)
+streamWriterWrite(void * object, Stream st)
 {
 	ssize_t ret;
 
-	RETCALL(object, StreamReader, read, ret, st);
+	RETCALL(object, StreamWriter, write, ret, st);
 
 	return ret;
 }

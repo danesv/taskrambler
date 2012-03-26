@@ -53,5 +53,9 @@ AC_CONFIG_FILES([Makefile
 		 src/hash/Makefile
 		 src/http/Makefile
 		 src/logger/Makefile
+		 src/server/Makefile
+		 src/session/Makefile
+		 src/socket/Makefile
+		 src/stream/Makefile
 		 tests/Makefile])
 AC_OUTPUT

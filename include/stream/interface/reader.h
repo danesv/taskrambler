@@ -1,5 +1,7 @@
 /**
  * \file
+ * Interface whose implementations can read from a stream given as
+ * a handle.
  *
  * \author	Georg Hopp
  *
@@ -20,43 +22,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdarg.h>
-#include <openssl/ssl.h>
+#ifndef __STREAM_INTERFACE_READER_H__
+#define __STREAM_INTERFACE_READER_H__
 
-#include "class.h"
-#include "stream.h"
+#include <sys/types.h>
 
+#include "stream/stream.h"
 
-static
-int
-streamCtor(void * _this, va_list * params)
-{
-	Stream this = _this;
-	this->type  = va_arg(* params, StreamHandleType);
+typedef ssize_t (* fptr_streamReaderRead)(void *, Stream);
 
-	switch(this->type) {
-		case STREAM_FD:
-			(this->handle).fd = va_arg(* params, int);
-			break;
+extern const struct interface i_StreamReader;
 
-		case STREAM_SSL:
-			(this->handle).ssl = va_arg(* params, SSL*);
-			break;
+struct i_StreamReader {
+	const struct interface * const _;
+	fptr_streamReaderRead          read;
+};
 
-		default:
-			return -1;
-	}
+extern ssize_t streamReaderRead(void *, Stream);
 
-	return 0;
-}
-
-static
-void
-streamDtor(void * _this)
-{
-}
-
-INIT_IFACE(Class, streamCtor, streamDtor, NULL);
-CREATE_CLASS(Stream, NULL, IFACE(Class));
+#endif // __STREAM_INTERFACE_READER_H__
 
 // vim: set ts=4 sw=4:

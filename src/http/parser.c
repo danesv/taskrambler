@@ -25,7 +25,7 @@
 #include <stdarg.h>
 
 #include "class.h"
-#include "interface/stream_reader.h"
+#include "stream.h"
 
 #include "http/parser.h"
 #include "http/message/queue.h"

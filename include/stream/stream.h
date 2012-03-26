@@ -20,43 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdarg.h>
+#ifndef __STREAM_STREAM_H__
+#define __STREAM_STREAM_H__
+
+#include <sys/types.h>
+#include <openssl/ssl.h>
 
 #include "class.h"
-#include "stream.h"
 
-#include "http/message/queue.h"
-#include "http/writer.h"
+typedef enum e_StreamHandleType {
+	STREAM_FD = 0,
+	STREAM_SSL
+} StreamHandleType;
 
-static
-int
-httpWriterCtor(void * _this, va_list * params)
-{
-	HttpWriter this = _this;
+CLASS(Stream) {
+	StreamHandleType type;
+	union {
+		int   fd;
+		SSL * ssl;
+	}              handle;
+};
 
-	this->buffer = va_arg(*params, Cbuf);
-	this->queue  = new(HttpMessageQueue);
+ssize_t streamRead(Stream, void *, size_t);
+ssize_t streamWrite(Stream, void *, size_t);
 
-	return 0;
-}
-
-static
-void
-httpWriterDtor(void * _this)
-{
-	HttpWriter this = _this;
-
-	delete(this->queue);
-
-	if (TRUE == this->ourLock)
-		cbufRelease(this->buffer);
-
-	if (NULL != this->current)
-		delete(this->current);
-}
-
-INIT_IFACE(Class, httpWriterCtor, httpWriterDtor, NULL);
-INIT_IFACE(StreamWriter, httpWriterWrite);
-CREATE_CLASS(HttpWriter, NULL, IFACE(Class), IFACE(StreamWriter));
+#endif // __STREAM_STREAM_H__
 
 // vim: set ts=4 sw=4:

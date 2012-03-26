@@ -22,12 +22,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __STREAM_WRITER_H__
-#define __STREAM_WRITER_H__
+#ifndef __STREAM_INTERFACE_WRITER_H__
+#define __STREAM_INTERFACE_WRITER_H__
 
 #include <sys/types.h>
 
-#include "stream.h"
+#include "stream/stream.h"
 
 typedef ssize_t (* fptr_streamWriterWrite)(void *, Stream);
 
@@ -40,6 +40,6 @@ struct i_StreamWriter {
 
 extern ssize_t streamWriterWrite(void *, Stream);
 
-#endif // __STREAM_WRITER_H__
+#endif // __STREAM_INTERFACE_WRITER_H__
 
 // vim: set ts=4 sw=4:

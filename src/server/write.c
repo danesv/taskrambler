@@ -22,7 +22,7 @@
 
 #include "server.h"
 #include "logger.h"
-#include "interface/stream_writer.h"
+#include "stream.h"
 
 void serverCloseConn(Server, unsigned int);
 
