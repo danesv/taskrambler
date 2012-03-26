@@ -25,8 +25,8 @@
 #include <string.h>
 
 #include "class.h"
+#include "hash.h"
 #include "http/header.h"
-#include "interface/hashable.h"
 
 #include "utils/hash.h"
 #include "utils/memory.h"

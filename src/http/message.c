@@ -46,8 +46,7 @@ httpMessageCtor(void * _this, va_list * params)
 	this->version = calloc(1, strlen(version)+1);
 	strcpy(this->version, version);
 
-	this->header  = new(Hash);
-	this->cookies = new(Hash);
+	this->header = new(Hash);
 
 	return 0;
 }
@@ -59,7 +58,6 @@ httpMessageDtor(void * _this)
 	HttpMessage this = _this;
 
 	delete(this->header);
-	delete(this->cookies);
 
 	FREE(this->version);
 

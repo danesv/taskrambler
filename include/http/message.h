@@ -38,7 +38,6 @@ CLASS(HttpMessage) {
 	char *          version;
 
 	Hash            header;
-	Hash            cookies;
 
 	HttpMessageType type;
 	Stream          handle;

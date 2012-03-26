@@ -62,7 +62,6 @@ httpWorkerCtor(void * _this, va_list * params)
 	this->writer = new(HttpWriter, this->wbuf);
 
 	this->sroot  = &(this->session);
-
 	this->auth   = va_arg(* params, void *);
 
 	return 0;

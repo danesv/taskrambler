@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CREDENTIAL_H__
-#define __CREDENTIAL_H__
+#ifndef __AUTH_CREDENTIAL_H__
+#define __AUTH_CREDENTIAL_H__
 
 #include <sys/types.h>
 
@@ -49,6 +49,6 @@ CLASS(Credential) {
 	} cred;
 };
 
-#endif // __CREDENTIAL_H__
+#endif // __AUTH_CREDENTIAL_H__
 
 // vim: set ts=4 sw=4:

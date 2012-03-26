@@ -20,27 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <search.h>
-#include <sys/types.h>
+#include "auth/auth.h"
+#include "auth/credential.h"
+#include "auth/interface/auth.h"
 
-#include "hash.h"
-#include "utils/hash.h"
+const struct interface i_Auth = {
+	"auth",
+	1
+};
 
-static
-inline
 int
-hashDeleteComp(const void * a, const void * b)
+authenticate(void * auth, Credential cred)
 {
-	return hashableGetHash((void*)b) - *(const unsigned long*)a;
-}
+	int ret;
 
-void *
-hashDelete(Hash this, const char * search, size_t nsearch)
-{
-	unsigned long hash  = sdbm((const unsigned char *)search, nsearch);
-	void *        found = tfind(&hash, &(this->root), hashDeleteComp);
+	RETCALL(auth, Auth, authenticate, ret, cred);
 
-	return (NULL != found)? *(void**)found : NULL;
+	return ret;
 }
 
 // vim: set ts=4 sw=4:

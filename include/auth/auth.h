@@ -1,5 +1,9 @@
 /**
  * \file
+ * Authenticatio module factory
+ *
+ * A factory to get a specific authentication module.
+ * An authentication module is a class that implement the Auth interface.
  *
  * \author	Georg Hopp
  *
@@ -20,23 +24,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "auth.h"
-#include "credential.h"
-#include "interface/auth.h"
+#ifndef __AUTH_AUTH_H__
+#define __AUTH_AUTH_H__
 
-const struct interface i_Auth = {
-	"auth",
-	1
+#include "class.h"
+#include "auth/ldap.h"
+
+typedef enum e_AuthModule {
+	AUTH_LDAP = 0
+} AuthModule;
+
+CLASS(Auth) {
 };
 
-int
-authenticate(void * auth, Credential cred)
-{
-	int ret;
+void *   authCreateById(Auth, int);
+AuthLdap authCreateLdap(Auth);
 
-	RETCALL(auth, Auth, authenticate, ret, cred);
-
-	return ret;
-}
+#endif // __AUTH_AUTH_H__
 
 // vim: set ts=4 sw=4:

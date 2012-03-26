@@ -25,12 +25,13 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "hash_value.h"
+#include "class.h"
 #include "utils/hash.h"
 #include "utils/memory.h"
 #include "commons.h"
-#include "class.h"
-#include "interface/hashable.h"
+
+#include "hash/value.h"
+#include "hash/interface/hashable.h"
 
 static
 int

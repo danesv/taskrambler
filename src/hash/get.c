@@ -24,7 +24,6 @@
 #include <sys/types.h>
 
 #include "hash.h"
-#include "interface/hashable.h"
 #include "utils/hash.h"
 
 static

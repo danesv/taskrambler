@@ -28,7 +28,7 @@
 #include <sys/time.h>
 
 #include "class.h"
-#include "interface/auth.h"
+#include "auth.h"
 
 #include "http/worker.h"
 #include "http/header.h"
@@ -39,9 +39,7 @@
 #include "http/parser.h"
 #include "session.h"
 #include "stream.h"
-#include "hash_value.h"
 #include "hash.h"
-#include "credential.h"
 
 #include "utils/memory.h"
 #include "hash.h"

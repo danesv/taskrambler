@@ -26,13 +26,13 @@
 #include <stdio.h>
 #include <ldap.h>
 
-#include "auth/ldap.h"
 #include "class.h"
-#include "credential.h"
-#include "interface/auth.h"
-
 #include "utils/memory.h"
 #include "commons.h"
+
+#include "auth/ldap.h"
+#include "auth/credential.h"
+#include "auth/interface/auth.h"
 
 static
 int

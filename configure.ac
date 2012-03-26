@@ -3,13 +3,20 @@
 
 AC_PREREQ([2.68])
 AC_INIT([taskrambler], [0.0.1], [Georg Hopp <georg@steffers.org>])
+LT_INIT
 AM_INIT_AUTOMAKE([subdir-objects])
-AM_SILENT_RULES([yes])
+#AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2012 Georg Hopp])
 AC_REVISION([$Revision: 0.01 $])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
+
+m4_include([m4/gcov.m4])
+AC_TDD_GCOV
+AC_SUBST(COVERAGE_CFLAGS)
+AC_SUBST(COVERAGE_CXXFLAGS)
+AC_SUBST(COVERAGE_LDFLAGS)
 
 # Checks for programs.
 AC_PROG_CXX
@@ -38,5 +45,12 @@ AC_TYPE_SIZE_T
 #AC_FUNC_MALLOC
 AC_CHECK_FUNCS([memset])
 
-AC_CONFIG_FILES([Makefile src/Makefile src/class/Makefile tests/Makefile])
+AC_CONFIG_FILES([Makefile
+		 src/Makefile
+		 src/auth/Makefile
+		 src/cbuf/Makefile
+		 src/class/Makefile
+		 src/hash/Makefile
+		 src/http/Makefile
+		 tests/Makefile])
 AC_OUTPUT

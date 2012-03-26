@@ -25,10 +25,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "credential.h"
 #include "class.h"
-
 #include "utils/memory.h"
+
+#include "auth/credential.h"
 
 static
 int

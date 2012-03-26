@@ -25,9 +25,9 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-#include "cookie.h"
 #include "class.h"
-#include "interface/hashable"
+#include "hash.h"
+#include "http/cookie.h"
 
 #include "utils/hash.h"
 #include "utils/memory.h"

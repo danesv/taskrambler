@@ -23,7 +23,6 @@
 #include <search.h>
 
 #include "hash.h"
-#include "interface/hashable.h"
 #include "class.h"
 
 static

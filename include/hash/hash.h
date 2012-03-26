@@ -20,44 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
+#ifndef __HASH_HASH_H__
+#define __HASH_HASH_H__
 
-#include <search.h>
-#include <stdarg.h>
+#include <sys/types.h>
 
-#include "hash.h"
 #include "class.h"
 
-static
-int
-hashCtor(void * _this, va_list * params)
-{
-	return 0;
-}
 
-static
-inline
-void
-tDelete(void * node)
-{
-	delete(node);
-}
+CLASS(Hash) {
+	void * root;
+};
 
-static
-void
-hashDtor(void * _this)
-{
-	Hash this = _this;
+void * hashAdd(Hash, void *);
+void * hashDelete(Hash, const char *, size_t);
+void * hashGet(Hash, const char *, size_t);
+void   hashEach(Hash, void (*)(const void*));
 
-	/**
-	 * this is a GNU extension...anyway on most non
-	 * GNUish systems i would not use tsearch anyway
-	 * as the trees will be unbalanced.
-	 */
-	tdestroy(this->root, tDelete);
-}
-
-INIT_IFACE(Class, hashCtor, hashDtor, NULL);
-CREATE_CLASS(Hash, NULL, IFACE(Class));
+#endif // __HASH_HASH_H__
 
 // vim: set ts=4 sw=4:

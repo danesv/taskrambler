@@ -25,7 +25,7 @@
 #include <stdarg.h>
 
 #include "class.h"
-#include "interface/hashable.h"
+#include "hash/interface/hashable.h"
 
 const struct interface i_Hashable = {
 	"hashable",

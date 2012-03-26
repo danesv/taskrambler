@@ -1,5 +1,7 @@
 .*.swp
 *.o
+*.gcda
+*.gcno
 .dirstamp
 .deps/
 Makefile
@@ -8,6 +10,8 @@ Makefile.in
 m4/
 /docs/
 /INSTALL
+coverage.info
+coveragereport/
 *.m4
 /autom4te.cache/
 /compile
@@ -19,3 +23,4 @@ m4/
 /missing
 stamp-h1
 src/taskrambler
+

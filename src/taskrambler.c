@@ -38,7 +38,7 @@
 #include "server.h"
 #include "logger.h"
 #include "http/worker.h"
-#include "auth/ldap.h"
+#include "auth.h"
 
 #include "class.h"
 #include "interface/logger.h"

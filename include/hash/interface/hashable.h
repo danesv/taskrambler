@@ -21,8 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __INTERFACE_HASHABLE_H__
-#define __INTERFACE_HASHABLE_H__
+#ifndef __HASH_INTERFACE_HASHABLE_H__
+#define __HASH_INTERFACE_HASHABLE_H__
 
 #include "class.h"
 
@@ -40,6 +40,6 @@ struct i_Hashable {
 extern unsigned long hashableGetHash(void *);
 extern void          hashableHandleDouble(void *, void *);
 
-#endif // __INTERFACE_HASHABLE_H__
+#endif // __HASH_INTERFACE_HASHABLE_H__
 
 // vim: set ts=4 sw=4:

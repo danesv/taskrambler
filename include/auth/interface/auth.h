@@ -25,13 +25,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __INTERFACE_AUTH_H__
-#define __INTERFACE_AUTH_H__
+#ifndef __AUTH_INTERFACE_AUTH_H__
+#define __AUTH_INTERFACE_AUTH_H__
 
 #include <stdarg.h>
 
 #include "class.h"
-#include "credential.h"
+#include "auth/credential.h"
 
 typedef int (* fptr_authenticate)(void *, Credential);
 
@@ -44,6 +44,6 @@ struct i_Auth {
 
 extern int authenticate(void *, Credential);
 
-#endif // __INTERFACE_AUTH_H__
+#endif // __AUTH_INTERFACE_AUTH_H__
 
 // vim: set ts=4 sw=4:

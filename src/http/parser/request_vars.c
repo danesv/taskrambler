@@ -26,7 +26,6 @@
 
 #include "http/parser.h"
 #include "http/request.h"
-#include "hash_value.h"
 #include "hash.h"
 #include "class.h"
 

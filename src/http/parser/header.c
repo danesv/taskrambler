@@ -30,7 +30,6 @@
 #include "http/message.h"
 #include "http/request.h"
 #include "hash.h"
-#include "hash_value.h"
 
 void
 httpParserHeader(

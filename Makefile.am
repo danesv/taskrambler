@@ -8,3 +8,5 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = include assets certs
 
 SUBDIRS = src tests
+
+include $(top_srcdir)/Makefile.am.coverage
