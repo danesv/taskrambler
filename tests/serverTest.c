@@ -3,60 +3,43 @@
 #include <unistd.h>
 #include <signal.h>
 #include <socket.h>
+#include <sys/types.h>
 
 #include "runtest.h"
 #include "logger.h"
-#include "cclass.h"
+#include "class.h"
 #include "server.h"
-#include "signalHandling.h"
+#include "utils/signalHandling.h"
+#include "mock/mock_logger.h"
+#include "mock/mock_worker.h"
 
 
 #define TEST_PORT	11212
 #define TEST_DATA	"test"
 
 
-int  level  = -1;
-char msg[1024];
 char buffer[1025];
 
-static void
-read_hook(const char * _buffer, size_t size)
-{
-	memset(buffer, 0, 1025);
-
-	if (NULL != _buffer) {
-		strncpy(buffer, _buffer, 1024>size? size : 1024);
-	}
-
-	doShutdown = 1;
-}
-
-static void
-logfnct_mock(int _level, const char * _msg)
-{
-    level = _level;
-    strncpy(msg, _msg, 1023);
-}
-
 const char testname[] = "serverTest";
-LOGGER logger = NULL;
-SERVER server = NULL;
+
+MockLogger logger = NULL;
+MockWorker worker = NULL;
+Server     server = NULL;
 
 static
 int
 __setUp()
 {
-	logger = new(LOGGER, NULL);
-	logger_add(logger, logfnct_mock);
+	logger = new(MockLogger, LOGGER_DEBUG);
+	worker = new(MockWorker);
 
-	server = new(SERVER, logger, TEST_PORT, SOMAXCONN);
+	server = new(Server, logger, worker, TEST_PORT, SOMAXCONN);
 
-	ASSERT_INSTANCE_OF(SERVER, server);
-	ASSERT_INSTANCE_OF(LOGGER, server->logger);
-	ASSERT_INSTANCE_OF(SOCK, server->sock);
+	ASSERT_INSTANCE_OF(Server, server);
+	ASSERT_INSTANCE_OF(MockLogger, server->logger);
+	ASSERT_INSTANCE_OF(MockWorker, server->worker);
+	ASSERT_INSTANCE_OF(Sock, server->sock);
 	ASSERT_EQUAL(TEST_PORT, server->sock->port);
-
-	server->read_hook = read_hook;
 
 	return TEST_OK;
 }
@@ -66,16 +49,19 @@ static
 int
 __tearDown()
 {
-    level = -1;
-
     if (NULL != server) {
         ASSERT_OBJECT(server);
-        delete(&server);
+        delete(server);
+    }
+
+    if (NULL != worker) {
+        ASSERT_OBJECT(worker);
+        delete(worker);
     }
 
     if (NULL != logger) {
         ASSERT_OBJECT(logger);
-        delete(&logger);
+        delete(logger);
     }
 
     return TEST_OK;
@@ -86,19 +72,23 @@ static
 int
 testDummy()
 {
-	SOCK con;
-	pid_t pid;
+	Sock con;
+	pid_t pid, ppid;
+	char addr[16];
 
-	pid = fork();
+	ppid = getpid();
+	pid  = fork();
 
 	switch(pid) {
 		case 0:
-			con = new(SOCK, logger, TEST_PORT);
+			con = new(Sock, logger, TEST_PORT);
 			sleep(1);
-			sock_connect(con, "127.0.0.1");
+			socketConnect(con, "127.0.0.1", &addr);
 			write(con->handle, TEST_DATA, strlen(TEST_DATA)+1);
-			delete(&con);
+			sleep(1);
+			delete(con);
 			__tearDown();
+			kill(ppid, SIGINT);
 			exit(EXIT_SUCCESS);
 
 		case -1:
@@ -106,10 +96,10 @@ testDummy()
 
 		default:
 			init_signals();
-			server_run(server);
+			serverRun(server);
 	}
 
-	ASSERT_STRING_EQUAL(TEST_DATA, buffer);
+	ASSERT_STRING_EQUAL(TEST_DATA, worker->rbuf);
 
 	return TEST_OK;
 }

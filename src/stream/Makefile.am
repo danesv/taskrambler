@@ -1,8 +1,8 @@
 ACLOCAL_AMFLAGS = -I m4
 
 STREAM = stream.c read.c write.c
-IFACE  = interface/stream_reader.c \
-	 interface/stream_writer.c
+IFACE  = interface/reader.c \
+	 interface/writer.c
 
 noinst_LIBRARIES = libstream.a
 

@@ -1,8 +1,8 @@
 ACLOCAL_AMFLAGS = -I m4
 
 TESTS_ENVIRONMENT = valgrind --error-exitcode=123 --leak-check=full --quiet
-TESTS = classTest loggerTest socketTest# serverTest
-check_PROGRAMS = classTest loggerTest socketTest# serverTest
+TESTS = classTest loggerTest socketTest serverTest
+check_PROGRAMS = classTest loggerTest socketTest serverTest
 
 COMMON = runtest.c
 CLASS  = $(COMMON) \
@@ -23,8 +23,23 @@ SOCKET = $(LOGGER) \
 	 ../src/socket/accept.c \
 	 ../src/socket/connect.c
 
-#SERVER = $(SOCKET) ../src/server.c ../src/server/run.c \
-#	 ../src/server/close_conn.c ../src/utils/signalHandling.c
+STREAM_OBJ = ./stream/stream.o \
+	     ./stream/read.o \
+	     ./stream/write.o \
+	     ./stream/reader.o \
+	     ./stream/writer.o
+
+SERVER = $(SOCKET) \
+	 ../src/server/server.c \
+	 ../src/server/run.c \
+	 ../src/server/close_conn.c \
+	 ../src/server/handle_accept.c \
+	 ../src/server/poll.c \
+	 ../src/server/read.c \
+	 ../src/server/write.c \
+	 ../src/utils/signalHandling.c \
+	 ../src/utils/memory.c \
+	 mock/mock_worker.c
 
 classTest_SOURCES = $(CLASS) classTest.c
 classTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../include -I .. -I .
@@ -38,9 +53,16 @@ socketTest_SOURCES = $(SOCKET) socketTest.c
 socketTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../include -I .. -I .
 socketTest_LDFLAGS = -lgcov
 
-#serverTest_SOURCES = $(SERVER) serverTest.c
-#serverTest_CFLAGS  = -Wall -ggdb -O0 -I ../include -I .. -I .
+serverTest_SOURCES = $(SERVER) serverTest.c
+serverTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../include -I .. -I .
+serverTest_LDFLAGS = $(STREAM_OBJ) -lgcov
 
 EXTRA_DIST = runtest.h mock/mock_class.h mock/mock_logger.h
 
-check-build: $(check_PROGRAMS)
+.PHONY: stream
+stream:
+	$(MAKE) -C stream $(AM_MAKEFLAGS)
+
+check-build: stream $(check_PROGRAMS)
+
+SUBDIRS = stream
