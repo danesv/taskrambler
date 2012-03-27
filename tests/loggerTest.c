@@ -21,35 +21,19 @@
 #include <stdlib.h>
 
 #include "runtest.h"
-#include "cclass.h"
+#include "class.h"
 #include "logger.h"
+#include "mock/mock_logger.h"
 
-
-int    level  = -1;
-char * msg    = NULL;
-
-static void
-logfnct_mock(int _level, const char * _msg)
-{
-    level = _level;
-    msg   = malloc(strlen(_msg) + 1);
-    strcpy(msg, _msg);
-}
 
 const char testname[] = "loggerTest";
-LOGGER logger = NULL;
+Logger logger = NULL;
 
 
 static
 int
 __setUp()
 {
-    logger = new(LOGGER, NULL);
-
-    ASSERT_INSTANCE_OF(LOGGER, logger);
-
-    logger_add(logger, logfnct_mock);
-
     return TEST_OK;
 }
 int (* const setUp)() = __setUp;
@@ -58,16 +42,9 @@ static
 int
 __tearDown()
 {
-    level = -1;
-
-    if (NULL != msg) {
-        free(msg);
-        msg = NULL;
-    }
-
     if (NULL != logger) {
         ASSERT_OBJECT(logger);
-        delete(&logger);
+        delete(logger);
     }
 
     return TEST_OK;
@@ -76,18 +53,62 @@ int (* const tearDown)() = __tearDown;
 
 static
 int
-testLogger()
+testLoggerLevel()
 {
-    logger_log(logger, LOGGER_ERR, "foo %d %s", 123, "bar");
+    logger = new(MockLogger, LOGGER_ERR);
 
-    ASSERT_EQUAL(LOGGER_ERR, level);
-    ASSERT_STRING_EQUAL("foo 123 bar", msg);
+    ASSERT_INSTANCE_OF(MockLogger, logger);
+    ASSERT_EQUAL(LOGGER_ERR, logger->min_level);
+
+    loggerLog(logger, LOGGER_WARNING, "foo %d %s", 123, "bar");
+
+    ASSERT_STRING_EQUAL("", ((MockLogger)logger)->message);
+
+    loggerLog(logger, LOGGER_ERR, "foo %d %s", 123, "bar");
+    ASSERT_STRING_EQUAL("[ERR] foo 123 bar", ((MockLogger)logger)->message);
+
+    mockLoggerCleanMsg((MockLogger)logger);
+    loggerLog(logger, LOGGER_CRIT, "foo %d %s", 123, "bar");
+    ASSERT_STRING_EQUAL("[CRIT] foo 123 bar", ((MockLogger)logger)->message);
+
+    return TEST_OK;
+}
+
+static
+int
+testLoggerStderr()
+{
+    logger = new(LoggerStderr, LOGGER_ERR);
+
+    freopen("/dev/null", "w", stderr);
+    loggerLog(logger, LOGGER_ERR, "foo %d %s", 123, "bar");
+
+    /**
+     * \todo think about a way to assert something here
+     */
+
+    return TEST_OK;
+}
+
+static
+int
+testLoggerSyslog()
+{
+    logger = new(LoggerSyslog, LOGGER_ERR);
+
+    loggerLog(logger, LOGGER_ERR, "foo %d %s", 123, "bar");
+
+    /**
+     * \todo think about a way to assert something here
+     */
 
     return TEST_OK;
 }
 
 const testfunc tests[] = {
-    testLogger
+    testLoggerLevel,
+    testLoggerStderr,
+    testLoggerSyslog
 };
 const size_t count = FUNCS_COUNT(tests);
 

@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include <string.h>
 
+#include "class.h"
 
 enum RESULT_TYPES {
     TEST_OK=0,
@@ -94,7 +95,7 @@ enum RESULT_TYPES {
         return TEST_FAILED; }
 
 #define ASSERT_OBJECT(val) \
-    if (! isObject((val))) { \
+    if (! IS_OBJECT((val))) { \
         printf("%s[%d]: Assertion failed that %s IS an object\n", \
                 __FILE__, __LINE__, #val); \
         return TEST_FAILED; }
@@ -112,7 +113,7 @@ enum RESULT_TYPES {
         return TEST_FAILED; }
 
 #define ASSERT_INSTANCE_OF(class, val) \
-    if (! instanceOf(class, val)) { \
+    if (! INSTANCE_OF(class, val)) { \
         printf("%s[%d]: Assertion failed that %s is instance of %s\n", \
                 __FILE__, __LINE__, #val, #class); \
         return TEST_FAILED; }
@@ -130,7 +131,6 @@ extern int (* const tearDown)();
 
 int isMemNull(void * _mem, size_t size);
 int isObjectNull(void * _object);
-int isObject(void * _object);
 
 #endif//__RUNTEST_h__
 // vim: set et ts=4 sw=4:

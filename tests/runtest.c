@@ -37,19 +37,11 @@ const char results[3] = {
 };
 
 int
-isObject(void * object)
-{
-    class_ptr class = GET_CLASS(object);
-
-    return (class->magic == CLASS_MAGIC);
-}
-
-int
 isObjectNull(void * object)
 {
     class_ptr class = GET_CLASS(object);
 
-    if (! isObject(object)) {
+    if (! IS_OBJECT(object)) {
         return 0;
     }
 

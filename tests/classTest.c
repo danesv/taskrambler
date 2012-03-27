@@ -60,7 +60,18 @@ testNew(void)
 
     ASSERT_OBJECT_NOT_NULL(mock);
     ASSERT_EQUAL(1, _called);
-    ASSERT_EQUAL(123, mockClassGetValue(mock));
+    ASSERT_EQUAL(123, mock->value);
+
+    return TEST_OK;
+}
+
+static
+int
+testNewFail(void)
+{
+    mock = new(MockClass, 321);
+
+    ASSERT_NULL(mock);
 
     return TEST_OK;
 }
@@ -82,9 +93,28 @@ testDelete(void)
     return TEST_OK;
 }
 
+static
+int
+testClone(void)
+{
+    MockClass clone;
+
+    mock  = new(MockClass, 123);
+    clone = clone(mock);
+
+    ASSERT_INSTANCE_OF(MockClass, clone);
+    ASSERT_EQUAL(mock->value, clone->value);
+
+    delete(clone);
+
+    return TEST_OK;
+}
+
 const testfunc tests[] = {
     testNew,
+    testNewFail,
     testDelete,
+    testClone
 };
 const size_t count = FUNCS_COUNT(tests);
 

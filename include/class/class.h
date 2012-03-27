@@ -66,9 +66,12 @@
 	}; struct class * const _##name = &c_##name
 
 #define INIT_CLASS(class)			((class)->init? (class)->init() : (class))
-#define GET_CLASS(object)			(INIT_CLASS(*(class_ptr *)((object) - sizeof(void*))))
+#define GET_CLASS(object)			(INIT_CLASS(*(class_ptr *)((void*)(object) - sizeof(void*))))
 #define IFACE_GET(class,iface)		(interfaceGet(&((class)->impl),(iface)))
 #define HAS_PARENT(class)			(NULL != ((class)->parent) &&  INIT_CLASS((class)->parent))
+
+#define IS_OBJECT(obj)				((GET_CLASS((obj)))->magic == CLASS_MAGIC)
+#define INSTANCE_OF(class,obj)		((GET_CLASS((obj))) == _##class)
 
 /**
  * \todo actually i use gcc feature ## for variadoc... think about

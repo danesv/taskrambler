@@ -41,6 +41,9 @@ mockCtor(void * _this, va_list * params)
     _called = 1;
     this->value = va_arg(* params, int);
 
+    if (321 == this->value)
+        return -1;
+
     return 0;
 }
 
@@ -52,32 +55,18 @@ mockDtor(void * _this)
     _called = 1;
 }
 
-INIT_IFACE(Class, mockCtor, mockDtor, NULL);
-CREATE_CLASS(MockClass, NULL, IFACE(Class));
-
-/**
- * ~~~ method implementations ~~~~~~~~
- */
-
-int
-mockClassGetValue(MockClass this)
-{
-    return this->value;
-}
-
+static
+inline
 void
-mockClassSetValue(MockClass this, int value)
+mockClone(void * _this, void * _base)
 {
-    this->value = value;
+    MockClass this = _this;
+    MockClass base = _base;
+
+    this->value = base->value;
 }
 
-/**
- * ~~~ helper for mock assertions ~~~~~~~~
- */
-void *
-getConstruct()
-{
-    return mockCtor;
-}
+INIT_IFACE(Class, mockCtor, mockDtor, mockClone);
+CREATE_CLASS(MockClass, NULL, IFACE(Class));
 
 // vim: set et ts=4 sw=4:

@@ -11,6 +11,8 @@ Makefile.in
 m4/
 /docs/
 /INSTALL
+coverage.base
+coverage.run
 coverage.info
 coveragereport/
 *.m4
