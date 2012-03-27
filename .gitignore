@@ -26,4 +26,4 @@ coveragereport/
 /missing
 stamp-h1
 src/taskrambler
-/tests/classTest
+/tests/*Test
