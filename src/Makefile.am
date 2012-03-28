@@ -24,8 +24,8 @@ AM_CFLAGS = -Wall -I ../include/
 bin_PROGRAMS = taskrambler
 
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
-taskrambler_CFLAGS  = -Wall -I ../include/ $(COVERAGE_CFLAGS)
+taskrambler_CFLAGS  = -Wall -I ../include/# $(COVERAGE_CFLAGS)
 taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap
-taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
+#taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
 SUBDIRS = auth cbuf class hash http logger server session socket stream
