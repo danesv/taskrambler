@@ -7,7 +7,7 @@ OBJECTS  = stream.o read.o write.o reader.o writer.o
 	gcc -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../../include -c $< -o $@
 
 .PHONY: all clean check distclean check-build
-all:
+all: check-build
 check: check-build
 check-build: $(OBJECTS)
 distclean: clean

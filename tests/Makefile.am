@@ -63,7 +63,8 @@ EXTRA_DIST = runtest.h mock/mock_class.h mock/mock_logger.h
 stream:
 	$(MAKE) -C stream $(AM_MAKEFLAGS)
 
-check-build: stream (check_PROGRAMS)
+$(check_PROGRAMS): stream
+check-build: $(check_PROGRAMS)
 
 all-local: stream
 
