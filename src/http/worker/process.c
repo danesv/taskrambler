@@ -56,7 +56,6 @@ httpWorkerProcess(HttpWorker this, Stream st)
 	ssize_t size;
 
 	if (0 < (size = httpParserParse(this->parser, st))) {
-		int              i;
 
 		while (! httpMessageQueueEmpty(this->parser->queue)) {
 			HttpRequest request  = (HttpRequest)httpMessageQueueGet(
