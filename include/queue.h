@@ -23,35 +23,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __HTTP_MESSAGE_QUEUE_H__
-#define __HTTP_MESSAGE_QUEUE_H__
+#ifndef __QUEUE_H__
+#define __QUEUE_H__
 
 #include <sys/types.h>
 
 #include "class.h"
-#include "http/message.h"
 #include "commons.h"
 
 
-CLASS(HttpMessageQueue) {
-	HttpMessage      msg;
-	HttpMessageQueue next;
+CLASS(Queue) {
+	void * msg;
+	Queue  next;
 
 	/**
 	 * first and last are only available in the initial queue
 	 * element (the root). This elelment does not contain any message
 	 * and exists only for organizational purpose.
 	 */
-	HttpMessageQueue first;
-	HttpMessageQueue last;
-	size_t           nmsg;
+	Queue  first;
+	Queue  last;
+	size_t nmsg;
 };
 
-void        httpMessageQueuePut(HttpMessageQueue, HttpMessage);
-HttpMessage httpMessageQueueGet(HttpMessageQueue);
+void   queuePut(Queue, void *);
+void * queueGet(Queue);
 
-#define httpMessageQueueEmpty(this)		(0 >= (this)->nmsg)
+#define queueEmpty(this)		(0 >= (this)->nmsg)
 
-#endif // __HTTP_MESSAGE_QUEUE_H__
+#endif // __QUEUE_H__
 
 // vim: set ts=4 sw=4:

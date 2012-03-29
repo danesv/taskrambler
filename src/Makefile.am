@@ -13,6 +13,7 @@ LIBS = ./http/libhttp.a \
        ./cbuf/libcbuf.a \
        ./class/libclass.a \
        ./hash/libhash.a \
+       ./queue/libqueue.a \
        ./logger/liblogger.a \
        ./server/libserver.a \
        ./session/libsession.a \
@@ -28,4 +29,4 @@ taskrambler_CFLAGS  = -Wall -I ../include/# $(COVERAGE_CFLAGS)
 taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
-SUBDIRS = auth cbuf class hash http logger server session socket stream
+SUBDIRS = auth cbuf class hash queue http logger server session socket stream

@@ -21,32 +21,22 @@
  */
 
 #include "class.h"
-#include "http/message.h"
-#include "http/message/queue.h"
+#include "queue.h"
 
-HttpMessage
-httpMessageQueueGet(HttpMessageQueue this)
+void
+queuePut(Queue this, void * msg)
 {
-	HttpMessageQueue first;
-	HttpMessage      msg;
+	Queue node = (this->last)? this->last : this;
 
-	if (NULL == this->first) {
-		return NULL;
+	node->next = new(Queue);
+	this->last = node->next;
+
+	if (node == this) {
+		this->first = node->next;
 	}
 
-	msg   = this->first->msg;
-	first = this->first->next;
-
-	if (this->first == this->last) {
-		this->last = NULL;
-	}
-	delete(this->first);
-
-	this->next  = first;
-	this->first = first;
-	this->nmsg--;
-
-	return msg;
+	node->next->msg = msg;
+	this->nmsg++;
 }
 
 // vim: set ts=4 sw=4:

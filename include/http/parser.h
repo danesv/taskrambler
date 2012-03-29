@@ -26,7 +26,7 @@
 
 #include "class.h"
 #include "http/message.h"
-#include "http/message/queue.h"
+#include "queue.h"
 #include "cbuf.h"
 #include "stream.h"
 
@@ -51,7 +51,7 @@ CLASS(HttpParser) {
 	char *           incomplete;
 	size_t           isize;
 
-	HttpMessageQueue queue;
+	Queue            queue;
 	HttpMessage      current;
 
 	HttpMessageState state;

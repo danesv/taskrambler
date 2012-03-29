@@ -6,9 +6,6 @@ MSG    = message.c \
 	 message/header_to_string.c \
 	 message/get_version.c \
 	 message/has_valid_version.c
-MSGQ   = message/queue.c \
-	 message/queue/get.c \
-	 message/queue/put.c
 REQ    = request.c \
 	 request/has_valid_method.c
 RESP   = response.c \
@@ -38,6 +35,6 @@ HEADER = header.c \
 
 noinst_LIBRARIES = libhttp.a
 
-libhttp_a_SOURCES = $(MSG) $(MSGQ) $(REQ) $(RESP) $(PARSER) $(WRITER) \
+libhttp_a_SOURCES = $(MSG) $(REQ) $(RESP) $(PARSER) $(WRITER) \
 		    $(WORKER) $(HEADER) interface/i_http_intro.c
 libhttp_a_CFLAGS  = -Wall -I ../../include/

@@ -25,7 +25,7 @@
 #include "class.h"
 #include "stream.h"
 
-#include "http/message/queue.h"
+#include "queue.h"
 #include "http/writer.h"
 
 static
@@ -35,7 +35,7 @@ httpWriterCtor(void * _this, va_list * params)
 	HttpWriter this = _this;
 
 	this->buffer = va_arg(*params, Cbuf);
-	this->queue  = new(HttpMessageQueue);
+	this->queue  = new(Queue);
 
 	return 0;
 }

@@ -25,7 +25,7 @@
 
 #include "class.h"
 #include "http/message.h"
-#include "http/message/queue.h"
+#include "queue.h"
 #include "http/writer.h"
 #include "cbuf.h"
 #include "stream.h"
@@ -51,9 +51,8 @@ httpWriterWrite(void * _this, Stream st)
 	while (cont) {
 		switch (this->state) {
 			case HTTP_WRITER_GET:
-				if (NULL == this->current &&
-						! httpMessageQueueEmpty(this->queue)) {
-					this->current = httpMessageQueueGet(this->queue);
+				if (NULL == this->current && ! queueEmpty(this->queue)) {
+					this->current = queueGet(this->queue);
 
 					this->written = 0;
 					this->nbody   = 0;

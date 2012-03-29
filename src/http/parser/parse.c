@@ -25,6 +25,7 @@
 #include "class.h"
 #include "cbuf.h"
 #include "stream.h"
+#include "queue.h"
 
 #include "http/parser.h"
 #include "http/header.h"
@@ -170,7 +171,7 @@ httpParserParse(void * _this, Stream st)
 					/**
 					 * enqueue current request
 					 */
-					httpMessageQueuePut(this->queue, this->current);
+					queuePut(this->queue, this->current);
 					this->current = NULL;
 
 					/**

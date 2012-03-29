@@ -28,7 +28,7 @@
 #include "stream.h"
 
 #include "http/parser.h"
-#include "http/message/queue.h"
+#include "queue.h"
 #include "http/request.h"
 #include "http/response.h"
 #include "cbuf.h"
@@ -48,7 +48,7 @@ httpParserCtor(void * _this, va_list * params)
 		return -1;
 	}
 
-	this->queue = new(HttpMessageQueue);
+	this->queue = new(Queue);
 
 	return 0;
 }

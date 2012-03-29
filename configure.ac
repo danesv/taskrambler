@@ -8,7 +8,7 @@ AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
 AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2012 Georg Hopp])
-AC_REVISION([$Revision: 0.01 $])
+AC_REVISION([$Revision: 0.02 $])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -52,6 +52,7 @@ AC_CONFIG_FILES([Makefile
 		 src/cbuf/Makefile
 		 src/class/Makefile
 		 src/hash/Makefile
+		 src/queue/Makefile
 		 src/http/Makefile
 		 src/logger/Makefile
 		 src/server/Makefile

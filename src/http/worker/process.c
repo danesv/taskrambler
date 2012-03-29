@@ -29,20 +29,19 @@
 
 #include "class.h"
 #include "auth.h"
+#include "queue.h"
+#include "session.h"
+#include "stream.h"
+#include "hash.h"
 
 #include "http/worker.h"
 #include "http/header.h"
 #include "http/message.h"
 #include "http/request.h"
 #include "http/response.h"
-#include "http/message/queue.h"
 #include "http/parser.h"
-#include "session.h"
-#include "stream.h"
-#include "hash.h"
 
 #include "utils/memory.h"
-#include "hash.h"
 #include "commons.h"
 
 
@@ -57,8 +56,8 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 	if (0 < (size = httpParserParse(this->parser, st))) {
 
-		while (! httpMessageQueueEmpty(this->parser->queue)) {
-			HttpRequest request  = (HttpRequest)httpMessageQueueGet(
+		while (! queueEmpty(this->parser->queue)) {
+			HttpRequest request  = queueGet(
 					this->parser->queue);
 			HttpMessage response = NULL;
 
@@ -234,7 +233,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 			delete(request);
 
-			httpMessageQueuePut(this->writer->queue, response);
+			queuePut(this->writer->queue, response);
 			response = NULL;
 		}
 	}

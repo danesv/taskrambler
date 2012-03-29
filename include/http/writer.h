@@ -28,7 +28,7 @@
 
 #include "class.h"
 #include "http/message.h"
-#include "http/message/queue.h"
+#include "queue.h"
 #include "cbuf.h"
 #include "stream.h"
 
@@ -45,17 +45,17 @@ typedef enum e_HttpWriterState {
 } HttpWriterState;
 
 CLASS(HttpWriter) {
-	Cbuf             buffer;
-	Bool             ourLock;
+	Cbuf            buffer;
+	Bool            ourLock;
 
-	HttpMessageQueue queue;
-	HttpMessage      current;
+	Queue           queue;
+	HttpMessage     current;
 
-	size_t           nheader;
-	size_t           nbody;
-	size_t           written;
+	size_t          nheader;
+	size_t          nbody;
+	size_t          written;
 
-	HttpWriterState  state;
+	HttpWriterState state;
 };
 
 ssize_t httpWriterWrite(void *, Stream);

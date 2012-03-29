@@ -20,36 +20,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdarg.h>
-
 #include "class.h"
+#include "queue.h"
 
-#include "http/message/queue.h"
-
-static
-int
-messageQueueCtor(void * _this, va_list * params)
+void *
+queueGet(Queue this)
 {
-	return 0;
-}
+	Queue  first;
+	void * msg;
 
-static
-void
-messageQueueDtor(void * _this)
-{
-	HttpMessageQueue this = _this;
-	HttpMessageQueue node = this->first;
-	int              i;
-	
-	while (NULL != node) {
-		HttpMessageQueue next = node->next;
-		delete(node->msg);
-		delete(node);
-		node = next;
+	if (NULL == this->first) {
+		return NULL;
 	}
-}
 
-INIT_IFACE(Class, messageQueueCtor, messageQueueDtor, NULL);
-CREATE_CLASS(HttpMessageQueue, NULL, IFACE(Class));
+	msg   = this->first->msg;
+	first = this->first->next;
+
+	if (this->first == this->last) {
+		this->last = NULL;
+	}
+	delete(this->first);
+
+	this->next  = first;
+	this->first = first;
+	this->nmsg--;
+
+	return msg;
+}
 
 // vim: set ts=4 sw=4:
