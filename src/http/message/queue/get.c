@@ -34,10 +34,15 @@ httpMessageQueueGet(HttpMessageQueue this)
 		return NULL;
 	}
 
-	msg = this->first->msg;
+	msg   = this->first->msg;
 	first = this->first->next;
+
+	if (this->first == this->last) {
+		this->last = NULL;
+	}
 	delete(this->first);
 
+	this->next  = first;
 	this->first = first;
 	this->nmsg--;
 
