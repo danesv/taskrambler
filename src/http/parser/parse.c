@@ -167,16 +167,16 @@ httpParserParse(void * _this, Stream st)
 						httpParserPostVars(this);
 					}
 
-				/**
-				 * enqueue current request
-				 */
-				this->queue->msgs[(this->queue->nmsgs)++] = this->current;
-				this->current                             = NULL;
+					/**
+					 * enqueue current request
+					 */
+					httpMessageQueuePut(this->queue, this->current);
+					this->current = NULL;
 
-				/**
-				 * prepare for next request
-				 */
-				this->state = HTTP_MESSAGE_GARBAGE;
+					/**
+					 * prepare for next request
+					 */
+					this->state = HTTP_MESSAGE_GARBAGE;
 				}
 				break;
 
@@ -185,7 +185,7 @@ httpParserParse(void * _this, Stream st)
 		}
 	}
 
-	return this->queue->nmsgs;
+	return this->queue->nmsg;
 }
 
 // vim: set ts=4 sw=4:

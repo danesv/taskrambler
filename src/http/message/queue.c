@@ -38,10 +38,14 @@ void
 messageQueueDtor(void * _this)
 {
 	HttpMessageQueue this = _this;
+	HttpMessageQueue node = this->first;
 	int              i;
-
-	for (i=0; i<this->nmsgs; i++) {
-		delete((this->msgs)[i]);
+	
+	while (NULL != node) {
+		HttpMessageQueue next = node->next;
+		delete(node->msg);
+		delete(node);
+		node = next;
 	}
 }
 

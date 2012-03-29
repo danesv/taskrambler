@@ -25,6 +25,7 @@
 
 #include "class.h"
 #include "http/message.h"
+#include "http/message/queue.h"
 #include "http/writer.h"
 #include "cbuf.h"
 #include "stream.h"
@@ -35,9 +36,8 @@
 ssize_t
 httpWriterWrite(void * _this, Stream st)
 {
-	HttpWriter       this    = _this;
-	HttpMessageQueue respq   = this->queue;
-	int              cont    = 1;
+	HttpWriter this = _this;
+	int        cont = 1;
 
 	if (cbufIsLocked(this->buffer)) {
 		if (FALSE == this->ourLock)
@@ -51,8 +51,9 @@ httpWriterWrite(void * _this, Stream st)
 	while (cont) {
 		switch (this->state) {
 			case HTTP_WRITER_GET:
-				if (NULL == this->current && 0 < respq->nmsgs) {
-					this->current = respq->msgs[0];
+				if (NULL == this->current &&
+						! httpMessageQueueEmpty(this->queue)) {
+					this->current = httpMessageQueueGet(this->queue);
 
 					this->written = 0;
 					this->nbody   = 0;
@@ -122,11 +123,7 @@ httpWriterWrite(void * _this, Stream st)
 				break;
 
 			case HTTP_WRITER_DONE:
-	 			this->state   = HTTP_WRITER_GET;
-
-				memmove(respq->msgs,
-						&(respq->msgs[1]),
-						sizeof(void*) * (--respq->nmsgs + 1));
+	 			this->state = HTTP_WRITER_GET;
 
 				cbufRelease(this->buffer);
 				this->ourLock = FALSE;
@@ -148,7 +145,7 @@ httpWriterWrite(void * _this, Stream st)
 		}
 	}
 
-	return respq->nmsgs;
+	return this->queue->nmsg;
 }
 
 // vim: set ts=4 sw=4:

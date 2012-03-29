@@ -6,7 +6,9 @@ MSG    = message.c \
 	 message/header_to_string.c \
 	 message/get_version.c \
 	 message/has_valid_version.c
-MSGQ   = message/queue.c
+MSGQ   = message/queue.c \
+	 message/queue/get.c \
+	 message/queue/put.c
 REQ    = request.c \
 	 request/has_valid_method.c
 RESP   = response.c \

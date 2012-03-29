@@ -57,13 +57,11 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 	if (0 < (size = httpParserParse(this->parser, st))) {
 		int              i;
-		HttpMessageQueue reqq  = this->parser->queue;
-		HttpMessageQueue respq = this->writer->queue;
 
-		for (i=0; i<reqq->nmsgs; i++) {
-			HttpMessage  rmessage = reqq->msgs[i];
-			HttpRequest  request  = (HttpRequest)(reqq->msgs[i]);
-			HttpMessage  response = NULL;
+		while (! httpMessageQueueEmpty(this->parser->queue)) {
+			HttpRequest request  = (HttpRequest)httpMessageQueueGet(
+					this->parser->queue);
+			HttpMessage response = NULL;
 
 			/**
 			 * \todo store the cookie count in the request to make a simple
@@ -235,12 +233,11 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 			httpWorkerAddCommonHeader((HttpMessage)request, response);
 
-			respq->msgs[(respq->nmsgs)++] = response;
-			response = NULL;
-			delete((reqq->msgs)[i]);
-		}
+			delete(request);
 
-		reqq->nmsgs = 0;
+			httpMessageQueuePut(this->writer->queue, response);
+			response = NULL;
+		}
 	}
 
 	return size;

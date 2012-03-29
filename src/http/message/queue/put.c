@@ -1,8 +1,5 @@
 /**
  * \file
- * Holds requests ready for processing.
- * 
- * \todo change this to a real queue.
  *
  * \author	Georg Hopp
  *
@@ -23,35 +20,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __HTTP_MESSAGE_QUEUE_H__
-#define __HTTP_MESSAGE_QUEUE_H__
-
-#include <sys/types.h>
-
 #include "class.h"
 #include "http/message.h"
-#include "commons.h"
+#include "http/message/queue.h"
 
+void
+httpMessageQueuePut(HttpMessageQueue this, HttpMessage msg)
+{
+	HttpMessageQueue node = (this->last)? this->last : this;
 
-CLASS(HttpMessageQueue) {
-	HttpMessage      msg;
-	HttpMessageQueue next;
+	node->next = new(HttpMessageQueue);
+	this->last = node->next;
 
-	/**
-	 * first and last are only available in the initial queue
-	 * element (the root). This elelment does not contain any message
-	 * and exists only for organizational purpose.
-	 */
-	HttpMessageQueue first;
-	HttpMessageQueue last;
-	size_t           nmsg;
-};
+	if (node == this) {
+		this->first = node->next;
+	}
 
-void        httpMessageQueuePut(HttpMessageQueue, HttpMessage);
-HttpMessage httpMessageQueueGet(HttpMessageQueue);
-
-#define httpMessageQueueEmpty(this)		(0 >= (this)->nmsg)
-
-#endif // __HTTP_MESSAGE_QUEUE_H__
+	node->next->msg = msg;
+	this->nmsg++;
+}
 
 // vim: set ts=4 sw=4:
