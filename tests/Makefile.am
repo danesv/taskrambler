@@ -42,20 +42,20 @@ SERVER = $(SOCKET) \
 	 mock/mock_worker.c
 
 classTest_SOURCES = $(CLASS) classTest.c
-classTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../include -I .. -I .
-classTest_LDFLAGS = -lgcov
+classTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -pg -I ../include -I .. -I .
+classTest_LDFLAGS = -lgcov -pg
 
 loggerTest_SOURCES = $(LOGGER) loggerTest.c
-loggerTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../include -I .. -I .
-loggerTest_LDFLAGS = -lgcov
+loggerTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -pg -I ../include -I .. -I .
+loggerTest_LDFLAGS = -lgcov -pg
 
 socketTest_SOURCES = $(SOCKET) socketTest.c
-socketTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../include -I .. -I .
-socketTest_LDFLAGS = -lgcov
+socketTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -pg -I ../include -I .. -I .
+socketTest_LDFLAGS = -lgcov -pg
 
 serverTest_SOURCES = $(SERVER) serverTest.c
-serverTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -I ../include -I .. -I .
-serverTest_LDFLAGS = $(STREAM_OBJ) -lgcov
+serverTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -pg -I ../include -I .. -I .
+serverTest_LDFLAGS = $(STREAM_OBJ) -lgcov -pg
 
 EXTRA_DIST = runtest.h mock/mock_class.h mock/mock_logger.h
 
