@@ -1,0 +1,58 @@
+div#randval {
+    left:             200px;
+    top:              100px;
+    padding:          10px;
+    position:         fixed;
+    background-color: white;
+    border:           1px solid black;
+    border-radius:    10px;
+}
+
+div#login {
+    padding:          5px;
+    position:         fixed;
+    background-color: white;
+    border:           1px solid black;
+    border-radius:    10px;
+}
+
+div.hide {
+    top: -500px !important;
+}
+
+.small {
+    font-size: small;
+}
+
+.x-small {
+    font-size: x-small;
+}
+
+ul#menu {
+    list-style:    none inside;
+    margin:        0px;
+    padding:       1px 0px 0px;
+    border-bottom: 1px solid #7b0b2b;
+    display:       inline-block;
+    width:         100%;
+}
+
+ul#menu li {
+    padding:                 2px;
+    border-top-left-radius:  10px;
+    border-top-right-radius: 10px;
+    border-top:              1px solid #7b0b2b;
+    border-left:             1px solid #7b0b2b;
+    border-right:            1px solid #7b0b2b;
+    text-align:              center;
+    cursor:                  pointer;
+
+    float:                   left;
+    margin-right:            1px;
+}
+
+div#sessinfo canvas {
+    border: 1px solid black;
+}
+
+/* vim: set st=4 sw=4: */

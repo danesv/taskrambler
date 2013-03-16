@@ -1,0 +1,32 @@
+ACLOCAL_AMFLAGS = -I m4
+
+IFACE = interface/subject.c \
+	interface/observer.c
+UTILS = utils/hash.c \
+	utils/memory.c \
+	utils/http.c \
+	utils/daemonize.c \
+	utils/signalHandling.c
+
+LIBS = ./http/libhttp.a \
+       ./auth/libauth.a \
+       ./cbuf/libcbuf.a \
+       ./class/libclass.a \
+       ./hash/libhash.a \
+       ./queue/libqueue.a \
+       ./logger/liblogger.a \
+       ./server/libserver.a \
+       ./session/libsession.a \
+       ./socket/libsocket.a \
+       ./stream/libstream.a
+
+AM_CFLAGS = -Wall -I ../include/
+
+bin_PROGRAMS = taskrambler
+
+taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
+taskrambler_CFLAGS  = -Wall -I ../include/# $(COVERAGE_CFLAGS)
+taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap
+#taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
+
+SUBDIRS = auth cbuf class hash queue http logger server session socket stream

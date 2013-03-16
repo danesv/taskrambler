@@ -1,0 +1,8 @@
+VERY BIG TODO:
+- right now i will use long polling ajax calls when feedback from to the client
+  is needed. In the long term this should be changed to websockets (ws). But
+  right now ws specification is not final anyway. :)
+
+- handle errors after all system call...especially open, close, etc.
+
+- IPV6 support
