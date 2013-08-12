@@ -61,15 +61,15 @@ serverCtor(void * _this, va_list * params)
 	port         = va_arg(* params, int);
 	backlog      = va_arg(* params, unsigned int);
 
-	this->fds     = calloc(sizeof(struct pollfd), this->max_fds);
-	this->conns   = calloc(sizeof(struct conns), this->max_fds);
+	this->fds   = calloc(sizeof(struct pollfd), this->max_fds);
+	this->conns = calloc(sizeof(struct conns), this->max_fds);
 
-	this->sock    = new(Sock, this->logger, port);
-	flags = fcntl(this->sock->handle, F_GETFL, 0);
+	this->sock = new(Sock, this->logger, port);
+	flags      = fcntl(this->sock->handle, F_GETFL, 0);
 	fcntl(this->sock->handle, F_SETFL, flags | O_NONBLOCK);
 
 	this->sockSSL = new(Sock, this->logger, port+1);
-	flags = fcntl(this->sockSSL->handle, F_GETFL, 0);
+	flags         = fcntl(this->sockSSL->handle, F_GETFL, 0);
 	fcntl(this->sockSSL->handle, F_SETFL, flags | O_NONBLOCK);
 
 	SSL_library_init();

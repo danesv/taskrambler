@@ -83,7 +83,7 @@ httpParserParse(void * _this, Stream st)
 			case HTTP_MESSAGE_START:
 				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
 					if (! cbufIsEmpty(this->buffer)) {
-						this->isize = this->buffer->bused;
+						this->isize      = this->buffer->bused;
 						this->incomplete = malloc(this->isize);
 						memcpy(this->incomplete,
 								cbufGetData(this->buffer, this->isize),
