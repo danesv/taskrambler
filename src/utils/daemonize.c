@@ -25,7 +25,14 @@
 #include <stdio.h>      // for printf() and fprintf()
 #include <unistd.h>     // for getopt
 #include <stdlib.h>
+#include <unistd.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
+
+#define WORKDIR		"/"
+#define UMASK		0
 
 void daemonize(void) {
     pid_t pid;
@@ -39,6 +46,23 @@ void daemonize(void) {
 
     // make new child session leader
     setsid();
+
+    if (0 > ((pid = fork()))) {
+        perror("deamoinze[fork]");
+        exit(EXIT_FAILURE);
+    } else if (0 != pid) {
+        exit(EXIT_SUCCESS);
+    }
+
+    // set umask and change to working directory to /
+    umask(UMASK);
+    chdir(PWD);   // this should root and assets needs to be found
+                  // via some kind of configuration.
+
+    // we should close all open filedescriptors now.
+    // But I assume that this function is called at the very start of the
+    // program and no more filedescriptors are open than the standard
+    // ones.
 
     // connect all standard streams to /dev/null
     stderr = freopen("/dev/null", "w", stderr);
