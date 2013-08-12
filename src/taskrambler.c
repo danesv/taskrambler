@@ -72,6 +72,7 @@ main()
 	setrlimit(RLIMIT_NOFILE, &limit);
 
 	init_signals();
+	daemonize();
 
 	shm   = shm_open("/fooshm", O_RDWR|O_CREAT, S_IRWXU);
 	ftruncate(shm, psize);
@@ -145,7 +146,6 @@ main()
 				worker = new(HttpWorker, "testserver", value, auth);
 				server = new(Server, logger, worker, 11212, SOMAXCONN);
 
-				//daemonize();
 				if (NULL != server) {
 					serverRun(server);
 				}
