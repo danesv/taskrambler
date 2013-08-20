@@ -31,6 +31,8 @@
 #include "http/request.h"
 #include "hash.h"
 
+#include "utils/memory.h"
+
 void
 httpParserHeader(
 		HttpParser   this,
@@ -55,7 +57,7 @@ httpParserHeader(
 	if (0 == strncasecmp("content-length", name, nname-1)) {
 		current->nbody = strtoul(value, NULL, 10);
 		if (0 < this->current->nbody) {
-			current->body  = malloc(current->nbody);
+			current->body  = memMalloc(current->nbody);
 		}
 		current->dbody = 0;
 	}

@@ -61,7 +61,7 @@ httpResponseSession(Session session)
 			(NULL != session)? session->username : "");
 
 	message->nbody = nbuf;
-	message->body  = malloc(nbuf);
+	message->body  = memMalloc(nbuf);
 	memcpy(message->body, buffer, nbuf);
 
 	return response;

@@ -59,7 +59,7 @@ httpResponseRandval(time_t ctime, int value)
 	nbuf = sprintf(buffer, RESP_DATA, ctime, remaining, value);
 
 	message->nbody = nbuf;
-	message->body  = malloc(nbuf);
+	message->body  = memMalloc(nbuf);
 	memcpy(message->body, buffer, nbuf);
 
 	return response;

@@ -43,7 +43,7 @@ httpMessageCtor(void * _this, va_list * params)
 	HttpMessage this    = _this;
 	char *      version = va_arg(* params, char *);
 
-	this->version = calloc(1, strlen(version)+1);
+	this->version = memCalloc(1, strlen(version)+1);
 	strcpy(this->version, version);
 
 	this->header = new(Hash);
@@ -59,11 +59,11 @@ httpMessageDtor(void * _this)
 
 	delete(this->header);
 
-	FREE(this->version);
+	MEM_FREE(this->version);
 
 	switch (this->type) {
 		case HTTP_MESSAGE_BUFFERED:
-			FREE(this->body);
+			MEM_FREE(this->body);
 			break;
 
 		case HTTP_MESSAGE_PIPED:
