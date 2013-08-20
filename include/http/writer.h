@@ -35,6 +35,29 @@
 #include "commons.h"
 
 
+/*
+ * the buffer that will be written back to an http client.
+ * If we have open 1024 paralell connection this will result
+ * in a memory usage of 128MB. Right now, we don't allow more
+ * than this amount of paralell connections.
+ * 
+ * This one and the parser buffer are the hugest memory pools
+ * we need. The parser buffer is of the same size.
+ *
+ * Right now only the ringbuffer is reused for each connection
+ * resulting in some memory movement between some temporary
+ * space and the circular buffer.
+ *
+ * This behavioru should be kept in place for low memory machines
+ * running this code.
+ *
+ * Anyway, I will build a version which uses two ringbuffers for
+ * each connection, Resulting in a 256KB memory used for each
+ * connection. Which in turn means 256MB for 1024 paralell connections.
+ *
+ * And as I will also implement a cbuf pool, this memory will not be
+ * freed before application end.
+ */
 #define WRITER_MAX_BUF	131072
 
 
@@ -45,15 +68,15 @@ typedef enum e_HttpWriterState {
 } HttpWriterState;
 
 CLASS(HttpWriter) {
-	Cbuf            buffer;
-	Bool            ourLock;
+	Cbuf        buffer;
+	Bool        ourLock;
 
-	Queue           queue;
-	HttpMessage     current;
+	Queue       queue;
+	HttpMessage current;
 
-	size_t          nheader;
-	size_t          nbody;
-	size_t          written;
+	size_t      nheader;
+	size_t      nbody;
+	size_t      written;
 
 	HttpWriterState state;
 };
