@@ -42,8 +42,84 @@
  */
 
 #include <stdlib.h>
+#include <search.h>
 
 #include "utils/memory.h"
+
+struct memSegment {
+	size_t   size;
+	void   * ptr;
+}
+
+void ** segments = NULL;
+
+/**
+ * this will interpret any memory segment that is not smaller
+ * than the expected size as fitting.
+ *
+ * @param void * size_ptr  a pointer to a size_t value searched for
+ * @param void * subject   a pointer to the currently analysed tree element
+ */
+static
+int
+segmentFindCmp(const void * size_ptr, const void * subject)
+{
+	if (*size_ptr < subject->size)
+		return -1;
+
+	return 0;
+}
+
+/**
+ * this returns exact fits....uhh.....I can't relate solely on
+ * the size argument as then same sized segments will never
+ * be stored. 
+ * Maybe a tree is not the best data structure to use to store
+ * these.
+ * Anyway, right now take the ptr into account if size if equal.
+ */
+static
+int
+segmentSearchCmd(const void * search, const void * subject)
+{
+	size_t idx = search->size - subject->size;
+
+	if (0 == idx) {
+		return search->ptr - subject->ptr;
+	}
+
+	return idx;
+}
+
+/**
+ * we do NOT ensure that the memory region is zeroed
+ * because we want the best performance.
+ * Most times this is not neccessary at all.
+ */
+struct memSegment *
+memCalloc(size_t nmemb, size_t size)
+{
+	return memMalloc(nmemb * size);
+}
+
+
+struct memSegment *
+memMalloc(size_t size)
+{
+	struct memSegment * seg = tfind(&size, segments, segmentFindCmp);
+
+	if (NULL == seg) {
+		seg = (struct memSegment *)malloc(sizeof(struct memSegment) + size);
+
+		seg->size = size;
+		seg->ptr  = seg + sizeof(struct memSegment);
+	} else {
+		// remove the found one from the tree.
+		tdelete((void *)seg, segments, segmentSearchCmp);
+	}
+
+	return seg;
+}
 
 void
 ffree(void ** data)
