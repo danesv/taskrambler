@@ -123,6 +123,7 @@ main()
 					sigsuspend(&pause_mask);
 				}
 
+				memCleanup();
 				_exit(EXIT_SUCCESS);
 			}
 
@@ -192,6 +193,8 @@ main()
 				if (NULL != worker) delete(worker);
 				if (NULL != auth)   delete(auth);
 				if (NULL != logger) delete(logger);
+
+				memCleanup();
 			}
 
 			break;
