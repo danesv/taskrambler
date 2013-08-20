@@ -27,6 +27,8 @@
 #include "logger/logger.h"
 #include "logger/interface/logger.h"
 
+#include "utils/memory.h"
+
 const struct interface i_Logger = {
 	"logger",
 	1
@@ -37,23 +39,23 @@ loggerLog(void * _object, logger_level level, const char * const fmt, ...) {
 	Logger object = _object;
 
 	if (level >= object->min_level) {
-		char *  msg      = NULL;
-		size_t  msg_size = 0;
-		va_list params;
+		struct memSegment * msg      = NULL;
+		size_t              msg_size = 0;
+		va_list             params;
 
 		va_start(params, fmt);
-		msg_size = vsnprintf(msg, msg_size, fmt, params);
+		msg_size = vsnprintf(NULL, msg_size, fmt, params);
 		va_end(params);
 
-		msg = malloc(msg_size + 1);
+		msg = memMalloc(msg_size + 1);
 
 		va_start(params, fmt);
-		vsnprintf(msg, msg_size + 1, fmt, params);
+		vsnprintf(msg->ptr, msg_size + 1, fmt, params);
 		va_end(params);
 
-		CALL(_object, Logger, log, level, msg);
+		CALL(_object, Logger, log, level, msg->ptr);
 
-		free(msg);
+		MEM_FREE(msg);
 	}
 }
 

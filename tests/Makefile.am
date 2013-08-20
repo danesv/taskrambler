@@ -15,6 +15,7 @@ LOGGER = $(CLASS) \
 	 ../src/logger/stderr.c \
 	 ../src/logger/syslog.c \
 	 ../src/logger/interface/i_logger.c \
+	 ../src/utils/memory.c \
 	 mock/mock_logger.c
 
 SOCKET = $(LOGGER) \
@@ -38,7 +39,6 @@ SERVER = $(SOCKET) \
 	 ../src/server/read.c \
 	 ../src/server/write.c \
 	 ../src/utils/signalHandling.c \
-	 ../src/utils/memory.c \
 	 mock/mock_worker.c
 
 classTest_SOURCES = $(CLASS) classTest.c
@@ -55,7 +55,7 @@ socketTest_LDFLAGS = -lgcov -pg
 
 serverTest_SOURCES = $(SERVER) serverTest.c
 serverTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -pg -I ../include -I .. -I .
-serverTest_LDFLAGS = $(STREAM_OBJ) -lgcov -pg
+serverTest_LDFLAGS = $(STREAM_OBJ) -lgcov -lcrypto -pg
 
 EXTRA_DIST = runtest.h mock/mock_class.h mock/mock_logger.h
 
