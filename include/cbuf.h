@@ -38,11 +38,13 @@
 #include "stream.h"
 
 #include "commons.h"
+#include "utils/memory.h"
 
 #define ECBUFOVFL		100
 
 
 CLASS(Cbuf) {
+	struct memSegment * shm_name_seg;
 	char * shm_name;  // shared memory identifier
 
 	char * data;
