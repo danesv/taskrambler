@@ -42,6 +42,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #define _GNU_SOURCE
 #include <search.h>
 
@@ -108,56 +109,51 @@ segmentFree(void * segment)
 void *
 memMalloc(size_t size)
 {
-	struct memSegment * seg = tfind(&size, &segments, segmentFindCmp);
+	struct memSegment ** seg_ptr = tfind(&size, &segments, segmentFindCmp);
+	struct memSegment *  seg;
 
-	if (NULL == seg) {
+	if (NULL == seg_ptr) {
 		seg = (struct memSegment *)malloc(sizeof(struct memSegment) + size);
 
 		seg->size = size;
-		seg->ptr  = seg + sizeof(struct memSegment);
+		seg->ptr  = (void *)seg + sizeof(struct memSegment);
 	} else {
+		seg = *seg_ptr;
 		// remove the found one from the tree as we use it now.
 		tdelete((void *)seg, &segments, segmentSearchCmp);
-		seg = *(struct memSegment **)seg;
 	}
 
 	return seg->ptr;
 }
 
 /**
- * we do NOT ensure that the memory region is zeroed
- * because we want the best performance.
- * Most times this is not neccessary at all.
+ * this is a really memory wasting solution....just to be able to
+ * use calloc, which might be faster then malloc/memset solution.
+ *
+ * Maybe this is a bad idea, as we need to memset the buffer anyway
+ * if it comes from our tree, which hopefully should be the majority
+ * of cases.
  */
 void *
 memCalloc(size_t nmemb, size_t size)
 {
-	size_t _size            = nmemb * size;
-	size_t _inmemb          = (sizeof(struct memSegment) / size) + 1;
-	struct memSegment * seg = tfind(&_size, &segments, segmentFindCmp);
+	size_t   _size = nmemb * size;
+	void   * mem   = memMalloc(_size);
+	struct memSegment * seg = 
+		(struct memSegment *)(mem - sizeof(struct memSegment));
 
-	if (NULL == seg) {
-		seg = (struct memSegment *)calloc(nmemb + _inmemb, size);
-		seg->size = size;
-		seg->ptr  = seg + sizeof(struct memSegment);
-	} else {
-		// remove the found one from the tree as we use it now.
-		tdelete((void *)seg, &segments, segmentSearchCmp);
-		seg = *(struct memSegment **)seg;
-	}
+	printf("DEBUG %zu : %zu\n", _size, seg->size);
 
-	return seg->ptr;
+	memset(mem, 0, _size);
+
+	return mem;
 }
 
 void
 memFree(void ** mem)
 {
 	if (NULL != *mem) {
-		struct memSegment * seg = *(struct memSegment **)mem;
-
-		seg -= sizeof(struct memSegment);
-
-		tsearch((void *)seg, &segments, segmentSearchCmp);
+		void * foo = tsearch(*mem - sizeof(struct memSegment), &segments, segmentSearchCmp);
 		*mem = NULL;
 	}
 }

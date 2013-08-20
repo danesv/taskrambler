@@ -27,6 +27,9 @@
 #include "class/class.h"
 #include "class/interface/class.h"
 
+#include "utils/memory.h"
+
+
 const
 struct interface i_Class = {
 	"class",
@@ -36,7 +39,7 @@ struct interface i_Class = {
 void *
 classNew(class_ptr class, ...)
 {
-	void *  object = calloc(1, class->object_size + sizeof(void*));
+	void *  object = memCalloc(1, class->object_size + sizeof(void*));
 	va_list params;
 	int     ret;
 
@@ -58,9 +61,12 @@ void
 classDelete(void ** object)
 {
 	if (NULL != *object) {
+		void * mem;
+
 		CALL(*object, Class, dtor);
 
-		free(*object - sizeof(void*));
+		mem = *object - sizeof(void*);
+		MEM_FREE(mem);
 		*object = NULL;
 	}
 }
@@ -69,7 +75,7 @@ void *
 classClone(void * _object)
 {
 	class_ptr class  = GET_CLASS(_object);
-	void *    object = calloc(1, class->object_size + sizeof(void*));
+	void *    object = memCalloc(1, class->object_size + sizeof(void*));
 
 	* (class_ptr *)object = class;
 	object += sizeof(void*);

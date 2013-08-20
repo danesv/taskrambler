@@ -8,6 +8,7 @@ COMMON = runtest.c
 CLASS  = $(COMMON) \
 	 ../src/class/interface.c \
 	 ../src/class/interface/i_class.c \
+	 ../src/utils/memory.c \
 	 mock/mock_class.c
 
 LOGGER = $(CLASS) \
@@ -15,7 +16,6 @@ LOGGER = $(CLASS) \
 	 ../src/logger/stderr.c \
 	 ../src/logger/syslog.c \
 	 ../src/logger/interface/i_logger.c \
-	 ../src/utils/memory.c \
 	 mock/mock_logger.c
 
 SOCKET = $(LOGGER) \
