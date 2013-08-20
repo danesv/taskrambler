@@ -14,7 +14,7 @@
 #include "mock/mock_worker.h"
 
 
-#define TEST_PORT	11212
+#define TEST_PORT	11222
 #define TEST_DATA	"test"
 
 
