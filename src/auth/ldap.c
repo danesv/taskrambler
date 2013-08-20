@@ -42,7 +42,7 @@ authLdapCtor(void * _this, va_list * params)
 	char *   url  = va_arg(*params, char*);
 	char *   base_dn;
 
-	this->url = malloc(strlen(url) + 1);
+	this->url = memMalloc(strlen(url) + 1);
 	strcpy(this->url, url);
 
 	this->version  = 3;
@@ -50,7 +50,7 @@ authLdapCtor(void * _this, va_list * params)
 	base_dn        = va_arg(* params, char *);
 	this->nbase_dn = va_arg(* params, size_t);
 	
-	this->base_dn = malloc(this->nbase_dn + 1);
+	this->base_dn = memMalloc(this->nbase_dn + 1);
 	this->base_dn[this->nbase_dn] = 0;
 	memcpy(this->base_dn, base_dn, this->nbase_dn);
 
@@ -63,8 +63,8 @@ authLdapDtor(void * _this)
 {
 	AuthLdap this = _this;
 
-	FREE(this->base_dn);
-	FREE(this->url);
+	MEM_FREE(this->base_dn);
+	MEM_FREE(this->url);
 }
 
 static
