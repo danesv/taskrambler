@@ -44,7 +44,7 @@ httpWorkerCtor(void * _this, va_list * params)
 	char *     id   = va_arg(*params, char *);
 	char       cbuf_id[100];
 
-	this->id  = malloc(strlen(id) + 1);
+	this->id  = memMalloc(strlen(id) + 1);
 	strcpy(this->id, id);
 
 	this->val = va_arg(*params, struct randval *);
@@ -78,7 +78,7 @@ httpWorkerDtor(void * _this)
 {
 	HttpWorker this = _this;
 
-	FREE(this->id);
+	MEM_FREE(this->id);
 
 	delete(this->parser);
 	delete(this->writer);
