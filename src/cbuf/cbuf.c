@@ -53,8 +53,7 @@ cbufCtor(void * _this, va_list * params)
 	int    shm;
 	char * data;
 
-	this->shm_name_seg = memMalloc(strlen(shm_name) + 7 + 2);
-	this->shm_name     = this->shm_name_seg->ptr;
+	this->shm_name = memMalloc(strlen(shm_name) + 7 + 2);
 	sprintf(this->shm_name, "/%06d_%s", getpid(), shm_name);
 
 	/**
@@ -111,7 +110,7 @@ cbufDtor(void * _this)
 {
 	Cbuf this = _this;
 
-	MEM_FREE(this->shm_name_seg);
+	MEM_FREE(this->shm_name);
 
 	if (NULL != this->data && MAP_FAILED != this->data) {
 		munmap(this->data, this->bsize << 1);

@@ -47,6 +47,11 @@
 
 #include "utils/memory.h"
 
+struct memSegment {
+	size_t   size;
+	void   * ptr;
+};
+
 
 void * segments = NULL;
 
@@ -100,7 +105,7 @@ segmentFree(void * segment)
 }
 
 
-struct memSegment *
+void *
 memMalloc(size_t size)
 {
 	struct memSegment * seg = tfind(&size, &segments, segmentFindCmp);
@@ -116,7 +121,7 @@ memMalloc(size_t size)
 		seg = *(struct memSegment **)seg;
 	}
 
-	return seg;
+	return seg->ptr;
 }
 
 /**
@@ -124,18 +129,36 @@ memMalloc(size_t size)
  * because we want the best performance.
  * Most times this is not neccessary at all.
  */
-struct memSegment *
+void *
 memCalloc(size_t nmemb, size_t size)
 {
-	return memMalloc(nmemb * size);
+	size_t _size            = nmemb * size;
+	size_t _inmemb          = (sizeof(struct memSegment) / size) + 1;
+	struct memSegment * seg = tfind(&_size, &segments, segmentFindCmp);
+
+	if (NULL == seg) {
+		seg = (struct memSegment *)calloc(nmemb + _inmemb, size);
+		seg->size = size;
+		seg->ptr  = seg + sizeof(struct memSegment);
+	} else {
+		// remove the found one from the tree as we use it now.
+		tdelete((void *)seg, &segments, segmentSearchCmp);
+		seg = *(struct memSegment **)seg;
+	}
+
+	return seg->ptr;
 }
 
 void
-memFree(struct memSegment ** seg)
+memFree(void ** mem)
 {
-	if (NULL != *seg) {
-		tsearch((void *)*seg, &segments, segmentSearchCmp);
-		*seg = NULL;
+	if (NULL != *mem) {
+		struct memSegment * seg = *(struct memSegment **)mem;
+
+		seg -= sizeof(struct memSegment);
+
+		tsearch((void *)seg, &segments, segmentSearchCmp);
+		*mem = NULL;
 	}
 }
 

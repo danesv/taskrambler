@@ -26,17 +26,13 @@
 #define CSTRA(val)	val, sizeof(val)-1 //!< Const STRing Argument
 
 #define FREE(val)		(ffree((void**)&(val)))
-#define MEM_FREE(seg)	(memFree((struct memSegment **)&(seg)))
+#define MEM_FREE(seg)	(memFree((void **)&(seg)))
 
-struct memSegment {
-	size_t   size;
-	void   * ptr;
-};
 
-struct memSegment * memMalloc(size_t);
-struct memSegment * memCalloc(size_t, size_t);
-void                memFree(struct memSegment **);
-void                memCleanup();
+void * memMalloc(size_t);
+void * memCalloc(size_t, size_t);
+void   memFree(void **);
+void   memCleanup();
 
 void ffree(void **);
 

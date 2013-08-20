@@ -39,9 +39,9 @@ loggerLog(void * _object, logger_level level, const char * const fmt, ...) {
 	Logger object = _object;
 
 	if (level >= object->min_level) {
-		struct memSegment * msg      = NULL;
-		size_t              msg_size = 0;
-		va_list             params;
+		char    * msg      = NULL;
+		size_t    msg_size = 0;
+		va_list   params;
 
 		va_start(params, fmt);
 		msg_size = vsnprintf(NULL, msg_size, fmt, params);
@@ -50,10 +50,10 @@ loggerLog(void * _object, logger_level level, const char * const fmt, ...) {
 		msg = memMalloc(msg_size + 1);
 
 		va_start(params, fmt);
-		vsnprintf(msg->ptr, msg_size + 1, fmt, params);
+		vsnprintf(msg, msg_size + 1, fmt, params);
 		va_end(params);
 
-		CALL(_object, Logger, log, level, msg->ptr);
+		CALL(_object, Logger, log, level, msg);
 
 		MEM_FREE(msg);
 	}

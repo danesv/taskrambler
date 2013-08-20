@@ -44,7 +44,6 @@
 
 
 CLASS(Cbuf) {
-	struct memSegment * shm_name_seg;
 	char * shm_name;  // shared memory identifier
 
 	char * data;
