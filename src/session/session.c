@@ -45,7 +45,7 @@ sessionCtor(void * _this, va_list * params)
 	this->livetime = time(NULL) + SESSION_LIVETIME;
 	this->id       = sdbm((unsigned char *)uname, nuname) ^ this->livetime;
 
-	this->username = malloc(nuname + 1);
+	this->username = memMalloc(nuname + 1);
 	this->username[nuname] = 0;
 	memcpy(this->username, uname, nuname);
 
@@ -58,7 +58,7 @@ sessionDtor(void * _this)
 {
 	Session this = _this;
 
-	FREE(this->username);
+	MEM_FREE(this->username);
 }
 
 INIT_IFACE(Class, sessionCtor, sessionDtor, NULL);
