@@ -42,16 +42,13 @@
  */
 
 #include <stdlib.h>
+#define _GNU_SOURCE
 #include <search.h>
 
 #include "utils/memory.h"
 
-struct memSegment {
-	size_t   size;
-	void   * ptr;
-};
 
-void ** segments = NULL;
+void * segments = NULL;
 
 /**
  * this will interpret any memory segment that is not smaller
@@ -95,11 +92,18 @@ segmentSearchCmp(const void * search, const void * subject)
 	return idx;
 }
 
+static
+void
+segmentFree(void * segment)
+{
+	free(segment);
+}
+
 
 struct memSegment *
 memMalloc(size_t size)
 {
-	struct memSegment * seg = tfind(&size, segments, segmentFindCmp);
+	struct memSegment * seg = tfind(&size, &segments, segmentFindCmp);
 
 	if (NULL == seg) {
 		seg = (struct memSegment *)malloc(sizeof(struct memSegment) + size);
@@ -107,8 +111,9 @@ memMalloc(size_t size)
 		seg->size = size;
 		seg->ptr  = seg + sizeof(struct memSegment);
 	} else {
-		// remove the found one from the tree.
-		tdelete((void *)seg, segments, segmentSearchCmp);
+		// remove the found one from the tree as we use it now.
+		tdelete((void *)seg, &segments, segmentSearchCmp);
+		seg = *(struct memSegment **)seg;
 	}
 
 	return seg;
@@ -125,6 +130,20 @@ memCalloc(size_t nmemb, size_t size)
 	return memMalloc(nmemb * size);
 }
 
+void
+memFree(struct memSegment ** seg)
+{
+	if (NULL != *seg) {
+		tsearch((void *)*seg, &segments, segmentSearchCmp);
+		*seg = NULL;
+	}
+}
+
+void
+memCleanup()
+{
+	tdestroy(segments, segmentFree);
+}
 
 void
 ffree(void ** data)
