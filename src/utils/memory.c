@@ -49,7 +49,7 @@
 struct memSegment {
 	size_t   size;
 	void   * ptr;
-}
+};
 
 void ** segments = NULL;
 
@@ -64,7 +64,7 @@ static
 int
 segmentFindCmp(const void * size_ptr, const void * subject)
 {
-	if (*size_ptr < subject->size)
+	if (*(size_t *)size_ptr < ((struct memSegment *)subject)->size)
 		return -1;
 
 	return 0;
@@ -80,26 +80,19 @@ segmentFindCmp(const void * size_ptr, const void * subject)
  */
 static
 int
-segmentSearchCmd(const void * search, const void * subject)
+segmentSearchCmp(const void * search, const void * subject)
 {
-	size_t idx = search->size - subject->size;
+	size_t idx =
+		((struct memSegment *)search)->size -
+		((struct memSegment *)subject)->size;
 
 	if (0 == idx) {
-		return search->ptr - subject->ptr;
+		return
+			((struct memSegment *)search)->ptr -
+			((struct memSegment *)subject)->ptr;
 	}
 
 	return idx;
-}
-
-/**
- * we do NOT ensure that the memory region is zeroed
- * because we want the best performance.
- * Most times this is not neccessary at all.
- */
-struct memSegment *
-memCalloc(size_t nmemb, size_t size)
-{
-	return memMalloc(nmemb * size);
 }
 
 
@@ -120,6 +113,18 @@ memMalloc(size_t size)
 
 	return seg;
 }
+
+/**
+ * we do NOT ensure that the memory region is zeroed
+ * because we want the best performance.
+ * Most times this is not neccessary at all.
+ */
+struct memSegment *
+memCalloc(size_t nmemb, size_t size)
+{
+	return memMalloc(nmemb * size);
+}
+
 
 void
 ffree(void ** data)
