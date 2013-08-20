@@ -29,6 +29,8 @@
 #include "hash.h"
 #include "class.h"
 
+#include "utils/memory.h"
+
 void
 httpParserRequestVars(HttpParser this)
 {
@@ -39,7 +41,7 @@ httpParserRequestVars(HttpParser this)
 		delim = request->uri + strlen(request->uri);
 	}
 
-	request->path = malloc(delim - request->uri + 1);
+	request->path = memMalloc(delim - request->uri + 1);
 	request->path[delim - request->uri] = 0;
 	memcpy(request->path, request->uri, delim - request->uri);
 

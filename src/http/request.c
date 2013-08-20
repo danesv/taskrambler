@@ -48,11 +48,11 @@ httpRequestCtor(void * _this, va_list * params)
 
 	PARENTCALL(_this, Class, ctor, params);
 
-	this->method       = malloc(mlen + 1);
+	this->method       = memMalloc(mlen + 1);
 	this->method[mlen] = 0;
 	memcpy(this->method, method, mlen);
 
-	this->uri       = malloc(ulen + 1);
+	this->uri       = memMalloc(ulen + 1);
 	this->uri[ulen] = 0;
 	memcpy(this->uri, uri, ulen);
 
@@ -73,9 +73,9 @@ httpRequestDtor(void * _this)
 	delete(this->post);
 	delete(this->cookies);
 
-	FREE(this->uri);
-	FREE(this->method);
-	FREE(this->path);
+	MEM_FREE(this->uri);
+	MEM_FREE(this->method);
+	MEM_FREE(this->path);
 
 	PARENTCALL(_this, Class, dtor);
 } 
