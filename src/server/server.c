@@ -61,8 +61,8 @@ serverCtor(void * _this, va_list * params)
 	port         = va_arg(* params, int);
 	backlog      = va_arg(* params, unsigned int);
 
-	this->fds   = calloc(sizeof(struct pollfd), this->max_fds);
-	this->conns = calloc(sizeof(struct conns), this->max_fds);
+	this->fds   = memCalloc(sizeof(struct pollfd), this->max_fds);
+	this->conns = memCalloc(sizeof(struct conns), this->max_fds);
 
 	this->sock = new(Sock, this->logger, port);
 	flags      = fcntl(this->sock->handle, F_GETFL, 0);
@@ -111,8 +111,8 @@ serverDtor(void * _this)
 		}
     }
 
-	FREE(this->fds);
-	FREE(this->conns);
+	MEM_FREE(this->fds);
+	MEM_FREE(this->conns);
 
 	delete(this->sock);
 	delete(this->sockSSL);
