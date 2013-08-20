@@ -43,13 +43,13 @@ httpHeaderCtor(void * _this, va_list * params) {
 	value           = va_arg(* params, char *);
 	this->nvalue[0] = va_arg(* params, size_t);
 	
-	this->name              = malloc(this->nname + 1);
+	this->name              = memMalloc(this->nname + 1);
 	this->name[this->nname] = 0;
 	memcpy(this->name, name, this->nname);
 
 	this->hash = sdbm((unsigned char *)name, this->nname);
 
-	(this->value)[0]                    = malloc((this->nvalue)[0] + 1);
+	(this->value)[0]                    = memMalloc((this->nvalue)[0] + 1);
 	(this->value)[0][(this->nvalue)[0]] = 0;
 	memcpy((this->value)[0], value, (this->nvalue)[0]);
 	this->cvalue = 1;
@@ -65,10 +65,10 @@ httpHeaderDtor(void * _this)
 	HttpHeader this = _this;
 	size_t     i;
 
-	FREE(this->name);
+	MEM_FREE(this->name);
 
 	for (i=0; i<this->cvalue; i++) {
-		FREE(this->value[i]);
+		MEM_FREE(this->value[i]);
 	}
 }
 
