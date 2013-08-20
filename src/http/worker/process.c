@@ -126,7 +126,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 											username->value,
 											username->nvalue));
 							} else {
-								this->session->username = malloc(username->nvalue + 1);
+								this->session->username = memMalloc(username->nvalue + 1);
 								this->session->username[username->nvalue] = 0;
 								memcpy(this->session->username,
 										username->value,
