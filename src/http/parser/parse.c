@@ -57,8 +57,7 @@ httpParserParse(void * _this, Stream st)
 
 	if (NULL != this->incomplete) {
 		cbufSetData(this->buffer, this->incomplete, this->isize);
-		free(this->incomplete);
-		this->incomplete = NULL;
+		MEM_FREE(this->incomplete);
 	}
 
 	if (0 > (read = cbufRead(this->buffer, st))) {
@@ -84,7 +83,7 @@ httpParserParse(void * _this, Stream st)
 				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
 					if (! cbufIsEmpty(this->buffer)) {
 						this->isize      = this->buffer->bused;
-						this->incomplete = malloc(this->isize);
+						this->incomplete = memMalloc(this->isize);
 						memcpy(this->incomplete,
 								cbufGetData(this->buffer, this->isize),
 								this->isize);
@@ -110,7 +109,7 @@ httpParserParse(void * _this, Stream st)
 				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
 					if (! cbufIsEmpty(this->buffer)) {
 						this->isize = this->buffer->bused;
-						this->incomplete = malloc(this->isize);
+						this->incomplete = memMalloc(this->isize);
 						memcpy(this->incomplete,
 								cbufGetData(this->buffer, this->isize),
 								this->isize);
