@@ -41,9 +41,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _GNU_SOURCE
+
 #include <stdlib.h>
 #include <string.h>
-#define _GNU_SOURCE
 #include <search.h>
 
 #include "utils/memory.h"
@@ -67,8 +68,8 @@ static
 int
 segmentFindCmp(const void * size_ptr, const void * subject)
 {
-	if (*(size_t *)size_ptr < ((struct memSegment *)subject)->size)
-		return -1;
+	if (*(size_t *)size_ptr > ((struct memSegment *)subject)->size)
+		return 1;
 
 	return 0;
 }
@@ -139,10 +140,6 @@ memCalloc(size_t nmemb, size_t size)
 {
 	size_t   _size = nmemb * size;
 	void   * mem   = memMalloc(_size);
-	struct memSegment * seg = 
-		(struct memSegment *)(mem - sizeof(struct memSegment));
-
-	printf("DEBUG %zu : %zu\n", _size, seg->size);
 
 	memset(mem, 0, _size);
 
@@ -153,7 +150,7 @@ void
 memFree(void ** mem)
 {
 	if (NULL != *mem) {
-		void * foo = tsearch(*mem - sizeof(struct memSegment), &segments, segmentSearchCmp);
+		tsearch(*mem - sizeof(struct memSegment), &segments, segmentSearchCmp);
 		*mem = NULL;
 	}
 }

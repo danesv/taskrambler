@@ -53,24 +53,24 @@ loggerLog(void * _object, logger_level level, const char * const fmt, ...) {
 		vsnprintf(msg, msg_size + 1, fmt, params);
 		va_end(params);
 
-		// ----- DEBUG ------
-		do {
-			struct i_Logger * iface;
-
-			do {
-				class_ptr class = GET_CLASS(_object);
-				iface = (struct i_Logger *)IFACE_GET(class, &i_Logger);
-				while ((NULL == iface || NULL == iface->log) && HAS_PARENT(class)) {
-					class = class->parent;
-					iface = (struct i_Logger *)IFACE_GET(class, &i_Logger);
-				}
-				assert(NULL != iface->log);
-			} while(0);
-
-			iface->log(_object, level, msg);
-		} while(0);
-		// ----- DEBUG ------
-		//CALL(_object, Logger, log, level, msg);
+//		// ----- DEBUG ------
+//		do {
+//			struct i_Logger * iface;
+//
+//			do {
+//				class_ptr class = GET_CLASS(_object);
+//				iface = (struct i_Logger *)IFACE_GET(class, &i_Logger);
+//				while ((NULL == iface || NULL == iface->log) && HAS_PARENT(class)) {
+//					class = class->parent;
+//					iface = (struct i_Logger *)IFACE_GET(class, &i_Logger);
+//				}
+//				assert(NULL != iface->log);
+//			} while(0);
+//
+//			iface->log(_object, level, msg);
+//		} while(0);
+//		// ----- DEBUG ------
+		CALL(_object, Logger, log, level, msg);
 
 		MEM_FREE(msg);
 	}
