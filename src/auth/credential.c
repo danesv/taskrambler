@@ -48,11 +48,11 @@ credentialCtor(void * _this, va_list * params)
 				pass                 = va_arg(* params, char*);
 				CRED_PWD(this).npass = va_arg(* params, size_t);
 
-				CRED_PWD(this).user  = malloc(CRED_PWD(this).nuser + 1);
+				CRED_PWD(this).user  = memMalloc(CRED_PWD(this).nuser + 1);
 				CRED_PWD(this).user[CRED_PWD(this).nuser] = 0;
 				memcpy(CRED_PWD(this).user, user, CRED_PWD(this).nuser);
 
-				CRED_PWD(this).pass  = malloc(CRED_PWD(this).npass + 1);
+				CRED_PWD(this).pass  = memMalloc(CRED_PWD(this).npass + 1);
 				CRED_PWD(this).pass[CRED_PWD(this).npass] = 0;
 				memcpy(CRED_PWD(this).pass, pass, CRED_PWD(this).npass);
 			}
@@ -73,8 +73,8 @@ credentialDtor(void * _this)
 
 	switch(this->type) {
 		case CRED_PASSWORD:
-			FREE(CRED_PWD(this).user);
-			FREE(CRED_PWD(this).pass);
+			MEM_FREE(CRED_PWD(this).user);
+			MEM_FREE(CRED_PWD(this).pass);
 			break;
 	}
 }
