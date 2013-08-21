@@ -57,8 +57,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 	if (0 < (size = httpParserParse(this->parser, st))) {
 
 		while (! queueEmpty(this->parser->queue)) {
-			HttpRequest request  = queueGet(
-					this->parser->queue);
+			HttpRequest request  = queueGet(this->parser->queue);
 			HttpMessage response = NULL;
 
 			/**
@@ -120,8 +119,8 @@ httpWorkerProcess(HttpWorker this, Stream st)
 							response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
 						} else {
 							if (NULL == this->session) {
-					this->session = sessionAdd(
-							this->sroot,
+								this->session = sessionAdd(
+										this->sroot,
 										new(Session,
 											username->value,
 											username->nvalue));
