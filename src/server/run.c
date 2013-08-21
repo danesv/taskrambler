@@ -38,20 +38,20 @@ serverRun(Server this)
 
     while (!doShutdown) //! until error or signal 
     {
-		int          events;
+		int          events = 0;
 		unsigned int i;
-		int          naccs = 10;
 
-		events = serverPoll(this);
-		if (doShutdown || 0 >= events) break;
+		if (0 == events) {
+			events = serverPoll(this);
+		}
 
 		/**
 		 * handle accept
 		 */
 		if (0 != ((this->fds)[0].revents & POLLIN)) {
-			events--;
-			while(-1 != serverHandleAccept(this, 0) && 0 < naccs) {
-				naccs--;
+			if (-1 == serverHandleAccept(this, 0)) {
+				(this->fds)[0].revents |= ~POLLIN;
+				events--;
 			}
 		}
 
@@ -59,33 +59,31 @@ serverRun(Server this)
 		 * handle accept SSL
 		 */
 		if (0 != ((this->fds)[1].revents & POLLIN)) {
-			events--;
-			while(-1 != serverHandleAccept(this, 1) && 0 < naccs) {
-				naccs--;
+			if (-1 == serverHandleAccept(this, 1)) {
+				(this->fds)[1].revents |= ~POLLIN;
+				events--;
 			}
 		}
 
 		for (i=2; i < this->nfds; i++) {
-			int nreads = 10, nwrites = 10;
-
 			/**
 			 * handle reads 
 			 */
-			if (0 != ((this->fds)[i].revents & POLLIN) && 0 < nreads) {
-				events--;
-				nreads--;
-
-				serverRead(this, i);
+			if (0 != ((this->fds)[i].revents & POLLIN)) {
+				if (0 < serverRead(this, i)) {
+					(this->fds)[i].revents |= ~POLLIN;
+					events--;
+				}
 			}
 
 			/**
 			 * handle writes
 			 */
-			if (0 != ((this->fds)[i].revents & POLLOUT) && 0 < nwrites) {
-				events--;
-				nwrites--;
-
-				serverWrite(this, i);
+			if (0 != ((this->fds)[i].revents & POLLOUT)) {
+				if (0 < serverWrite(this, i)) {
+					(this->fds)[i].revents |= ~POLLOUT;
+					events--;
+				}
 			}
 
 			if (0 > events)

@@ -58,21 +58,23 @@ serverPoll(Server this) {
 	/*
 	 * wait for handles to become ready
 	 */
-	if (-1 == (events = poll(this->fds, this->nfds, -1))) {
-		switch (errno) {
-			default:
-			case EBADF:
-			case EINVAL:
-			case ENOMEM:
-				doShutdown = 1;
-				// DROP THROUGH
+	do {
+		if (-1 == (events = poll(this->fds, this->nfds, -1))) {
+			switch (errno) {
+				default:
+				case EBADF:
+				case EINVAL:
+				case ENOMEM:
+					doShutdown = 1;
+					// DROP THROUGH
 
-			case EINTR:
-				loggerLog(this->logger, LOGGER_CRIT,
-						"poll systemcall failed: [%s] - service terminated",
-						strerror(errno));
+				case EINTR:
+					loggerLog(this->logger, LOGGER_CRIT,
+							"poll systemcall failed: [%s] - service terminated",
+							strerror(errno));
+			}
 		}
-	}
+	} while (! doShutdown && 0 >= events);
 
 	return events;
 }

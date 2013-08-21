@@ -6,3 +6,6 @@ VERY BIG TODO:
 - handle errors after all system call...especially open, close, etc.
 
 - IPV6 support
+
+- There seem to be a problem in the server under heavy load. Some tests with ab show that at some point it does not accept any more connections. Nor does it seem to answer request. I guess that it might be difficult to find this....
+  => might be done...

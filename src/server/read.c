@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <errno.h>
+
 #include "server.h"
 #include "logger.h"
 #include "stream.h"
@@ -44,6 +46,16 @@ serverRead(Server this, unsigned int i)
 					(this->conns)[fd].worker,
 					(this->conns)[fd].stream)))
 	{
+		case -1: 
+			/*
+			 * read failure
+			 */
+			if (errno == EAGAIN || errno == EWOULDBLOCK) {
+				/* on EGAIN just try again later. */
+				break;
+			}
+			// DROP-THROUGH
+
 		case -2:
 			/**
 			 * normal close: this must be mapped to -2 within the
@@ -52,18 +64,17 @@ serverRead(Server this, unsigned int i)
 			 * \todo make sure all pending writes will be done before
 			 * close.
 			 */
-			// DROP-THROUGH
 
-		case -1: 
 			/*
-			 * read failure / close connection
+			 * close connection if not EAGAIN, this would also
+			 * remove the filedescriptor from the poll list.
+			 * Else just return indicate
 			 */
 			loggerLog(this->logger, LOGGER_INFO,
 					"connection[%d] closed...%s",
 					fd,
 					inet_ntoa((((this->conns)[fd].sock)->addr).sin_addr));
 			serverCloseConn(this, i);
-			break;
 
 		case 0:
 			break;
