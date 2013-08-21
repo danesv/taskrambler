@@ -10,4 +10,4 @@ CB = cbuf.c read.c write.c \
 noinst_LIBRARIES = libcbuf.a
 
 libcbuf_a_SOURCES = $(CB)
-libcbuf_a_CFLAGS  = -Wall -I ../../include/
+libcbuf_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/

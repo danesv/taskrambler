@@ -37,4 +37,4 @@ noinst_LIBRARIES = libhttp.a
 
 libhttp_a_SOURCES = $(MSG) $(REQ) $(RESP) $(PARSER) $(WRITER) \
 		    $(WORKER) $(HEADER) interface/i_http_intro.c
-libhttp_a_CFLAGS  = -Wall -I ../../include/
+libhttp_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/
