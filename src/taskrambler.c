@@ -74,8 +74,10 @@ main()
 	init_signals();
 	daemonize();
 
-	shm   = shm_open("/fooshm", O_RDWR|O_CREAT, S_IRWXU);
-	ftruncate(shm, psize);
+	shm = shm_open("/fooshm", O_RDWR|O_CREAT, S_IRWXU);
+	if (-1 == ftruncate(shm, psize)) {
+		doShutdown = 1;
+	}
 
 	switch((pid = fork())) {
 		case -1:

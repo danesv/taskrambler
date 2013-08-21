@@ -40,6 +40,7 @@ streamWrite(Stream this, void * buf, size_t count)
 			break;
 
 		default:
+			done = 0;
 			break;
 	}
 

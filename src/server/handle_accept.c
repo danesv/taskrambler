@@ -46,25 +46,26 @@ serverHandleAccept(Server this, unsigned int i)
 	acc = socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
 
 	if (-1 != acc->handle) {
-	switch(i) {
-		case 0:
-			// no SSL
-			st = new(Stream, STREAM_FD, acc->handle);
-			break;
+		switch(i) {
+			case 0:
+				// no SSL
+				st = new(Stream, STREAM_FD, acc->handle);
+				break;
 
-		case 1:
-			// SSL
-			{
-				SSL * ssl = SSL_new(this->ctx);
-				SSL_set_fd(ssl, acc->handle);
-				SSL_accept(ssl);
-				st = new(Stream, STREAM_SSL, ssl);
-			}
-			break;
+			case 1:
+				// SSL
+				{
+					SSL * ssl = SSL_new(this->ctx);
+					SSL_set_fd(ssl, acc->handle);
+					SSL_accept(ssl);
+					st = new(Stream, STREAM_SSL, ssl);
+				}
+				break;
 
-		default:
-			break;
-	}
+			default:
+				st = NULL;
+				break;
+		}
 
 		// save the socket handle
 		(this->conns)[acc->handle].sock   = acc; 

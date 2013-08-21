@@ -26,6 +26,7 @@
 #include <unistd.h>     // for getopt
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -56,8 +57,10 @@ void daemonize(void) {
 
     // set umask and change to working directory to /
     umask(UMASK);
-    chdir(PWD);   // this should root and assets needs to be found
-                  // via some kind of configuration.
+    if (-1 == chdir(PWD)) {  // this should root and assets needs to be found
+		perror("daemonize"); // via some kind of configuration.
+		exit(EXIT_FAILURE);
+	}
 
     // we should close all open filedescriptors now.
     // But I assume that this function is called at the very start of the

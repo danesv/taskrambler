@@ -84,7 +84,9 @@ testDummy()
 			con = new(Sock, logger, TEST_PORT);
 			sleep(1);
 			socketConnect(con, "127.0.0.1", &addr);
-			write(con->handle, TEST_DATA, strlen(TEST_DATA)+1);
+			if(-1 == write(con->handle, TEST_DATA, strlen(TEST_DATA)+1)) {
+				exit(EXIT_FAILURE);
+			}
 			sleep(1);
 			delete(con);
 			__tearDown();
