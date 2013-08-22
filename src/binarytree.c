@@ -5,6 +5,7 @@ struct element
 {
     int data;
 
+    struct element * parent;
     struct element * left;
     struct element * right;
 };
@@ -13,9 +14,10 @@ struct element *
 newElement(int data)
 {
     struct element * el = malloc(sizeof(struct element));
-    el->data  = data;
-    el->left  = NULL;
-    el->right = NULL;
+    el->data   = data;
+    el->parent = NULL;
+    el->left   = NULL;
+    el->right  = NULL;
 
     return el;
 }
@@ -57,14 +59,16 @@ insertElement(struct element ** tree, int data)
     while (data != (*node)->data) {
         if (data < (*node)->data) {
             if (NULL == (*node)->left) {
-                (*node)->left = newElement(data);
+                (*node)->left         = newElement(data);
+                (*node)->left->parent = *node;
                 return;
             } else {
                 *node = (*node)->left;
             }
         } else {
             if (NULL == (*node)->right) {
-                (*node)->right = newElement(data);
+                (*node)->right         = newElement(data);
+                (*node)->right->parent = *node;
                 return;
             } else {
                 *node = (*node)->right;
@@ -85,15 +89,12 @@ insertElement(struct element ** tree, int data)
  * This can be NULL wenn calling.
  */
 struct element *
-findInOrderSuccessor(struct element * tree, struct element ** parent)
+findInOrderSuccessor(struct element * tree)
 {
     struct element * node = tree->right;
 
-    *parent = tree;
-
     while (NULL != node->left) {
-        *parent = node;
-        node    = node->left;
+        node = node->left;
     }
 
     return node;
@@ -126,9 +127,10 @@ deleteElement(struct element ** tree, int data)
 
     // case 1: two children
     if (NULL != node->left && NULL != node->right) {
-        struct element * successor = findInOrderSuccessor(node, &parent);
+        struct element * successor = findInOrderSuccessor(node);
 
         node->data = successor->data;
+        parent     = successor->parent;
         node       = successor;
     }
 
@@ -158,6 +160,55 @@ deleteElement(struct element ** tree, int data)
     if (node == *tree) {
         *tree = NULL;
     }
+}
+
+
+void
+traverse(struct element * tree, void (*cb)(int, int))
+{
+    struct element * previous = NULL;
+    struct element * node     = tree;
+    int    depth              = 1;
+
+    while (tree) {
+        /* we came from a left node */
+        if ((NULL == node->left || previous == node->left) &&
+                previous != node->right) {
+
+            cb(node->data, depth);
+            previous = node;
+
+            if (NULL != node->right) {
+                node = node->right;
+                depth++;
+            } else {
+                if (node->parent->right == node) {
+                    break;
+                } 
+
+                node = node->parent;
+                depth--;
+            }
+        } else {
+            previous = node;
+
+            if (previous == node->left || previous == node->right) {
+                node = node->parent;
+                depth--;
+            } else {
+                node = node->left;
+                depth++;
+            }
+        }
+    }
+}
+
+void printElement(int data, int depth)
+{
+    char format[250];
+
+    sprintf(format, "%% %dd(%%d)\n", depth * 3);
+    printf(format, data, depth);
 }
 
 /**
@@ -195,6 +246,10 @@ main(int argc, char * argv[])
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
+
+    puts ("traverse");
+    traverse(root, printElement);
+    puts ("\n");
 
     puts ("delete 5 (one child on both sides):\n");
     deleteElement(&root, 5);
