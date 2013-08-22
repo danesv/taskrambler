@@ -49,11 +49,12 @@ case 2 (black parent): add an element 8.
 
                   B(13)
 
-            R(i8)        B(N)
+            R(8)        B(N)
 
          B(N)   B(N)
                    
 we violate none of the properties defined. Nothing to be done.
+
 
 Now add 16 which is case 2 again
 
@@ -195,7 +196,7 @@ before starting over again, we have the following:
      grandparent B(13)
 
 
-now property 4 of for our new parnet is violated which brings us to case 4 as
+now property 4 of our new parent is violated which brings us to case 4 as
 it is not the root. (the cases are taken from wikipedia.)
 
 so lets do case 4 on our node (which is left rotate on our parent,

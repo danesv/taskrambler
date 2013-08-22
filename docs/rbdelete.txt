@@ -146,4 +146,100 @@ exchange colors of P and S and make Sr black.
 
            B(N) B(N)     B(N) B(N)       B(N) B(N)       B(N)  B(N)
 
+
+
+now for case 2, we delete 16 from the following tree
+
+                        B(13)
+
+           R(8)                         B(16)
+
+     B(3)         B(11)             B(N)        B(N)
+
+ B(N)   B(N)   R(9)       B(N)
+
+             B(N) B(N)
+
+again first lets see what we have where...
+
+  N : Nullpointer set in R(13)->right (thus N will be black by definition, ever)
+  P : B(13)
+  S : R(8)
+  Sl: B(3)
+  Sr: B(11)
+
+                        B(13)P
+
+           R(8)S                        B(N)N
+
+     B(3)Sl       B(11)Sr
+
+ B(N)   B(N)   R(9)       B(N)
+
+             B(N) B(N)
+
+revert colors of P and S
+
+                        R(13)P
+
+           B(8)S                        B(N)N
+
+     B(3)Sl       B(11)Sr
+
+ B(N)   B(N)   R(9)       B(N)
+
+             B(N) B(N)
+
+rotate right at P
+
+                        B(8)S
+
+           B(3)Sl                       R(13)P
+
+     B(N)       B(N)            B(11)Sr         B(N)N
+
+                           R(9)       B(N)
+
+                        B(N) B(N)
+
+relable ... done on wikipedia (don't know if I will need it.)
+
+                        B(8) 
+
+           B(3)                         R(13)P
+
+     B(N)       B(N)            B(11)S          B(N)N
+
+                           R(9)Sl     B(N)Sr
+
+                        B(N) B(N)
+
+ok, not case 3... P is red
+nor is it case 4 Sl is red.
+kind of case 6 reversed ... lets try what they do in the code not in the description...
+
+Sl to black
+
+                        B(8) 
+
+           B(3)                         R(13)P
+
+     B(N)       B(N)            B(11)S          B(N)N
+
+                           B(9)Sl     B(N)Sr
+
+                        B(N) B(N)
+
+rotate right on P
+
+                        B(8) 
+
+           B(3)                         B(11)S
+
+     B(N)       B(N)             B(9)Sl         R(13)P
+
+                              B(N)  B(N)     B(N)Sr  B(N)N
+
+This result is wrong....the balance is ok, but the color of 9 is wrong.
+
 # vim: set et ts=4:
