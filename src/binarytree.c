@@ -49,29 +49,29 @@ findElement(struct element * tree, int data)
 void
 insertElement(struct element ** tree, int data)
 {
-    struct element ** node = tree;
+    struct element * node = *tree;
 
-    if (NULL == *node) {
-        *node = newElement(data);
+    if (NULL == node) {
+        *tree = newElement(data);
         return;
     }
 
-    while (data != (*node)->data) {
-        if (data < (*node)->data) {
-            if (NULL == (*node)->left) {
-                (*node)->left         = newElement(data);
-                (*node)->left->parent = *node;
+    while (data != node->data) {
+        if (data < node->data) {
+            if (NULL == node->left) {
+                node->left         = newElement(data);
+                node->left->parent = node;
                 return;
             } else {
-                *node = (*node)->left;
+                node = node->left;
             }
         } else {
-            if (NULL == (*node)->right) {
-                (*node)->right         = newElement(data);
-                (*node)->right->parent = *node;
+            if (NULL == node->right) {
+                node->right         = newElement(data);
+                node->right->parent = node;
                 return;
             } else {
-                *node = (*node)->right;
+                node = node->right;
             }
         }
     }
@@ -218,72 +218,86 @@ main(int argc, char * argv[])
 {
     struct element * root = NULL;
 
-    puts ("insert 5:\n");
+    puts("insert 5:");
     insertElement(&root, 5);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("insert 4:\n");
+    puts("insert 4:");
     insertElement(&root, 4);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("insert 5:\n");
+    puts("insert 5:");
     insertElement(&root, 5);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("insert 6:\n");
+    puts("insert 6:");
     insertElement(&root, 6);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("traverse");
+    puts("traverse");
     traverse(root, printElement);
-    puts ("\n");
+    puts("\n");
 
-    puts ("delete 5 (one child on both sides):\n");
+    puts("delete 5 (one child on both sides):");
     deleteElement(&root, 5);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("delete 6 (one child on the left):\n");
+    puts("delete 6 (one child on the left):");
     deleteElement(&root, 6);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("insert 6:\n");
+    puts("insert 6:");
     insertElement(&root, 6);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("delete 6 (a leaf):\n");
+    puts("delete 6 (a leaf):");
     deleteElement(&root, 6);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
 
-    puts ("delete 4 (a leaf and root):\n");
+    puts("delete 4 (a leaf and root):");
     deleteElement(&root, 4);
     printf("R: 0x%p\n", root);
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
+
+    puts("insert 4:");
+    insertElement(&root, 4);
+    puts("insert 5:");
+    insertElement(&root, 5);
+    puts("insert 6:");
+    insertElement(&root, 6);
+    printf("4: 0x%p\n", findElement(root, 4));
+    printf("5: 0x%p\n", findElement(root, 5));
+    printf("6: 0x%p\n\n", findElement(root, 6));
+
+    puts("traverse");
+    traverse(root, printElement);
+    puts("\n");
 
     return 0;
 }
