@@ -114,27 +114,36 @@ Get an overview over our variables now:
   Sl: Nullpointer
   Sr: R(10)
 
-we have case 2 described in Wikipedia (reverse colors of P and S)
+cases:
+ - case 2: S is red => reverse color of P and S, then rotate left at P
+ - case 3: P, S and S's children are black => repaint S red
+ - case 4: S and S's children are black, P is red => exchange colors of S and
+   P
+ - case 5: S and Sr black, Sl is red N left of P => rotate right at S, exchange
+   colors of S and Sl
+ - case 6: S black, Sr is red N left of P => rotate left at P, exchange colors
+   of P and S and make Sr black
 
-                                B(11)
-                  
-                    R(8)                         R(13)
+looks like case 6:
 
-             B(N)         B(9)            B(12)           B(16)
-
-                        B(N)  R(10)      B(N) B(N)       B(N)  B(N)
-
-                            B(N) B(N)
-
-still case 2 rotate left on P
+first rotate left at P
 
                                 B(11)
                   
                     B(9)                         R(13)
 
-             B(8)         R(10)           B(12)           B(16)
+             R(8)         R(10)            B(12)           B(16)
 
-           B(N) B(N)    B(N)  B(N)      B(N) B(N)       B(N)  B(N)
+           B(N) B(N)     B(N) B(N)       B(N) B(N)       B(N)  B(N)
 
+exchange colors of P and S and make Sr black.
+
+                                B(11)
+                  
+                    R(9)                         R(13)
+
+             B(8)         B(10)            B(12)           B(16)
+
+           B(N) B(N)     B(N) B(N)       B(N) B(N)       B(N)  B(N)
 
 # vim: set et ts=4:
