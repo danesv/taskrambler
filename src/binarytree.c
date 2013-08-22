@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../include/commons.h"
+
+
 struct element
 {
     int data;
@@ -103,13 +106,10 @@ findInOrderSuccessor(struct element * tree)
 void
 deleteElement(struct element ** tree, int data)
 {
-    struct element * parent = NULL;
     struct element * node   = *tree;
 
     // find the relevant node and it's parent
     while (NULL != node && node->data != data) {
-        parent = node;
-
         if (data < node->data) {
             node = node->left;
         } else {
@@ -130,29 +130,26 @@ deleteElement(struct element ** tree, int data)
         struct element * successor = findInOrderSuccessor(node);
 
         node->data = successor->data;
-        parent     = successor->parent;
         node       = successor;
     }
 
     // case 2: one child wither left or right
     if (NULL != node->left) {
         node->data = node->left->data;
-        parent     = node;
-        node       = parent->left;
+        node       = node->left;
     } 
 
     if (NULL != node->right) {
         node->data = node->right->data;
-        parent     = node;
-        node       = parent->right;
+        node       = node->right;
     }
 
     // case 3: we are a leaf
-    if (NULL != parent) {
-        if (node == parent->left) {
-            parent->left  = NULL;
+    if (NULL != node->parent) {
+        if (node == node->parent->left) {
+            node->parent->left  = NULL;
         } else {
-            parent->right = NULL;
+            node->parent->right = NULL;
         }
     }
 
