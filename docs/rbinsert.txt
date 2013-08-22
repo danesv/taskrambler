@@ -223,7 +223,7 @@ and parent color to black.
 
                                 B(11)
                   
-                    R(8)                         B(13)
+                    R(8)                         R(13)
 
              B(3)         B(9)            B(12)           B(16)
 
