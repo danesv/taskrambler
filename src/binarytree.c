@@ -171,7 +171,6 @@ traverse(struct element * tree, void (*cb)(int, int))
     int    depth              = 1;
 
     while (tree) {
-        /* we came from a left node */
         if ((NULL == node->left || previous == node->left) &&
                 previous != node->right) {
 
