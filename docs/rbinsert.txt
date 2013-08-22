@@ -1,0 +1,234 @@
+Properties of a rbtree
+======================
+
+1. A node is either red or black.
+2. The root is black. (This rule is sometimes omitted. Since the root can
+   always be changed from red to black, but not necessarily vice-versa,
+   this rule has little effect on analysis.)
+3. All leaves (NIL) are black. (All leaves are same color as the
+   root.)
+4. Every red node must have two black child nodes.
+5. Every simple path from a given node to any of its
+   descendant leaves contains the same number of black nodes.
+
+
+Assumptions in addition to wikipedia
+====================================
+
+lets assume that NULL pointer are black B nodes. But we mark them with a (N)
+
+
+Example
+=======
+
+we start with an empty tree....
+-------------------------------
+
+                 B(N)
+
+
+case 1 (root): add first element... elements are red R wenn added, add key 13.
+------------------------------------------------------------------------------
+
+                 R(13)
+
+            B(N)      B(N)
+
+
+but now we violate rule 2 and correct this simply by changing the root to
+black. => first rule, if we insert into a root node (the root was null) insert
+as black.
+
+                  B(13)
+
+            B(N)         B(N)
+
+
+case 2 (black parent): add an element 8.
+-----------------------------------------
+
+                  B(13)
+
+            R(i8)        B(N)
+
+         B(N)   B(N)
+                   
+we violate none of the properties defined. Nothing to be done.
+
+Now add 16 which is case 2 again
+
+                   B(13)
+
+           R(8)             R(16)
+
+       B(N)     B(N)       B(N)   B(N)
+
+
+case 3 (red parent and uncle): add 11....
+----------------------------------------
+
+                   B(13)
+
+          R(8)                 R(16)
+
+     B(N)      R(11)         B(N)     B(N)
+
+             B(N)  B(N)
+
+This violates propert 4 (each red node must have 2 black childs).
+=> repaint both to black and the gandparent to red.
+
+                      R(13)
+
+          B(8)                       B(16)
+
+    B(N)         R(11)         B(N)           B(N)
+
+              B(N)   B(N)
+
+This violates now property 2 (The root is black) and it may have
+violated property 4 for the gantparent...so we start all over again
+with case 1 on the grantparent.
+As we now might run into case 4 or 5 where also parent uncle and
+grandparent might be needed we should always track
+
+ - grandgrandparent
+ - granduncle
+ - grandparent
+ - parent
+ - uncle
+
+For now case 1 occurs again wich gives us the following:
+
+                        B(13)
+          
+           B(8)                         B(16)
+
+     B(N)         R(11)             B(N)        B(N)
+
+               B(N)   B(N)
+
+
+Perfect, thats ok again.
+
+Now as preparation of case 4 we add a 3
+
+                        B(13)
+          
+           B(8)                         B(16)
+
+     R(3)         R(11)             B(N)        B(N)
+
+ B(N)   B(N)   B(N)    B(N)
+
+
+and now a 9.
+
+                        B(13)
+          
+           B(8)                         B(16)
+
+     R(3)         R(11)             B(N)        B(N)
+
+ B(N)   B(N)   R(9)    B(N)
+
+             B(N)  B(N)
+
+
+which again leads to case 3.
+
+                        B(13)
+          
+           R(8)                         B(16)
+
+     B(3)         B(11)             B(N)        B(N)
+
+ B(N)   B(N)   R(9)       B(N)
+
+             B(N) B(N)
+
+and we are fine again.
+now add 12...
+
+                        B(13)
+          
+           R(8)                         B(16)
+
+     B(3)         B(11)             B(N)        B(N)
+
+ B(N)   B(N)   R(9)      R(12)
+
+             B(N) B(N)  B(N) B(N)
+
+and now add a 10...
+
+                        B(13)
+          
+           R(8)                         B(16)
+
+     B(3)         B(11)             B(N)        B(N)
+
+ B(N)   B(N)   R(9)      R(12)
+
+             B(N) R(10)  B(N) B(N)
+                  N  N
+
+case 3 again...
+
+                        B(13)
+          
+           R(8)                         B(16)
+
+     B(3)         R(11)             B(N)        B(N)
+
+ B(N)   B(N)   B(9)      B(12)
+
+             B(N) R(10)  B(N) B(N)
+                  N  N
+
+as case 3 starts again with grandparent as node, which has to be prepared
+before starting over again, we have the following:
+
+     node        R(11)
+     parent      R(8)
+     uncle       B(16)
+     grandparent B(13)
+
+
+now property 4 of for our new parnet is violated which brings us to case 4 as
+it is not the root. (the cases are taken from wikipedia.)
+
+so lets do case 4 on our node (which is left rotate on our parent,
+the parent of our grandparent).
+
+                                B(13)
+                  
+                   R(11)                         B(16)
+
+             R(8)           B(12)           B(N)        B(N)
+
+         B(3)     B(9)     B(N) B(N)
+
+     B(N) B(N)  B(N) R(10) 
+                     N  N
+
+but again we are left in violated state...again property 4 is violated.
+This is always the case, so always do case 5 after case 4.
+
+We can see beside of some subtree changes our node and parent have changed
+role. we need to address this by swaping them in our code.
+
+So, do case 5 (right rotate the grandparent and set grandparent color to red
+and parent color to black.
+
+                                B(11)
+                  
+                    R(8)                         B(13)
+
+             B(3)         B(9)            B(12)           B(16)
+
+           B(N) B(N)    B(N)  R(10)      B(N) B(N)       B(N)  B(N)
+
+                            B(N) B(N)
+
+# vim: set et ts=4:
