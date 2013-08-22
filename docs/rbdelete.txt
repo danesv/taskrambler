@@ -1,0 +1,107 @@
+Properties of a rbtree
+======================
+
+1. A node is either red or black.
+2. The root is black. (This rule is sometimes omitted. Since the root can
+   always be changed from red to black, but not necessarily vice-versa,
+   this rule has little effect on analysis.)
+3. All leaves (NIL) are black. (All leaves are same color as the
+   root.)
+4. Every red node must have two black child nodes.
+5. Every simple path from a given node to any of its
+   descendant leaves contains the same number of black nodes.
+
+
+Assumptions in addition to wikipedia
+====================================
+
+lets assume that NULL pointer are black B nodes. But we mark them with a (N)
+
+
+Example
+=======
+
+we start with the tree from the insert example
+----------------------------------------------
+
+                                B(11)
+                  
+                    R(8)                         R(13)
+
+             B(3)         B(9)            B(12)           B(16)
+
+           B(N) B(N)    B(N)  R(10)      B(N) B(N)       B(N)  B(N)
+
+                            B(N) B(N)
+
+we remove R(10) / remove a red node (replace with its child):
+wikipedia explains why this can only happen with two leaf children (our B(N))
+
+                                B(11)
+                  
+                    R(8)                         R(13)
+
+             B(3)         B(9)            B(12)           B(16)
+
+           B(N) B(N)    B(N)  B(N)      B(N) B(N)       B(N)  B(N)
+
+
+again start with the insert example result
+------------------------------------------
+
+                                B(11)
+                  
+                    R(8)                         R(13)
+
+             B(3)         B(9)            B(12)           B(16)
+
+           B(N) B(N)    B(N)  R(10)      B(N) B(N)       B(N)  B(N)
+
+                            B(N) B(N)
+
+remove B(9) (which is the second simple case described on wikipedia)
+M black, C red
+After remove just repaint child black. As I do not replace the node,
+but the value this is simplified in my case to simply do nothing after
+normal delete... :D
+
+                                B(11)
+                  
+                    R(8)                         R(13)
+
+             B(3)         B(10)            B(12)           B(16)
+
+           B(N) B(N)    B(N)   B(N)      B(N) B(N)       B(N)  B(N)
+
+
+again start with the insert example result
+------------------------------------------
+
+                                B(11)
+                  
+                    R(8)                         R(13)
+
+             B(3)         B(9)            B(12)           B(16)
+
+           B(N) B(N)    B(N)  R(10)      B(N) B(N)       B(N)  B(N)
+
+                            B(N) B(N)
+
+now lets delete B(3)... which is stated on wikipedia as the complicated case
+where 6 subcases could be distinguished.
+
+Wikipedia says we begin with replacing B(3) which one if its childs, in my
+case this means, setting r(8)->left to NULL....
+
+So, what is called in on Wikipedia is simply a nullpointer for me...hopefully
+I don't have to do anything with it.
+
+Get an overview over our variables now:
+
+  N : Nullpointer set in R(8)->left
+  P : R(8)
+  S : B(9)
+  Sl: Nullpointer
+  Sr: R(10)
+
+# vim: set et ts=4:
