@@ -109,6 +109,8 @@ findInOrderSuccessor(struct element * tree)
     return node;
 }
 
+void deleteOneChild(struct element **, struct element *);
+
 void
 deleteElement(struct element ** tree, int data)
 {
@@ -139,6 +141,10 @@ deleteElement(struct element ** tree, int data)
         node       = successor;
     }
 
+    /*
+     * In rb trees we handle the remaining situations differently
+     */
+    /*
     // case 2: one child wither left or right
     if (NULL != node->left) {
         //node->data = node->left->data;
@@ -186,6 +192,8 @@ deleteElement(struct element ** tree, int data)
     }
 
     free(node);
+    */
+    deleteOneChild(tree, node);
 }
 
 
@@ -278,6 +286,16 @@ uncle(struct element * node)
 
     return gp->left;
 }
+
+struct element *
+sibling(struct element * node)
+{
+    if (node == node->parent->left)
+        return node->parent->right;
+    else
+        return node->parent->left;
+}
+
 
 void
 rotateLeft(struct element ** tree, struct element * node)
@@ -427,6 +445,173 @@ insertCase1(struct element ** tree, struct element * node)
      }
 }
 
+void
+replaceNode(struct element * node1, struct element * node2)
+{
+    if (NULL != node1->parent) {
+        if (node1 == node1->parent->left) {
+            node1->parent->left = node2;
+        } else {
+            node1->parent->right = node2;
+        }
+    }
+
+    if (NULL != node2) {
+        node2->parent = node1->parent;
+    }
+}
+
+void
+deleteCase6(struct element ** tree, struct element * node)
+{
+    struct element * s = sibling(node);
+
+    s->color            = node->parent->color;
+    node->parent->color = rbBlack;
+
+    if (node == node->parent->left) {
+        s->right->color = rbBlack;
+        rotateLeft(tree, node->parent);
+    } else {
+        s->left->color = rbBlack;
+        rotateRight(tree, node->parent);
+    }
+}
+
+void
+deleteCase5(struct element ** tree, struct element * node)
+{
+    struct element * s = sibling(node);
+
+    if  (NULL != s && s->color == rbBlack) {
+        /*
+         * this if statement is trivial,
+         * due to case 2 (even though case 2 changed the sibling to a
+         * sibling's child,
+         * the sibling's child can't be red, since no red parent can
+         * have a red child).
+         */
+        /*
+         * the following statements just force the red to be on the
+         * left of the left of the parent,
+         * or right of the right, so case six will rotate correctly.
+         */
+        if ((node == node->parent->left) &&
+                (s->right->color == rbBlack) &&
+                (s->left->color == rbRed)) {
+
+            /* this last test is trivial too due to cases 2-4. */
+            s->color       = rbRed;
+            s->left->color = rbBlack;
+
+            rotateRight(tree, s);
+        } else if ((node == node->parent->right) &&
+                (s->left->color == rbBlack) &&
+                (s->right->color == rbRed)) {
+            /*
+             * this last test is trivial too due to cases 2-4.
+             */
+            s->color        = rbRed;
+            s->right->color = rbBlack;
+
+            rotateLeft(tree, s);
+        }
+    }
+
+    deleteCase6(tree, node);
+}
+
+void
+deleteCase4(struct element ** tree, struct element * node)
+{
+    struct element * s = sibling(node);
+
+    if ((node->parent->color == rbRed) &&
+            (NULL == s || ((s->color == rbBlack) &&
+                           (s->left->color == rbBlack) &&
+                           (s->right->color == rbBlack)))) {
+        if (NULL != s) {
+            s->color = rbRed;
+        }
+        node->parent->color = rbBlack;
+    } else {
+        deleteCase5(tree, node);
+    }
+}
+
+void deleteCase1(struct element **, struct element *);
+
+void
+deleteCase3(struct element ** tree, struct element * node)
+{
+    struct element * s = sibling(node);
+
+    if ((node->parent->color == rbBlack) &&
+            (NULL == s || ((s->color == rbBlack) &&
+                           (s->left->color == rbBlack) &&
+                           (s->right->color == rbBlack)))) {
+        if (NULL != s) {
+            s->color = rbRed;
+        }
+        deleteCase1(tree, node->parent);
+    } else {
+        deleteCase4(tree, node);
+    }
+}
+
+void
+deleteCase2(struct element ** tree, struct element * node)
+{
+    struct element * s = sibling(node);
+
+    if (NULL != s && s->color == rbRed) {
+        node->parent->color = rbRed;
+        s->color            = rbBlack;
+
+        if (node == node->parent->left) {
+            rotateLeft(tree, node->parent);
+        } else {
+            rotateRight(tree, node->parent);
+        }
+    }
+
+    deleteCase3(tree, node);
+}
+
+void
+deleteCase1(struct element ** tree, struct element * node)
+{
+     if (NULL != node && NULL != node->parent) {
+         deleteCase2(tree, node);
+     }
+}
+
+void
+deleteOneChild(struct element ** tree, struct element * node)
+{
+    /*
+     * Precondition: n has at most one non-null child.
+     */
+    struct element * child = (NULL == node->right) ? node->left : node->right;
+
+    replaceNode(node, child);
+
+    if (node->color == rbBlack) {
+        if (NULL != child && child->color == rbRed) {
+            child->color = rbBlack;
+        } else {
+            deleteCase1(tree, child);
+        }
+    }
+
+    if (NULL == node->parent){
+        *tree = 0x0;
+    }
+    free(node);
+}
+
+
+
 /**
  * =======================================================================
  */
@@ -479,16 +664,6 @@ main(int argc, char * argv[])
      * Looks like the insert works properly.
      * So the problem is out traversing...
      */
-    // puts("elements:");
-    // for (i=1; i<20; i++) {
-    //     struct element * element = findElement(root, i);
-    //     printf("Element %02d: n=0x%p p=0x%p l=0x%p r=0x%p\n",
-    //             i,
-    //             element,
-    //             element ? element->parent : 0x0,
-    //             element ? element->left : 0x0,
-    //             element ? element->right : 0x0);
-    // }
 
     puts("traverse");
     traverse(root1, printElement);
@@ -510,6 +685,38 @@ main(int argc, char * argv[])
     inserted = insertElement(&root2, 10);
     insertCase1(&root2, inserted);
 
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 8);
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 11);
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 13);
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 3);
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 16);
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 10);
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 9);
+    puts("traverse");
+    traverse(root2, printElement);
+
+    deleteElement(&root2, 12);
     puts("traverse");
     traverse(root2, printElement);
 
