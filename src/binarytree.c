@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/commons.h"
-
 
 struct element
 {
@@ -186,14 +184,22 @@ deleteElement(struct element ** tree, int data)
 void
 traverse(struct element * tree, void (*cb)(int, int))
 {
-    struct element * previous = NULL;
+    struct element * previous = tree;
     struct element * node     = tree;
     int    depth              = 1;
 
-    while (tree) {
-        if ((NULL == node->left || previous == node->left) &&
-                previous != node->right) {
+    // I think this has something like O(n+log(n)) on a ballanced
+    // tree because I have to traverse back the rightmost leaf to
+    // the root to get a break condition.
+    while (node) {
+        if (previous == node->right) {
+            previous = node;
+            node     = node->parent;
+            depth--;
+            continue;
+        }
 
+        if ((NULL == node->left || previous == node->left)) {
             cb(node->data, depth);
             previous = node;
 
@@ -201,33 +207,23 @@ traverse(struct element * tree, void (*cb)(int, int))
                 node = node->right;
                 depth++;
             } else {
-                if (NULL == node->parent || node->parent->right == node) {
-                    break;
-                } 
-
                 node = node->parent;
                 depth--;
             }
         } else {
             previous = node;
-
-            if (previous == node->left || previous == node->right) {
-                node = node->parent;
-                depth--;
-            } else {
-                node = node->left;
-                depth++;
-            }
+            node     = node->left;
+            depth++;
         }
     }
 }
 
 void printElement(int data, int depth)
 {
-    char format[250];
+    int  i;
 
-    sprintf(format, "%% %dd(%%d)\n", depth * 3);
-    printf(format, data, depth);
+    for (i=0; i<depth-1; i++) printf("-");
+    printf("%02d(%02d)\n", data, depth);
 }
 
 /**
@@ -236,92 +232,64 @@ void printElement(int data, int depth)
 int
 main(int argc, char * argv[])
 {
+    int              i;
     struct element * root = NULL;
 
-    puts("insert 5:");
-    insertElement(&root, 5);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
+    insertElement(&root, 13);
+    insertElement(&root, 8);
+    insertElement(&root, 16);
+    insertElement(&root, 11);
+    insertElement(&root, 3);
+    insertElement(&root, 9);
+    insertElement(&root, 12);
+    insertElement(&root, 10);
 
-    puts("insert 4:");
-    insertElement(&root, 4);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("insert 5:");
-    insertElement(&root, 5);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("insert 6:");
-    insertElement(&root, 6);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("traverse");
-    traverse(root, printElement);
-    puts("\n");
-
-    puts("delete 5 (one child on both sides):");
-    deleteElement(&root, 5);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("traverse");
-    traverse(root, printElement);
-    puts("\n");
-
-    puts("delete 6 (one child on the left):");
-    deleteElement(&root, 6);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("insert 6:");
-    insertElement(&root, 6);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("delete 6 (a leaf):");
-    deleteElement(&root, 6);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("delete 4 (a leaf and root):");
-    deleteElement(&root, 4);
-    printf("R: 0x%p\n", root);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
-
-    puts("insert 4:");
-    insertElement(&root, 4);
-    puts("insert 5:");
-    insertElement(&root, 5);
-    puts("insert 6:");
-    insertElement(&root, 6);
-    printf("4: 0x%p\n", findElement(root, 4));
-    printf("5: 0x%p\n", findElement(root, 5));
-    printf("6: 0x%p\n\n", findElement(root, 6));
+    /*
+     * after this I have the following:
+     *
+     * Element 03: n=0x0xcf50d0 p=0x0xcf5040 l=0x(nil) r=0x(nil)
+     * Element 08: n=0x0xcf5040 p=0x0xcf5010 l=0x0xcf50d0 r=0x0xcf50a0
+     * Element 09: n=0x0xcf5100 p=0x0xcf50a0 l=0x(nil) r=0x0xcf5160
+     * Element 10: n=0x0xcf5160 p=0x0xcf5100 l=0x(nil) r=0x(nil)
+     * Element 11: n=0x0xcf50a0 p=0x0xcf5040 l=0x0xcf5100 r=0x0xcf5130
+     * Element 12: n=0x0xcf5130 p=0x0xcf50a0 l=0x(nil) r=0x(nil)
+     * Element 13: n=0x0xcf5010 p=0x(nil) l=0x0xcf5040 r=0x0xcf5070
+     * Element 16: n=0x0xcf5070 p=0x0xcf5010 l=0x(nil) r=0x(nil)
+     *
+     * which translates to:
+     * 
+     * 03 has p:08, l:N , R:N
+     * 08 has p:13, l:03, r:11
+     * 09 has p:11, l:N , r:10
+     * 10 has p:09, l:N , r:N
+     * 11 has p:08, l:09, r:12
+     * 12 has p:11, l:N , r:N
+     * 13 has p:N , l:08, r:16
+     * 16 has p:13, l:N , r:N
+     *                    
+     * which visualizes as:
+     *                      13
+     *           08                      16
+     *      03            11            0  0
+     *     0  0       09      12
+     *              0   10   0  0
+     *
+     * Looks like the insert works properly.
+     * So the problem is out traversing...
+     */
+    puts("elements:");
+    for (i=1; i<20; i++) {
+        struct element * element = findElement(root, i);
+        printf("Element %02d: n=0x%p p=0x%p l=0x%p r=0x%p\n",
+                i,
+                element,
+                element ? element->parent : 0x0,
+                element ? element->left : 0x0,
+                element ? element->right : 0x0);
+    }
 
     puts("traverse");
     traverse(root, printElement);
-    puts("\n");
 
     return 0;
 }
