@@ -109,9 +109,9 @@ findInOrderSuccessor(struct element * tree)
     return node;
 }
 
-void deleteOneChild(struct element **, struct element *);
+struct element * deleteOneChild(struct element **, struct element *);
 
-void
+struct element *
 deleteElement(struct element ** tree, int data)
 {
     struct element * node   = *tree;
@@ -127,11 +127,11 @@ deleteElement(struct element ** tree, int data)
 
     // element not found
     if (NULL == node) {
-        return;
+        return node;
     }
 
-    // distinuish 3 cases, where the resolving of each case leads to the
-    // precondition of the other.
+    // now our cases follows...the first one is the same as with
+    // simple binary search trees.
 
     // case 1: two children
     if (NULL != node->left && NULL != node->right) {
@@ -141,59 +141,7 @@ deleteElement(struct element ** tree, int data)
         node       = successor;
     }
 
-    /*
-     * In rb trees we handle the remaining situations differently
-     */
-    /*
-    // case 2: one child wither left or right
-    if (NULL != node->left) {
-        //node->data = node->left->data;
-        //node       = node->left;
-        if (NULL != node->parent) {
-            if (node == node->parent->left) {
-                node->parent->left = node->left;
-            } else {
-                node->parent->right = node->left;
-            }
-        }
-        node->left->parent = node->parent;
-    } 
-
-    if (NULL != node->right) {
-        //node->data = node->right->data;
-        //node       = node->right;
-        if (NULL != node->parent) {
-            if (node == node->parent->left) {
-                node->parent->left = node->right;
-            } else {
-                node->parent->right = node->right;
-            }
-        }
-        node->right->parent = node->parent;
-    }
-
-    // case 3: we are a leaf
-    if (NULL != node->parent) {
-        if (node == node->parent->left) {
-            node->parent->left  = NULL;
-        } else {
-            node->parent->right = NULL;
-        }
-    }
-
-    if (node == *tree) {
-        if (NULL != node->left) {
-            *tree = node->left;
-        } else if (NULL != node->right) {
-            *tree = node->right;
-        } else {
-            *tree = NULL;
-        }
-    }
-
-    free(node);
-    */
-    deleteOneChild(tree, node);
+    return deleteOneChild(tree, node);
 }
 
 
@@ -586,7 +534,7 @@ deleteCase1(struct element ** tree, struct element * node)
      }
 }
 
-void
+struct element *
 deleteOneChild(struct element ** tree, struct element * node)
 {
     /*
@@ -607,7 +555,8 @@ deleteOneChild(struct element ** tree, struct element * node)
     if (NULL == node->parent){
         *tree = 0x0;
     }
-    free(node);
+
+    return node;
 }
 
 
@@ -618,107 +567,60 @@ deleteOneChild(struct element ** tree, struct element * node)
 int
 main(int argc, char * argv[])
 {
-    struct element * root1    = NULL;
-    struct element * root2    = NULL;
+    struct element * root     = NULL;
     struct element * inserted = NULL;
 
-    insertElement(&root1, 13);
-    insertElement(&root1, 8);
-    insertElement(&root1, 16);
-    insertElement(&root1, 11);
-    insertElement(&root1, 3);
-    insertElement(&root1, 9);
-    insertElement(&root1, 12);
-    insertElement(&root1, 10);
-
-    /*
-     * after this I have the following:
-     *
-     * Element 03: n=0x0xcf50d0 p=0x0xcf5040 l=0x(nil) r=0x(nil)
-     * Element 08: n=0x0xcf5040 p=0x0xcf5010 l=0x0xcf50d0 r=0x0xcf50a0
-     * Element 09: n=0x0xcf5100 p=0x0xcf50a0 l=0x(nil) r=0x0xcf5160
-     * Element 10: n=0x0xcf5160 p=0x0xcf5100 l=0x(nil) r=0x(nil)
-     * Element 11: n=0x0xcf50a0 p=0x0xcf5040 l=0x0xcf5100 r=0x0xcf5130
-     * Element 12: n=0x0xcf5130 p=0x0xcf50a0 l=0x(nil) r=0x(nil)
-     * Element 13: n=0x0xcf5010 p=0x(nil) l=0x0xcf5040 r=0x0xcf5070
-     * Element 16: n=0x0xcf5070 p=0x0xcf5010 l=0x(nil) r=0x(nil)
-     *
-     * which translates to:
-     * 
-     * 03 has p:08, l:N , R:N
-     * 08 has p:13, l:03, r:11
-     * 09 has p:11, l:N , r:10
-     * 10 has p:09, l:N , r:N
-     * 11 has p:08, l:09, r:12
-     * 12 has p:11, l:N , r:N
-     * 13 has p:N , l:08, r:16
-     * 16 has p:13, l:N , r:N
-     *                    
-     * which visualizes as:
-     *                      13
-     *           08                      16
-     *      03            11            0  0
-     *     0  0       09      12
-     *              0   10   0  0
-     *
-     * Looks like the insert works properly.
-     * So the problem is out traversing...
-     */
+    inserted = insertElement(&root, 13);
+    insertCase1(&root, inserted);
+    inserted = insertElement(&root, 8);
+    insertCase1(&root, inserted);
+    inserted = insertElement(&root, 16);
+    insertCase1(&root, inserted);
+    inserted = insertElement(&root, 11);
+    insertCase1(&root, inserted);
+    inserted = insertElement(&root, 3);
+    insertCase1(&root, inserted);
+    inserted = insertElement(&root, 9);
+    insertCase1(&root, inserted);
+    inserted = insertElement(&root, 12);
+    insertCase1(&root, inserted);
+    inserted = insertElement(&root, 10);
+    insertCase1(&root, inserted);
 
     puts("traverse");
-    traverse(root1, printElement);
+    traverse(root, printElement);
 
-    inserted = insertElement(&root2, 13);
-    insertCase1(&root2, inserted);
-    inserted = insertElement(&root2, 8);
-    insertCase1(&root2, inserted);
-    inserted = insertElement(&root2, 16);
-    insertCase1(&root2, inserted);
-    inserted = insertElement(&root2, 11);
-    insertCase1(&root2, inserted);
-    inserted = insertElement(&root2, 3);
-    insertCase1(&root2, inserted);
-    inserted = insertElement(&root2, 9);
-    insertCase1(&root2, inserted);
-    inserted = insertElement(&root2, 12);
-    insertCase1(&root2, inserted);
-    inserted = insertElement(&root2, 10);
-    insertCase1(&root2, inserted);
-
+    free(deleteElement(&root, 8));
     puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
-    deleteElement(&root2, 8);
+    free(deleteElement(&root, 11));
     puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
-    deleteElement(&root2, 11);
+    free(deleteElement(&root, 13));
     puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
-    deleteElement(&root2, 13);
+    free(deleteElement(&root, 3));
     puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
-    deleteElement(&root2, 3);
+    free(deleteElement(&root, 16));
     puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
-    deleteElement(&root2, 16);
+    free(deleteElement(&root, 10));
     puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
-    deleteElement(&root2, 10);
+    free(deleteElement(&root, 9));
     puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
-    deleteElement(&root2, 9);
+    free(deleteElement(&root, 12));
     puts("traverse");
-    traverse(root2, printElement);
-
-    deleteElement(&root2, 12);
-    puts("traverse");
-    traverse(root2, printElement);
+    traverse(root, printElement);
 
     return 0;
 }
