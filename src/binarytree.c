@@ -188,10 +188,16 @@ traverse(struct element * tree, void (*cb)(int, int))
     struct element * node     = tree;
     int    depth              = 1;
 
-    // I think this has something like O(n+log(n)) on a ballanced
-    // tree because I have to traverse back the rightmost leaf to
-    // the root to get a break condition.
+    /*
+     * I think this has something like O(n+log(n)) on a ballanced
+     * tree because I have to traverse back the rightmost leaf to
+     * the root to get a break condition.
+     */
     while (node) {
+        /*
+         * If we come from the right so nothing and go to our
+         * next parent.
+         */
         if (previous == node->right) {
             previous = node;
             node     = node->parent;
@@ -200,6 +206,10 @@ traverse(struct element * tree, void (*cb)(int, int))
         }
 
         if ((NULL == node->left || previous == node->left)) {
+            /*
+             * If there are no more elements to the left or we
+             * came from the left, process data.
+             */
             cb(node->data, depth);
             previous = node;
 
@@ -211,6 +221,9 @@ traverse(struct element * tree, void (*cb)(int, int))
                 depth--;
             }
         } else {
+            /*
+             * if there are more elements to the left go there.
+             */
             previous = node;
             node     = node->left;
             depth++;
@@ -222,8 +235,9 @@ void printElement(int data, int depth)
 {
     int  i;
 
-    for (i=0; i<depth-1; i++) printf("-");
-    printf("%02d(%02d)\n", data, depth);
+    printf("%02d(%02d)", data, depth);
+    for (i=0; i<depth; i++) printf("-");
+    puts("");
 }
 
 /**
