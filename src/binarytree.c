@@ -135,13 +135,29 @@ deleteElement(struct element ** tree, int data)
 
     // case 2: one child wither left or right
     if (NULL != node->left) {
-        node->data = node->left->data;
-        node       = node->left;
+        //node->data = node->left->data;
+        //node       = node->left;
+        if (NULL != node->parent) {
+            if (node == node->parent->left) {
+                node->parent->left = node->left;
+            } else {
+                node->parent->right = node->left;
+            }
+        }
+        node->left->parent = node->parent;
     } 
 
     if (NULL != node->right) {
-        node->data = node->right->data;
-        node       = node->right;
+        //node->data = node->right->data;
+        //node       = node->right;
+        if (NULL != node->parent) {
+            if (node == node->parent->left) {
+                node->parent->left = node->right;
+            } else {
+                node->parent->right = node->right;
+            }
+        }
+        node->right->parent = node->parent;
     }
 
     // case 3: we are a leaf
@@ -153,10 +169,17 @@ deleteElement(struct element ** tree, int data)
         }
     }
 
-    free(node);
     if (node == *tree) {
-        *tree = NULL;
+        if (NULL != node->left) {
+            *tree = node->left;
+        } else if (NULL != node->right) {
+            *tree = node->right;
+        } else {
+            *tree = NULL;
+        }
     }
+
+    free(node);
 }
 
 
@@ -178,7 +201,7 @@ traverse(struct element * tree, void (*cb)(int, int))
                 node = node->right;
                 depth++;
             } else {
-                if (node->parent->right == node) {
+                if (NULL == node->parent || node->parent->right == node) {
                     break;
                 } 
 
@@ -253,6 +276,10 @@ main(int argc, char * argv[])
     printf("4: 0x%p\n", findElement(root, 4));
     printf("5: 0x%p\n", findElement(root, 5));
     printf("6: 0x%p\n\n", findElement(root, 6));
+
+    puts("traverse");
+    traverse(root, printElement);
+    puts("\n");
 
     puts("delete 6 (one child on the left):");
     deleteElement(&root, 6);
