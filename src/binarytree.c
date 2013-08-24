@@ -246,7 +246,6 @@ void printElement(int data, int depth)
 int
 main(int argc, char * argv[])
 {
-    int              i;
     struct element * root = NULL;
 
     insertElement(&root, 13);
@@ -259,49 +258,42 @@ main(int argc, char * argv[])
     insertElement(&root, 10);
 
     /*
-     * after this I have the following:
-     *
-     * Element 03: n=0x0xcf50d0 p=0x0xcf5040 l=0x(nil) r=0x(nil)
-     * Element 08: n=0x0xcf5040 p=0x0xcf5010 l=0x0xcf50d0 r=0x0xcf50a0
-     * Element 09: n=0x0xcf5100 p=0x0xcf50a0 l=0x(nil) r=0x0xcf5160
-     * Element 10: n=0x0xcf5160 p=0x0xcf5100 l=0x(nil) r=0x(nil)
-     * Element 11: n=0x0xcf50a0 p=0x0xcf5040 l=0x0xcf5100 r=0x0xcf5130
-     * Element 12: n=0x0xcf5130 p=0x0xcf50a0 l=0x(nil) r=0x(nil)
-     * Element 13: n=0x0xcf5010 p=0x(nil) l=0x0xcf5040 r=0x0xcf5070
-     * Element 16: n=0x0xcf5070 p=0x0xcf5010 l=0x(nil) r=0x(nil)
-     *
-     * which translates to:
-     * 
-     * 03 has p:08, l:N , R:N
-     * 08 has p:13, l:03, r:11
-     * 09 has p:11, l:N , r:10
-     * 10 has p:09, l:N , r:N
-     * 11 has p:08, l:09, r:12
-     * 12 has p:11, l:N , r:N
-     * 13 has p:N , l:08, r:16
-     * 16 has p:13, l:N , r:N
-     *                    
-     * which visualizes as:
-     *                      13
-     *           08                      16
-     *      03            11            0  0
-     *     0  0       09      12
-     *              0   10   0  0
-     *
-     * Looks like the insert works properly.
-     * So the problem is out traversing...
+     * delete does not work correctly here..
+     * luckily I do not need the simple binary trees anymore
+     * as I have rbtrees.
      */
-    puts("elements:");
-    for (i=1; i<20; i++) {
-        struct element * element = findElement(root, i);
-        printf("Element %02d: n=0x%p p=0x%p l=0x%p r=0x%p\n",
-                i,
-                element,
-                element ? element->parent : 0x0,
-                element ? element->left : 0x0,
-                element ? element->right : 0x0);
-    }
+    puts("traverse");
+    traverse(root, printElement);
 
+    deleteElement(&root, 8);
+    puts("traverse");
+    traverse(root, printElement);
+
+    deleteElement(&root, 11);
+    puts("traverse");
+    traverse(root, printElement);
+
+    deleteElement(&root, 13);
+    puts("traverse");
+    traverse(root, printElement);
+
+    deleteElement(&root, 3);
+    puts("traverse");
+    traverse(root, printElement);
+
+    deleteElement(&root, 16);
+    puts("traverse");
+    traverse(root, printElement);
+
+    deleteElement(&root, 10);
+    puts("traverse");
+    traverse(root, printElement);
+
+    deleteElement(&root, 9);
+    puts("traverse");
+    traverse(root, printElement);
+
+    deleteElement(&root, 12);
     puts("traverse");
     traverse(root, printElement);
 
