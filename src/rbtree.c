@@ -89,7 +89,7 @@ sibling(struct element * node)
 }
 
 /*
- * rotations...also needed for rb handling.
+ * tree modifications...needed for rb handling.
  */
 void
 rotateLeft(struct element ** tree, struct element * node)
@@ -138,6 +138,23 @@ rotateRight(struct element ** tree, struct element * node)
 
     node->parent = leftChild;
 }
+
+void
+replaceNode(struct element * node1, struct element * node2)
+{
+    if (NULL != node1->parent) {
+        if (node1 == node1->parent->left) {
+            node1->parent->left = node2;
+        } else {
+            node1->parent->right = node2;
+        }
+    }
+
+    if (NULL != node2) {
+        node2->parent = node1->parent;
+    }
+}
+
 
 /**
  * insert element in tree
@@ -269,7 +286,10 @@ struct element * deleteOneChild(struct element **, struct element *);
 struct element *
 deleteElement(struct element ** tree, int data)
 {
-    struct element * node   = *tree;
+    struct element * node = *tree;
+    struct element * del_node;
+    struct element * child;
+    struct element * s;
 
     // find the relevant node and it's parent
     while (NULL != node && node->data != data) {
@@ -285,27 +305,150 @@ deleteElement(struct element ** tree, int data)
         return node;
     }
 
+    del_node = node;
+
     // now our cases follows...the first one is the same as with
-    // simple binary search trees.
+    // simple binary search trees. Two non null children.
 
     // case 1: two children
     if (NULL != node->left && NULL != node->right) {
         struct element * successor = findInOrderSuccessor(node);
 
         node->data = successor->data;
-        node       = successor;
+        del_node = node = successor;
     }
 
-    return deleteOneChild(tree, node);
+    // delete and rb rebalance...
+    while(1) {
+        // Precondition: n has at most one non-null child.
+        child = (NULL == node->right) ? node->left : node->right;
+        replaceNode(node, child);
+
+        // delete one child case
+        // TODO this is overly complex as simply derived from the function...
+        // maybe this can be simplified. Maybe not...check.
+        if (node->color == rbBlack) {
+            if (NULL != child && child->color == rbRed) {
+                child->color = rbBlack;
+                // done despite modifying tree itself if neccessary..
+                break;
+            } else {
+                if (NULL == node->parent){
+                    *tree = 0x0;
+                }
+                node = child;
+            }
+        } else {
+            if (NULL == node->parent){
+                *tree = 0x0;
+            }
+            break;
+        }
+
+        // case 1
+        if (NULL == node || NULL == node->parent) {
+            // done again
+            break;
+        }
+
+        // case 2
+        s = sibling(node);
+
+        if (NULL != s && s->color == rbRed) {
+            node->parent->color = rbRed;
+            s->color            = rbBlack;
+
+            if (node == node->parent->left) {
+                rotateLeft(tree, node->parent);
+            } else {
+                rotateRight(tree, node->parent);
+            }
+        }
+
+        // case 3 / 4
+        if (NULL == s || ((s->color == rbBlack) &&
+                               (s->left->color == rbBlack) &&
+                               (s->right->color == rbBlack))) {
+
+            if (NULL != s) {
+                s->color = rbRed;
+            }
+
+            if (node->parent->color == rbBlack) {
+                // case 3
+                node = node->parent;
+                continue;
+            } else {
+                // case 4
+                node->parent->color = rbBlack;
+                // and done again...
+                break;
+            }
+        } else {
+            // done...
+            break;
+        }
+
+
+        // case 5
+        if  (NULL != s && s->color == rbBlack) {
+            // this if statement is trivial,
+            // due to case 2 (even though case 2 changed the sibling to a
+            // sibling's child,
+            // the sibling's child can't be red, since no red parent can
+            // have a red child).
+            //
+            // the following statements just force the red to be on the
+            // left of the left of the parent,
+            // or right of the right, so case 6 will rotate correctly.
+            if ((node == node->parent->left) &&
+                    (s->right->color == rbBlack) &&
+                    (s->left->color == rbRed)) {
+
+                // this last test is trivial too due to cases 2-4.
+                s->color       = rbRed;
+                s->left->color = rbBlack;
+
+                rotateRight(tree, s);
+            } else if ((node == node->parent->right) &&
+                    (s->left->color == rbBlack) &&
+                    (s->right->color == rbRed)) {
+                // this last test is trivial too due to cases 2-4.
+                s->color        = rbRed;
+                s->right->color = rbBlack;
+
+                rotateLeft(tree, s);
+            }
+        }
+
+        // case 6
+        s->color            = node->parent->color;
+        node->parent->color = rbBlack;
+
+        if (node == node->parent->left) {
+            s->right->color = rbBlack;
+            rotateLeft(tree, node->parent);
+        } else {
+            s->left->color = rbBlack;
+            rotateRight(tree, node->parent);
+        }
+
+        // done...
+        break;
+    }
+ 
+    //deleteOneChild(tree, node);
+
+    return del_node;
 }
 
 
 void
-traverse(struct element * tree, void (*cb)(int, int))
+traverse(struct element * tree, void (*cb)(int, int, enum rbColor))
 {
     struct element * previous = tree;
     struct element * node     = tree;
-    int    depth              = 1;
+    int              depth    = 1;
 
     /*
      * I think this has something like O(n+log(n)) on a ballanced
@@ -329,7 +472,7 @@ traverse(struct element * tree, void (*cb)(int, int))
              * If there are no more elements to the left or we
              * came from the left, process data.
              */
-            cb(node->data, depth);
+            cb(node->data, depth, node->color);
             previous = node;
 
             if (NULL != node->right) {
@@ -350,182 +493,14 @@ traverse(struct element * tree, void (*cb)(int, int))
     }
 }
 
-void printElement(int data, int depth)
+void printElement(int data, int depth, enum rbColor color)
 {
     int  i;
 
-    printf("%02d(%02d)", data, depth);
+    printf("%s %02d(%02d)", (color==rbRed)?"R":"B", data, depth);
     for (i=0; i<depth; i++) printf("-");
     puts("");
 }
-
-
-void
-replaceNode(struct element * node1, struct element * node2)
-{
-    if (NULL != node1->parent) {
-        if (node1 == node1->parent->left) {
-            node1->parent->left = node2;
-        } else {
-            node1->parent->right = node2;
-        }
-    }
-
-    if (NULL != node2) {
-        node2->parent = node1->parent;
-    }
-}
-
-void
-deleteCase6(struct element ** tree, struct element * node)
-{
-    struct element * s = sibling(node);
-
-    s->color            = node->parent->color;
-    node->parent->color = rbBlack;
-
-    if (node == node->parent->left) {
-        s->right->color = rbBlack;
-        rotateLeft(tree, node->parent);
-    } else {
-        s->left->color = rbBlack;
-        rotateRight(tree, node->parent);
-    }
-}
-
-void
-deleteCase5(struct element ** tree, struct element * node)
-{
-    struct element * s = sibling(node);
-
-    if  (NULL != s && s->color == rbBlack) {
-        /*
-         * this if statement is trivial,
-         * due to case 2 (even though case 2 changed the sibling to a
-         * sibling's child,
-         * the sibling's child can't be red, since no red parent can
-         * have a red child).
-         */
-        /*
-         * the following statements just force the red to be on the
-         * left of the left of the parent,
-         * or right of the right, so case six will rotate correctly.
-         */
-        if ((node == node->parent->left) &&
-                (s->right->color == rbBlack) &&
-                (s->left->color == rbRed)) {
-
-            /* this last test is trivial too due to cases 2-4. */
-            s->color       = rbRed;
-            s->left->color = rbBlack;
-
-            rotateRight(tree, s);
-        } else if ((node == node->parent->right) &&
-                (s->left->color == rbBlack) &&
-                (s->right->color == rbRed)) {
-            /*
-             * this last test is trivial too due to cases 2-4.
-             */
-            s->color        = rbRed;
-            s->right->color = rbBlack;
-
-            rotateLeft(tree, s);
-        }
-    }
-
-    deleteCase6(tree, node);
-}
-
-void
-deleteCase4(struct element ** tree, struct element * node)
-{
-    struct element * s = sibling(node);
-
-    if ((node->parent->color == rbRed) &&
-            (NULL == s || ((s->color == rbBlack) &&
-                           (s->left->color == rbBlack) &&
-                           (s->right->color == rbBlack)))) {
-        if (NULL != s) {
-            s->color = rbRed;
-        }
-        node->parent->color = rbBlack;
-    } else {
-        deleteCase5(tree, node);
-    }
-}
-
-void deleteCase1(struct element **, struct element *);
-
-void
-deleteCase3(struct element ** tree, struct element * node)
-{
-    struct element * s = sibling(node);
-
-    if ((node->parent->color == rbBlack) &&
-            (NULL == s || ((s->color == rbBlack) &&
-                           (s->left->color == rbBlack) &&
-                           (s->right->color == rbBlack)))) {
-        if (NULL != s) {
-            s->color = rbRed;
-        }
-        deleteCase1(tree, node->parent);
-    } else {
-        deleteCase4(tree, node);
-    }
-}
-
-void
-deleteCase2(struct element ** tree, struct element * node)
-{
-    struct element * s = sibling(node);
-
-    if (NULL != s && s->color == rbRed) {
-        node->parent->color = rbRed;
-        s->color            = rbBlack;
-
-        if (node == node->parent->left) {
-            rotateLeft(tree, node->parent);
-        } else {
-            rotateRight(tree, node->parent);
-        }
-    }
-
-    deleteCase3(tree, node);
-}
-
-void
-deleteCase1(struct element ** tree, struct element * node)
-{
-     if (NULL != node && NULL != node->parent) {
-         deleteCase2(tree, node);
-     }
-}
-
-struct element *
-deleteOneChild(struct element ** tree, struct element * node)
-{
-    /*
-     * Precondition: n has at most one non-null child.
-     */
-    struct element * child = (NULL == node->right) ? node->left : node->right;
-
-    replaceNode(node, child);
-
-    if (node->color == rbBlack) {
-        if (NULL != child && child->color == rbRed) {
-            child->color = rbBlack;
-        } else {
-            deleteCase1(tree, child);
-        }
-    }
-
-    if (NULL == node->parent){
-        *tree = 0x0;
-    }
-
-    return node;
-}
-
 
 
 /**
@@ -548,7 +523,6 @@ main(int argc, char * argv[])
     puts("traverse");
     traverse(root, printElement);
 
-    /*
     free(deleteElement(&root, 8));
     puts("traverse");
     traverse(root, printElement);
@@ -580,7 +554,6 @@ main(int argc, char * argv[])
     free(deleteElement(&root, 12));
     puts("traverse");
     traverse(root, printElement);
-    */
 
     return 0;
 }
