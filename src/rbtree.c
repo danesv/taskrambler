@@ -50,40 +50,195 @@ findElement(struct element * tree, int data)
     return tree;
 }
 
+/*
+ * function to get specific elements needed for 
+ * rb handling, grandparent, uncle and sibbling
+ */
+struct element *
+grandparent(struct element * node)
+{
+    if (NULL != node && NULL != node->parent) {
+        return node->parent->parent;
+    }
+
+    return NULL;
+}
+
+struct element *
+uncle(struct element * node)
+{
+    struct element * gp = grandparent(node);
+
+    if (NULL == gp) {
+        return NULL;
+    }
+
+    if (node->parent == gp->left) {
+        return gp->right;
+    }
+
+    return gp->left;
+}
+
+struct element *
+sibling(struct element * node)
+{
+    return (node == node->parent->left) ?
+        node->parent->right :
+        node->parent->left;
+}
+
+/*
+ * rotations...also needed for rb handling.
+ */
+void
+rotateLeft(struct element ** tree, struct element * node)
+{
+    struct element * rightChild = node->right;
+    struct element * rcLeftSub  = node->right->left;
+
+    rightChild->left   = node;
+    rightChild->parent = node->parent;
+    node->right        = rcLeftSub;
+    rcLeftSub->parent  = node;
+
+    if (node->parent) {
+        if (node->parent->left == node) {
+            node->parent->left = rightChild;
+        } else {
+            node->parent->right = rightChild;
+        }
+    } else {
+        *tree = rightChild;
+    }
+
+    node->parent = rightChild;
+}
+
+void
+rotateRight(struct element ** tree, struct element * node)
+{
+    struct element * leftChild  = node->left;
+    struct element * lcRightSub = node->left->right;
+
+    leftChild->right   = node;
+    leftChild->parent  = node->parent;
+    node->left         = lcRightSub;
+    lcRightSub->parent = node;
+
+    if (node->parent) {
+        if (node->parent->left == node) {
+            node->parent->left = leftChild;
+        } else {
+            node->parent->right = leftChild;
+        }
+    } else {
+        *tree = leftChild;
+    }
+
+    node->parent = leftChild;
+}
+
 /**
  * insert element in tree
  */
 struct element *
 insertElement(struct element ** tree, int data)
 {
-    struct element * node = *tree;
+    struct element * node     = *tree;
+    struct element * new_node = NULL;
+    struct element * u;
+    struct element * g;
 
+    // if tree is empty it's simple... :)
     if (NULL == node) {
-        *tree = newElement(data);
-        return *tree;
-    }
-
-    while (data != node->data) {
-        if (data < node->data) {
-            if (NULL == node->left) {
-                node->left         = newElement(data);
-                node->left->parent = node;
-                return node->left;
+        *tree = node = new_node = newElement(data);
+    } else {
+        // normal binary tree add....
+        while (data != node->data) {
+            if (data < node->data) {
+                if (NULL == node->left) {
+                    node->left         = newElement(data);
+                    node->left->parent = node;
+                    new_node = node = node->left;
+                    break;
+                } else {
+                    node = node->left;
+                }
             } else {
-                node = node->left;
-            }
-        } else {
-            if (NULL == node->right) {
-                node->right         = newElement(data);
-                node->right->parent = node;
-                return node->right;
-            } else {
-                node = node->right;
+                if (NULL == node->right) {
+                    node->right         = newElement(data);
+                    node->right->parent = node;
+                    new_node = node = node->right;
+                    break;
+                } else {
+                    node = node->right;
+                }
             }
         }
     }
 
-    return NULL;
+    if (NULL != new_node) {
+        /* 
+         * handle reballancing rb style
+         */
+        while (1) {
+            // case 1
+            if (node->parent == NULL) {
+                node->color = rbBlack;
+                // we're done.... :)
+                break;
+            }
+
+            // case 2
+            if (node->parent->color == rbBlack) {
+                // Tree is still valid ... wow, again we're done... :)
+                break;
+            }
+
+            // case 3
+            u = uncle(node);
+            g = grandparent(node);
+
+            if ((u != NULL) && (u->color == rbRed)) {
+                node->parent->color = rbBlack;
+                u->color            = rbBlack;
+                g->color            = rbRed;
+
+                node = g;
+                continue;
+            }
+
+            // case 4
+            if ((node == node->parent->right) && (node->parent == g->left)) {
+                rotateLeft(tree, node->parent);
+                node = node->left; 
+            } else if (
+                    (node == node->parent->left) &&
+                    (node->parent == g->right)) {
+
+                rotateRight(tree, node->parent);
+                node = node->right; 
+            }
+
+            // case 5
+            g = grandparent(node);
+
+            node->parent->color = rbBlack;
+            g->color            = rbRed;
+
+            if (node == node->parent->left) {
+                rotateRight(tree, g);
+            } else {
+                rotateLeft(tree, g);
+            }
+
+            // we're done..
+            break;
+        }
+    }
+
+    return new_node;
 }
 
 /**
@@ -204,194 +359,6 @@ void printElement(int data, int depth)
     puts("");
 }
 
-
-/*
- * rbinsert from wikipedia...see later if this could be
- * optiized.
- */
-struct element *
-grandparent(struct element * node)
-{
-    if (NULL != node && NULL != node->parent) {
-        return node->parent->parent;
-    }
-
-    return NULL;
-}
-
-struct element *
-uncle(struct element * node)
-{
-    struct element * gp = grandparent(node);
-
-    if (NULL == gp) {
-        return NULL;
-    }
-
-    if (node->parent == gp->left) {
-        return gp->right;
-    }
-
-    return gp->left;
-}
-
-struct element *
-sibling(struct element * node)
-{
-    if (node == node->parent->left)
-        return node->parent->right;
-    else
-        return node->parent->left;
-}
-
-
-void
-rotateLeft(struct element ** tree, struct element * node)
-{
-    struct element * rightChild = node->right;
-    struct element * rcLeftSub  = node->right->left;
-
-    rightChild->left   = node;
-    rightChild->parent = node->parent;
-    node->right        = rcLeftSub;
-    rcLeftSub->parent  = node;
-
-    if (node->parent) {
-        if (node->parent->left == node) {
-            node->parent->left = rightChild;
-        } else {
-            node->parent->right = rightChild;
-        }
-    } else {
-        *tree = rightChild;
-    }
-
-    node->parent = rightChild;
-}
-
-void
-rotateRight(struct element ** tree, struct element * node)
-{
-    struct element * leftChild  = node->left;
-    struct element * lcRightSub = node->left->right;
-
-    leftChild->right   = node;
-    leftChild->parent  = node->parent;
-    node->left         = lcRightSub;
-    lcRightSub->parent = node;
-
-    if (node->parent) {
-        if (node->parent->left == node) {
-            node->parent->left = leftChild;
-        } else {
-            node->parent->right = leftChild;
-        }
-    } else {
-        *tree = leftChild;
-    }
-
-    node->parent = leftChild;
-}
-
-void
-insertCase5(struct element ** tree, struct element * node)
-{
-    struct element *g = grandparent(node);
-
-    node->parent->color = rbBlack;
-    g->color            = rbRed;
-
-    if (node == node->parent->left) {
-        rotateRight(tree, g);
-    } else {
-        rotateLeft(tree, g);
-    }
-}
-
-void
-insertCase4(struct element ** tree, struct element * node)
-{
-    struct element * g = grandparent(node);
-
-    if ((node == node->parent->right) && (node->parent == g->left)) {
-        rotateLeft(tree, node->parent);
-
-        /*
-         * rotate_left can be the below because of already
-         * having *g =  grandparent(n) 
-         *
-         * struct node *saved_p=g->left, *saved_left_n=n->left;
-         * g->left=n; 
-         * n->left=saved_p;
-         * saved_p->right=saved_left_n;
-         * 
-         * and modify the parent's nodes properly
-         */
-        node = node->left; 
-
-    } else if (
-            (node == node->parent->left) &&
-            (node->parent == g->right)) {
-
-        rotateRight(tree, node->parent);
-
-        /*
-         * rotate_right can be the below to take advantage
-         * of already having *g =  grandparent(n) 
-         *
-         * struct node *saved_p=g->right, *saved_right_n=n->right;
-         * g->right=n; 
-         * n->right=saved_p;
-         * saved_p->left=saved_right_n;
-         * 
-         */
-        node = node->right; 
-    }
-
-    insertCase5(tree, node);
-}
-
-void insertCase1(struct element **, struct element *);
-
-void
-insertCase3(struct element ** tree, struct element * node)
-{
-    struct element * u = uncle(node);
-    struct element * g;
-
-    if ((u != NULL) && (u->color == rbRed)) {
-        node->parent->color = rbBlack;
-        u->color            = rbBlack;
-        g                   = grandparent(node);
-        g->color            = rbRed;
-
-        insertCase1(tree, g);
-    } else {
-        insertCase4(tree, node);
-    }
-}
-
-void
-insertCase2(struct element ** tree, struct element * node)
-{
-    if (node->parent->color == rbBlack) {
-        return;
-        // Tree is still valid ... wow, again we're done... :)
-    } else {
-        insertCase3(tree, node);
-    }
-}
-
-void
-insertCase1(struct element ** tree, struct element * node)
-{
-     if (node->parent == NULL) {
-         node->color = rbBlack;
-         // we're done.... :)
-     } else {
-         insertCase2(tree, node);
-     }
-}
 
 void
 replaceNode(struct element * node1, struct element * node2)
@@ -568,28 +535,20 @@ int
 main(int argc, char * argv[])
 {
     struct element * root     = NULL;
-    struct element * inserted = NULL;
 
-    inserted = insertElement(&root, 13);
-    insertCase1(&root, inserted);
-    inserted = insertElement(&root, 8);
-    insertCase1(&root, inserted);
-    inserted = insertElement(&root, 16);
-    insertCase1(&root, inserted);
-    inserted = insertElement(&root, 11);
-    insertCase1(&root, inserted);
-    inserted = insertElement(&root, 3);
-    insertCase1(&root, inserted);
-    inserted = insertElement(&root, 9);
-    insertCase1(&root, inserted);
-    inserted = insertElement(&root, 12);
-    insertCase1(&root, inserted);
-    inserted = insertElement(&root, 10);
-    insertCase1(&root, inserted);
-
+    insertElement(&root, 13);
+    insertElement(&root, 8);
+    insertElement(&root, 16);
+    insertElement(&root, 11);
+    insertElement(&root, 3);
+    insertElement(&root, 9);
+    insertElement(&root, 12);
+    insertElement(&root, 10);
+    
     puts("traverse");
     traverse(root, printElement);
 
+    /*
     free(deleteElement(&root, 8));
     puts("traverse");
     traverse(root, printElement);
@@ -621,6 +580,7 @@ main(int argc, char * argv[])
     free(deleteElement(&root, 12));
     puts("traverse");
     traverse(root, printElement);
+    */
 
     return 0;
 }
