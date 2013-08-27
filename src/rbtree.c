@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
+#define NVALUES  10
 
 enum rbColor {rbBlack=1, rbRed=2};
 
@@ -19,14 +21,15 @@ struct element
 struct element *
 newElement(int data)
 {
-    struct element * node = malloc(sizeof(struct element));
-    node->data   = data;
-    node->color  = rbRed;
-    node->parent = NULL;
-    node->left   = NULL;
-    node->right  = NULL;
+    struct element * element = malloc(sizeof(struct element));
 
-    return node;
+    element->data   = data;
+    element->color  = rbRed;
+    element->parent = NULL;
+    element->left   = NULL;
+    element->right  = NULL;
+
+    return element;
 }
 
 /**
@@ -83,9 +86,15 @@ uncle(struct element * node)
 struct element *
 sibling(struct element * node)
 {
-    return (node == node->parent->left) ?
-        node->parent->right :
-        node->parent->left;
+    if (NULL == node) {
+        return NULL;
+    }
+
+    if (NULL == node->parent->left || node == node->parent->left) {
+        return node->parent->right;
+    } else {
+        return node->parent->left;
+    }
 }
 
 /*
@@ -100,7 +109,9 @@ rotateLeft(struct element ** tree, struct element * node)
     rightChild->left   = node;
     rightChild->parent = node->parent;
     node->right        = rcLeftSub;
-    rcLeftSub->parent  = node;
+    if (NULL != rcLeftSub) {
+        rcLeftSub->parent  = node;
+    }
 
     if (node->parent) {
         if (node->parent->left == node) {
@@ -124,7 +135,9 @@ rotateRight(struct element ** tree, struct element * node)
     leftChild->right   = node;
     leftChild->parent  = node->parent;
     node->left         = lcRightSub;
-    lcRightSub->parent = node;
+    if (NULL != lcRightSub) {
+        lcRightSub->parent = node;
+    }
 
     if (node->parent) {
         if (node->parent->left == node) {
@@ -140,7 +153,10 @@ rotateRight(struct element ** tree, struct element * node)
 }
 
 void
-replaceNode(struct element * node1, struct element * node2)
+replaceNode(
+        struct element ** tree,
+        struct element * node1,
+        struct element * node2)
 {
     if (NULL != node1->parent) {
         if (node1 == node1->parent->left) {
@@ -148,6 +164,8 @@ replaceNode(struct element * node1, struct element * node2)
         } else {
             node1->parent->right = node2;
         }
+    } else {
+        *tree = node2;
     }
 
     if (NULL != node2) {
@@ -160,7 +178,7 @@ replaceNode(struct element * node1, struct element * node2)
  * insert element in tree
  */
 struct element *
-insertElement(struct element ** tree, int data)
+insertElement(struct element ** tree, struct element * element)
 {
     struct element * node     = *tree;
     struct element * new_node = NULL;
@@ -169,28 +187,30 @@ insertElement(struct element ** tree, int data)
 
     // if tree is empty it's simple... :)
     if (NULL == node) {
-        *tree = node = new_node = newElement(data);
+        *tree = node = new_node = element;
     } else {
         // normal binary tree add....
-        while (data != node->data) {
-            if (data < node->data) {
+        while (element->data != node->data) {
+            if (element->data < node->data) {
                 if (NULL == node->left) {
-                    node->left         = newElement(data);
+                    node->left         = element;
                     node->left->parent = node;
                     new_node = node = node->left;
                     break;
                 } else {
                     node = node->left;
                 }
-            } else {
+            } else if (element->data > node->data) {
                 if (NULL == node->right) {
-                    node->right         = newElement(data);
+                    node->right         = element;
                     node->right->parent = node;
                     new_node = node = node->right;
                     break;
                 } else {
                     node = node->right;
                 }
+            } else {
+                return node;
             }
         }
     }
@@ -217,7 +237,7 @@ insertElement(struct element ** tree, int data)
             u = uncle(node);
             g = grandparent(node);
 
-            if ((u != NULL) && (u->color == rbRed)) {
+            if (u != NULL && u->color == rbRed) {
                 node->parent->color = rbBlack;
                 u->color            = rbBlack;
                 g->color            = rbRed;
@@ -227,12 +247,10 @@ insertElement(struct element ** tree, int data)
             }
 
             // case 4
-            if ((node == node->parent->right) && (node->parent == g->left)) {
+            if (node == node->parent->right && node->parent == g->left) {
                 rotateLeft(tree, node->parent);
                 node = node->left; 
-            } else if (
-                    (node == node->parent->left) &&
-                    (node->parent == g->right)) {
+            } else if (node == node->parent->left && node->parent == g->right) {
 
                 rotateRight(tree, node->parent);
                 node = node->right; 
@@ -284,7 +302,7 @@ findInOrderSuccessor(struct element * tree)
 struct element * deleteOneChild(struct element **, struct element *);
 
 struct element *
-deleteElement(struct element ** tree, int data)
+deleteElement(struct element ** tree, struct element * element)
 {
     struct element * node = *tree;
     struct element * del_node;
@@ -292,8 +310,8 @@ deleteElement(struct element ** tree, int data)
     struct element * s;
 
     // find the relevant node and it's parent
-    while (NULL != node && node->data != data) {
-        if (data < node->data) {
+    while (NULL != node && node->data != element->data) {
+        if (element->data < node->data) {
             node = node->left;
         } else {
             node = node->right;
@@ -318,35 +336,35 @@ deleteElement(struct element ** tree, int data)
         del_node = node = successor;
     }
 
+    // Precondition: n has at most one non-null child.
+    child = (NULL == node->right) ? node->left : node->right;
+    replaceNode(tree, node, child);
+
+    // delete one child case
+    // TODO this is overly complex as simply derived from the function...
+    // maybe this can be simplified. Maybe not...check.
+    if (node->color == rbBlack) {
+        if (NULL != child && child->color == rbRed) {
+            child->color = rbBlack;
+            // done despite modifying tree itself if neccessary..
+            return del_node;
+        } else {
+            if (NULL != child) {
+                node = child;
+            } else {
+                node->color = rbBlack;
+                node->left  = NULL;
+                node->right = NULL;
+            }
+        }
+    } else {
+        return del_node;
+    }
+
     // delete and rb rebalance...
     while(1) {
-        // Precondition: n has at most one non-null child.
-        child = (NULL == node->right) ? node->left : node->right;
-        replaceNode(node, child);
-
-        // delete one child case
-        // TODO this is overly complex as simply derived from the function...
-        // maybe this can be simplified. Maybe not...check.
-        if (node->color == rbBlack) {
-            if (NULL != child && child->color == rbRed) {
-                child->color = rbBlack;
-                // done despite modifying tree itself if neccessary..
-                break;
-            } else {
-                if (NULL == node->parent){
-                    *tree = 0x0;
-                }
-                node = child;
-            }
-        } else {
-            if (NULL == node->parent){
-                *tree = 0x0;
-            }
-            break;
-        }
-
         // case 1
-        if (NULL == node || NULL == node->parent) {
+        if (NULL == node->parent) {
             // done again
             break;
         }
@@ -358,17 +376,23 @@ deleteElement(struct element ** tree, int data)
             node->parent->color = rbRed;
             s->color            = rbBlack;
 
-            if (node == node->parent->left) {
+            /*
+             * detect which child we are...assumption
+             * if we are not parent->right and parent->right is not
+             * null we must be left, even if its set to NULL previously
+             */
+            if (NULL != node->parent->right && node != node->parent->right) {
                 rotateLeft(tree, node->parent);
             } else {
                 rotateRight(tree, node->parent);
             }
         }
 
+        s = sibling(node);
         // case 3 / 4
         if (NULL == s || ((s->color == rbBlack) &&
-                               (s->left->color == rbBlack) &&
-                               (s->right->color == rbBlack))) {
+                    (NULL == s->left || s->left->color == rbBlack) &&
+                    (NULL == s->right || s->right->color == rbBlack))) {
 
             if (NULL != s) {
                 s->color = rbRed;
@@ -384,11 +408,7 @@ deleteElement(struct element ** tree, int data)
                 // and done again...
                 break;
             }
-        } else {
-            // done...
-            break;
         }
-
 
         // case 5
         if  (NULL != s && s->color == rbBlack) {
@@ -402,8 +422,8 @@ deleteElement(struct element ** tree, int data)
             // left of the left of the parent,
             // or right of the right, so case 6 will rotate correctly.
             if ((node == node->parent->left) &&
-                    (s->right->color == rbBlack) &&
-                    (s->left->color == rbRed)) {
+                    (NULL == s->right || s->right->color == rbBlack) &&
+                    (NULL != s->left && s->left->color == rbRed)) {
 
                 // this last test is trivial too due to cases 2-4.
                 s->color       = rbRed;
@@ -411,8 +431,8 @@ deleteElement(struct element ** tree, int data)
 
                 rotateRight(tree, s);
             } else if ((node == node->parent->right) &&
-                    (s->left->color == rbBlack) &&
-                    (s->right->color == rbRed)) {
+                    (NULL == s->left || s->left->color == rbBlack) &&
+                    (NULL != s->right && s->right->color == rbRed)) {
                 // this last test is trivial too due to cases 2-4.
                 s->color        = rbRed;
                 s->right->color = rbBlack;
@@ -421,16 +441,31 @@ deleteElement(struct element ** tree, int data)
             }
         }
 
+        s = sibling(node);
         // case 6
-        s->color            = node->parent->color;
-        node->parent->color = rbBlack;
+        if (NULL != s) {
+            s->color = node->parent->color;
+        }
 
-        if (node == node->parent->left) {
-            s->right->color = rbBlack;
-            rotateLeft(tree, node->parent);
-        } else {
-            s->left->color = rbBlack;
-            rotateRight(tree, node->parent);
+        if (NULL != node && NULL != node->parent) {
+            node->parent->color = rbBlack;
+
+            /*
+             * detect which child we are...assumption
+             * if we are not parent->right and parent->right is not
+             * null we must be left, even if its set to NULL previously
+             */
+            if (NULL != node->parent->right && node != node->parent->right) {
+                if (NULL != s->right) {
+                    s->right->color = rbBlack;
+                }
+                rotateLeft(tree, node->parent);
+            } else {
+                if (NULL != s->left) {
+                    s->left->color = rbBlack;
+                }
+                rotateRight(tree, node->parent);
+            }
         }
 
         // done...
@@ -509,49 +544,57 @@ void printElement(int data, int depth, enum rbColor color)
 int
 main(int argc, char * argv[])
 {
-    struct element * root     = NULL;
+    struct element * root  = NULL;
+    int              value;
+    int              count;
 
-    insertElement(&root, 13);
-    insertElement(&root, 8);
-    insertElement(&root, 16);
-    insertElement(&root, 11);
-    insertElement(&root, 3);
-    insertElement(&root, 9);
-    insertElement(&root, 12);
-    insertElement(&root, 10);
-    
+//    insertElement(&root, newElement(84));
+//    insertElement(&root, newElement(87));
+//    insertElement(&root, newElement(78));
+//    insertElement(&root, newElement(16));
+//    insertElement(&root, newElement(94));
+//
+//    puts("traverse");
+//    traverse(root, printElement);
+//
+//    free(deleteElement(&root, findElement(root, 87)));
+//    puts("traverse");
+//    traverse(root, printElement);
+//    free(deleteElement(&root, findElement(root, 94)));
+//    puts("traverse");
+//    traverse(root, printElement);
+//    free(deleteElement(&root, findElement(root, 16)));
+//    puts("traverse");
+//    traverse(root, printElement);
+//    free(deleteElement(&root, findElement(root, 84)));
+//    puts("traverse");
+//    traverse(root, printElement);
+//    free(deleteElement(&root, findElement(root, 78)));
+//    puts("traverse");
+//    traverse(root, printElement);
+//
+    for (count=0; count<NVALUES;) {
+        value = (random() % 1000000) + 1;
+
+        if (NULL == findElement(root, value)) {
+            insertElement(&root, newElement(value));
+            count++;
+        }
+    }
+
     puts("traverse");
     traverse(root, printElement);
 
-    free(deleteElement(&root, 8));
-    puts("traverse");
-    traverse(root, printElement);
+    for (count=0; count<NVALUES;) {
+        value                    = (random() % 1000000) + 1;
+        struct element * element = findElement(root, value);
 
-    free(deleteElement(&root, 11));
-    puts("traverse");
-    traverse(root, printElement);
+        if (NULL != element) {
+            free(deleteElement(&root, element));
+            count++;
+        }
+    }
 
-    free(deleteElement(&root, 13));
-    puts("traverse");
-    traverse(root, printElement);
-
-    free(deleteElement(&root, 3));
-    puts("traverse");
-    traverse(root, printElement);
-
-    free(deleteElement(&root, 16));
-    puts("traverse");
-    traverse(root, printElement);
-
-    free(deleteElement(&root, 10));
-    puts("traverse");
-    traverse(root, printElement);
-
-    free(deleteElement(&root, 9));
-    puts("traverse");
-    traverse(root, printElement);
-
-    free(deleteElement(&root, 12));
     puts("traverse");
     traverse(root, printElement);
 

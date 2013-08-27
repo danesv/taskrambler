@@ -8,4 +8,6 @@ VERY BIG TODO:
 - IPV6 support
 
 - There seem to be a problem in the server under heavy load. Some tests with ab show that at some point it does not accept any more connections. Nor does it seem to answer request. I guess that it might be difficult to find this....
-  => might be done...
+  => might be done... maybe not completely, I still loose connections under very high load.
+
+- using tsearch for my memory management was kind of a bad idea. tsearch uses malloc and free upon addition and remove of elements. Resulting again in uncontroolled heap usage. I guess I have to implement my own tree mechanism here, which does not involve further allocation.
