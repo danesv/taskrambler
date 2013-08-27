@@ -14,6 +14,9 @@ struct element
 
     enum rbColor color;
 
+    struct element * next;
+    struct element * last;
+
     struct element * parent;
     struct element * left;
     struct element * right;
@@ -26,6 +29,9 @@ newElement(size_t size)
 
     element->size   = size;
     element->ptr    = element + sizeof(struct element);
+
+    element->next   = NULL;
+    element->last   = NULL;
 
     element->color  = rbRed;
     element->parent = NULL;
@@ -192,17 +198,21 @@ insertElement(struct element ** tree, struct element * element)
     struct element * u;
     struct element * g;
 
+    element->next   = NULL;
+    element->last   = NULL;
+
+    element->color  = rbRed;
+    element->parent = NULL;
+    element->left   = NULL;
+    element->right  = NULL;
+
     // if tree is empty it's simple... :)
     if (NULL == node) {
         *tree = node = new_node = element;
     } else {
         // normal binary tree add....
-        while (element->size != node->size || element->ptr != node->ptr) {
-            if (element->size < node->size && NULL != node->left) {
-                node = node->left;
-            } else if (element->size > node->size && NULL != node->right) {
-                node = node->right;
-            } else if (element->ptr < node->ptr) {
+        while (NULL != node) {
+            if (element->size < node->size) {
                 if (NULL == node->left) {
                     node->left         = element;
                     node->left->parent = node;
@@ -211,7 +221,7 @@ insertElement(struct element ** tree, struct element * element)
                 } else {
                     node = node->left;
                 }
-            } else if (element->ptr > node->ptr) {
+            } else if (element->size > node->size) {
                 if (NULL == node->right) {
                     node->right         = element;
                     node->right->parent = node;
@@ -221,6 +231,13 @@ insertElement(struct element ** tree, struct element * element)
                     node = node->right;
                 }
             } else {
+                if (NULL == node->next) {
+                    node->next = element;
+                    node->last = element;
+                } else {
+                    node->last->next = element;
+                    node->last       = element;
+                }
                 return node;
             }
         }
@@ -327,14 +344,41 @@ deleteElement(struct element ** tree, struct element * element)
     struct element * s;
 
     // find the relevant node and it's parent
-    while (NULL != node
-            && node->size != element->size
-            && node->ptr != element->ptr) {
+    while (NULL != node) {
 
-        if (element->size < node->size || element->ptr < node->ptr) {
+        if (element->size < node->size) {
             node = node->left;
-        } else {
+        } else if (element->size > node->size) {
             node = node->right;
+        } else {
+            if (NULL != node->next) {
+                if (NULL != node->parent) {
+                    if (node == node->parent->left) {
+                        node->parent->left = node->next;
+                    } else {
+                        node->parent->right = node->next;
+                    }
+                } else {
+                    *tree = node->next;
+                }
+
+                if (NULL != node->left) {
+                    node->left->parent = node->next;
+                }
+
+                if (NULL != node->right) {
+                    node->right->parent = node->next;
+                }
+                
+                node->next->last   = node->last;
+                node->next->color  = node->color;
+                node->next->parent = node->parent;
+                node->next->left   = node->left;
+                node->next->right  = node->right;
+
+                return node;
+            }
+            break;
         }
     }
 
@@ -521,7 +565,7 @@ deleteElement(struct element ** tree, struct element * element)
 
 
 void
-traverse(struct element * tree, void (*cb)(size_t, void *, int, enum rbColor))
+traverse(struct element * tree, void (*cb)(struct element *, int))
 {
     struct element * previous = tree;
     struct element * node     = tree;
@@ -549,7 +593,7 @@ traverse(struct element * tree, void (*cb)(size_t, void *, int, enum rbColor))
              * If there are no more elements to the left or we
              * came from the left, process data.
              */
-            cb(node->size, node->ptr, depth, node->color);
+            cb(node, depth);
             previous = node;
 
             if (NULL != node->right) {
@@ -570,15 +614,96 @@ traverse(struct element * tree, void (*cb)(size_t, void *, int, enum rbColor))
     }
 }
 
-void printElement(size_t size, void * ptr, int depth, enum rbColor color)
+void
+post(struct element * tree, void (*cb)(struct element *, int))
+{
+    struct element * previous = tree;
+    struct element * node     = tree;
+    int              depth    = 1;
+
+    /*
+     * I think this has something like O(n+log(n)) on a ballanced
+     * tree because I have to traverse back the rightmost leaf to
+     * the root to get a break condition.
+     */
+    while (node) {
+        /*
+         * If we come from the right so nothing and go to our
+         * next parent.
+         */
+        if ((NULL == node->left && NULL == node->right)
+                || previous == node->right) {
+
+            struct element * parent = node->parent;
+
+            cb(node, depth);
+
+            previous = node;
+            node     = parent;
+            depth--;
+            continue;
+        }
+
+        if ((NULL == node->left || previous == node->left)) {
+            /*
+             * If there are no more elements to the left or we
+             * came from the left, process data.
+             */
+            previous = node;
+
+            if (NULL != node->right) {
+                node = node->right;
+                depth++;
+            } else {
+                node = node->parent;
+                depth--;
+            }
+        } else {
+            /*
+             * if there are more elements to the left go there.
+             */
+            previous = node;
+            node     = node->left;
+            depth++;
+        }
+    }
+}
+
+void printElement(struct element * node, int depth)
 {
     int  i;
 
-    printf("%s %010zu:0x%p(%02d)", (color==rbRed)?"R":"B", size, ptr, depth);
+    printf("%s %010zu:%p(%02d)",
+            (node->color==rbRed)?"R":"B",
+            node->size,
+            node->ptr,
+            depth);
     for (i=0; i<depth; i++) printf("-");
     puts("");
+
+    node = node->next;
+    while (NULL != node) {
+        printf("  %s %010zu:%p(%02d)",
+                (node->color==rbRed)?"R":"B",
+                node->size,
+                node->ptr,
+                depth);
+        for (i=0; i<depth; i++) printf("-");
+        puts("");
+        node = node->next;
+    }
 }
 
+void cleanup(struct element * node, int depth)
+{
+    while (NULL != node) {
+        printf("free node: ");
+        printElement(node, 0);
+        struct element * next = node->next;
+        free(node);
+        node = next;
+    }
+}
 
 /**
  * =======================================================================
@@ -588,58 +713,6 @@ main(int argc, char * argv[])
 {
     struct element * root  = NULL;
     struct element * found = NULL;
-    int              value;
-    int              count;
-
-//    insertElement(&root, newElement(84));
-//    insertElement(&root, newElement(87));
-//    insertElement(&root, newElement(78));
-//    insertElement(&root, newElement(16));
-//    insertElement(&root, newElement(94));
-//
-//    puts("traverse");
-//    traverse(root, printElement);
-//
-//    free(deleteElement(&root, findElement(root, 87)));
-//    puts("traverse");
-//    traverse(root, printElement);
-//    free(deleteElement(&root, findElement(root, 94)));
-//    puts("traverse");
-//    traverse(root, printElement);
-//    free(deleteElement(&root, findElement(root, 16)));
-//    puts("traverse");
-//    traverse(root, printElement);
-//    free(deleteElement(&root, findElement(root, 84)));
-//    puts("traverse");
-//    traverse(root, printElement);
-//    free(deleteElement(&root, findElement(root, 78)));
-//    puts("traverse");
-//    traverse(root, printElement);
-//
-//    for (count=0; count<NVALUES;) {
-//        value = (random() % 1000000) + 1;
-//
-//        if (NULL == findElement(root, value)) {
-//            insertElement(&root, newElement(value));
-//            count++;
-//        }
-//    }
-//
-//    puts("traverse");
-//    traverse(root, printElement);
-//
-//    for (count=0; count<NVALUES;) {
-//        value                    = (random() % 1000000) + 1;
-//        struct element * element = findElement(root, value);
-//
-//        if (NULL != element) {
-//            free(deleteElement(&root, element));
-//            count++;
-//        }
-//    }
-//
-//    puts("traverse");
-//    traverse(root, printElement);
 
     insertElement(&root, newElement(40));
     insertElement(&root, newElement(50));
@@ -662,7 +735,7 @@ main(int argc, char * argv[])
     if (NULL == found) {
         printf("can't find segmenet of minimum size: %d\n", 10);
     } else {
-        printElement(found->size, found->ptr, 0, found->color);
+        printElement(found, 0);
     }
     puts("");
 
@@ -670,7 +743,7 @@ main(int argc, char * argv[])
     if (NULL == found) {
         printf("can't find segmenet of minimum size: %d\n", 64);
     } else {
-        printElement(found->size, found->ptr, 0, found->color);
+        printElement(found, 0);
     }
     puts("");
 
@@ -678,14 +751,45 @@ main(int argc, char * argv[])
     if (NULL == found) {
         printf("can't find segmenet of minimum size: %d\n", 90);
     } else {
-        printElement(found->size, found->ptr, 0, found->color);
+        printElement(found, 0);
     }
     puts("");
 
-    deleteElement(&root, findElement(root, 70));
+    free(deleteElement(&root, findElement(root, 70)));
     puts("traverse");
     traverse(root, printElement);
     puts("");
+
+    insertElement(&root, newElement(80));
+    insertElement(&root, newElement(50));
+    insertElement(&root, newElement(80));
+
+    puts("traverse");
+    traverse(root, printElement);
+    puts("");
+
+    found = deleteElement(&root, findElement(root, 80));
+    printf("up to free: %p\n", found);
+    free(found);
+    puts("traverse");
+    traverse(root, printElement);
+    puts("");
+
+    found = deleteElement(&root, findElement(root, 50));
+    printf("up to free: %p\n", found);
+    free(found);
+    puts("traverse");
+    traverse(root, printElement);
+    puts("");
+
+    found = deleteElement(&root, findElement(root, 70));
+    printf("up to free: %p\n", found);
+    free(found);
+    puts("traverse");
+    traverse(root, printElement);
+    puts("");
+
+    post(root, cleanup);
 
     return 0;
 }

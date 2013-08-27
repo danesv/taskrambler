@@ -56,18 +56,17 @@
 
 enum rbColor {rbBlack=1, rbRed=2};
 
-int malloccount = 0;
 
-struct memSegment {
-	size_t   size;
-	void   * ptr;
+struct memSegment
+{
+    size_t   size;
+    void   * ptr;
 
-	// for address queue
-	struct memSegment * next;
-	struct memSegment * last;
-
-	// for rbtree
     enum rbColor color;
+
+    struct memSegment * next;
+    struct memSegment * last;
+
     struct memSegment * parent;
     struct memSegment * left;
     struct memSegment * right;
@@ -77,14 +76,12 @@ struct memSegment *
 newElement(size_t size)
 {
     struct memSegment * element = malloc(size + sizeof(struct memSegment));
-	malloccount++;
-	printf("+");
 
     element->size   = size;
-    element->ptr    = (void *)element + sizeof(struct memSegment);
+    element->ptr    = (void*)element + sizeof(struct memSegment);
 
-	element->next   = NULL;
-	element->last   = NULL;
+    element->next   = NULL;
+    element->last   = NULL;
 
     element->color  = rbRed;
     element->parent = NULL;
@@ -104,7 +101,7 @@ findElement(struct memSegment * tree, size_t size)
 
     while (NULL != tree) {
         if (tree->size == size) {
-			fitting = tree;
+            fitting = tree;
             break;
         }
 
@@ -251,19 +248,20 @@ insertElement(struct memSegment ** tree, struct memSegment * element)
     struct memSegment * u;
     struct memSegment * g;
 
-	element->color  = rbRed;
-	element->parent = NULL;
-	element->left   = NULL;
-	element->right  = NULL;
-	element->next   = NULL;
-	element->last   = NULL;
+    element->next   = NULL;
+    element->last   = NULL;
+
+    element->color  = rbRed;
+    element->parent = NULL;
+    element->left   = NULL;
+    element->right  = NULL;
 
     // if tree is empty it's simple... :)
     if (NULL == node) {
         *tree = node = new_node = element;
     } else {
         // normal binary tree add....
-        while (element->size != node->size) {
+        while (NULL != node) {
             if (element->size < node->size) {
                 if (NULL == node->left) {
                     node->left         = element;
@@ -283,13 +281,14 @@ insertElement(struct memSegment ** tree, struct memSegment * element)
                     node = node->right;
                 }
             } else {
-				if (NULL == node->next) {
-					node->next = node->last = element;
-				} else {
-					node->last->next = element;
-					node->last       = element;
-				}
-                return element;
+                if (NULL == node->next) {
+                    node->next = element;
+                    node->last = element;
+                } else {
+                    node->last->next = element;
+                    node->last       = element;
+                }
+                return node;
             }
         }
     }
@@ -365,6 +364,12 @@ insertElement(struct memSegment ** tree, struct memSegment * element)
  * aka left in-order successor.
  * We return the parent of the element in the out argument parent.
  * This can be NULL wenn calling.
+ *
+ * 2: *successor = {size = 80, ptr = 0x603ae0, color = rbRed, parent = 0x603160, 
+ *   left = 0x0, right = 0x0}
+ *   1: *node = {size = 70, ptr = 0x603a60, color = rbBlack, parent = 0x603070, 
+ *     left = 0x6030e0, right = 0x6031e0}
+ *
  */
 struct memSegment *
 findInOrderSuccessor(struct memSegment * tree)
@@ -390,46 +395,41 @@ deleteElement(struct memSegment ** tree, struct memSegment * element)
 
     // find the relevant node and it's parent
     while (NULL != node) {
+
         if (element->size < node->size) {
             node = node->left;
         } else if (element->size > node->size) {
             node = node->right;
         } else {
-			// we know we found our tree element.
-			if (NULL != node->next) {
-				// last element.
-				if (NULL != node->parent) {
-					if (node->parent->left == node->parent) {
-						node->parent->left = node->next;
-					} else {
-						node->parent->right = node->next;
-					}
-				}
+            if (NULL != node->next) {
+                if (NULL != node->parent) {
+                    if (node == node->parent->left) {
+                        node->parent->left = node->next;
+                    } else {
+                        node->parent->right = node->next;
+                    }
+                } else {
+                    *tree = node->next;
+                }
 
-				if (NULL != node->left) {
-					node->left->parent = node->next;
-				}
+                if (NULL != node->left) {
+                    node->left->parent = node->next;
+                }
 
-				if (NULL != node->right) {
-					node->right->parent = node->next;
-				}
+                if (NULL != node->right) {
+                    node->right->parent = node->next;
+                }
+                
+                node->next->last   = node->last;
+                node->next->color  = node->color;
+                node->next->parent = node->parent;
+                node->next->left   = node->left;
+                node->next->right  = node->right;
 
-				if (node->next == node->last) {
-					node->next->next = NULL;
-					node->next->last = NULL;
-				} else {
-					node->next->last = node->last;
-				}
-
-				node->next->parent = node->parent;
-				node->next->color  = node->color;
-				node->next->left   = node->left;
-				node->next->right  = node->right;
-
-				return node;
-			}
-			break;
-		}
+                return node;
+            }
+            break;
+        }
     }
 
     // element not found
@@ -446,10 +446,6 @@ deleteElement(struct memSegment ** tree, struct memSegment * element)
     if (NULL != node->left && NULL != node->right) {
         struct memSegment * successor = findInOrderSuccessor(node);
 
-		// this is a replacement code for simply change value and remove
-		// successor...I can not do this here because the address of
-		// the object is part of the information that has to be
-		// preserved.
         enum rbColor tmpcolor      = successor->color;
         struct memSegment * tmpparent = successor->parent;
         struct memSegment * tmpleft   = successor->left;
@@ -630,7 +626,7 @@ traverse(struct memSegment * tree, void (*cb)(struct memSegment *, int))
      * tree because I have to traverse back the rightmost leaf to
      * the root to get a break condition.
      */
-    while (NULL != node) {
+    while (node) {
         /*
          * If we come from the right so nothing and go to our
          * next parent.
@@ -668,20 +664,95 @@ traverse(struct memSegment * tree, void (*cb)(struct memSegment *, int))
     }
 }
 
+void
+post(struct memSegment * tree, void (*cb)(struct memSegment *, int))
+{
+    struct memSegment * previous = tree;
+    struct memSegment * node     = tree;
+    int              depth    = 1;
+
+    /*
+     * I think this has something like O(n+log(n)) on a ballanced
+     * tree because I have to traverse back the rightmost leaf to
+     * the root to get a break condition.
+     */
+    while (node) {
+        /*
+         * If we come from the right so nothing and go to our
+         * next parent.
+         */
+        if ((NULL == node->left && NULL == node->right)
+                || previous == node->right) {
+
+            struct memSegment * parent = node->parent;
+
+            cb(node, depth);
+
+            previous = node;
+            node     = parent;
+            depth--;
+            continue;
+        }
+
+        if ((NULL == node->left || previous == node->left)) {
+            /*
+             * If there are no more elements to the left or we
+             * came from the left, process data.
+             */
+            previous = node;
+
+            if (NULL != node->right) {
+                node = node->right;
+                depth++;
+            } else {
+                node = node->parent;
+                depth--;
+            }
+        } else {
+            /*
+             * if there are more elements to the left go there.
+             */
+            previous = node;
+            node     = node->left;
+            depth++;
+        }
+    }
+}
+
 void printElement(struct memSegment * node, int depth)
 {
     int  i;
 
-    printf("%s %010zu:0x%p(%02d)",
-			(node->color==rbRed)?"R":"B",
-			node->size, 
-			node->ptr, 
-			depth);
-
+    printf("%s %010zu:%p(%02d)",
+            (node->color==rbRed)?"R":"B",
+            node->size,
+            node->ptr,
+            depth);
     for (i=0; i<depth; i++) printf("-");
     puts("");
+
+    node = node->next;
+    while (NULL != node) {
+        printf("  %s %010zu:%p(%02d)",
+                (node->color==rbRed)?"R":"B",
+                node->size,
+                node->ptr,
+                depth);
+        for (i=0; i<depth; i++) printf("-");
+        puts("");
+        node = node->next;
+    }
 }
 
+void
+cleanup(struct memSegment * node, int depth)
+{
+    while (NULL != node) {
+        struct memSegment * next = node->next;
+        free(node);
+        node = next;
+    }
+}
 
 struct memSegment * segments = NULL;
 
@@ -731,13 +802,11 @@ static
 void
 segmentFree(struct memSegment * segment, int depth)
 {
-	while (NULL != segment) {
-		struct memSegment * next = segment->next;
-		free(segment);
-		malloccount--;
-		printf("-");
-		segment = next;
-	}
+    while (NULL != segment) {
+        struct memSegment * next = segment->next;
+        free(segment);
+        segment = next;
+    }
 }
 
 
@@ -757,7 +826,7 @@ memMalloc(size_t size)
 	} else {
 		//printf("  FOUND Segment: 0x%p of size: %zu\n", seg, seg->size);
 		// remove the found one from the tree as we use it now.
-		deleteElement(&segments, seg);
+		seg = deleteElement(&segments, seg);
 	}
 
 
@@ -799,27 +868,9 @@ memFree(void ** mem)
 }
 
 void
-pre_order(struct memSegment * tree, void (*cb)(struct memSegment *, int))
-{
-	if (NULL != tree) {
-		if (NULL != tree->left) {
-			pre_order(tree->left, cb);
-		}
-
-		if (NULL != tree->right) {
-			pre_order(tree->right, cb);
-		}
-
-		cb(tree, 0);
-	}
-}
-
-void
 memCleanup()
 {
-	printf("\n");
-	pre_order(segments, segmentFree);
-	printf("\nmalloccount: %d\n", malloccount);
+	post(segments, segmentFree);
 }
 
 void
