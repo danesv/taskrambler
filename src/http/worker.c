@@ -24,12 +24,15 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
 #include <stdio.h>
 #include <search.h>
 
 #include "class.h"
 #include "stream.h"
+#include "hash.h"
 #include "http/worker.h"
 #include "http/parser.h"
 #include "http/writer.h"
@@ -48,6 +51,42 @@ httpWorkerCtor(void * _this, va_list * params)
 	strcpy(this->id, id);
 
 	this->val = va_arg(*params, struct randval *);
+
+	/* read all mimetypes in a hash */
+	this->mime_types = new(Hash);
+	if (0 == access("./config/mime.types", O_RDONLY)) {
+		FILE * handle = fopen("./config/mime.types", "r");
+
+		if (NULL != handle) {
+			char buffer[512];
+
+			while (NULL != fgets(buffer, 512, handle)) {
+				char * tmp;
+				char * key = buffer;
+				char * value;
+				size_t nkey;
+				size_t nvalue;
+
+				buffer[511] = '\0';
+				tmp = memchr(key, ' ', 512);
+
+				if (NULL != tmp) {
+					*tmp = '\0';
+				}
+				nkey = tmp - buffer;
+
+				value = tmp + 1;
+				for (; *value == ' ' && value < buffer+512; value++);
+
+				nvalue = strlen(value);
+
+				hashAdd(this->mime_types,
+						new(HashValue, key, nkey, value, nvalue));
+			}
+
+			fclose(handle);
+		}
+	}
 
 	sprintf(cbuf_id, "%s_%s", "parser", id);
 	this->pbuf   = new(Cbuf, cbuf_id, PARSER_MAX_BUF);
@@ -84,6 +123,7 @@ httpWorkerDtor(void * _this)
 	delete(this->writer);
 
 	if (NULL != this->pbuf) {
+		delete(this->mime_types);
 		delete(this->pbuf); //!< cloned workers have NULL, so delete won't do anything
 		delete(this->wbuf); //!< cloned workers have NULL, so delete won't do anything
 		tdestroy(*(this->sroot), tDelete);
@@ -98,6 +138,8 @@ httpWorkerClone(void * _this, void * _base)
 	HttpWorker base = _base;
 
 	this->val  = base->val;
+
+	this->mime_types = base->mime_types;
 
 	this->parser = new(HttpParser, base->pbuf);
 	this->writer = new(HttpWriter, base->wbuf);

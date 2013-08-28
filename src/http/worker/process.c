@@ -47,6 +47,7 @@
 
 HttpMessage httpWorkerGetAsset(HttpRequest, const char *, const char *, size_t);
 void        httpWorkerAddCommonHeader(HttpMessage, HttpMessage);
+char *		httpWorkerGetMimeType(HttpWorker, const char * extension);
 
 
 ssize_t
@@ -68,11 +69,11 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			if (NULL == this->session) {
 				HashValue sidstr = hashGet(request->cookies, CSTRA("sid"));
 
-					if (NULL != sidstr) {
-						unsigned long sid;
+				if (NULL != sidstr) {
+					unsigned long sid;
 
 					sid = strtoul((char*)(sidstr->value), NULL, 10);
-						this->session = sessionGet(this->sroot, sid);
+					this->session = sessionGet(this->sroot, sid);
 				}
 			}
 
@@ -225,12 +226,25 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 				else {
 					char asset[2048] = "./assets/html";
+					char * extension = strrchr(request->path, '.');
+					char * mime_type = NULL;
+					char   default_mime[] = "application/octet-stream";
+
+					if (NULL != extension) {
+						extension++;
+						mime_type = httpWorkerGetMimeType(this, extension);
+					}
+
+					if (NULL == mime_type) {
+						mime_type = default_mime;
+					}
 
 					strcat(asset, request->path);
 					response = httpWorkerGetAsset(
 							request,
 							asset,
-							CSTRA("text/html"));
+							mime_type,
+							strlen(mime_type));
 				}
 
 			}

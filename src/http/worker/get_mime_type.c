@@ -1,6 +1,5 @@
 /**
  * \file
- * Worker for processing HTTP request, response cycles.
  *
  * \author	Georg Hopp
  *
@@ -21,44 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __HTTP_WORKER_H__
-#define __HTTP_WORKER_H__
-
 #include <sys/types.h>
-#include <time.h>
 
-#include "class.h"
+#include "http/worker.h"
+
+#include "utils/memory.h"
 #include "hash.h"
-#include "http/parser.h"
-#include "http/writer.h"
-#include "cbuf.h"
-#include "session.h"
 
-#include "commons.h"
+char *
+httpWorkerGetMimeType(
+		HttpWorker   this,
+		const char * extension)
+{
+	HashValue mime_type;
 
-struct randval {
-	time_t timestamp;
-	int    value;
-};
+	mime_type = hashGet(this->mime_types, extension, strlen(extension));
 
-
-CLASS(HttpWorker) {
-	char           * id;
-	struct randval * val;
-
-	Cbuf       pbuf;
-	Cbuf       wbuf;
-
-	Hash       mime_types;
-
-	HttpParser parser;
-	HttpWriter writer;
-	Session    session;
-	Session  * sroot;
-
-	void *     auth;
-};
-
-#endif // __HTTP_WORKER_H__
+	return (char *)mime_type->value;
+}
 
 // vim: set ts=4 sw=4:
