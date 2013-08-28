@@ -225,14 +225,23 @@ httpWorkerProcess(HttpWorker this, Stream st)
 				}
 
 				else {
-					char asset[2048] = "./assets/html";
+					char html_asset[2048] = "./assets/html";
+					char base_asset[2048] = "./assets";
+
 					char * extension = strrchr(request->path, '.');
 					char * mime_type = NULL;
 					char   default_mime[] = "application/octet-stream";
+					char * asset     = base_asset;
+
 
 					if (NULL != extension) {
 						extension++;
 						mime_type = httpWorkerGetMimeType(this, extension);
+					}
+
+					if (NULL != mime_type &&
+							0 == memcmp(mime_type, CSTRA("text/html"))) {
+						asset = html_asset;
 					}
 
 					if (NULL == mime_type) {

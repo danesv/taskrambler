@@ -60,14 +60,15 @@ httpWorkerCtor(void * _this, va_list * params)
 		if (NULL != handle) {
 			char buffer[512];
 
-			while (NULL != fgets(buffer, 512, handle)) {
+			buffer[511] = '\0';
+
+			while (NULL != fgets(buffer, 511, handle)) {
 				char * tmp;
 				char * key = buffer;
 				char * value;
 				size_t nkey;
 				size_t nvalue;
 
-				buffer[511] = '\0';
 				tmp = memchr(key, ' ', 512);
 
 				if (NULL != tmp) {
@@ -76,9 +77,13 @@ httpWorkerCtor(void * _this, va_list * params)
 				nkey = tmp - buffer;
 
 				value = tmp + 1;
-				for (; *value == ' ' && value < buffer+512; value++);
+				for (; *value == ' ' && value < buffer+511; value++);
 
 				nvalue = strlen(value);
+
+				if ('\n' == value[nvalue-1]) {
+					value[nvalue-1] = '\0';
+				}
 
 				hashAdd(this->mime_types,
 						new(HashValue, key, nkey, value, nvalue));
