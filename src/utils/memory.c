@@ -51,8 +51,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <search.h>
+#include <unistd.h>
 
 #include "utils/memory.h"
+
+
+#define PAGE_SIZE = 32
+
 
 enum rbColor {rbBlack=1, rbRed=2};
 
@@ -75,6 +80,12 @@ struct memSegment
 struct memSegment *
 newElement(size_t size)
 {
+	long psize = sysconf(_SC_PAGESIZE);
+
+	/* allocate only blocks of a multiple of pagesize, similar to cbuf */
+	size  = (0 >= size)? 1 : (0 != size%psize)? (size/psize)+1 : size/psize;
+	size *= psize;
+
     struct memSegment * element = malloc(size + sizeof(struct memSegment));
 
     element->size   = size;
