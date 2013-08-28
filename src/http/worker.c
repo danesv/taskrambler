@@ -82,7 +82,8 @@ httpWorkerCtor(void * _this, va_list * params)
 				nvalue = strlen(value);
 
 				if ('\n' == value[nvalue-1]) {
-					value[nvalue-1] = '\0';
+					nvalue--;
+					value[nvalue] = '\0';
 				}
 
 				hashAdd(this->mime_types,

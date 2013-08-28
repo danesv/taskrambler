@@ -151,15 +151,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			}
 
 			if (0 == strcmp("GET", request->method)) {
-
-				if (0 == strcmp("/", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/html/main.html",
-							CSTRA("text/html"));
-				}
-
-				else if (0 == strcmp("/sessinfo/", request->path)) {
+				if (0 == strcmp("/sessinfo/", request->path)) {
 					response = (HttpMessage)httpResponseSession(this->session);
 				}
 
@@ -182,20 +174,6 @@ httpWorkerProcess(HttpWorker this, Stream st)
 					}
 				}
 
-				else if (0 == strcmp("/image/me", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/image/waldschrat.jpg",
-							CSTRA("image/jpeg"));
-				}
-
-				else if (0 == strcmp("/assets/js/jquery", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/jquery-1.7.1.min.js",
-							CSTRA("text/javascript"));
-				}
-
 				else if (0 == strcmp("/assets/js/serverval", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
@@ -203,36 +181,24 @@ httpWorkerProcess(HttpWorker this, Stream st)
 							CSTRA("text/javascript"));
 				}
 
-				else if (0 == strcmp("/assets/js/session", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/session.js",
-							CSTRA("text/javascript"));
-				}
-
-				else if (0 == strcmp("/assets/js/init", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/init.js",
-							CSTRA("text/javascript"));
-				}
-
-				else if (0 == strcmp("/assets/style/common", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/style/common.css",
-							CSTRA("text/css"));
-				}
-
 				else {
 					char html_asset[2048] = "./assets/html";
 					char base_asset[2048] = "./assets";
+					char main_asset[]     = "/main.html";
 
-					char * extension = strrchr(request->path, '.');
-					char * mime_type = NULL;
+					char * mime_type      = NULL;
 					char   default_mime[] = "application/octet-stream";
-					char * asset     = base_asset;
+					char * asset_path     = base_asset;
+					char * asset;
+					char * extension;
 
+					if (0 == strcmp("/", request->path)) {
+						asset = main_asset;
+					} else {
+						asset = request->path;
+					}
+
+					extension = strrchr(asset, '.');
 
 					if (NULL != extension) {
 						extension++;
@@ -241,17 +207,17 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 					if (NULL != mime_type &&
 							0 == memcmp(mime_type, CSTRA("text/html"))) {
-						asset = html_asset;
+						asset_path = html_asset;
 					}
 
 					if (NULL == mime_type) {
 						mime_type = default_mime;
 					}
 
-					strcat(asset, request->path);
+					strcat(asset_path, asset);
 					response = httpWorkerGetAsset(
 							request,
-							asset,
+							asset_path,
 							mime_type,
 							strlen(mime_type));
 				}
