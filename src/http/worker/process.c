@@ -158,11 +158,11 @@ httpWorkerProcess(HttpWorker this, Stream st)
 							CSTRA("text/html"));
 				}
 
-				if (0 == strcmp("/sessinfo/", request->path)) {
+				else if (0 == strcmp("/sessinfo/", request->path)) {
 					response = (HttpMessage)httpResponseSession(this->session);
 				}
 
-				if (0 == strcmp("/sess/", request->path)) {
+				else if (0 == strcmp("/sess/", request->path)) {
 					if (NULL == this->session) {
 						this->session = sessionAdd(
 								this->sroot,
@@ -171,7 +171,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 					response = (HttpMessage)httpResponseSession(this->session);
 				}
 
-				if (0 == strcmp("/randval/", request->path)) {
+				else if (0 == strcmp("/randval/", request->path)) {
 					if (NULL != this->session) {
 						response = (HttpMessage)httpResponseRandval(
 								this->val->timestamp,
@@ -181,47 +181,58 @@ httpWorkerProcess(HttpWorker this, Stream st)
 					}
 				}
 
-				if (0 == strcmp("/image/me", request->path)) {
+				else if (0 == strcmp("/image/me", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
 							"./assets/image/waldschrat.jpg",
 							CSTRA("image/jpeg"));
 				}
 
-				if (0 == strcmp("/assets/js/jquery", request->path)) {
+				else if (0 == strcmp("/assets/js/jquery", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
 							"./assets/js/jquery-1.7.1.min.js",
 							CSTRA("text/javascript"));
 				}
 
-				if (0 == strcmp("/assets/js/serverval", request->path)) {
+				else if (0 == strcmp("/assets/js/serverval", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
 							"./assets/js/serverval.js",
 							CSTRA("text/javascript"));
 				}
 
-				if (0 == strcmp("/assets/js/session", request->path)) {
+				else if (0 == strcmp("/assets/js/session", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
 							"./assets/js/session.js",
 							CSTRA("text/javascript"));
 				}
 
-				if (0 == strcmp("/assets/js/init", request->path)) {
+				else if (0 == strcmp("/assets/js/init", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
 							"./assets/js/init.js",
 							CSTRA("text/javascript"));
 				}
 
-				if (0 == strcmp("/assets/style/common", request->path)) {
+				else if (0 == strcmp("/assets/style/common", request->path)) {
 					response = httpWorkerGetAsset(
 							request,
 							"./assets/style/common.css",
 							CSTRA("text/css"));
 				}
+
+				else {
+					char asset[2048] = "./assets/html";
+
+					strcat(asset, request->path);
+					response = httpWorkerGetAsset(
+							request,
+							asset,
+							CSTRA("text/html"));
+				}
+
 			}
 
 			if (NULL == response) {

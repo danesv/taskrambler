@@ -21,6 +21,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 #include <time.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -55,8 +56,12 @@ httpResponseAsset(
 	HttpMessage  message;
 	int          handle;
 
-	handle = open(fname, O_RDONLY);
-	fstat(handle, &st);
+	if (-1 == access(fname, O_RDONLY)) {
+		handle = -1;
+	} else {
+		handle = open(fname, O_RDONLY);
+		fstat(handle, &st);
+	}
 
 	tmp    = localtime(&(st.st_mtime));
 	netag  = strftime(etag, sizeof(etag), "%s", tmp);
@@ -70,8 +75,10 @@ httpResponseAsset(
 	message  = (HttpMessage)response;
 
 	message->type   = HTTP_MESSAGE_PIPED;
-	message->handle = new(Stream, STREAM_FD, handle);
-	message->nbody  = st.st_size;
+	if (-1 != handle) {
+		message->handle = new(Stream, STREAM_FD, handle);
+		message->nbody  = st.st_size;
+	}
 
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"), mime, nmime));

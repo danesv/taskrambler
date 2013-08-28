@@ -37,9 +37,10 @@ httpWorkerGetAsset(
 		const char * mime,
 		size_t       nmime)
 {
-	char *     match;
-	size_t     nmatch;
-	HttpHeader header;
+	char *      match;
+	size_t      nmatch;
+	HttpHeader  header;
+	HttpMessage message;
 
 	header = hashGet(
 			((HttpMessage)request)->header,
@@ -54,8 +55,14 @@ httpWorkerGetAsset(
 		nmatch = (header->nvalue)[0];
 	}
 
-	return (HttpMessage)httpResponseAsset(
+	message = (HttpMessage)httpResponseAsset(
 			fname, mime, nmime, match, nmatch);
+
+	if (message->type == HTTP_MESSAGE_PIPED && message->handle == NULL) {
+		delete(message);
+	}
+
+	return message;
 }
 
 // vim: set ts=4 sw=4:

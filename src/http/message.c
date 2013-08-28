@@ -67,7 +67,7 @@ httpMessageDtor(void * _this)
 			break;
 
 		case HTTP_MESSAGE_PIPED:
-			if (2 < (this->handle->handle).fd) {
+			if (NULL != this->handle && 2 < (this->handle->handle).fd) {
 				close((this->handle->handle).fd);
 			}
 			delete(this->handle);
