@@ -27,13 +27,16 @@
 #include "class.h"
 #include "hash.h"
 #include "stream.h"
+#include "asset.h"
 
 CLASS(HttpMessage) {
 	char *          version;
 
 	Hash            header;
 
+	Asset           asset;
 	char *          body;
+
 	int             nbody;
 	int             dbody;
 };

@@ -26,21 +26,24 @@
 #include "http/message.h"
 #include "http/request.h"
 #include "http/response.h"
+#include "http/worker.h"
 
 #include "utils/memory.h"
 #include "hash.h"
 
 HttpMessage
 httpWorkerGetAsset(
-		HttpRequest request,
-		const char * fname,
-		const char * mime,
-		size_t       nmime)
+		HttpWorker   this,
+		HttpRequest  request,
+		const char * fname)
 {
 	char *      match;
 	size_t      nmatch;
 	HttpHeader  header;
 	HttpMessage message;
+	Asset       asset;
+
+	size_t nfname = strlen(fname);
 
 	header = hashGet(
 			((HttpMessage)request)->header,
@@ -55,11 +58,26 @@ httpWorkerGetAsset(
 		nmatch = (header->nvalue)[0];
 	}
 
-	message = (HttpMessage)httpResponseAsset(
-			fname, mime, nmime, match, nmatch);
+	asset = assetPoolGet(fname, nfname);
 
-	if (message->type == HTTP_MESSAGE_PIPED && message->handle == NULL) {
-		delete(message);
+	if (asset->netag == nmatch
+			&& 0 == memcmp(asset->etag, match, asset->netag)) {
+		assetPoolRelease(asset);
+
+		return (HttpMessage)httpResponse304(
+				asset->mime_type, asset->nmime_type,
+				asset->etag, asset->netag,
+				asset->mtime, asset->nmtime);
+	}   
+
+	message = (HttpMessage)httpResponseAsset(asset);
+
+	if (NULL == message) {
+		// here we should be somewhat more care about what causes
+		// the message to be NULL... here this could be also a 
+		// 404 not found....
+		assetPoolRelease(asset);
+		message = (HttpMessage)httpResponse500();
 	}
 
 	return message;

@@ -1,5 +1,18 @@
 /**
  * \file
+ * A response class that delivers an asset (file on disk).
+ *
+ * In future this will use a asset class, get from an asset class
+ * hash. The asset hash will be a shared resource between all
+ * workers.
+ *
+ * The asset class holds an open file descriptor wich is memory
+ * mapped and is able to give the correct pointer to neede data.
+ *
+ * This change will envolve changes in other parts of the response
+ * write system, as we no longer need to destinguish between piped
+ * and bufferd resources...we will allways work with a memory address
+ * only one time its allocated and one time a memory mapped file.
  *
  * \author	Georg Hopp
  *
@@ -38,54 +51,30 @@
 #include "utils/memory.h"
 #include "hash.h"
 
+#include "asset.h"
+
+
 HttpResponse
-httpResponseAsset(
-		const char * fname,
-		const char * mime,
-		size_t       nmime,
-		const char * match,
-		size_t       nmatch)
+httpResponseAsset(Asset asset)
 {
-	struct tm *  tmp;
-	char         etag[200];
-	size_t       netag;
-	char         mtime[200];
-	size_t       nmtime;
-	struct stat  st;
 	HttpResponse response;
 	HttpMessage  message;
-	int          handle;
-
-	if (-1 == access(fname, O_RDONLY)) {
-		handle = -1;
-	} else {
-		handle = open(fname, O_RDONLY);
-		fstat(handle, &st);
-	}
-
-	tmp    = localtime(&(st.st_mtime));
-	netag  = strftime(etag, sizeof(etag), "%s", tmp);
-	nmtime = strftime(mtime, sizeof(mtime), "%a, %d %b %Y %T %Z", tmp);
-
-	if (netag == nmatch && 0 == memcmp(etag, match, netag)) {
-		return httpResponse304(mime, nmime, etag, netag, mtime, nmtime);
-	}
 
 	response = new(HttpResponse, "HTTP/1.1", 200, "OK");
 	message  = (HttpMessage)response;
 
-	message->type   = HTTP_MESSAGE_PIPED;
-	if (-1 != handle) {
-		message->handle = new(Stream, STREAM_FD, handle);
-		message->nbody  = st.st_size;
-	}
+	message->asset = asset;
+	message->body  = asset->data;
+	message->nbody = asset->size;
 
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("Content-Type"), mime, nmime));
+			new(HttpHeader, CSTRA("Content-Type"),
+				asset->mime_type, asset->nmime_type));
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("ETag"), etag, netag));
+			new(HttpHeader, CSTRA("ETag"), asset->etag, asset->netag));
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("Last-Modified"), mtime, nmtime));
+			new(HttpHeader, CSTRA("Last-Modified"),
+				asset->mtime, asset->nmtime));
 
 	return response;
 }

@@ -2,16 +2,19 @@ ACLOCAL_AMFLAGS = -I m4
 
 IFACE = interface/subject.c \
 	interface/observer.c
+
 UTILS = utils/hash.c \
 	utils/memory.c \
 	utils/http.c \
 	utils/daemonize.c \
-	utils/signalHandling.c
+	utils/signalHandling.c \
+	utils/mime_type.c
 
 LIBS = ./http/libhttp.a \
        ./auth/libauth.a \
        ./cbuf/libcbuf.a \
        ./class/libclass.a \
+       ./asset/libasset.a \
        ./hash/libhash.a \
        ./queue/libqueue.a \
        ./logger/liblogger.a \
@@ -29,4 +32,5 @@ taskrambler_CFLAGS  = $(CFLAGS) -Wall -DPWD=\"$(PWD)\" -I ../include/# $(COVERAG
 taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
-SUBDIRS = auth cbuf class hash queue http logger server session socket stream
+SUBDIRS = asset auth cbuf class hash queue http \
+	  logger server session socket stream

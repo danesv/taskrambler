@@ -61,6 +61,11 @@ serverCtor(void * _this, va_list * params)
 	port         = va_arg(* params, int);
 	backlog      = va_arg(* params, unsigned int);
 
+	loggerLog(this->logger,
+			LOGGER_INFO,
+			"accept up to %zu connections",
+			this->max_fds);
+
 	this->fds   = memCalloc(sizeof(struct pollfd), this->max_fds);
 	this->conns = memCalloc(sizeof(struct conns), this->max_fds);
 

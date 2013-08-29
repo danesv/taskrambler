@@ -52,47 +52,7 @@ httpWorkerCtor(void * _this, va_list * params)
 
 	this->val = va_arg(*params, struct randval *);
 
-	/* read all mimetypes in a hash */
-	this->mime_types = new(Hash);
-	if (0 == access("./config/mime.types", O_RDONLY)) {
-		FILE * handle = fopen("./config/mime.types", "r");
-
-		if (NULL != handle) {
-			char buffer[512];
-
-			buffer[511] = '\0';
-
-			while (NULL != fgets(buffer, 511, handle)) {
-				char * tmp;
-				char * key = buffer;
-				char * value;
-				size_t nkey;
-				size_t nvalue;
-
-				tmp = memchr(key, ' ', 512);
-
-				if (NULL != tmp) {
-					*tmp = '\0';
-				}
-				nkey = tmp - buffer;
-
-				value = tmp + 1;
-				for (; *value == ' ' && value < buffer+511; value++);
-
-				nvalue = strlen(value);
-
-				if ('\n' == value[nvalue-1]) {
-					nvalue--;
-					value[nvalue] = '\0';
-				}
-
-				hashAdd(this->mime_types,
-						new(HashValue, key, nkey, value, nvalue));
-			}
-
-			fclose(handle);
-		}
-	}
+	this->asset_pool = new(Hash);
 
 	sprintf(cbuf_id, "%s_%s", "parser", id);
 	this->pbuf   = new(Cbuf, cbuf_id, PARSER_MAX_BUF);
@@ -129,7 +89,7 @@ httpWorkerDtor(void * _this)
 	delete(this->writer);
 
 	if (NULL != this->pbuf) {
-		delete(this->mime_types);
+		delete(this->asset_pool);
 		delete(this->pbuf); //!< cloned workers have NULL, so delete won't do anything
 		delete(this->wbuf); //!< cloned workers have NULL, so delete won't do anything
 		tdestroy(*(this->sroot), tDelete);
@@ -145,7 +105,7 @@ httpWorkerClone(void * _this, void * _base)
 
 	this->val  = base->val;
 
-	this->mime_types = base->mime_types;
+	this->asset_pool = base->asset_pool;
 
 	this->parser = new(HttpParser, base->pbuf);
 	this->writer = new(HttpWriter, base->wbuf);

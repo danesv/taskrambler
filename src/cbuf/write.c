@@ -38,6 +38,10 @@ cbufWrite(Cbuf this, Stream st)
 	wwsize = streamWrite(st, cbufGetRead(this), wsize);
 
 	switch (wwsize) {
+		case  0:
+			wwsize = -2;
+			// DROP THROUGH
+
 		case -1:
 			break;
 

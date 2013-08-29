@@ -42,10 +42,11 @@
 #include "http/parser.h"
 
 #include "utils/memory.h"
+#include "utils/mime_type.h"
 #include "commons.h"
 
 
-HttpMessage httpWorkerGetAsset(HttpRequest, const char *, const char *, size_t);
+HttpMessage httpWorkerGetAsset(HttpWorker, HttpRequest, const char *);
 void        httpWorkerAddCommonHeader(HttpMessage, HttpMessage);
 char *		httpWorkerGetMimeType(HttpWorker, const char * extension);
 
@@ -174,23 +175,14 @@ httpWorkerProcess(HttpWorker this, Stream st)
 					}
 				}
 
-				else if (0 == strcmp("/assets/js/serverval", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/serverval.js",
-							CSTRA("text/javascript"));
-				}
-
 				else {
 					char html_asset[2048] = "./assets/html";
 					char base_asset[2048] = "./assets";
 					char main_asset[]     = "/main.html";
 
-					char * mime_type      = NULL;
-					char   default_mime[] = "application/octet-stream";
 					char * asset_path     = base_asset;
 					char * asset;
-					char * extension;
+					char * mime_type;
 
 					if (0 == strcmp("/", request->path)) {
 						asset = main_asset;
@@ -198,11 +190,10 @@ httpWorkerProcess(HttpWorker this, Stream st)
 						asset = request->path;
 					}
 
-					extension = strrchr(asset, '.');
-
-					if (NULL != extension) {
-						extension++;
-						mime_type = httpWorkerGetMimeType(this, extension);
+					mime_type = strrchr(asset, '.');
+					if (NULL != mime_type) {
+						mime_type++;
+						mime_type = getMimeType(mime_type, strlen(mime_type));
 					}
 
 					if (NULL != mime_type &&
@@ -210,16 +201,8 @@ httpWorkerProcess(HttpWorker this, Stream st)
 						asset_path = html_asset;
 					}
 
-					if (NULL == mime_type) {
-						mime_type = default_mime;
-					}
-
 					strcat(asset_path, asset);
-					response = httpWorkerGetAsset(
-							request,
-							asset_path,
-							mime_type,
-							strlen(mime_type));
+					response = httpWorkerGetAsset(this, request, asset_path);
 				}
 
 			}

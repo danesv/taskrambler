@@ -81,20 +81,9 @@ httpWriterWrite(void * _this, Stream st)
 							this->current->nbody - this->nbody,
 							cbufGetFree(this->buffer));
 
-					switch (this->current->type) {
-						case HTTP_MESSAGE_BUFFERED:
-							cbufSetData(this->buffer,
-									this->current->body + this->nbody,
-									size);
-							break;
-
-						case HTTP_MESSAGE_PIPED:
-							size = cbufRead(this->buffer, this->current->handle);
-							break;
-
-						default:
-							return -1;
-					}
+					cbufSetData(this->buffer,
+							this->current->body + this->nbody,
+							size);
 
 					this->nbody += size;
 				}
@@ -105,12 +94,11 @@ httpWriterWrite(void * _this, Stream st)
 				{
 					ssize_t written = cbufWrite(this->buffer, st);
 
-					if (0 <= written) {
-						this->written += written;
+					if (0 > written) {
+						return written;
 					}
-					else {
-						return -1;
-					}
+
+					this->written += written;
 				}
 
 				if (this->written == this->current->nbody + this->nheader) {
@@ -138,8 +126,8 @@ httpWriterWrite(void * _this, Stream st)
 					delete(this->current);
 					return -1;
 				}
-
 				delete(this->current);
+
 				break;
 		}
 	}

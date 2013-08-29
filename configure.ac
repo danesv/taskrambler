@@ -51,6 +51,7 @@ AC_CHECK_FUNCS([memset])
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
+		 src/asset/Makefile
 		 src/auth/Makefile
 		 src/cbuf/Makefile
 		 src/class/Makefile

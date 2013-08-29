@@ -38,7 +38,7 @@ void *
 hashDelete(Hash this, const char * search, size_t nsearch)
 {
 	unsigned long hash  = sdbm((const unsigned char *)search, nsearch);
-	void *        found = tfind(&hash, &(this->root), hashDeleteComp);
+	void *        found = tdelete(&hash, &(this->root), hashDeleteComp);
 
 	return (NULL != found)? *(void**)found : NULL;
 }

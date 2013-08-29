@@ -49,7 +49,7 @@ CLASS(HttpWorker) {
 	Cbuf       pbuf;
 	Cbuf       wbuf;
 
-	Hash       mime_types;
+	Hash       asset_pool;
 
 	HttpParser parser;
 	HttpWriter writer;

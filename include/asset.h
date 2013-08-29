@@ -41,13 +41,18 @@ CLASS(Asset) {
 	size_t   nmtime;
 
 	char   * mime_type;
-	size_t   size;
+	size_t   nmime_type;
 
 	int      handle;
 	char   * data;
+	size_t   size;
+
+	size_t   ref_count;
 };
 
-char * assetDataAt(size_t);
+Asset  assetPoolGet(const char *, size_t);
+size_t assetPoolRelease(Asset);
+void   assetPoolCleanup(void);
 
 #endif // __ASSET_H__
 

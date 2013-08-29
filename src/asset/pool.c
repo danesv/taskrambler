@@ -20,55 +20,69 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
+// for size_t
+#include <sys/types.h>
 
-#include <search.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
-#include <unistd.h>
+// for strlen
 
 #include "class.h"
+#include "asset.h"
 #include "hash.h"
-#include "http/message.h"
-#include "utils/memory.h"
 
+Hash asset_pool = NULL;
 
 static
-int
-httpMessageCtor(void * _this, va_list * params)
+inline
+void
+freeAsset(const void * _node)
 {
-	HttpMessage this    = _this;
-	char *      version = va_arg(* params, char *);
+	Asset node = (Asset)_node;
 
-	this->version = memCalloc(1, strlen(version)+1);
-	strcpy(this->version, version);
-
-	this->header = new(Hash);
-
-	return 0;
+	delete(node);
 }
 
-static
-void
-httpMessageDtor(void * _this)
+Asset
+assetPoolGet(const char * path, size_t npath)
 {
-	HttpMessage this = _this;
+	Asset asset = NULL;
 
-	delete(this->header);
-
-	MEM_FREE(this->version);
-
-	if (NULL == this->asset) {
-		MEM_FREE(this->body);
+	if (NULL == asset_pool) {
+		asset_pool = new(Hash);
 	} else {
-		assetPoolRelease(this->asset);
+		asset = hashGet(asset_pool, path, npath);
 	}
-} 
 
-INIT_IFACE(Class, httpMessageCtor, httpMessageDtor, NULL);
-CREATE_CLASS(HttpMessage, NULL, IFACE(Class));
+	if (NULL == asset) {
+		asset = new(Asset, path, npath);
+
+		hashAdd(asset_pool,
+				new(HashValue, path, npath, asset, sizeof(Asset)));
+	} else {
+		asset->ref_count++;
+	}
+
+	return asset;
+}
+
+size_t
+assetPoolRelease(Asset asset)
+{
+	if (asset->ref_count <= 1) {
+		hashDelete(asset_pool, asset->fname, asset->nfname);
+		delete(asset);
+
+		return 0;
+	} else {
+		asset->ref_count--;
+
+		return asset->ref_count;
+	}
+}
+
+void
+assetPoolCleanup(void)
+{
+	hashEach(asset_pool, freeAsset);
+}
 
 // vim: set ts=4 sw=4:

@@ -12,6 +12,7 @@ RESP   = response.c \
 	 response/304.c \
 	 response/404.c \
 	 response/403.c \
+	 response/500.c \
 	 response/login_form.c \
 	 response/asset.c \
 	 response/randval.c \
@@ -29,8 +30,7 @@ WORKER = worker.c \
 	 worker/process.c \
 	 worker/answer.c \
 	 worker/get_asset.c \
-	 worker/add_common_header.c \
-	 worker/get_mime_type.c
+	 worker/add_common_header.c
 HEADER = header.c \
 	 header/to_string.c
 

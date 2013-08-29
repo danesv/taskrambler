@@ -59,7 +59,7 @@ assetCtor(void * _this, va_list * params)
 	this->fname[2048] = '\0';
 
 	if (-1 == access(this->fname, O_RDONLY)) {
-		this->handle = -1;
+		return -1;
 	} else {
 		this->handle = open(this->fname, O_RDONLY);
 		fstat(this->handle, &st);
@@ -80,8 +80,20 @@ assetCtor(void * _this, va_list * params)
 		this->mime_type = "application/octet-stream";
 	}
 
+	if (NULL != this->mime_type) {
+		this->nmime_type = strlen(this->mime_type);
+	} else {
+		this->nmime_type = 0;
+	}
+
 	this->data = mmap(
 			NULL, this->size, PROT_READ, MAP_PRIVATE, this->handle, 0);
+
+	if (MAP_FAILED == this->data) {
+		return -1;
+	}
+
+	this->ref_count = 1;
 
 	return 0;
 }
@@ -89,8 +101,13 @@ assetCtor(void * _this, va_list * params)
 static void assetDtor(void * _this) {
 	Asset this = _this;
 
-	munmap(this->data, this->size);
-	close(this->handle);
+	if (MAP_FAILED != this->data && NULL != this->data) {
+		munmap(this->data, this->size);
+	}
+
+	if (0 != this->handle) {
+		close(this->handle);
+	}
 }
 
 INIT_IFACE(Class, assetCtor, assetDtor, NULL);

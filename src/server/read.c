@@ -76,11 +76,11 @@ serverRead(Server this, unsigned int i)
 					inet_ntoa((((this->conns)[fd].sock)->addr).sin_addr));
 			serverCloseConn(this, i);
 
-		case 0:
-			break;
+		//case 0:
+		//	break;
 
 		default:
-			(this->fds)[i].events |= POLLOUT;
+		//	(this->fds)[i].events |= POLLOUT;
 			break;
 	}
 

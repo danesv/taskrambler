@@ -196,6 +196,8 @@ main()
 				if (NULL != auth)   delete(auth);
 				if (NULL != logger) delete(logger);
 
+				clearMimeTypes();
+				assetPoolCleanup();
 				memCleanup();
 			}
 
