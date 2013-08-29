@@ -52,8 +52,6 @@ httpResponseRandval(time_t ctime, int value)
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"), CSTRA("application/json")));
 
-	message->type  = HTTP_MESSAGE_BUFFERED;
-
 	remaining = 10 - (time(NULL) - ctime);
 
 	nbuf = sprintf(buffer, RESP_DATA, ctime, remaining, value);

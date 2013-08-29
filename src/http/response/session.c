@@ -52,8 +52,6 @@ httpResponseSession(Session session)
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"), CSTRA("application/json")));
 
-	message->type  = HTTP_MESSAGE_BUFFERED;
-
 	nbuf = sprintf(buffer, RESP_DATA,
 			(NULL != session)? session->id : 0,
 			(NULL != session)? SESSION_LIVETIME : 0,

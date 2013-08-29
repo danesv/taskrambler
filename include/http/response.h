@@ -30,6 +30,7 @@
 #include "class.h"
 #include "http/message.h"
 #include "session.h"
+#include "asset.h"
 
 
 CLASS(HttpResponse) {
@@ -43,16 +44,14 @@ HttpResponse httpResponse304(
 		const char *, size_t,
 		const char *, size_t,
 		const char *, size_t);
-HttpResponse httpResponse404();
 HttpResponse httpResponse403();
+HttpResponse httpResponse404();
+HttpResponse httpResponse500();
 HttpResponse httpResponseMe();
 HttpResponse httpResponseLoginForm();
 HttpResponse httpResponseRandval(time_t, int);
 HttpResponse httpResponseSession(Session);
-HttpResponse httpResponseAsset(
-		const char *,
-		const char *, size_t,
-		const char *, size_t);
+HttpResponse httpResponseAsset(Asset);
 
 #endif // __HTTP_RESPONSE_H__
 

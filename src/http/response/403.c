@@ -41,7 +41,6 @@ httpResponse403()
 	response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
 	message  = (HttpMessage)response;
 
-	message->type  = HTTP_MESSAGE_BUFFERED;
 	message->nbody = 0;
 	message->body  = NULL;
 
