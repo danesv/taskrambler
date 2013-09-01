@@ -37,10 +37,19 @@ hashDeleteComp(const void * a, const void * b)
 void *
 hashDelete(Hash this, const char * search, size_t nsearch)
 {
-	unsigned long hash  = sdbm((const unsigned char *)search, nsearch);
-	void *        found = tdelete(&hash, &(this->root), hashDeleteComp);
+	unsigned long    hash   = sdbm((const unsigned char *)search, nsearch);
+	void          ** _found = tfind(&hash, &(this->root), hashDeleteComp);
+	void          *  found;
 
-	return (NULL != found)? *(void**)found : NULL;
+	if (NULL != _found) {
+		found = *_found;
+	} else {
+		found = NULL;
+	}
+
+	tdelete(&hash, &(this->root), hashDeleteComp);
+
+	return (NULL != found)? found : NULL;
 }
 
 // vim: set ts=4 sw=4:

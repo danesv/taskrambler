@@ -39,8 +39,11 @@
 
 #include "class.h"
 #include "asset.h"
+#include "hash.h"
 
 #include "utils/mime_type.h"
+#include "utils/hash.h"
+
 
 static
 int
@@ -57,6 +60,10 @@ assetCtor(void * _this, va_list * params)
 
 	strncpy(this->fname, fname, 2047);
 	this->fname[2048] = '\0';
+
+	this->hash = sdbm(
+			(unsigned char *)this->fname,
+			this->nfname);
 
 	if (-1 == access(this->fname, O_RDONLY)) {
 		return -1;
@@ -110,7 +117,23 @@ static void assetDtor(void * _this) {
 	}
 }
 
+static
+unsigned long
+assetGetHash(void * _this)
+{
+	Asset this = _this;
+
+	return this->hash;
+}
+
+static
+void
+assetHandleDouble(void * _this, void * _doub)
+{
+}
+
 INIT_IFACE(Class, assetCtor, assetDtor, NULL);
-CREATE_CLASS(Asset, NULL, IFACE(Class));
+INIT_IFACE(Hashable, assetGetHash, assetHandleDouble);
+CREATE_CLASS(Asset, NULL, IFACE(Class), IFACE(Hashable));
 
 // vim: set ts=4 sw=4:

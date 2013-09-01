@@ -36,9 +36,7 @@ inline
 void
 freeAsset(const void * _node)
 {
-	Asset node = (Asset)_node;
-
-	delete(node);
+	delete(_node);
 }
 
 Asset
@@ -54,9 +52,7 @@ assetPoolGet(const char * path, size_t npath)
 
 	if (NULL == asset) {
 		asset = new(Asset, path, npath);
-
-		hashAdd(asset_pool,
-				new(HashValue, path, npath, asset, sizeof(Asset)));
+		hashAdd(asset_pool, asset);
 	} else {
 		asset->ref_count++;
 	}
@@ -68,8 +64,11 @@ size_t
 assetPoolRelease(Asset asset)
 {
 	if (asset->ref_count <= 1) {
-		hashDelete(asset_pool, asset->fname, asset->nfname);
-		delete(asset);
+		hashDelete( asset_pool, asset->fname, asset->nfname);
+
+		if (NULL != asset) {
+			delete(asset);
+		}
 
 		return 0;
 	} else {
@@ -83,6 +82,7 @@ void
 assetPoolCleanup(void)
 {
 	hashEach(asset_pool, freeAsset);
+	delete(asset_pool);
 }
 
 // vim: set ts=4 sw=4:
