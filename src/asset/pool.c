@@ -81,8 +81,10 @@ assetPoolRelease(Asset asset)
 void
 assetPoolCleanup(void)
 {
-	hashEach(asset_pool, freeAsset);
-	delete(asset_pool);
+	if (NULL != asset_pool) {
+		hashEach(asset_pool, freeAsset);
+		delete(asset_pool);
+	}
 }
 
 // vim: set ts=4 sw=4:
