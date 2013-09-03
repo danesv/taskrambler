@@ -47,7 +47,6 @@ CLASS(HttpWorker) {
 	struct randval * val;
 
 	Cbuf       pbuf;
-	Cbuf       wbuf;
 
 	Hash       asset_pool;
 

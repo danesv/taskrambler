@@ -88,7 +88,6 @@ httpWorkerDtor(void * _this)
 	if (NULL != this->pbuf) {
 		delete(this->asset_pool);
 		delete(this->pbuf); //!< cloned workers have NULL, so delete won't do anything
-		delete(this->wbuf); //!< cloned workers have NULL, so delete won't do anything
 		tdestroy(*(this->sroot), tDelete);
 	}
 }

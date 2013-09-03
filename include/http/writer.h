@@ -57,7 +57,6 @@
  * And as I will also implement a cbuf pool, this memory will not be
  * freed before application end.
  */
-#define WRITER_MAX_BUF		131072
 
 /*
  * This is the multiplier for the size of the initial write buffer.
