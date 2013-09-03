@@ -11,3 +11,9 @@ VERY BIG TODO:
   => might be done... maybe not completely, I still loose connections under very high load.
 
 - using tsearch for my memory management was kind of a bad idea. tsearch uses malloc and free upon addition and remove of elements. Resulting again in uncontroolled heap usage. I guess I have to implement my own tree mechanism here, which does not involve further allocation.
+
+- another bug: if there is trailing garbage on the header line
+  we got a segfault...
+
+  GET /images/waldschrat.jpg HTTP/1.1^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D
+  ^[[D = backspace...
