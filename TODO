@@ -20,3 +20,10 @@ VERY BIG TODO:
 
 - the unexpected connection close seems to occur just on concurrency over
   1000 paralell connections...maybe this gives a hint.
+
+- after changing to non blocking sockets the server hangs after some requests.
+  have to check when this happens....
+  * it seems that it does not occur without keep-alive and concurrency
+  * also concurrent connection don't seem to make a problem.
+  * keep-alive alone again don't seem to be a problem...
+  !!!! if both are active something is screwed up.... !!!!
