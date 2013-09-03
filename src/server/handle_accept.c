@@ -44,6 +44,7 @@ serverHandleAccept(Server this, unsigned int i)
 	}
 
 	acc = socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
+	socketNonblock(acc);
 
 	if (-1 != acc->handle) {
 		switch(i) {

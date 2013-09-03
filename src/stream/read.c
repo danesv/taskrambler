@@ -22,6 +22,7 @@
 
 #include <openssl/ssl.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "stream.h"
 
@@ -31,8 +32,30 @@ streamRead(Stream this, void * buf, size_t count)
 	ssize_t done;
 
 	switch(this->type) {
+		ssize_t _read;
+
 		case STREAM_FD:
-			done = read((this->handle).fd, buf, count);
+			_read = read((this->handle).fd, buf, count);
+
+			if (_read < 0) {
+				switch (errno) {
+					case EINTR:
+					case ENOMEM:
+						done = 0;
+						break;
+					case (EAGAIN|EWOULDBLOCK):
+						done = -1;
+						break;
+					default:
+						done = -2;
+						break;
+				}
+			} else if (_read == 0) {
+				done = -2;
+			} else {
+				done = _read;
+			}
+
 			break;
 
 		case STREAM_SSL:

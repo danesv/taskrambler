@@ -45,6 +45,7 @@
 
 #include "utils/signalHandling.h"
 #include "utils/memory.h"
+#include "utils/mime_type.h"
 
 #define DEFAULT_SECS	10
 //#define DEFAULT_USECS	(1000000 / HZ * 2)

@@ -70,6 +70,7 @@ serverCtor(void * _this, va_list * params)
 	this->conns = memCalloc(sizeof(struct conns), this->max_fds);
 
 	this->sock = new(Sock, this->logger, port);
+	socketNonblock(this->sock);
 	flags      = fcntl(this->sock->handle, F_GETFL, 0);
 	fcntl(this->sock->handle, F_SETFL, flags | O_NONBLOCK);
 

@@ -31,8 +31,8 @@
 ssize_t
 cbufRead(Cbuf this, Stream st)
 {
-	ssize_t rrsize = 0;
-	size_t  rsize  = cbufGetFree(this);
+	size_t  rsize = cbufGetFree(this);
+	ssize_t rrsize;
 
 	if (0 == rsize) {
 		errno = ECBUFOVFL;
@@ -41,17 +41,8 @@ cbufRead(Cbuf this, Stream st)
 
 	rrsize = streamRead(st, cbufGetWrite(this), rsize);
 
-	switch (rrsize) {
-		case  0:
-			rrsize = -2;
-			// DROP THROUGH
-
-		case -1:
-			break;
-
-		default:
-			cbufIncWrite(this, rrsize);
-			break;
+	if (0 < rrsize) {
+		cbufIncWrite(this, rrsize);
 	}
 
 	return rrsize;

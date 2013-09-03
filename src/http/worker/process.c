@@ -54,10 +54,13 @@ char *		httpWorkerGetMimeType(HttpWorker, const char * extension);
 ssize_t
 httpWorkerProcess(HttpWorker this, Stream st)
 {
-	ssize_t size;
+	ssize_t requests = httpParserParse(this->parser, st);
 
-	if (0 < (size = httpParserParse(this->parser, st))) {
+	if (0 > requests) {
+		return requests;
+	}
 
+	if (0 < requests) {
 		while (! queueEmpty(this->parser->queue)) {
 			HttpRequest request  = queueGet(this->parser->queue);
 			HttpMessage response = NULL;
@@ -212,18 +215,13 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			}
 
 			httpWorkerAddCommonHeader((HttpMessage)request, response);
-
 			delete(request);
-
 			queuePut(this->writer->queue, response);
-
-			size = this->writer->queue->nmsg;
-
 			response = NULL;
 		}
 	}
 
-	return size;
+	return this->writer->queue->nmsg;
 }
 
 // vim: set ts=4 sw=4:

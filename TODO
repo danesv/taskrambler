@@ -17,3 +17,6 @@ VERY BIG TODO:
 
   GET /images/waldschrat.jpg HTTP/1.1^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D
   ^[[D = backspace...
+
+- the unexpected connection close seems to occur just on concurrency over
+  1000 paralell connections...maybe this gives a hint.

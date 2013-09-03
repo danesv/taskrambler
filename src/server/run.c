@@ -33,11 +33,12 @@ ssize_t serverWrite(Server, unsigned int);
 void
 serverRun(Server this)
 {
+	int events = 0;
+
     loggerLog(this->logger, LOGGER_INFO, "service started");
 
     while (!doShutdown) //! until error or signal 
     {
-		int          events = 0;
 		unsigned int i;
 
 		if (0 == events) {
@@ -71,12 +72,25 @@ serverRun(Server this)
 			if (0 != ((this->fds)[i].revents & POLLIN)) {
 				ssize_t processed = serverRead(this, i);
 
-				if (0 < processed) {
-					(this->fds)[i].revents &= ~POLLIN;
+				// don't poll this one until I say.
+				(this->fds)[i].events &= ~POLLIN;
+
+				if (0 > processed) {
 					events--;
+
+					switch (processed) {
+						case -1: // poll me again
+							(this->fds)[i].events  |= POLLIN;
+							(this->fds)[i].revents &= ~POLLIN;
+							break;
+
+						case -2: // close me...
+							serverCloseConn(this, i);
+							break;
+					}
 				}
 
-				if (processed > 0) {
+				if (0 < processed) {
 					(this->fds)[i].events |= POLLOUT;
 				}
 			}
@@ -87,11 +101,20 @@ serverRun(Server this)
 			if (0 != ((this->fds)[i].revents & POLLOUT)) {
 				ssize_t remaining = serverWrite(this, i);
 
-				if (0 > remaining) {
+				(this->fds)[i].events &= ~POLLOUT;
+
+				if (0 >= remaining) {
+					/*
+					 * 0 means queue was empty...try again next
+					 * time...no need to poll again.
+					 * Anyway, most likely we need to read again
+					 * so lets finish this event for now.
+					 */
 					events--;
 
 					switch (remaining) {
 						case -1: // poll me again
+							(this->fds)[i].events  |= POLLOUT;
 							(this->fds)[i].revents &= ~POLLOUT;
 							break;
 
@@ -99,10 +122,6 @@ serverRun(Server this)
 							serverCloseConn(this, i);
 							break;
 					}
-				}
-
-				if (0 == remaining) {
-					(this->fds)[i].events &= ~POLLOUT;
 				}
 			}
 
