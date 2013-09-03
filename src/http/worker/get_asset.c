@@ -60,6 +60,10 @@ httpWorkerGetAsset(
 
 	asset = assetPoolGet(fname, nfname);
 
+	if (NULL == asset) {
+		return (HttpMessage)httpResponse404();
+	}
+
 	if (asset->netag == nmatch
 			&& 0 == memcmp(asset->etag, match, asset->netag)) {
 		assetPoolRelease(asset);

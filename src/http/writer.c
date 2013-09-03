@@ -28,14 +28,15 @@
 #include "queue.h"
 #include "http/writer.h"
 
+#include "utils/memory.h"
+
 static
 int
 httpWriterCtor(void * _this, va_list * params)
 {
 	HttpWriter this = _this;
 
-	this->buffer = va_arg(*params, Cbuf);
-	this->queue  = new(Queue);
+	this->queue = new(Queue);
 
 	return 0;
 }
@@ -48,11 +49,13 @@ httpWriterDtor(void * _this)
 
 	delete(this->queue);
 
-	if (TRUE == this->ourLock)
-		cbufRelease(this->buffer);
+	if (NULL != this->buffer) {
+		MEM_FREE(this->buffer);
+	}
 
-	if (NULL != this->current)
+	if (NULL != this->current) {
 		delete(this->current);
+	}
 }
 
 INIT_IFACE(Class, httpWriterCtor, httpWriterDtor, NULL);

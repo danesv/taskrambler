@@ -29,7 +29,6 @@
 #include "class.h"
 #include "http/message.h"
 #include "queue.h"
-#include "cbuf.h"
 #include "stream.h"
 
 #include "commons.h"
@@ -58,8 +57,21 @@
  * And as I will also implement a cbuf pool, this memory will not be
  * freed before application end.
  */
-#define WRITER_MAX_BUF	131072
+#define WRITER_MAX_BUF		131072
 
+/*
+ * This is the multiplier for the size of the initial write buffer.
+ * It is used to store the
+ * string representation of the message, as well as the first part of
+ * the body if the headers exceed the size a multiple of this will
+ * be reserved...very unlikely, but not impossible.
+ * If no the whole body fits within this buffer only part of it will
+ * be copied in there. The rest will be send in following send calls.
+ */
+#define WRITER_BUF_CHUNK	1024 * 10 // our default buffer chunk for
+									  // headers is 10k. This will result
+									  // in at least 20m for 2000 concurrent
+									  // connections.
 
 typedef enum e_HttpWriterState {
 	HTTP_WRITER_GET=0,
@@ -68,15 +80,15 @@ typedef enum e_HttpWriterState {
 } HttpWriterState;
 
 CLASS(HttpWriter) {
-	Cbuf        buffer;
-	Bool        ourLock;
+	char        * buffer;
 
-	Queue       queue;
-	HttpMessage current;
+	Queue         queue;
+	HttpMessage   current;
 
-	size_t      nheader;
-	size_t      nbody;
-	size_t      written;
+	size_t        nbuffer; // size of buffer
+	size_t        nheader; // size headers in buf
+	size_t        nbody;   // sizeof body in buffer
+	size_t        written; // already written bytes
 
 	HttpWriterState state;
 };

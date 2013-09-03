@@ -28,11 +28,13 @@
 #define FREE(val)		(ffree((void**)&(val)))
 #define MEM_FREE(seg)	(memFree((void **)&(seg)))
 
+#include <sys/types.h>
 
-void * memMalloc(size_t);
-void * memCalloc(size_t, size_t);
-void   memFree(void **);
-void   memCleanup();
+void   * memMalloc(size_t);
+void   * memCalloc(size_t, size_t);
+void     memFree(void **);
+size_t   memGetSize(void *);
+void     memCleanup();
 
 void ffree(void **);
 

@@ -869,13 +869,21 @@ memFree(void ** mem)
 	if (NULL != *mem) {
 		insertElement(&segments, (struct memSegment *)(*mem - sizeof(struct memSegment)));
 
-		//printf("FREE of Segment: 0x%p of size: %zu\n",
-		//		*mem - sizeof(struct memSegment),
-		//		((struct memSegment *)(*mem - sizeof(struct memSegment)))->size);
-		//traverse(segments, printElement);
-
 		*mem = NULL;
 	}
+}
+
+size_t
+memGetSize(void * mem)
+{
+	struct memSegment * segment;
+
+	if (NULL == mem) {
+		return 0;
+	}
+
+	segment = (struct memSegment *)(mem - sizeof(struct memSegment));
+	return segment->size;
 }
 
 void

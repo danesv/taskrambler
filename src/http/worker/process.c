@@ -216,6 +216,9 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			delete(request);
 
 			queuePut(this->writer->queue, response);
+
+			size = this->writer->queue->nmsg;
+
 			response = NULL;
 		}
 	}

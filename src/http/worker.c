@@ -57,11 +57,8 @@ httpWorkerCtor(void * _this, va_list * params)
 	sprintf(cbuf_id, "%s_%s", "parser", id);
 	this->pbuf   = new(Cbuf, cbuf_id, PARSER_MAX_BUF);
 
-	sprintf(cbuf_id, "%s_%s", "writer", id);
-	this->wbuf   = new(Cbuf, cbuf_id, WRITER_MAX_BUF);
-
 	this->parser = new(HttpParser, this->pbuf);
-	this->writer = new(HttpWriter, this->wbuf);
+	this->writer = new(HttpWriter);
 
 	this->sroot  = &(this->session);
 	this->auth   = va_arg(* params, void *);
@@ -108,7 +105,26 @@ httpWorkerClone(void * _this, void * _base)
 	this->asset_pool = base->asset_pool;
 
 	this->parser = new(HttpParser, base->pbuf);
-	this->writer = new(HttpWriter, base->wbuf);
+	/*
+	 * I am pretty sure that it is not neccessary to have a
+	 * separeate writer for each connection...
+	 * Right now I leave it that way.
+	 * TODO check this.
+	 * OK some facts:
+	 * - the stream as well as the worker are associated
+	 *   to the filehandle within the server.
+	 * - the response queue is located within the writer.
+	 *   (this might be wrong...the response queue should
+	 *   be part of the worker. That way I could give it
+	 *   into the writer when writing. That way only one
+	 *   instance of the writer might be possible...)
+	 *   NO, the previous statement is wrong...this would
+	 *   involve much more organization overhead within
+	 *   the writer...queue change and such...
+	 *   At the end I think it might be best to leave it as
+	 *   it is.
+	 */
+	this->writer = new(HttpWriter);
 
 	this->sroot  = &(base->session);
 	this->auth   = base->auth;

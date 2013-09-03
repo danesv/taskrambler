@@ -49,7 +49,7 @@ serverRun(Server this)
 		 */
 		if (0 != ((this->fds)[0].revents & POLLIN)) {
 			if (-1 == serverHandleAccept(this, 0)) {
-				(this->fds)[0].revents |= ~POLLIN;
+				(this->fds)[0].revents &= ~POLLIN;
 				events--;
 			}
 		}
@@ -59,7 +59,7 @@ serverRun(Server this)
 		 */
 		if (0 != ((this->fds)[1].revents & POLLIN)) {
 			if (-1 == serverHandleAccept(this, 1)) {
-				(this->fds)[1].revents |= ~POLLIN;
+				(this->fds)[1].revents &= ~POLLIN;
 				events--;
 			}
 		}
@@ -69,9 +69,15 @@ serverRun(Server this)
 			 * handle reads 
 			 */
 			if (0 != ((this->fds)[i].revents & POLLIN)) {
-				if (0 < serverRead(this, i)) {
-					(this->fds)[i].revents |= ~POLLIN;
+				ssize_t processed = serverRead(this, i);
+
+				if (0 < processed) {
+					(this->fds)[i].revents &= ~POLLIN;
 					events--;
+				}
+
+				if (processed > 0) {
+					(this->fds)[i].events |= POLLOUT;
 				}
 			}
 
@@ -79,9 +85,24 @@ serverRun(Server this)
 			 * handle writes
 			 */
 			if (0 != ((this->fds)[i].revents & POLLOUT)) {
-				if (0 < serverWrite(this, i)) {
-					(this->fds)[i].revents |= ~POLLOUT;
+				ssize_t remaining = serverWrite(this, i);
+
+				if (0 > remaining) {
 					events--;
+
+					switch (remaining) {
+						case -1: // poll me again
+							(this->fds)[i].revents &= ~POLLOUT;
+							break;
+
+						case -2: // close me...
+							serverCloseConn(this, i);
+							break;
+					}
+				}
+
+				if (0 == remaining) {
+					(this->fds)[i].events &= ~POLLOUT;
 				}
 			}
 

@@ -32,71 +32,18 @@ ssize_t
 serverWrite(Server this, unsigned int i)
 {
 	int     fd = (this->fds)[i].fd;
-	ssize_t remaining;
 
 	if (NULL == (this->conns)[fd].worker) {
 		loggerLog(
 				this->logger,
 				LOGGER_INFO,
 				"initialization error: NULL worker");
-		return -1;
+		return -2;
 	}
 
-	remaining = streamWriterWrite(
+	return streamWriterWrite(
 			(this->conns)[fd].worker,
 			(this->conns)[fd].stream);
-
-	switch(remaining) {
-		case -1: 
-			/*
-			 * read failure
-			 */
-			if (errno == EAGAIN || errno == EWOULDBLOCK) {
-				/* on EGAIN just try again later. */
-				break;
-			}
-			// DROP-THROUGH
-
-		case -2:
-			/**
-			 * normal close: this must be mapped to -2 within the
-			 * underlying read call.
-			 *
-			 * \todo make sure all pending writes will be done before
-			 * close.
-			 */
-
-			/*
-			 * close connection if not EAGAIN, this would also
-			 * remove the filedescriptor from the poll list.
-			 * Else just return indicate
-			 */
-			loggerLog(this->logger, LOGGER_INFO,
-					"connection[%d] closed...%s",
-					fd,
-					inet_ntoa((((this->conns)[fd].sock)->addr).sin_addr));
-			serverCloseConn(this, i);
-
-		//case 0:
-		//	break;
-
-		default:
-		//	(this->fds)[i].events |= POLLOUT;
-			break;
-
-//		case -1:
-//			serverCloseConn(this, i);
-//			break;
-//
-//		case 0:
-//			(this->fds)[i].events &= ~POLLOUT;
-//			break;
-//
-//		default:
-//			break;
-	}
-
-	return remaining;
 }
 
 // vim: set ts=4 sw=4:
