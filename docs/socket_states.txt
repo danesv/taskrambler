@@ -1,0 +1,53 @@
+each socket can have 4 states while reading or writing...well as far as i can
+say....assuming is is nonblocking.
+These can be checked via errno and return value.
+
+			recv		send		errno
+OK                      >0		>0		NOT SET
+CLOSED REMOTELY		0		-1		(write)ECONNRESET
+E_AGAIN			-1		-1		EAGAIN|EWOULDBLOCK
+ERROR OTHER		-1		-1		AMYTHING ELSE
+
+This means we need a slightly different handling for reading and writing.
+It might be neccessary to distinguish other streams from sockets albeit I
+would like to prevent this...
+This might be tested with small test programs. Well, the only special thing
+is ECONNRESET in write mode...because this is something that would not
+happen to files open for writing.
+We need to be more selective when to close the socket. In fact there are
+some errors, as EINTR which does not mean our socket is closed at all.
+
+Error which does not cause us to close the socket while writing:
+
+EAGAIN  - go to poll
+EINTR   - try again
+ENOBUFS - try again (maybe only a few times....)
+ENOMEM  - try again (maybe only a few times....)
+
+All other errors will cause us to close the socket while writing to it.
+
+Error which does not cause us to close the socket while reading:
+
+EAGAIN - go to poll
+EINTR  - try again
+ENOMEM - try again (maybe only a few times....)
+
+All other errors will cause us to close the socket while reading from it.
+
+From a server view...
+- read or write a socket as long as OK
+- close if either indicated by read or write...maybe read or write themself
+  could do the close.
+- poll if all socket get EAGAIN on read and write.
+
+So...read and write must be able to notify about 3 states at least.
+
+1. I am fine...continue operation on me
+2. I could not continue right now...please poll me
+3. Don't do any further operation on me...please close me.
+
+This could be simply done with return values...
+
+for 1. Return value >= 0
+for 2. Return -1  STREAM_DO_POLL
+for 3. Return -2  STREAM_DO_CLOSE
