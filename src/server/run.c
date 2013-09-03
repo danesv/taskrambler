@@ -50,7 +50,6 @@ serverRun(Server this)
 		 */
 		if (0 != ((this->fds)[0].revents & POLLIN)) {
 			if (-1 == serverHandleAccept(this, 0)) {
-				(this->fds)[0].revents &= ~POLLIN;
 				events--;
 			}
 		}
@@ -60,7 +59,6 @@ serverRun(Server this)
 		 */
 		if (0 != ((this->fds)[1].revents & POLLIN)) {
 			if (-1 == serverHandleAccept(this, 1)) {
-				(this->fds)[1].revents &= ~POLLIN;
 				events--;
 			}
 		}
@@ -72,20 +70,14 @@ serverRun(Server this)
 			if (0 != ((this->fds)[i].revents & POLLIN)) {
 				ssize_t processed = serverRead(this, i);
 
-				// don't poll this one until I say.
-				(this->fds)[i].events &= ~POLLIN;
-
 				if (0 > processed) {
 					events--;
 
 					switch (processed) {
-						case -1: // poll me again
-							(this->fds)[i].events  |= POLLIN;
-							(this->fds)[i].revents &= ~POLLIN;
-							break;
-
 						case -2: // close me...
 							serverCloseConn(this, i);
+
+						case -1: // poll me again
 							break;
 					}
 				}
@@ -101,8 +93,6 @@ serverRun(Server this)
 			if (0 != ((this->fds)[i].revents & POLLOUT)) {
 				ssize_t remaining = serverWrite(this, i);
 
-				(this->fds)[i].events &= ~POLLOUT;
-
 				if (0 >= remaining) {
 					/*
 					 * 0 means queue was empty...try again next
@@ -113,19 +103,20 @@ serverRun(Server this)
 					events--;
 
 					switch (remaining) {
-						case -1: // poll me again
-							(this->fds)[i].events  |= POLLOUT;
-							(this->fds)[i].revents &= ~POLLOUT;
+						case  0: // nothing more to write stop polling
+							(this->fds)[i].events &= ~POLLOUT;
 							break;
 
 						case -2: // close me...
 							serverCloseConn(this, i);
+
+						case -1: // poll me again
 							break;
 					}
 				}
 			}
 
-			if (0 > events)
+			if (0 >= events)
 				break; // no more events to handle
 		}
     }
