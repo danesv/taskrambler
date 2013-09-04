@@ -26,8 +26,6 @@
 #include "logger.h"
 #include "stream.h"
 
-void serverCloseConn(Server, unsigned int);
-
 ssize_t
 serverWrite(Server this, unsigned int i)
 {

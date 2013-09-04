@@ -29,6 +29,8 @@ int     serverPoll(Server);
 int     serverHandleAccept(Server, unsigned int);
 ssize_t serverRead(Server, unsigned int);
 ssize_t serverWrite(Server, unsigned int);
+void    serverCloseConn(Server, unsigned int);
+
 
 void
 serverRun(Server this)

@@ -76,6 +76,9 @@ authLdapAuthenticate(void * _this, Credential cred)
 	char *   who_ptr = who;
 	int      ldap_err;
 
+	struct berval   ldap_cred;
+	struct berval * ldap_servcred;
+
 	if (CRED_PASSWORD != cred->type) {
 		return FALSE;
 	}
@@ -91,9 +94,19 @@ authLdapAuthenticate(void * _this, Credential cred)
 	memcpy(who_ptr, this->base_dn, this->nbase_dn);
 	who_ptr[this->nbase_dn] = 0;
 
-	ldap_err = ldap_simple_bind_s(this->ldap, who, CRED_PWD(cred).pass);
+	ldap_cred.bv_val = CRED_PWD(cred).pass;
+	ldap_cred.bv_len = CRED_PWD(cred).npass;
+	ldap_err = ldap_sasl_bind_s(
+			this->ldap,
+			who,
+			LDAP_SASL_SIMPLE,
+			&ldap_cred,
+			NULL,
+			NULL,
+			&ldap_servcred);
+
 	if (0 == ldap_err) {
-		ldap_unbind_s(this->ldap);
+		ldap_unbind_ext_s(this->ldap, NULL, NULL);
 		//! \todo here we need to get and return the user id
 		return TRUE;
 	}

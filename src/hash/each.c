@@ -24,7 +24,7 @@
 
 #include "hash.h"
 
-static void (*cb)(void*);
+static void (*cb)(const void*);
 
 static
 inline

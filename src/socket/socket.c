@@ -35,7 +35,6 @@ socketCtor(void * _this, va_list * params)
 	Sock this = _this;
 	int reUse   = 1;     //! \todo make this configurable
 	int port;
-	int nonblock;
 
 	this->log  = va_arg(* params, Logger);
 	port       = va_arg(* params, int);

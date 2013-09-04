@@ -26,13 +26,11 @@
 #include "logger.h"
 #include "stream.h"
 
-void    serverCloseConn(Server, unsigned int);
 
 ssize_t
 serverRead(Server this, unsigned int i)
 {
 	int     fd = (this->fds)[i].fd;
-	ssize_t size;
 
 	if (NULL == (this->conns)[fd].worker) {
 		loggerLog(
@@ -42,49 +40,9 @@ serverRead(Server this, unsigned int i)
 		return -1;
 	}
 
-	switch ((size = streamReaderRead(
-					(this->conns)[fd].worker,
-					(this->conns)[fd].stream)))
-	{
-		case -1: 
-			/*
-			 * read failure
-			 */
-			if (errno == EAGAIN || errno == EWOULDBLOCK) {
-				/* on EGAIN just try again later. */
-				break;
-			}
-			// DROP-THROUGH
-
-		case -2:
-			/**
-			 * normal close: this must be mapped to -2 within the
-			 * underlying read call.
-			 *
-			 * \todo make sure all pending writes will be done before
-			 * close.
-			 */
-
-			/*
-			 * close connection if not EAGAIN, this would also
-			 * remove the filedescriptor from the poll list.
-			 * Else just return indicate
-			 */
-			loggerLog(this->logger, LOGGER_INFO,
-					"connection[%d] closed...%s",
-					fd,
-					inet_ntoa((((this->conns)[fd].sock)->addr).sin_addr));
-			serverCloseConn(this, i);
-
-		//case 0:
-		//	break;
-
-		default:
-		//	(this->fds)[i].events |= POLLOUT;
-			break;
-	}
-
-	return size;
+	return streamReaderRead(
+			(this->conns)[fd].worker,
+			(this->conns)[fd].stream);
 }
 
 // vim: set ts=4 sw=4:
