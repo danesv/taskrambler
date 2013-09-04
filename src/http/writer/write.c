@@ -117,12 +117,8 @@ httpWriterWrite(void * _this, Stream st)
 					 * By the way, the same is true for reading,
 					 * so to say, the parser.
 					 */
-					// cont = 0;
-					// break;
-
-					/* to go a step further...we send it to the
-					 * poll cicle again... */
-					return -1;
+					cont = 0;
+					break;
 				}
 
 				if (this->written >= this->nheader + this->current->nbody) {

@@ -51,7 +51,7 @@ serverRun(Server this)
 		 * handle accept
 		 */
 		if (0 != ((this->fds)[0].revents & POLLIN)) {
-			if (-1 == serverHandleAccept(this, 0)) {
+			if (0 > serverHandleAccept(this, 0)) {
 				events--;
 			}
 		}

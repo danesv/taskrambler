@@ -27,3 +27,51 @@ VERY BIG TODO:
   * also concurrent connection don't seem to make a problem.
   * keep-alive alone again don't seem to be a problem...
   !!!! if both are active something is screwed up.... !!!!
+
+- at least some of the problems result in something that I think
+  is a bug in the glibc implementation of tdelete.
+
+  Under some circumstances tdelete does not search the whole tree.
+  Here comes some debug output of the code...
+
+  This shows a code fragment that tries to remove a no longer
+  needed asset from the asset_pool.
+
+    DEBUG: pool release asset --./assets/image/waldschrat.jpg--
+
+  Twalk over all elements in the tree:
+
+    DEBUG: ./assets/image/waldschrat.jpg(1910357807899405601) => 0xe378a8
+    DEBUG: ./assets/js/jquery.js(10519512221325982142) => 0x10d3638
+
+  Output of each call to tDelete comparison function:
+  (Notice that the searched asset hash was in the previous Twalk.
+
+    DEBUG: search asset hash: 1910357807899405601
+    DEBUG: found: 10519512221325982142, key: ./assets/js/jquery.js
+    DEBUG: !!!!! NOT FOUND !!!!!!!
+    DEBUG: find results in (nil)
+
+  Repeated 2 times if non was found...
+
+    DEBUG: search asset hash: 1910357807899405601
+    DEBUG: found: 10519512221325982142, key: ./assets/js/jquery.js
+    DEBUG: !!!!! NOT FOUND !!!!!!!
+    DEBUG: find results in (nil)
+    DEBUG: search asset hash: 1910357807899405601
+    DEBUG: found: 10519512221325982142, key: ./assets/js/jquery.js
+    DEBUG: !!!!! NOT FOUND !!!!!!!
+    DEBUG: find results in (nil)
+    ===
+
+  Again a twalk over all elements...
+
+    DEBUG: ./assets/image/waldschrat.jpg(1910357807899405601) => 0xe378a8
+    DEBUG: ./assets/js/jquery.js(10519512221325982142) => 0x10d3638
+
+  Final statement...
+
+    DEBUG delete 0xe378a8, parent was (nil)
+
+  So, it looks like I should build my own tree implementation...
+  well in fact it seems that I have to!

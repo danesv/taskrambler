@@ -55,10 +55,15 @@
 
 
 HttpResponse
-httpResponseAsset(Asset asset)
+httpResponseAsset(const char * fname, size_t nfname)
 {
 	HttpResponse response;
 	HttpMessage  message;
+	Asset        asset = assetPoolGet(fname, nfname);
+
+	if (NULL == asset) {
+		return NULL;
+	}
 
 	response = new(HttpResponse, "HTTP/1.1", 200, "OK");
 	message  = (HttpMessage)response;

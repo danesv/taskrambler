@@ -44,9 +44,10 @@ serverHandleAccept(Server this, unsigned int i)
 	}
 
 	acc = socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
-	socketNonblock(acc);
 
-	if (-1 != acc->handle) {
+	if (NULL != acc && -1 != acc->handle) {
+		socketNonblock(acc);
+
 		switch(i) {
 			case 0:
 				// no SSL
@@ -82,21 +83,24 @@ serverHandleAccept(Server this, unsigned int i)
 		delete(acc);
 
 		switch(errno) {
-			case EAGAIN:
+			case EAGAIN|EWOULDBLOCK:
+			case EINTR:
 				loggerLog(this->logger,
 						LOGGER_DEBUG,
 						"server accept blocks");
+				return -1;
 				break;
 
 			default:
 				loggerLog(this->logger,
 						LOGGER_DEBUG,
 						"server accept error");
+				return -2;
 				break;
 		}
 	}
 
-	return (acc)? acc->handle : -1;
+	return acc->handle;
 }
 
 // vim: set ts=4 sw=4:

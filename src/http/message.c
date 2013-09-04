@@ -65,6 +65,8 @@ httpMessageDtor(void * _this)
 		MEM_FREE(this->body);
 	} else {
 		assetPoolRelease(this->asset);
+		this->asset = NULL;
+		this->body  = NULL;
 	}
 } 
 

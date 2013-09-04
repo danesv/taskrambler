@@ -51,7 +51,7 @@ HttpResponse httpResponseMe();
 HttpResponse httpResponseLoginForm();
 HttpResponse httpResponseRandval(time_t, int);
 HttpResponse httpResponseSession(Session);
-HttpResponse httpResponseAsset(Asset);
+HttpResponse httpResponseAsset(const char *, size_t);
 
 #endif // __HTTP_RESPONSE_H__
 

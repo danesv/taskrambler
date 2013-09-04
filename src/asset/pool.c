@@ -20,6 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// for debugging
+#include <stdio.h>
+
 // for size_t
 #include <sys/types.h>
 
@@ -44,6 +47,8 @@ assetPoolGet(const char * path, size_t npath)
 {
 	Asset asset = NULL;
 
+	printf("DEBUG: pool get asset --%s--\n", path);
+
 	if (NULL == asset_pool) {
 		asset_pool = new(Hash);
 	} else {
@@ -52,9 +57,12 @@ assetPoolGet(const char * path, size_t npath)
 
 	if (NULL == asset) {
 		asset = new(Asset, path, npath);
+		printf("DEBUG create asset %p\n", asset);
 		hashAdd(asset_pool, asset);
 	} else {
+		printf("DEBUG found asset %p\n", asset);
 		asset->ref_count++;
+		printf("DEBUG increase ref_count to %zu\n", asset->ref_count);
 	}
 
 	return asset;
@@ -63,19 +71,22 @@ assetPoolGet(const char * path, size_t npath)
 size_t
 assetPoolRelease(Asset asset)
 {
-	if (asset->ref_count <= 1) {
-		hashDelete( asset_pool, asset->fname, asset->nfname);
+	printf("DEBUG: pool release asset --%s--\n", asset->fname);
 
-		if (NULL != asset) {
-			delete(asset);
-		}
-
-		return 0;
-	} else {
+	if (asset->ref_count > 1) {
 		asset->ref_count--;
-
+		printf("DEBUG decrease ref_count to %zu\n", asset->ref_count);
 		return asset->ref_count;
 	}
+
+	if (NULL != asset) {
+		Asset found = (Asset)hashDelete(
+				asset_pool, asset->fname, asset->nfname);
+		printf("DEBUG delete %p, parent was %p\n", asset, found);
+		delete(asset);
+	}
+
+	return 0;
 }
 
 void

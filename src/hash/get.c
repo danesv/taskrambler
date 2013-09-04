@@ -20,6 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdio.h>
+
 #include <search.h>
 #include <sys/types.h>
 
@@ -37,10 +39,10 @@ hashGetComp(const void * a, const void * b)
 void *
 hashGet(Hash this, const char * search, size_t nsearch)
 {
-	unsigned long hash  = sdbm((const unsigned char *)search, nsearch);
-	void *        found = tfind(&hash, &(this->root), hashGetComp);
+	unsigned long    hash  = sdbm((const unsigned char *)search, nsearch);
+	void          ** found = tfind(&hash, &(this->root), hashGetComp);
 
-	return (NULL != found)? *(void**)found : NULL;
+	return (NULL != found)? *found : NULL;
 }
 
 // vim: set ts=4 sw=4:

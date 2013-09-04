@@ -41,7 +41,6 @@ httpWorkerGetAsset(
 	size_t      nmatch;
 	HttpHeader  header;
 	HttpMessage message;
-	Asset       asset;
 
 	size_t nfname = strlen(fname);
 
@@ -58,31 +57,25 @@ httpWorkerGetAsset(
 		nmatch = (header->nvalue)[0];
 	}
 
-	asset = assetPoolGet(fname, nfname);
+	message = (HttpMessage)httpResponseAsset(fname, nfname);
 
-	if (NULL == asset) {
+	if (NULL == message) {
 		return (HttpMessage)httpResponse404();
 	}
 
-	if (asset->netag == nmatch
-			&& 0 == memcmp(asset->etag, match, asset->netag)) {
-		assetPoolRelease(asset);
+	if (message->asset->netag == nmatch
+			&& 0 == memcmp(message->asset->etag, match, nmatch)) {
+		HttpMessage new_message;
 
-		return (HttpMessage)httpResponse304(
-				asset->mime_type, asset->nmime_type,
-				asset->etag, asset->netag,
-				asset->mtime, asset->nmtime);
+		new_message = (HttpMessage)httpResponse304(
+				message->asset->mime_type, message->asset->nmime_type,
+				message->asset->etag, message->asset->netag,
+				message->asset->mtime, message->asset->nmtime);
+
+		delete(message);
+
+		return new_message;
 	}   
-
-	message = (HttpMessage)httpResponseAsset(asset);
-
-	if (NULL == message) {
-		// here we should be somewhat more care about what causes
-		// the message to be NULL... here this could be also a 
-		// 404 not found....
-		assetPoolRelease(asset);
-		message = (HttpMessage)httpResponse500();
-	}
 
 	return message;
 }
