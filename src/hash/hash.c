@@ -38,7 +38,7 @@ hashCtor(void * _this, va_list * params)
 static
 inline
 void
-tDelete(void * node)
+tDelete(const void * node, const int depth)
 {
 	delete(node);
 }
@@ -49,12 +49,7 @@ hashDtor(void * _this)
 {
 	Hash this = _this;
 
-	/**
-	 * this is a GNU extension...anyway on most non
-	 * GNUish systems i would not use tsearch anyway
-	 * as the trees will be unbalanced.
-	 */
-	tdestroy(this->root, tDelete);
+	treeDestroy(&this->root, tDelete);
 }
 
 INIT_IFACE(Class, hashCtor, hashDtor, NULL);

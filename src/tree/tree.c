@@ -20,40 +20,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#define _GNU_SOURCE
 
-#include <search.h>
-#include <sys/types.h>
+#include <stdarg.h>
 
-#include "hash.h"
 #include "tree.h"
-#include "utils/hash.h"
+#include "class.h"
 
 static
-inline
 int
-hashGetComp(const void * a, const void * b)
+treeCtor(void * _this, va_list * params)
 {
-	unsigned long hash_a = hashableGetHash((void*)a);
+	Tree this = _this;
 
-	if (hash_a < *(const unsigned long*)b) {
-		return -1;
-	}
-	
-	if (hash_a > *(const unsigned long*)b) {
-		return 1;
-	}
+	this->data   = va_arg(*params, void *);
+	this->color  = rbRed;
+	this->parent = NULL;
+	this->left   = NULL;
+	this->right  = NULL;
 
 	return 0;
 }
 
-void *
-hashGet(Hash this, const char * search, size_t nsearch)
+static
+void
+treeDtor(void * _this)
 {
-	unsigned long   hash  = sdbm((const unsigned char *)search, nsearch);
-	void          * found = treeFind(this->root, &hash, hashGetComp);
-
-	return found;
 }
+
+INIT_IFACE(Class, treeCtor, treeDtor, NULL);
+CREATE_CLASS(Tree, NULL, IFACE(Class));
 
 // vim: set ts=4 sw=4:

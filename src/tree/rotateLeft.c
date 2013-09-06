@@ -20,40 +20,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-
-#include <search.h>
-#include <sys/types.h>
-
-#include "hash.h"
 #include "tree.h"
-#include "utils/hash.h"
 
-static
-inline
-int
-hashGetComp(const void * a, const void * b)
+void
+treeRotateLeft(Tree * this, Tree node)
 {
-	unsigned long hash_a = hashableGetHash((void*)a);
+	Tree rightChild = TREE_RIGHT(node);
+	Tree rcLeftSub  = TREE_RIGHT_LEFT(node);
 
-	if (hash_a < *(const unsigned long*)b) {
-		return -1;
-	}
-	
-	if (hash_a > *(const unsigned long*)b) {
-		return 1;
-	}
+	rightChild->left   = node;
+	rightChild->parent = TREE_PARENT(node);
+	node->right        = rcLeftSub;
+	if (NULL != rcLeftSub) {
+		rcLeftSub->parent  = node;
+	}   
 
-	return 0;
-}
+	if (NULL != TREE_PARENT(node)) {
+		if (TREE_PARENT(node)->left == node) {
+			TREE_PARENT(node)->left = rightChild;
+		} else {
+			TREE_PARENT(node)->right = rightChild;
+		}   
+	} else {
+		*this = rightChild;
+	}   
 
-void *
-hashGet(Hash this, const char * search, size_t nsearch)
-{
-	unsigned long   hash  = sdbm((const unsigned char *)search, nsearch);
-	void          * found = treeFind(this->root, &hash, hashGetComp);
-
-	return found;
+	node->parent = rightChild;
 }
 
 // vim: set ts=4 sw=4:

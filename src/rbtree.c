@@ -789,8 +789,8 @@ main(int argc, char * argv[])
     traverse(root, printElement);
     puts("");
 
-    post(root, cleanup);
-
+//    post(root, cleanup);
+//
     return 0;
 }
 

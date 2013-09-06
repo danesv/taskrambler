@@ -20,40 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-
-#include <search.h>
-#include <sys/types.h>
-
-#include "hash.h"
 #include "tree.h"
-#include "utils/hash.h"
-
-static
-inline
-int
-hashGetComp(const void * a, const void * b)
-{
-	unsigned long hash_a = hashableGetHash((void*)a);
-
-	if (hash_a < *(const unsigned long*)b) {
-		return -1;
-	}
-	
-	if (hash_a > *(const unsigned long*)b) {
-		return 1;
-	}
-
-	return 0;
-}
 
 void *
-hashGet(Hash this, const char * search, size_t nsearch)
+treeFind(Tree this, const void * search, TreeComp comp)
 {
-	unsigned long   hash  = sdbm((const unsigned char *)search, nsearch);
-	void          * found = treeFind(this->root, &hash, hashGetComp);
+	while (NULL != this) {
+		int comparison = comp(this->data, search);
 
-	return found;
+		if (0 < comparison) {
+			this = TREE_LEFT(this);
+			continue;
+		}
+
+		if (0 > comparison) {
+			this = TREE_RIGHT(this);
+			continue;
+		}
+
+		if (0 == comparison) {
+			break;
+		}
+	}   
+
+	return NULL != this ? this->data : NULL;
 }
 
 // vim: set ts=4 sw=4:

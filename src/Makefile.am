@@ -21,7 +21,8 @@ LIBS = ./http/libhttp.a \
        ./server/libserver.a \
        ./session/libsession.a \
        ./socket/libsocket.a \
-       ./stream/libstream.a
+       ./stream/libstream.a \
+       ./tree/libtree.a
 
 AM_CFLAGS = -Wall -I ../include/
 
@@ -33,4 +34,4 @@ taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
 SUBDIRS = asset auth cbuf class hash queue http \
-	  logger server session socket stream
+	  logger server session socket stream tree

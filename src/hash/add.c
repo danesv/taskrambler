@@ -30,24 +30,35 @@ inline
 int
 hashAddComp(const void * a, const void * b)
 {
-	return hashableGetHash((void*)b) - hashableGetHash((void*)a);
+	unsigned long hash_a = hashableGetHash((void*)a);
+	unsigned long hash_b = hashableGetHash((void*)b);
+
+	if (hash_a < hash_b) {
+		return -1;
+	}
+	
+	if (hash_a > hash_b) {
+		return 1;
+	}
+
+	return 0;
 }
 
 void *
 hashAdd(Hash this, void * operand)
 {
-	void * found = tsearch(operand, &(this->root), hashAddComp);
+	void * found = treeInsert(&this->root, operand, hashAddComp);
 
 	if (NULL == found) {
 		return NULL;
 	}
 
-	if (operand != *(void**)found) {
-		hashableHandleDouble(*(void**)found, operand);
+	if (operand != found) {
+		hashableHandleDouble(found, operand);
 		delete(operand);
 	}
 
-	return *(void**)found;
+	return found;
 }
 
 // vim: set ts=4 sw=4:

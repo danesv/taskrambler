@@ -20,10 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// for debug
-#include <stdio.h>
-
-
 #include <stdarg.h>
 
 // for mmap
@@ -104,9 +100,6 @@ assetCtor(void * _this, va_list * params)
 		close(this->handle);
 		return -1;
 	}
-
-	printf("DEBUG file mapped from %p to %p\n",
-			this->data, this->data + this->size);
 
 	this->ref_count = 1;
 

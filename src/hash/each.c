@@ -29,11 +29,9 @@ static void (*cb)(const void*);
 static
 inline
 void
-walk(const void * node, const VISIT which, const int depth)
+walk(const void * node, const int depth)
 {
-	if (endorder == which || leaf == which) {
-		cb(*(void**)node);
-	}
+	cb(node);
 }
 
 void
@@ -41,7 +39,7 @@ hashEach(Hash this, void (*callback)(const void*))
 {
 	cb = callback;
 
-	twalk(this->root, walk);
+	treeWalk(this->root, walk);
 }
 
 // vim: set ts=4 sw=4:

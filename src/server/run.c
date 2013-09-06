@@ -43,7 +43,11 @@ serverRun(Server this)
     {
 		unsigned int i;
 
-		if (0 == events) {
+		if (0 <= events) {
+			/*
+			 * TODO check why sometimes events is less than 0
+			 * There is still a misshandling here.
+			 */
 			events = serverPoll(this);
 		}
 

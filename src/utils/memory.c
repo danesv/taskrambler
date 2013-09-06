@@ -54,12 +54,10 @@
 #include <unistd.h>
 
 #include "utils/memory.h"
+#include "tree.h"
 
 
 #define PAGE_SIZE = 32
-
-
-enum rbColor {rbBlack=1, rbRed=2};
 
 
 struct memSegment
@@ -394,8 +392,6 @@ findInOrderSuccessor(struct memSegment * tree)
     return node;
 }
 
-struct memSegment * deleteOneChild(struct memSegment **, struct memSegment *);
-
 struct memSegment *
 deleteElement(struct memSegment ** tree, struct memSegment * element)
 {
@@ -619,8 +615,6 @@ deleteElement(struct memSegment ** tree, struct memSegment * element)
         break;
     }
  
-    //deleteOneChild(tree, node);
-
     return del_node;
 }
 
