@@ -57,9 +57,6 @@
 #include "tree.h"
 
 
-#define PAGE_SIZE = 32
-
-
 struct memSegment
 {
     size_t   size;
@@ -815,21 +812,23 @@ segmentFree(struct memSegment * segment, int depth)
 }
 
 
+/*
+ * This will always allocate a multiple of PAGESIZE
+ */
 void *
 memMalloc(size_t size)
 {
 	struct memSegment * seg;
+	long   psize = sysconf(_SC_PAGESIZE);
 
-	//printf("MALLOC of size: %zu\n", size);
-	//traverse(segments, printElement);
+	size  = (0 >= size)? 1 : (0 != size%psize)? (size/psize)+1 : size/psize; 
+	size *= psize;
 
 	seg = findElement(segments, size);
 
 	if (NULL == seg) {
 		seg = newElement(size);
-		//printf("  CREATE Segment: 0x%p of size: %zu\n", seg, seg->size);
 	} else {
-		//printf("  FOUND Segment: 0x%p of size: %zu\n", seg, seg->size);
 		// remove the found one from the tree as we use it now.
 		seg = deleteElement(&segments, seg);
 	}
