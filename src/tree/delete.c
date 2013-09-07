@@ -103,6 +103,7 @@ treeDelete(Tree * this, const void * search, TreeComp comp)
 				return data;
 			} else {
 				if (NULL != child) {
+					delete(node);
 					node = child;
 				} else {
 					node->color = rbBlack;
