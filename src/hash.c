@@ -36,14 +36,14 @@ main(int argc, char * argv[])
 
     deleted = hashDelete(hash, CSTRA("f9e0g"));
     delete(deleted);
-    //deleted = hashDelete(hash, CSTRA("fcrne9"));
-    //delete(deleted);
-    //deleted = hashDelete(hash, CSTRA("fr09ie"));
-    //delete(deleted);
-    //deleted = hashDelete(hash, CSTRA("jfde9w8"));
-    //delete(deleted);
-    //deleted = hashDelete(hash, CSTRA("j8frheff"));
-    //delete(deleted);
+    deleted = hashDelete(hash, CSTRA("fcrne9"));
+    delete(deleted);
+    deleted = hashDelete(hash, CSTRA("fr09ie"));
+    delete(deleted);
+    deleted = hashDelete(hash, CSTRA("jfde9w8"));
+    delete(deleted);
+    deleted = hashDelete(hash, CSTRA("j8frheff"));
+    delete(deleted);
 
     delete(hash);
     memCleanup();

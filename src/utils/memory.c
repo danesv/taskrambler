@@ -683,7 +683,8 @@ post(struct memSegment * tree, void (*cb)(struct memSegment *, int))
          * If we come from the right so nothing and go to our
          * next parent.
          */
-        if ((NULL == node->left && NULL == node->right)
+        if (((NULL == node->left || previous == node->left)
+					&& NULL == node->right)
                 || previous == node->right) {
 
             struct memSegment * parent = node->parent;
