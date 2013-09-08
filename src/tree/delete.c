@@ -31,6 +31,7 @@ void *
 treeDelete(Tree * this, const void * search, TreeComp comp)
 {
 	Tree   node = *this;
+	Tree   del_node;
 
 	void * data;
 
@@ -102,8 +103,8 @@ treeDelete(Tree * this, const void * search, TreeComp comp)
 				delete(node);
 				return data;
 			} else {
+				del_node = node;
 				if (NULL != child) {
-					delete(node);
 					node = child;
 				} else {
 					node->color = rbBlack;
@@ -171,13 +172,11 @@ treeDelete(Tree * this, const void * search, TreeComp comp)
 			if (rbBlack == TREE_PARENT(node)->color) {
 				// case 3
 				Tree parent = node->parent;
-				delete(node);
 				node = parent;
 				continue;
 			} else {
 				// case 4
 				TREE_PARENT(node)->color = rbBlack;
-				delete(node);
 				break;
 			}
 		}
@@ -240,6 +239,7 @@ treeDelete(Tree * this, const void * search, TreeComp comp)
 		break;
 	}
 
+	delete(del_node);
 	/*
 	 * not sure if deleting here is correct.
 	 */
