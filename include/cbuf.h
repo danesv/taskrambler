@@ -38,6 +38,7 @@
 #include "stream.h"
 
 #include "commons.h"
+#include "utils/memory.h"
 
 #define ECBUFOVFL		100
 

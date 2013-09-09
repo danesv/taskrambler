@@ -6,4 +6,4 @@ SERVER = server.c run.c close_conn.c poll.c \
 noinst_LIBRARIES = libserver.a
 
 libserver_a_SOURCES = $(SERVER)
-libserver_a_CFLAGS  = -Wall -I ../../include/
+libserver_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/

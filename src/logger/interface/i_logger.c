@@ -27,6 +27,8 @@
 #include "logger/logger.h"
 #include "logger/interface/logger.h"
 
+#include "utils/memory.h"
+
 const struct interface i_Logger = {
 	"logger",
 	1
@@ -37,23 +39,40 @@ loggerLog(void * _object, logger_level level, const char * const fmt, ...) {
 	Logger object = _object;
 
 	if (level >= object->min_level) {
-		char *  msg      = NULL;
-		size_t  msg_size = 0;
-		va_list params;
+		char    * msg      = NULL;
+		size_t    msg_size = 0;
+		va_list   params;
 
 		va_start(params, fmt);
-		msg_size = vsnprintf(msg, msg_size, fmt, params);
+		msg_size = vsnprintf(NULL, msg_size, fmt, params);
 		va_end(params);
 
-		msg = malloc(msg_size + 1);
+		msg = memMalloc(msg_size + 1);
 
 		va_start(params, fmt);
 		vsnprintf(msg, msg_size + 1, fmt, params);
 		va_end(params);
 
+//		// ----- DEBUG ------
+//		do {
+//			struct i_Logger * iface;
+//
+//			do {
+//				class_ptr class = GET_CLASS(_object);
+//				iface = (struct i_Logger *)IFACE_GET(class, &i_Logger);
+//				while ((NULL == iface || NULL == iface->log) && HAS_PARENT(class)) {
+//					class = class->parent;
+//					iface = (struct i_Logger *)IFACE_GET(class, &i_Logger);
+//				}
+//				assert(NULL != iface->log);
+//			} while(0);
+//
+//			iface->log(_object, level, msg);
+//		} while(0);
+//		// ----- DEBUG ------
 		CALL(_object, Logger, log, level, msg);
 
-		free(msg);
+		MEM_FREE(msg);
 	}
 }
 

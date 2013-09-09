@@ -27,68 +27,102 @@
 
 int     serverPoll(Server);
 int     serverHandleAccept(Server, unsigned int);
-void    serverCloseConn(Server, unsigned int);
 ssize_t serverRead(Server, unsigned int);
 ssize_t serverWrite(Server, unsigned int);
+void    serverCloseConn(Server, unsigned int);
+
 
 void
 serverRun(Server this)
 {
+	int events = 0;
+
     loggerLog(this->logger, LOGGER_INFO, "service started");
 
     while (!doShutdown) //! until error or signal 
     {
-		int          events;
 		unsigned int i;
-		int          naccs = 10;
 
-		events = serverPoll(this);
-		if (doShutdown || 0 >= events) break;
+		if (0 <= events) {
+			/*
+			 * TODO check why sometimes events is less than 0
+			 * There is still a misshandling here.
+			 */
+			events = serverPoll(this);
+		}
 
 		/**
 		 * handle accept
 		 */
 		if (0 != ((this->fds)[0].revents & POLLIN)) {
-			events--;
-			while(-1 != serverHandleAccept(this, 0) && 0 < naccs) {
-				naccs--;
+			if (0 > serverHandleAccept(this, 0)) {
+				events--;
 			}
 		}
 
-		/**
-		 * handle accept SSL
-		 */
-		if (0 != ((this->fds)[1].revents & POLLIN)) {
-			events--;
-			while(-1 != serverHandleAccept(this, 1) && 0 < naccs) {
-				naccs--;
-			}
-		}
+		// /**
+		//  * handle accept SSL
+		//  */
+		// if (0 != ((this->fds)[1].revents & POLLIN)) {
+		// 	if (-1 == serverHandleAccept(this, 1)) {
+		// 		events--;
+		// 	}
+		// }
 
 		for (i=2; i < this->nfds; i++) {
-			int nreads = 10, nwrites = 10;
-
 			/**
 			 * handle reads 
 			 */
-			if (0 != ((this->fds)[i].revents & POLLIN) && 0 < nreads) {
-				events--;
-				nreads--;
+			if (0 != ((this->fds)[i].revents & POLLIN)) {
+				ssize_t processed = serverRead(this, i);
 
-				serverRead(this, i);
+				if (0 > processed) {
+					events--;
+
+					switch (processed) {
+						case -2: // close me...
+							serverCloseConn(this, i);
+
+						case -1: // poll me again
+							break;
+					}
+				}
+
+				if (0 < processed) {
+					(this->fds)[i].events |= POLLOUT;
+				}
 			}
 
 			/**
 			 * handle writes
 			 */
-			if (0 != ((this->fds)[i].revents & POLLOUT) && 0 < nwrites) {
-				events--;
-				nwrites--;
+			if (0 != ((this->fds)[i].revents & POLLOUT)) {
+				ssize_t remaining = serverWrite(this, i);
 
-				serverWrite(this, i);
+				if (0 >= remaining) {
+					/*
+					 * 0 means queue was empty...try again next
+					 * time...no need to poll again.
+					 * Anyway, most likely we need to read again
+					 * so lets finish this event for now.
+					 */
+					events--;
+
+					switch (remaining) {
+						case  0: // nothing more to write stop polling
+							(this->fds)[i].events &= ~POLLOUT;
+							break;
+
+						case -2: // close me...
+							serverCloseConn(this, i);
+
+						case -1: // poll me again
+							break;
+					}
+				}
 			}
 
-			if (0 > events)
+			if (0 >= events)
 				break; // no more events to handle
 		}
     }

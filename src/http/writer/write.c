@@ -27,10 +27,10 @@
 #include "http/message.h"
 #include "queue.h"
 #include "http/writer.h"
-#include "cbuf.h"
 #include "stream.h"
 
 #include "commons.h"
+#include "utils/memory.h"
 
 
 ssize_t
@@ -39,112 +39,117 @@ httpWriterWrite(void * _this, Stream st)
 	HttpWriter this = _this;
 	int        cont = 1;
 
-	if (cbufIsLocked(this->buffer)) {
-		if (FALSE == this->ourLock)
-			return 0;
-	}
-	else {
-		cbufLock(this->buffer);
-		this->ourLock = TRUE;
-	}
-
 	while (cont) {
 		switch (this->state) {
+			char    * start;
+			ssize_t   to_write;
+			ssize_t   written;
+
 			case HTTP_WRITER_GET:
-				if (NULL == this->current && ! queueEmpty(this->queue)) {
+				if (! queueEmpty(this->queue)) {
 					this->current = queueGet(this->queue);
 
 					this->written = 0;
-					this->nbody   = 0;
 					this->nheader = httpMessageHeaderSizeGet(this->current);
 
-					httpMessageHeaderToString(
-							this->current,
-							cbufGetWrite(this->buffer));
-					cbufIncWrite(this->buffer, this->nheader);
+					if (this->nheader > memGetSize(this->buffer)) {
+						ssize_t size = this->nheader;
+
+						size = (0 != size%WRITER_BUF_CHUNK)?
+							(size/WRITER_BUF_CHUNK)+1 :
+							size/WRITER_BUF_CHUNK;
+						size *= WRITER_BUF_CHUNK;
+
+						if (NULL != this->buffer) {
+							MEM_FREE(this->buffer);
+						}
+
+						this->buffer  = memMalloc(size);
+						this->nbuffer = size;
+					}
+
+					httpMessageHeaderToString(this->current, this->buffer);
+
+					this->nbody = MIN(
+							this->current->nbody,
+							this->nbuffer - this->nheader);
+
+					memcpy(
+							this->buffer + this->nheader,
+							this->current->body,
+							this->nbody);
 
 					this->state = HTTP_WRITER_WRITE;
 				}
 				else {
-					cbufRelease(this->buffer);
-					this->ourLock = FALSE;
-					cont          = 0;
+					cont = 0;
+					break;
 				}
-				break;
 
 			case HTTP_WRITER_WRITE:
-				/**
-				 * read
-				 */
-				if (this->nbody < this->current->nbody) {
-					size_t size = MIN(
-							this->current->nbody - this->nbody,
-							cbufGetFree(this->buffer));
+				if (this->written >= this->nbuffer) {
+					size_t body_done = this->written - this->nheader;
 
-					switch (this->current->type) {
-						case HTTP_MESSAGE_BUFFERED:
-							cbufSetData(this->buffer,
-									this->current->body + this->nbody,
-									size);
-							break;
-
-						case HTTP_MESSAGE_PIPED:
-							size = cbufRead(this->buffer, this->current->handle);
-							break;
-
-						default:
-							return -1;
-					}
-
-					this->nbody += size;
+					start    = this->current->body + body_done;
+					to_write = this->current->nbody - body_done;
+				} else {
+					start    = this->buffer   + this->written;
+					to_write = (this->nheader + this->nbody) - this->written;
 				}
 
-				/**
-				 * write
-				 */
-				{
-					ssize_t written = cbufWrite(this->buffer, st);
+				written = streamWrite(st, start, to_write);
 
-					if (0 <= written) {
-						this->written += written;
-					}
-					else {
-						return -1;
-					}
+				if (written < 0) {
+					return written;
 				}
 
-				if (this->written == this->current->nbody + this->nheader) {
-					this->state = HTTP_WRITER_DONE;
-				}
-				else {
+				this->written += written;
+
+				if (written != to_write) {
+					/*
+					 * for some reason not all data could be
+					 * written...most likely its a slow connection
+					 * so, not to slow down the server we stop
+					 * writing to this one now and come back to
+					 * it in the next run....maybe it would be
+					 * feasable to also implement some kind of
+					 * timeout mechanism for writes...
+					 * By the way, the same is true for reading,
+					 * so to say, the parser.
+					 */
 					cont = 0;
+					break;
 				}
-				break;
+
+				if (this->written >= this->nheader + this->current->nbody) {
+					// we are done with this message.
+					this->state = HTTP_WRITER_DONE;
+				} else {
+					break;
+				}
 
 			case HTTP_WRITER_DONE:
 	 			this->state = HTTP_WRITER_GET;
-
-				cbufRelease(this->buffer);
-				this->ourLock = FALSE;
 
 				if (! httpMessageHasKeepAlive(this->current)) {
 					/**
 					 * if the message did not have the keep-alive feature
 					 * we don't care about further pipelined messages and
-					 * return to the caller with a -1 indicating that the
+					 * return to the caller with a -2 indicating that the
 					 * underlying connection should be closed at their side.
 					 * Then we close to connection.
 					 */
-					delete(this->current);
-					return -1;
+					return -2;
 				}
-
 				delete(this->current);
+
 				break;
 		}
 	}
 
-	return this->queue->nmsg;
+	return NULL == this->current ?
+		this->queue->nmsg :
+		this->queue->nmsg + 1;
 }
 
 // vim: set ts=4 sw=4:

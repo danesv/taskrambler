@@ -42,23 +42,27 @@
 #include "http/parser.h"
 
 #include "utils/memory.h"
+#include "utils/mime_type.h"
 #include "commons.h"
 
 
-HttpMessage httpWorkerGetAsset(HttpRequest, const char *, const char *, size_t);
+HttpMessage httpWorkerGetAsset(HttpWorker, HttpRequest, const char *);
 void        httpWorkerAddCommonHeader(HttpMessage, HttpMessage);
+char *		httpWorkerGetMimeType(HttpWorker, const char * extension);
 
 
 ssize_t
 httpWorkerProcess(HttpWorker this, Stream st)
 {
-	ssize_t size;
+	ssize_t requests = httpParserParse(this->parser, st);
 
-	if (0 < (size = httpParserParse(this->parser, st))) {
+	if (0 > requests) {
+		return requests;
+	}
 
+	if (0 < requests) {
 		while (! queueEmpty(this->parser->queue)) {
-			HttpRequest request  = queueGet(
-					this->parser->queue);
+			HttpRequest request  = queueGet(this->parser->queue);
 			HttpMessage response = NULL;
 
 			/**
@@ -69,11 +73,11 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			if (NULL == this->session) {
 				HashValue sidstr = hashGet(request->cookies, CSTRA("sid"));
 
-					if (NULL != sidstr) {
-						unsigned long sid;
+				if (NULL != sidstr) {
+					unsigned long sid;
 
 					sid = strtoul((char*)(sidstr->value), NULL, 10);
-						this->session = sessionGet(this->sroot, sid);
+					this->session = sessionGet(this->sroot, sid);
 				}
 			}
 
@@ -120,13 +124,13 @@ httpWorkerProcess(HttpWorker this, Stream st)
 							response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
 						} else {
 							if (NULL == this->session) {
-					this->session = sessionAdd(
-							this->sroot,
+								this->session = sessionAdd(
+										this->sroot,
 										new(Session,
 											username->value,
 											username->nvalue));
 							} else {
-								this->session->username = malloc(username->nvalue + 1);
+								this->session->username = memMalloc(username->nvalue + 1);
 								this->session->username[username->nvalue] = 0;
 								memcpy(this->session->username,
 										username->value,
@@ -151,19 +155,11 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			}
 
 			if (0 == strcmp("GET", request->method)) {
-
-				if (0 == strcmp("/", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/html/main.html",
-							CSTRA("text/html"));
-				}
-
 				if (0 == strcmp("/sessinfo/", request->path)) {
 					response = (HttpMessage)httpResponseSession(this->session);
 				}
 
-				if (0 == strcmp("/sess/", request->path)) {
+				else if (0 == strcmp("/sess/", request->path)) {
 					if (NULL == this->session) {
 						this->session = sessionAdd(
 								this->sroot,
@@ -172,7 +168,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 					response = (HttpMessage)httpResponseSession(this->session);
 				}
 
-				if (0 == strcmp("/randval/", request->path)) {
+				else if (0 == strcmp("/randval/", request->path)) {
 					if (NULL != this->session) {
 						response = (HttpMessage)httpResponseRandval(
 								this->val->timestamp,
@@ -182,47 +178,36 @@ httpWorkerProcess(HttpWorker this, Stream st)
 					}
 				}
 
-				if (0 == strcmp("/image/me", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/image/waldschrat.jpg",
-							CSTRA("image/jpeg"));
+				else {
+					char html_asset[2048] = "./assets/html";
+					char base_asset[2048] = "./assets";
+					char main_asset[]     = "/main.html";
+
+					char * asset_path     = base_asset;
+					char * asset;
+					char * mime_type;
+
+					if (0 == strcmp("/", request->path)) {
+						asset = main_asset;
+					} else {
+						asset = request->path;
+					}
+
+					mime_type = strrchr(asset, '.');
+					if (NULL != mime_type) {
+						mime_type++;
+						mime_type = getMimeType(mime_type, strlen(mime_type));
+					}
+
+					if (NULL != mime_type &&
+							0 == memcmp(mime_type, CSTRA("text/html"))) {
+						asset_path = html_asset;
+					}
+
+					strcat(asset_path, asset);
+					response = httpWorkerGetAsset(this, request, asset_path);
 				}
 
-				if (0 == strcmp("/assets/js/jquery", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/jquery-1.7.1.min.js",
-							CSTRA("text/javascript"));
-				}
-
-				if (0 == strcmp("/assets/js/serverval", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/serverval.js",
-							CSTRA("text/javascript"));
-				}
-
-				if (0 == strcmp("/assets/js/session", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/session.js",
-							CSTRA("text/javascript"));
-				}
-
-				if (0 == strcmp("/assets/js/init", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/js/init.js",
-							CSTRA("text/javascript"));
-				}
-
-				if (0 == strcmp("/assets/style/common", request->path)) {
-					response = httpWorkerGetAsset(
-							request,
-							"./assets/style/common.css",
-							CSTRA("text/css"));
-				}
 			}
 
 			if (NULL == response) {
@@ -230,15 +215,13 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			}
 
 			httpWorkerAddCommonHeader((HttpMessage)request, response);
-
 			delete(request);
-
 			queuePut(this->writer->queue, response);
 			response = NULL;
 		}
 	}
 
-	return size;
+	return this->writer->queue->nmsg;
 }
 
 // vim: set ts=4 sw=4:

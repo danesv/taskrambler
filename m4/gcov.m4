@@ -14,7 +14,7 @@ AC_DEFUN([AC_TDD_GCOV],
   [use_gcov=$enableval], [use_gcov=no])
   AM_CONDITIONAL(HAVE_GCOV, test "x$use_gcov" = "xyes")
 
-  # if test "x$use_gcov" = "xyes"; then
+  if test "x$use_gcov" = "xyes"; then
   # we need gcc:
   if test "$GCC" != "yes"; then
     AC_MSG_ERROR([GCC is required for --enable-gcov])
@@ -72,6 +72,6 @@ AC_DEFUN([AC_TDD_GCOV],
   COVERAGE_CXXFLAGS="-O0 -fprofile-arcs -ftest-coverage"	
   COVERAGE_LDFLAGS="-lgcov"
 
-#fi
+fi
 ]) # AC_TDD_GCOV
 

@@ -57,11 +57,12 @@ httpParserParse(void * _this, Stream st)
 
 	if (NULL != this->incomplete) {
 		cbufSetData(this->buffer, this->incomplete, this->isize);
-		free(this->incomplete);
-		this->incomplete = NULL;
+		MEM_FREE(this->incomplete);
 	}
 
 	if (0 > (read = cbufRead(this->buffer, st))) {
+		cbufRelease(this->buffer);
+		this->ourLock = FALSE;
 		return read;
 	}
 
@@ -76,15 +77,14 @@ httpParserParse(void * _this, Stream st)
 					cbufRelease(this->buffer);
 					this->ourLock = FALSE;
 					cont          = 0;
+					break;
 				}
-
-				break;
 
 			case HTTP_MESSAGE_START:
 				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
 					if (! cbufIsEmpty(this->buffer)) {
-						this->isize = this->buffer->bused;
-						this->incomplete = malloc(this->isize);
+						this->isize      = this->buffer->bused;
+						this->incomplete = memMalloc(this->isize);
 						memcpy(this->incomplete,
 								cbufGetData(this->buffer, this->isize),
 								this->isize);
@@ -99,18 +99,17 @@ httpParserParse(void * _this, Stream st)
 				if (NULL == this->current) {
 					cbufRelease(this->buffer);
 					this->ourLock = FALSE;
-					return -1;
+					return -2; // a server error occured can't process...
 				}
 				httpParserRequestVars(this);
 
 				this->state = HTTP_MESSAGE_INTRO_DONE;
-				break;
 
 			case HTTP_MESSAGE_INTRO_DONE:
 				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
 					if (! cbufIsEmpty(this->buffer)) {
-						this->isize = this->buffer->bused;
-						this->incomplete = malloc(this->isize);
+						this->isize      = this->buffer->bused;
+						this->incomplete = memMalloc(this->isize);
 						memcpy(this->incomplete,
 								cbufGetData(this->buffer, this->isize),
 								this->isize);
@@ -121,34 +120,33 @@ httpParserParse(void * _this, Stream st)
 					break;
 				}
 
-				if (0 == strlen(line)) {
-					this->state = HTTP_MESSAGE_HEADERS_DONE;
+				if (0 != strlen(line)) {
+					httpParserHeader(this, line, line_end);
 					break;
 				}
 
-				httpParserHeader(this, line, line_end);
-				break;
+				this->state = HTTP_MESSAGE_HEADERS_DONE;
 
 			case HTTP_MESSAGE_HEADERS_DONE:
 				if (this->current->dbody == this->current->nbody) {
 					this->state = HTTP_MESSAGE_DONE;
+				} else {
+					if (cbufIsEmpty(this->buffer)) {
+						cbufRelease(this->buffer);
+						this->ourLock = FALSE;
+						cont = 0;
+						break;
+					}
+
+					cbufIncRead(
+							this->buffer,
+							httpParserBody(
+								this,
+								cbufGetRead(this->buffer),
+								this->buffer->bused));
+
 					break;
 				}
-
-				if (cbufIsEmpty(this->buffer)) {
-					cbufRelease(this->buffer);
-					this->ourLock = FALSE;
-					cont = 0;
-					break;
-				}
-
-				cbufIncRead(
-						this->buffer,
-						httpParserBody(
-							this,
-							cbufGetRead(this->buffer),
-							this->buffer->bused));
-				break;
 
 			case HTTP_MESSAGE_DONE:
 				{

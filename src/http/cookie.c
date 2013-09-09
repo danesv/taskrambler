@@ -46,11 +46,11 @@ httpCookieCtor(void * _this, va_list * params)
 	value        = va_arg(* params, char*);
 	this->nvalue = va_arg(* params, size_t);
 
-	this->key = malloc(this->nkey + 1);
+	this->key = memMalloc(this->nkey + 1);
 	this->key[this->nkey] = 0;
 	memcpy(this->key, key, this->nkey);
 
-	this->value = malloc(this->nvalue + 1);
+	this->value = memMalloc(this->nvalue + 1);
 	this->value[this->nvalue] = 0;
 	memcpy(this->value, value, this->nvalue);
 
@@ -65,10 +65,10 @@ httpCookieDtor(void * _this, va_list * params)
 {
 	HttpCookie this = _this;
 
-	FREE(this->key);
-	FREE(this->value);
-	FREE(this->domain);
-	FREE(this->path);
+	MEM_FREE(this->key);
+	MEM_FREE(this->value);
+	MEM_FREE(this->domain);
+	MEM_FREE(this->path);
 }
 
 static

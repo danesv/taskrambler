@@ -9,7 +9,7 @@
 #include "mock/mock_logger.h"
 
 
-#define TEST_PORT	11212
+#define TEST_PORT	11222
 
 
 const char testname[] = "socketTest";

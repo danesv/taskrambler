@@ -55,9 +55,8 @@ httpResponse404()
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"), CSTRA("text/html")));
 
-	message->type  = HTTP_MESSAGE_BUFFERED;
 	message->nbody = sizeof(RESP_DATA) - 1;
-	message->body  = malloc(sizeof(RESP_DATA));
+	message->body  = memMalloc(sizeof(RESP_DATA));
 	memcpy(message->body, RESP_DATA, sizeof(RESP_DATA));
 
 	return response;

@@ -24,12 +24,15 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
 #include <stdio.h>
 #include <search.h>
 
 #include "class.h"
 #include "stream.h"
+#include "hash.h"
 #include "http/worker.h"
 #include "http/parser.h"
 #include "http/writer.h"
@@ -44,19 +47,18 @@ httpWorkerCtor(void * _this, va_list * params)
 	char *     id   = va_arg(*params, char *);
 	char       cbuf_id[100];
 
-	this->id  = malloc(strlen(id) + 1);
+	this->id  = memMalloc(strlen(id) + 1);
 	strcpy(this->id, id);
 
 	this->val = va_arg(*params, struct randval *);
 
+	this->asset_pool = new(Hash);
+
 	sprintf(cbuf_id, "%s_%s", "parser", id);
 	this->pbuf   = new(Cbuf, cbuf_id, PARSER_MAX_BUF);
 
-	sprintf(cbuf_id, "%s_%s", "writer", id);
-	this->wbuf   = new(Cbuf, cbuf_id, WRITER_MAX_BUF);
-
 	this->parser = new(HttpParser, this->pbuf);
-	this->writer = new(HttpWriter, this->wbuf);
+	this->writer = new(HttpWriter);
 
 	this->sroot  = &(this->session);
 	this->auth   = va_arg(* params, void *);
@@ -78,14 +80,14 @@ httpWorkerDtor(void * _this)
 {
 	HttpWorker this = _this;
 
-	FREE(this->id);
+	MEM_FREE(this->id);
 
 	delete(this->parser);
 	delete(this->writer);
 
 	if (NULL != this->pbuf) {
+		delete(this->asset_pool);
 		delete(this->pbuf); //!< cloned workers have NULL, so delete won't do anything
-		delete(this->wbuf); //!< cloned workers have NULL, so delete won't do anything
 		tdestroy(*(this->sroot), tDelete);
 	}
 }
@@ -99,8 +101,29 @@ httpWorkerClone(void * _this, void * _base)
 
 	this->val  = base->val;
 
+	this->asset_pool = base->asset_pool;
+
 	this->parser = new(HttpParser, base->pbuf);
-	this->writer = new(HttpWriter, base->wbuf);
+	/*
+	 * I am pretty sure that it is not neccessary to have a
+	 * separeate writer for each connection...
+	 * Right now I leave it that way.
+	 * TODO check this.
+	 * OK some facts:
+	 * - the stream as well as the worker are associated
+	 *   to the filehandle within the server.
+	 * - the response queue is located within the writer.
+	 *   (this might be wrong...the response queue should
+	 *   be part of the worker. That way I could give it
+	 *   into the writer when writing. That way only one
+	 *   instance of the writer might be possible...)
+	 *   NO, the previous statement is wrong...this would
+	 *   involve much more organization overhead within
+	 *   the writer...queue change and such...
+	 *   At the end I think it might be best to leave it as
+	 *   it is.
+	 */
+	this->writer = new(HttpWriter);
 
 	this->sroot  = &(base->session);
 	this->auth   = base->auth;

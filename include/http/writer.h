@@ -29,14 +29,48 @@
 #include "class.h"
 #include "http/message.h"
 #include "queue.h"
-#include "cbuf.h"
 #include "stream.h"
 
 #include "commons.h"
 
 
-#define WRITER_MAX_BUF	131072
+/*
+ * the buffer that will be written back to an http client.
+ * If we have open 1024 paralell connection this will result
+ * in a memory usage of 128MB. Right now, we don't allow more
+ * than this amount of paralell connections.
+ * 
+ * This one and the parser buffer are the hugest memory pools
+ * we need. The parser buffer is of the same size.
+ *
+ * Right now only the ringbuffer is reused for each connection
+ * resulting in some memory movement between some temporary
+ * space and the circular buffer.
+ *
+ * This behavioru should be kept in place for low memory machines
+ * running this code.
+ *
+ * Anyway, I will build a version which uses two ringbuffers for
+ * each connection, Resulting in a 256KB memory used for each
+ * connection. Which in turn means 256MB for 1024 paralell connections.
+ *
+ * And as I will also implement a cbuf pool, this memory will not be
+ * freed before application end.
+ */
 
+/*
+ * This is the multiplier for the size of the initial write buffer.
+ * It is used to store the
+ * string representation of the message, as well as the first part of
+ * the body if the headers exceed the size a multiple of this will
+ * be reserved...very unlikely, but not impossible.
+ * If no the whole body fits within this buffer only part of it will
+ * be copied in there. The rest will be send in following send calls.
+ */
+#define WRITER_BUF_CHUNK	1024 * 10 // our default buffer chunk for
+									  // headers is 10k. This will result
+									  // in at least 20m for 2000 concurrent
+									  // connections.
 
 typedef enum e_HttpWriterState {
 	HTTP_WRITER_GET=0,
@@ -45,15 +79,15 @@ typedef enum e_HttpWriterState {
 } HttpWriterState;
 
 CLASS(HttpWriter) {
-	Cbuf            buffer;
-	Bool            ourLock;
+	char        * buffer;
 
-	Queue           queue;
-	HttpMessage     current;
+	Queue         queue;
+	HttpMessage   current;
 
-	size_t          nheader;
-	size_t          nbody;
-	size_t          written;
+	size_t        nbuffer; // size of buffer
+	size_t        nheader; // size headers in buf
+	size_t        nbody;   // sizeof body in buffer
+	size_t        written; // already written bytes
 
 	HttpWriterState state;
 };

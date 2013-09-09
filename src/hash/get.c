@@ -20,10 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdio.h>
+
 #include <search.h>
 #include <sys/types.h>
 
 #include "hash.h"
+#include "tree.h"
 #include "utils/hash.h"
 
 static
@@ -31,16 +34,26 @@ inline
 int
 hashGetComp(const void * a, const void * b)
 {
-	return hashableGetHash((void*)b) - *(const unsigned long*)a;
+	unsigned long hash_a = hashableGetHash((void*)a);
+
+	if (hash_a < *(const unsigned long*)b) {
+		return -1;
+	}
+	
+	if (hash_a > *(const unsigned long*)b) {
+		return 1;
+	}
+
+	return 0;
 }
 
 void *
 hashGet(Hash this, const char * search, size_t nsearch)
 {
-	unsigned long hash  = sdbm((const unsigned char *)search, nsearch);
-	void *        found = tfind(&hash, &(this->root), hashGetComp);
+	unsigned long   hash  = sdbm((const unsigned char *)search, nsearch);
+	void          * found = treeFind(this->root, &hash, hashGetComp);
 
-	return (NULL != found)? *(void**)found : NULL;
+	return found;
 }
 
 // vim: set ts=4 sw=4:

@@ -37,7 +37,23 @@ hashableGetHash(void * hashable)
 {
 	unsigned long ret;
 
-	RETCALL(hashable, Hashable, getHash, ret);
+	//RETCALL(hashable, Hashable, getHash, ret);
+	do {
+		struct i_Hashable * iface;
+		//_CALL(GET_CLASS(hashable), Hashable, getHash);
+		do {
+			class_ptr class = GET_CLASS(hashable);
+			iface = (struct i_Hashable *)IFACE_GET(class, &i_Hashable);
+			while ((NULL == iface || NULL == iface->getHash) && HAS_PARENT(class)) {
+				class = class->parent;
+				iface = (struct i_Hashable *)IFACE_GET(class, &i_Hashable);
+			}
+			assert(NULL != iface->getHash);
+		} while(0);
+
+		ret = iface->getHash(hashable);
+	} while(0);
+
 
 	return ret;
 }

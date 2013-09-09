@@ -1,7 +1,8 @@
 /**
  * \file
+ * Represents an asset (a file on disk)
  *
- * \author	Georg Hopp
+ * \author  Georg Hopp
  *
  * \copyright
  * Copyright © 2012  Georg Hopp
@@ -20,33 +21,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __ASSET_H__
+#define __ASSET_H__
+
 #include <sys/types.h>
-#include <unistd.h>
 
-#include "cbuf.h"
-#include "stream.h"
+#include "class.h"
+#include "commons.h"
+#include "hash.h"
 
 
-ssize_t
-cbufWrite(Cbuf this, Stream st)
-{
-	ssize_t wwsize = 0;
-	size_t  wsize  = this->bused;
+CLASS(Asset) {
+	unsigned long hash;
 
-	if (0 == wsize) return 0;
+	char     fname[2049];
+	char     etag[200];
+	char     mtime[200];
 
-	wwsize = streamWrite(st, cbufGetRead(this), wsize);
+	size_t   nfname;
+	size_t   netag;
+	size_t   nmtime;
 
-	switch (wwsize) {
-		case -1:
-			break;
+	char   * mime_type;
+	size_t   nmime_type;
 
-		default:
-			cbufIncRead(this, wwsize);
-			break;
-	}
+	int      handle;
+	char   * data;
+	size_t   size;
 
-	return wwsize;
-}
+	size_t   ref_count;
+};
+
+Asset  assetPoolGet(const char *, size_t);
+size_t assetPoolRelease(Asset);
+void   assetPoolCleanup(void);
+
+#endif // __ASSET_H__
 
 // vim: set ts=4 sw=4:

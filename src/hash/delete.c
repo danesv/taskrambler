@@ -20,9 +20,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <search.h>
 #include <sys/types.h>
 
+#include "asset.h"
 #include "hash.h"
 #include "utils/hash.h"
 
@@ -31,16 +31,28 @@ inline
 int
 hashDeleteComp(const void * a, const void * b)
 {
-	return hashableGetHash((void*)b) - *(const unsigned long*)a;
+	unsigned long hash_a = hashableGetHash((void*)a);
+
+	if (hash_a < *(const unsigned long*)b) {
+		return -1;
+	}
+	
+	if (hash_a > *(const unsigned long*)b) {
+		return 1;
+	}
+
+	return 0;
 }
 
 void *
 hashDelete(Hash this, const char * search, size_t nsearch)
 {
-	unsigned long hash  = sdbm((const unsigned char *)search, nsearch);
-	void *        found = tfind(&hash, &(this->root), hashDeleteComp);
+	unsigned long   hash   = sdbm((const unsigned char *)search, nsearch);
+	void          * found = NULL;
 
-	return (NULL != found)? *(void**)found : NULL;
+	found = treeDelete(&(this->root), &hash, hashDeleteComp);
+
+	return found;
 }
 
 // vim: set ts=4 sw=4:

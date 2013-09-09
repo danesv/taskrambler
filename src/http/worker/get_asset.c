@@ -26,20 +26,23 @@
 #include "http/message.h"
 #include "http/request.h"
 #include "http/response.h"
+#include "http/worker.h"
 
 #include "utils/memory.h"
 #include "hash.h"
 
 HttpMessage
 httpWorkerGetAsset(
-		HttpRequest request,
-		const char * fname,
-		const char * mime,
-		size_t       nmime)
+		HttpWorker   this,
+		HttpRequest  request,
+		const char * fname)
 {
-	char *     match;
-	size_t     nmatch;
-	HttpHeader header;
+	char *      match;
+	size_t      nmatch;
+	HttpHeader  header;
+	HttpMessage message;
+
+	size_t nfname = strlen(fname);
 
 	header = hashGet(
 			((HttpMessage)request)->header,
@@ -54,8 +57,27 @@ httpWorkerGetAsset(
 		nmatch = (header->nvalue)[0];
 	}
 
-	return (HttpMessage)httpResponseAsset(
-			fname, mime, nmime, match, nmatch);
+	message = (HttpMessage)httpResponseAsset(fname, nfname);
+
+	if (NULL == message) {
+		return (HttpMessage)httpResponse404();
+	}
+
+	if (message->asset->netag == nmatch
+			&& 0 == memcmp(message->asset->etag, match, nmatch)) {
+		HttpMessage new_message;
+
+		new_message = (HttpMessage)httpResponse304(
+				message->asset->mime_type, message->asset->nmime_type,
+				message->asset->etag, message->asset->netag,
+				message->asset->mtime, message->asset->nmtime);
+
+		delete(message);
+
+		return new_message;
+	}   
+
+	return message;
 }
 
 // vim: set ts=4 sw=4:

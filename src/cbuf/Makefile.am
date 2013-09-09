@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-CB = cbuf.c read.c write.c \
+CB = cbuf.c read.c \
      get_line.c set_data.c get_data.c \
      addr_index.c get_free.c get_read.c get_write.c \
      inc_read.c inc_write.c is_empty.c memchr.c \
@@ -10,4 +10,4 @@ CB = cbuf.c read.c write.c \
 noinst_LIBRARIES = libcbuf.a
 
 libcbuf_a_SOURCES = $(CB)
-libcbuf_a_CFLAGS  = -Wall -I ../../include/
+libcbuf_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/

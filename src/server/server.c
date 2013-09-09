@@ -61,38 +61,45 @@ serverCtor(void * _this, va_list * params)
 	port         = va_arg(* params, int);
 	backlog      = va_arg(* params, unsigned int);
 
-	this->fds     = calloc(sizeof(struct pollfd), this->max_fds);
-	this->conns   = calloc(sizeof(struct conns), this->max_fds);
+	loggerLog(this->logger,
+			LOGGER_INFO,
+			"accept up to %zu connections",
+			this->max_fds);
 
-	this->sock    = new(Sock, this->logger, port);
-	flags = fcntl(this->sock->handle, F_GETFL, 0);
+	this->fds   = memCalloc(sizeof(struct pollfd), this->max_fds);
+	this->conns = memCalloc(sizeof(struct conns), this->max_fds);
+
+	this->sock = new(Sock, this->logger, port);
+	socketNonblock(this->sock);
+	flags      = fcntl(this->sock->handle, F_GETFL, 0);
 	fcntl(this->sock->handle, F_SETFL, flags | O_NONBLOCK);
 
-	this->sockSSL = new(Sock, this->logger, port+1);
-	flags = fcntl(this->sockSSL->handle, F_GETFL, 0);
-	fcntl(this->sockSSL->handle, F_SETFL, flags | O_NONBLOCK);
+	// this->sockSSL = new(Sock, this->logger, port+1);
+	// flags         = fcntl(this->sockSSL->handle, F_GETFL, 0);
+	// fcntl(this->sockSSL->handle, F_SETFL, flags | O_NONBLOCK);
 
-	SSL_library_init();
-	SSL_load_error_strings();
-	this->ctx = SSL_CTX_new(SSLv23_server_method());
-	SSL_CTX_use_certificate_file(
-			this->ctx,
-			"./certs/server.crt",
-			SSL_FILETYPE_PEM);
+	// SSL_library_init();
+	// SSL_load_error_strings();
+	// this->ctx = SSL_CTX_new(SSLv23_server_method());
+	// SSL_CTX_use_certificate_file(
+	// 		this->ctx,
+	// 		"./certs/server.crt",
+	// 		SSL_FILETYPE_PEM);
 
-	SSL_CTX_use_RSAPrivateKey_file(
-			this->ctx,
-			"./certs/server.key",
-			SSL_FILETYPE_PEM);
+	// SSL_CTX_use_RSAPrivateKey_file(
+	// 		this->ctx,
+	// 		"./certs/server.key",
+	// 		SSL_FILETYPE_PEM);
 
 	socketListen(this->sock, backlog);
-	socketListen(this->sockSSL, backlog);
+	// socketListen(this->sockSSL, backlog);
 
 	(this->fds)[0].fd     = this->sock->handle;
 	(this->fds)[0].events = POLLIN;
-	(this->fds)[1].fd     = this->sockSSL->handle;
-	(this->fds)[1].events = POLLIN;
-	this->nfds = 2;
+	// (this->fds)[1].fd     = this->sockSSL->handle;
+	// (this->fds)[1].events = POLLIN;
+	// this->nfds = 2;
+	this->nfds = 1;
 
 	return 0;
 }
@@ -111,14 +118,14 @@ serverDtor(void * _this)
 		}
     }
 
-	FREE(this->fds);
-	FREE(this->conns);
+	MEM_FREE(this->fds);
+	MEM_FREE(this->conns);
 
 	delete(this->sock);
-	delete(this->sockSSL);
+	// delete(this->sockSSL);
 
-	SSL_CTX_free(this->ctx);
-	ERR_free_strings();
+	// SSL_CTX_free(this->ctx);
+	// ERR_free_strings();
 }
 
 INIT_IFACE(Class, serverCtor, serverDtor, NULL);

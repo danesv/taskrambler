@@ -45,26 +45,29 @@ serverHandleAccept(Server this, unsigned int i)
 
 	acc = socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
 
-	if (-1 != acc->handle) {
-	switch(i) {
-		case 0:
-			// no SSL
-			st = new(Stream, STREAM_FD, acc->handle);
-			break;
+	if (NULL != acc && -1 != acc->handle) {
+		socketNonblock(acc);
 
-		case 1:
-			// SSL
-			{
-				SSL * ssl = SSL_new(this->ctx);
-				SSL_set_fd(ssl, acc->handle);
-				SSL_accept(ssl);
-				st = new(Stream, STREAM_SSL, ssl);
-			}
-			break;
+		switch(i) {
+			case 0:
+				// no SSL
+				st = new(Stream, STREAM_FD, acc->handle);
+				break;
 
-		default:
-			break;
-	}
+			case 1:
+				// SSL
+				{
+					SSL * ssl = SSL_new(this->ctx);
+					SSL_set_fd(ssl, acc->handle);
+					SSL_accept(ssl);
+					st = new(Stream, STREAM_SSL, ssl);
+				}
+				break;
+
+			default:
+				st = NULL;
+				break;
+		}
 
 		// save the socket handle
 		(this->conns)[acc->handle].sock   = acc; 
@@ -80,21 +83,29 @@ serverHandleAccept(Server this, unsigned int i)
 		delete(acc);
 
 		switch(errno) {
-			case EAGAIN:
+			case EAGAIN|EWOULDBLOCK:
+			case EINTR:
 				loggerLog(this->logger,
 						LOGGER_DEBUG,
 						"server accept blocks");
+				return -1;
 				break;
 
 			default:
 				loggerLog(this->logger,
 						LOGGER_DEBUG,
 						"server accept error");
+				return -2;
 				break;
 		}
 	}
 
-	return (acc)? acc->handle : -1;
+	if (0 == this->nfds%200) {
+		loggerLog(this->logger,
+				LOGGER_DEBUG, "paralel connections: %lu", this->nfds);
+	}
+
+	return acc->handle;
 }
 
 // vim: set ts=4 sw=4:

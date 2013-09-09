@@ -28,6 +28,7 @@
 #include <time.h>
 
 #include "class.h"
+#include "hash.h"
 #include "http/parser.h"
 #include "http/writer.h"
 #include "cbuf.h"
@@ -46,7 +47,8 @@ CLASS(HttpWorker) {
 	struct randval * val;
 
 	Cbuf       pbuf;
-	Cbuf       wbuf;
+
+	Hash       asset_pool;
 
 	HttpParser parser;
 	HttpWriter writer;

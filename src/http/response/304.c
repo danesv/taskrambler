@@ -43,7 +43,6 @@ httpResponse304(
 	response = new(HttpResponse, "HTTP/1.1", 304, "Not Modified");
 	message  = (HttpMessage)response;
 
-	message->type  = HTTP_MESSAGE_BUFFERED;
 	message->nbody = 0;
 	message->body  = NULL;
 

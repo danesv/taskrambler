@@ -80,7 +80,9 @@ testLoggerStderr()
 {
     logger = new(LoggerStderr, LOGGER_ERR);
 
-    freopen("/dev/null", "w", stderr);
+    if (NULL == freopen("/dev/null", "w", stderr)) {
+        return TEST_ERROR;
+    }
     loggerLog(logger, LOGGER_ERR, "foo %d %s", 123, "bar");
 
     /**

@@ -22,6 +22,7 @@
 
 #include <openssl/ssl.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "stream.h"
 
@@ -31,8 +32,29 @@ streamWrite(Stream this, void * buf, size_t count)
 	ssize_t done;
 
 	switch(this->type) {
+		ssize_t written;
+
 		case STREAM_FD:
-			done = write((this->handle).fd, buf, count);
+			written = write((this->handle).fd, buf, count);
+
+			if (written < 0) {
+				switch (errno) {
+					case EINTR:
+					case ENOBUFS:
+					case ENOMEM:
+						done = 0;
+						break;
+					case (EAGAIN|EWOULDBLOCK):
+						done = -1;
+						break;
+					default:
+						done = -2;
+						break;
+				}
+			} else {
+				done = written;
+			}
+
 			break;
 
 		case STREAM_SSL:
@@ -40,6 +62,7 @@ streamWrite(Stream this, void * buf, size_t count)
 			break;
 
 		default:
+			done = 0;
 			break;
 	}
 

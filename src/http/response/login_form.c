@@ -52,10 +52,8 @@ httpResponseLoginForm()
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"), CSTRA("text/html")));
 
-	message->type  = HTTP_MESSAGE_BUFFERED;
-
 	message->nbody = sizeof(RESP_DATA)-1;
-	message->body  = malloc(message->nbody);
+	message->body  = memMalloc(message->nbody);
 	memcpy(message->body, RESP_DATA, message->nbody);
 
 	return response;

@@ -27,21 +27,16 @@
 #include "class.h"
 #include "hash.h"
 #include "stream.h"
-
-typedef enum e_HttpMessageType {
-	HTTP_MESSAGE_BUFFERED=0,
-	HTTP_MESSAGE_PIPED
-} HttpMessageType;
-
+#include "asset.h"
 
 CLASS(HttpMessage) {
 	char *          version;
 
 	Hash            header;
 
-	HttpMessageType type;
-	Stream          handle;
+	Asset           asset;
 	char *          body;
+
 	int             nbody;
 	int             dbody;
 };

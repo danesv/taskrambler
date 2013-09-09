@@ -40,6 +40,7 @@ CLASS(Sock) {
 void socketConnect(Sock this, const char * addr, char (*)[16]);
 void socketListen(Sock this, int backlog);
 Sock socketAccept(Sock this, char (*remoteAddr)[16]);
+void socketNonblock(Sock this);
 
 #endif // __SOCKET_H__
 

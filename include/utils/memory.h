@@ -25,7 +25,16 @@
 
 #define CSTRA(val)	val, sizeof(val)-1 //!< Const STRing Argument
 
-#define FREE(val)	(ffree((void**)&(val)))
+#define FREE(val)		(ffree((void**)&(val)))
+#define MEM_FREE(seg)	(memFree((void **)&(seg)))
+
+#include <sys/types.h>
+
+void   * memMalloc(size_t);
+void   * memCalloc(size_t, size_t);
+void     memFree(void **);
+size_t   memGetSize(void *);
+void     memCleanup();
 
 void ffree(void **);
 

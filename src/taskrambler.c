@@ -45,6 +45,7 @@
 
 #include "utils/signalHandling.h"
 #include "utils/memory.h"
+#include "utils/mime_type.h"
 
 #define DEFAULT_SECS	10
 //#define DEFAULT_USECS	(1000000 / HZ * 2)
@@ -72,9 +73,12 @@ main()
 	setrlimit(RLIMIT_NOFILE, &limit);
 
 	init_signals();
+	//daemonize();
 
-	shm   = shm_open("/fooshm", O_RDWR|O_CREAT, S_IRWXU);
-	ftruncate(shm, psize);
+	shm = shm_open("/fooshm", O_RDWR|O_CREAT, S_IRWXU);
+	if (-1 == ftruncate(shm, psize)) {
+		doShutdown = 1;
+	}
 
 	switch((pid = fork())) {
 		case -1:
@@ -122,6 +126,7 @@ main()
 					sigsuspend(&pause_mask);
 				}
 
+				memCleanup();
 				_exit(EXIT_SUCCESS);
 			}
 
@@ -145,7 +150,6 @@ main()
 				worker = new(HttpWorker, "testserver", value, auth);
 				server = new(Server, logger, worker, 11212, SOMAXCONN);
 
-				//daemonize();
 				if (NULL != server) {
 					serverRun(server);
 				}
@@ -192,6 +196,10 @@ main()
 				if (NULL != worker) delete(worker);
 				if (NULL != auth)   delete(auth);
 				if (NULL != logger) delete(logger);
+
+				clearMimeTypes();
+				assetPoolCleanup();
+				memCleanup();
 			}
 
 			break;

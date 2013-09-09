@@ -22,6 +22,7 @@
 
 #include <errno.h>      // for errno
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "socket.h"
 #include "class.h"
@@ -36,13 +37,6 @@ socketAccept(Sock this, char (*remoteAddr)[16])
     // Set the size of the in-out parameter
     len = sizeof(this->addr);
 
-	/**
-	 * \todo Uhh, this is bad. we open a new socket additionally to
-	 * the one we get from the accept call.
-	 * i have to change the socket constructor to be able to create
-	 * the data structure without creation of a socket at all.
-	 * For now i simply close the socket here.... :D
-	 */
 	sock = new(Sock, this->log, -1);
 
     // Wait for a client to connect
@@ -53,8 +47,8 @@ socketAccept(Sock this, char (*remoteAddr)[16])
     } else {
 		strcpy(*remoteAddr, inet_ntoa((sock->addr).sin_addr));
 
-        loggerLog(this->log, LOGGER_INFO,
-				"handling client %s\n", inet_ntoa((sock->addr).sin_addr));
+        //loggerLog(this->log, LOGGER_INFO,
+		//		"handling client %s\n", inet_ntoa((sock->addr).sin_addr));
     }
 
     return sock;

@@ -26,10 +26,11 @@
 #include <sys/types.h>
 
 #include "class.h"
+#include "tree.h"
 
 
 CLASS(Hash) {
-	void * root;
+	Tree root;
 };
 
 void * hashAdd(Hash, void *);

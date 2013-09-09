@@ -2,12 +2,12 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([taskrambler], [0.0.1], [Georg Hopp <georg@steffers.org>])
+AC_INIT([taskrambler], [0.1.2], [Georg Hopp <georg@steffers.org>])
 LT_INIT
 AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
 AM_SILENT_RULES([yes])
-AC_COPYRIGHT([Copyright © 2012 Georg Hopp])
+AC_COPYRIGHT([Copyright © 2013 Georg Hopp])
 AC_REVISION([$Revision: 0.02 $])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
 AC_CONFIG_HEADERS([config.h])
@@ -18,6 +18,9 @@ AC_TDD_GCOV
 AC_SUBST(COVERAGE_CFLAGS)
 AC_SUBST(COVERAGE_CXXFLAGS)
 AC_SUBST(COVERAGE_LDFLAGS)
+
+PWD=$(/bin/pwd)
+AC_SUBST(PWD)
 
 # Checks for programs.
 AC_PROG_CXX
@@ -48,6 +51,7 @@ AC_CHECK_FUNCS([memset])
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
+		 src/asset/Makefile
 		 src/auth/Makefile
 		 src/cbuf/Makefile
 		 src/class/Makefile
@@ -59,5 +63,6 @@ AC_CONFIG_FILES([Makefile
 		 src/session/Makefile
 		 src/socket/Makefile
 		 src/stream/Makefile
+		 src/tree/Makefile
 		 tests/Makefile])
 AC_OUTPUT

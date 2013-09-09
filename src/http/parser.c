@@ -64,7 +64,7 @@ httpParserDtor(void * _this)
 	if (TRUE == this->ourLock)
 		cbufRelease(this->buffer);
 
-	FREE(this->incomplete);
+	MEM_FREE(this->incomplete);
 	delete(this->current);
 } 
 
