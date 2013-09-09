@@ -1,4 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
+AUTOMAKE_OPTIONS = subdir-objects
 
 TESTS_ENVIRONMENT = valgrind --error-exitcode=123 --leak-check=full --quiet
 TESTS = classTest loggerTest socketTest serverTest
@@ -22,15 +23,16 @@ SOCKET = $(LOGGER) \
 	 ../src/socket/socket.c \
 	 ../src/socket/listen.c \
 	 ../src/socket/accept.c \
-	 ../src/socket/connect.c
+	 ../src/socket/connect.c \
+	 ../src/socket/nonblock.c
 
-STREAM_OBJ = ./stream/stream.o \
-	     ./stream/read.o \
-	     ./stream/write.o \
-	     ./stream/reader.o \
-	     ./stream/writer.o
+STREAM = ../src/stream/stream.c \
+	 ../src/stream/read.c \
+	 ../src/stream/write.c \
+	 ../src/stream/interface/reader.c \
+	 ../src/stream/interface/writer.c
 
-SERVER = $(SOCKET) \
+SERVER = $(SOCKET) $(STREAM) \
 	 ../src/server/server.c \
 	 ../src/server/run.c \
 	 ../src/server/close_conn.c \
@@ -58,14 +60,3 @@ serverTest_CFLAGS  = -Wall -ggdb -O0 -fprofile-arcs -ftest-coverage -pg -I ../in
 serverTest_LDFLAGS = $(STREAM_OBJ) -lgcov -lcrypto -pg
 
 EXTRA_DIST = runtest.h mock/mock_class.h mock/mock_logger.h
-
-.PHONY: stream
-stream:
-	$(MAKE) -C stream $(AM_MAKEFLAGS)
-
-$(check_PROGRAMS): stream
-check-build: $(check_PROGRAMS)
-
-all-local: stream
-
-SUBDIRS = stream
