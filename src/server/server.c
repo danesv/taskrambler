@@ -98,8 +98,7 @@ serverCtor(void * _this, va_list * params)
 	(this->fds)[0].events = POLLIN;
 	// (this->fds)[1].fd     = this->sockSSL->handle;
 	// (this->fds)[1].events = POLLIN;
-	// this->nfds = 2;
-	this->nfds = 1;
+	this->nfds = 2;
 
 	return 0;
 }
@@ -112,8 +111,9 @@ serverDtor(void * _this)
     int    i;
 
     for (i=0; i<this->nfds; i++) {
-		if (this->sock->handle != (this->fds)[i].fd &&
-				this->sockSSL->handle != (this->fds)[i].fd) {
+		//if (this->sock->handle != (this->fds)[i].fd &&
+		//		this->sockSSL->handle != (this->fds)[i].fd) {
+		if (this->sock->handle != (this->fds)[i].fd) {
 			serverCloseConn(this, i);
 		}
     }
