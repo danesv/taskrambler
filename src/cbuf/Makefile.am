@@ -1,4 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
+AUTOMAKE_OPTIONS = subdir-objects
 
 CB = cbuf.c read.c \
      get_line.c set_data.c get_data.c \
