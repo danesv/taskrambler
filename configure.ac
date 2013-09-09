@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([taskrambler], [0.1.2], [Georg Hopp <georg@steffers.org>])
+AC_INIT([taskrambler], [0.1.3], [Georg Hopp <georg@steffers.org>])
 LT_INIT
 AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
