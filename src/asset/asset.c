@@ -58,7 +58,7 @@ assetCtor(void * _this, va_list * params)
 
 	this->nfname = va_arg(*params, size_t);
 
-	strncpy(this->fname, fname, 2047);
+	strncpy(this->fname, fname, 2048);
 	this->fname[2048] = '\0';
 
 	this->hash = sdbm(

@@ -100,6 +100,11 @@ serverHandleAccept(Server this, unsigned int i)
 		}
 	}
 
+	if (0 == this->nfds%200) {
+		loggerLog(this->logger,
+				LOGGER_DEBUG, "paralel connections: %lu", this->nfds);
+	}
+
 	return acc->handle;
 }
 

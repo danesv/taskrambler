@@ -47,8 +47,8 @@ socketAccept(Sock this, char (*remoteAddr)[16])
     } else {
 		strcpy(*remoteAddr, inet_ntoa((sock->addr).sin_addr));
 
-        loggerLog(this->log, LOGGER_INFO,
-				"handling client %s\n", inet_ntoa((sock->addr).sin_addr));
+        //loggerLog(this->log, LOGGER_INFO,
+		//		"handling client %s\n", inet_ntoa((sock->addr).sin_addr));
     }
 
     return sock;

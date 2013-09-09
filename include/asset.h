@@ -34,7 +34,7 @@
 CLASS(Asset) {
 	unsigned long hash;
 
-	char     fname[2048];
+	char     fname[2049];
 	char     etag[200];
 	char     mtime[200];
 
