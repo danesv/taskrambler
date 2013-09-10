@@ -23,10 +23,13 @@
 #ifndef __UTILS_HTTP_H__
 #define __UTILS_HTTP_H__
 
+#include <time.h>
 #include <sys/types.h>
 
 #include "http/message.h"
 
+size_t      rfc1123Gmt(char *, size_t, const time_t *);
+size_t      rfc1123GmtNow(char *, size_t);
 char        isHttpVersion(const char *, size_t);
 HttpMessage httpGetMessage(
 		const char *, size_t,

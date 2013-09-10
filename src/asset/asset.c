@@ -43,6 +43,7 @@
 
 #include "utils/mime_type.h"
 #include "utils/hash.h"
+#include "utils/http.h"
 
 
 static
@@ -74,8 +75,10 @@ assetCtor(void * _this, va_list * params)
 
 	tmp          = localtime(&(st.st_mtime));
 	this->netag  = strftime(this->etag, sizeof(this->etag), "%s", tmp);
-	this->nmtime = strftime(
-			this->mtime, sizeof(this->mtime), "%a, %d %b %Y %T %Z", tmp);
+	this->nmtime = rfc1123Gmt(
+			this->mtime,
+			sizeof(this->mtime),
+			&(st.st_mtime));
 
 	this->size = st.st_size;
 

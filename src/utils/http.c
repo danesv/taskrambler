@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <time.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <string.h>
@@ -31,6 +32,41 @@
 #include "class.h"
 
 #include "commons.h"
+
+
+static const char *DAY_NAMES[] = {
+	"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+static const char *MONTH_NAMES[] = {
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+
+/*
+ * This one is not thread save.
+ */
+size_t
+rfc1123Gmt(char * buffer, size_t _nbuf, const time_t * t)
+{
+	struct tm * tmp = gmtime(t);
+	size_t      nbuf;
+
+	nbuf = strftime(buffer, _nbuf, "---, %d --- %Y %T GMT", tmp);
+	memcpy(buffer, DAY_NAMES[tmp->tm_wday], 3);
+	memcpy(buffer+8, MONTH_NAMES[tmp->tm_mon], 3);
+
+	return nbuf;
+}
+
+/*
+ * This one is not thread save.
+ */
+size_t
+rfc1123GmtNow(char * buffer, size_t _nbuf)
+{
+	time_t t = time(NULL);
+
+	return rfc1123Gmt(buffer, _nbuf, &t);
+}
 
 char
 isHttpVersion(const char * str, size_t len)

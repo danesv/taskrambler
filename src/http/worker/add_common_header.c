@@ -20,7 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <time.h>
 #include <sys/types.h>
 
 #include "class.h"
@@ -29,23 +28,17 @@
 #include "http/header.h"
 #include "http/response.h"
 
-#include "utils/memory.h"
 #include "hash.h"
 
-static const char *DAY_NAMES[] = {
-	"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-static const char *MONTH_NAMES[] = {
-	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+#include "utils/memory.h"
+#include "utils/http.h"
 
 
 void
 httpWorkerAddCommonHeader(HttpMessage request, HttpMessage response)
 {
-	time_t       t;
-	struct tm *  tmp;
-	char         buffer[200];
-	size_t       nbuf;
+	char   buffer[200];
+	size_t nbuf;
 
 	if (httpMessageHasKeepAlive(request)) {
 		hashAdd(response->header,
@@ -69,12 +62,7 @@ httpWorkerAddCommonHeader(HttpMessage request, HttpMessage response)
 					new(HttpHeader, CSTRA("Content-Length"), buffer, nbuf));
 	}
 
-	t    = time(NULL);
-	tmp  = gmtime(&t);
-	nbuf = strftime(buffer, sizeof(buffer), "---, %d --- %Y %T GMT", tmp);
-	memcpy(buffer, DAY_NAMES[tmp->tm_wday], 3);
-	memcpy(buffer+8, MONTH_NAMES[tmp->tm_mon], 3);
-
+	nbuf = rfc1123GmtNow(buffer, sizeof(buffer));
 	hashAdd(response->header,
 			new(HttpHeader, CSTRA("Date"), buffer, nbuf));
 }
