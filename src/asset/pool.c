@@ -52,7 +52,9 @@ assetPoolGet(const char * path, size_t npath)
 
 	if (NULL == asset) {
 		asset = new(Asset, path, npath);
-		hashAdd(asset_pool, asset);
+		if (NULL != asset) {
+			hashAdd(asset_pool, asset);
+		}
 	} else {
 		asset->ref_count++;
 	}
