@@ -32,6 +32,13 @@
 #include "utils/memory.h"
 #include "hash.h"
 
+static const char *DAY_NAMES[] = {
+	"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+static const char *MONTH_NAMES[] = {
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+
 void
 httpWorkerAddCommonHeader(HttpMessage request, HttpMessage response)
 {
@@ -63,8 +70,11 @@ httpWorkerAddCommonHeader(HttpMessage request, HttpMessage response)
 	}
 
 	t    = time(NULL);
-	tmp  = localtime(&t);
-	nbuf = strftime(buffer, sizeof(buffer), "%a, %d %b %Y %T %Z", tmp);
+	tmp  = gmtime(&t);
+	nbuf = strftime(buffer, sizeof(buffer), "---, %d --- %Y %T GMT", tmp);
+	memcpy(buffer, DAY_NAMES[tmp->tm_wday], 3);
+	memcpy(buffer+8, MONTH_NAMES[tmp->tm_mon], 3);
+
 	hashAdd(response->header,
 			new(HttpHeader, CSTRA("Date"), buffer, nbuf));
 }
