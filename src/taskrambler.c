@@ -56,6 +56,8 @@ void nullhandler() {}
 
 void daemonize(void);
 
+Logger logger;
+
 int
 main()
 {
@@ -132,7 +134,6 @@ main()
 
 		default:
 			{
-				Logger     logger;
 				AuthLdap   auth;
 				HttpWorker worker;
 				Server     server;

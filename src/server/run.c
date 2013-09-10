@@ -60,14 +60,14 @@ serverRun(Server this)
 			}
 		}
 
-		// /**
-		//  * handle accept SSL
-		//  */
-		// if (0 != ((this->fds)[1].revents & POLLIN)) {
-		// 	if (-1 == serverHandleAccept(this, 1)) {
-		// 		events--;
-		// 	}
-		// }
+		/**
+		 * handle accept SSL
+		 */
+		if (0 != ((this->fds)[1].revents & POLLIN)) {
+			if (-1 == serverHandleAccept(this, 1)) {
+				events--;
+			}
+		}
 
 		for (i=2; i < this->nfds; i++) {
 			/**

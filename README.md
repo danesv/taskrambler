@@ -65,8 +65,6 @@ Currently this will stay in the foreground and does logging via syslog.
 The server will listen on port 11212 for HTTP requests and on port 11213
 for SSL requerst.
 
-Currently SSL request are broken and disabled completely.
-
 You can use telnet or simply start a browser and connect on localhost:11212.
 
 This should show up a very simplistic page.
