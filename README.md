@@ -18,7 +18,6 @@ You need the following to build this thing.
 
 - A GNU Autobuild (autoconf, automake, etc.) installation.
 - GCC as well as binutils.
-- lcov (this dependency has to change as it is really only related to testing.
 
 ### BUILDING
 
@@ -31,8 +30,24 @@ system.
 
 ### INSTALLING
 
-Currently i am not sure if this thing will install correctly. You might try
-at your own risk. Anyway, no install should be needed to test this thing.
+No care has been taken that this thing installs correctly. Anyway
+simply call *./src/taskrambler* will run this. After started this you
+should be able to connect with any browser on localhost port 11212.
+
+### PLAY AROUND
+
+Any asset under assets could be exchanged. It should be possible to
+change the main.html there and put additionally html files and images
+under assets and everything should be deliverd.
+
+Anyway, there are a few rules.
+
+* html assets will always be loaded from assets/html.
+* all other assets are loaded directly from the assets directory.
+
+So, right now this can be used as a HTTP server for static content
+and without virtual hosts support.
+
 
 USAGE
 -----
@@ -47,6 +62,8 @@ Currently this will stay in the foreground and does logging via syslog.
 The server will listen on port 11212 for HTTP requests and on port 11213
 for SSL requerst.
 
+Currently SSL request are broken and disabled completely.
+
 You can use telnet or simply start a browser and connect on localhost:11212.
 
 This should show up a very simplistic page.
@@ -55,7 +72,7 @@ or login.
 
 ### LOGIN
 
-You can't use the login without changing the code. It implemented using
+You can't use the login without changing the code. It's implemented using
 ldap and currently not configurable. You have to change the configuration
 in the code and compile again.
 
@@ -78,7 +95,7 @@ I think it contains some really interesting ideas.
 Well, sadly i have to say that this is a spare time project. Documentation
 is sparse and Tests too.
 
-If you like to contribute anyway, make a fork, do you changes and generate
+If you like to contribute anyway, make a fork, do your changes and generate
 a pull request.
 
 I will look at these as soon as possible.
