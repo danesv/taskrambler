@@ -64,7 +64,7 @@ serverRun(Server this)
 		 * handle accept SSL
 		 */
 		if (0 != ((this->fds)[1].revents & POLLIN)) {
-			if (-1 == serverHandleAccept(this, 1)) {
+			if (0 > serverHandleAccept(this, 1)) {
 				events--;
 			}
 		}
