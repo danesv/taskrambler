@@ -20,11 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <openssl/err.h>
 #include <openssl/ssl.h>
 #include <unistd.h>
 #include <errno.h>
-
-#include <openssl/err.h>
 
 #include "stream.h"
 #include "logger.h"
@@ -67,7 +66,7 @@ streamRead(Stream this, void * buf, size_t count)
 		case STREAM_SSL:
 			done = SSL_read((this->handle).ssl, buf, count);
 
-			if (0 > done) {
+			if (0 >= done) {
 				switch (SSL_get_error((this->handle).ssl, done)) {
 					case SSL_ERROR_SSL:
 					case SSL_ERROR_SYSCALL:
