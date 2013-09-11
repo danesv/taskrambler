@@ -1,10 +1,4 @@
-FOR VERSION 2.0
-
-- right now i will use long polling ajax calls when feedback from to the client
-  is needed. In the long term this should be changed to websockets (ws). But
-  right now ws specification is not final anyway. :)
-
-- IPV6 support (optional)
+FOR VERSION 0.2
 
 - abstract application logic from server logic. The HTTP processors should
   only care about HTTP, no application stuff at all. The idea is to create
@@ -28,3 +22,9 @@ FOR VERSION 2.0
 - Create management for roles.
 
 - Give a user the ability to open tasks to other users / roles....
+
+- right now i will use long polling ajax calls when feedback from to the client
+  is needed. In the long term this should be changed to websockets (ws). But
+  right now ws specification is not final anyway. :) (optional)
+
+- IPV6 support (optional)
