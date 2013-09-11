@@ -28,3 +28,8 @@ FOR VERSION 0.2
   right now ws specification is not final anyway. :) (optional)
 
 - IPV6 support (optional)
+
+
+FOR VERSION 1.0
+
+- support for multiple worker processes. (optional)
