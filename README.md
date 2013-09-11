@@ -1,12 +1,34 @@
 Taskrambler
 ===========
 
-This is a partly finished implementation of HTTP/1.1.
-It is especially intendet to write C only REST server,
-well, at least thats the idea.
-The homepage of this can be found here:
+When this is finished it will become a distributed task and time
+management system with a web frontend.
+It will come with its own HTTP server implementation and thus wont
+need any third party webserver to work.
+The backend is written completely in C while the frontend will be
+JavaScript, CSS and HTML.
 
-http://redmine.weird-web-workers.org/projects/taskrambler
+When this is finished users will be able to connect to the server
+via their browsers, manage their tasks there and specify policies
+who else might see their tasks, track the time spend on a specific
+task, attach tasks to projects, getting reports about their work done,
+etc.
+
+Right now for the taskmanagement stuff I think of a similar approach
+as [taskwarrior](http://taskwarrior.org/projects/show/taskwarrior) is going.
+This is an amazing tool and I really enjoy using it.
+I started this as an experiment to implement an HTTP server, then I learned
+about taskwarrior and thought, wouldn't it be great to have this
+functionality in a multiuser environment.
+
+Right now, it is a single process HTTP server implementation that performs
+not to bad.
+
+In the next version user will be able to create tasks and share them at
+least on a basic level.
+
+The main development page can be found 
+[here](http://redmine.weird-web-workers.org/projects/taskrambler).
 
 INSTALLATION
 ------------
