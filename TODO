@@ -1,14 +1,5 @@
 FOR VERSION 0.2
 
-- abstract application logic from server logic. The HTTP processors should
-  only care about HTTP, no application stuff at all. The idea is to create
-  a class for application commands and one for applications answers.
-  Additionally an adapter has to be created to translate application
-  messages from and to HTTP messages.
-  The advantage is that the application logic will be totally separated from 
-  the communication layer. This way other communication protocols could be
-  added when need is there.
-
 - move authentication from communication layer to application layer.
 
 - add a first simple session persistence stuff.
