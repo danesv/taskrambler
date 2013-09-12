@@ -22,8 +22,8 @@
 
 #define _GNU_SOURCE
 
-#include <stdio,h>
-#include <stdlib,h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 
 #include "class.h"
@@ -57,17 +57,17 @@ getSessionId(Hash cookies)
 
 static
 void
-loginAdapter(Application application, HttpWorker worker)
+loginAdapter(Application application, HttpWorker worker, unsigned long sid)
 {
 	HashValue  username;
-	HashValue  passeord;
+	HashValue  password;
 	Credential credential;
 
 	username = hashGet(
-			worker->current_reqeust->post,
+			worker->current_request->post,
 			CSTRA("username"));
 	password = hashGet(
-			worker->current_reqeust->post,
+			worker->current_request->post,
 			CSTRA("password"));
 
 	if (NULL == username || NULL == password) {
@@ -86,7 +86,10 @@ loginAdapter(Application application, HttpWorker worker)
 		size_t  nbuf;
 
 		if (NO_SESSION_SID == sid) {
-			sid = applicationSessionStart(application);
+			sid = applicationSessionStart(
+					application,
+					(char *)(username->value),
+					username->nvalue);
 		} else {
 			applicationSessionUpdate(
 					application,
@@ -99,29 +102,30 @@ loginAdapter(Application application, HttpWorker worker)
 
 		worker->current_response = 
 			(HttpMessage)httpResponseSession(
-					applicationSessionGet(sid));
+					applicationSessionGet(application, sid));
 
 		hashAdd(
 				worker->current_response->header,
-				new(HttpHeader. CSTRA("Set-Cookie"), buffer, nbuf));
+				new(HttpHeader, CSTRA("Set-Cookie"), buffer, nbuf));
 	} else {
 		worker->current_response =
 			new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
 	}
 
-	delete(credential)
+	delete(credential);
 }
 
 
 void
-applicationAdapterHttpUpdate(ApplicationAdapterHttp this, void * subject)
+applicationAdapterHttpUpdate(void * _this, void * subject)
 {
-	HttpWorker    worker   = (HttpWorker)subject;
-	unsigned long sid      = getSessionId(worker->current_request->cookies);
+	ApplicationAdapterHttp this = _this;
+	HttpWorker    worker = (HttpWorker)subject;
+	unsigned long sid    = getSessionId(worker->current_request->cookies);
 
 	if (0 == strcmp("POST", worker->current_request->method)) {
 		if (0 == strcmp("/login/", worker->current_request->path)) {
-			loginAdapter(this->application, worker);
+			loginAdapter(this->application, worker, sid);
 			return;
 		}
 	}
@@ -130,18 +134,18 @@ applicationAdapterHttpUpdate(ApplicationAdapterHttp this, void * subject)
 		if (0 == strcmp("/sessinfo/", worker->current_request->path)) {
 			worker->current_response = 
 				(HttpMessage)httpResponseSession(
-						applicationSessionGet(sid));
+						applicationSessionGet(this->application, sid));
 			return;
 		}
 		
 		if (0 == strcmp("/sess/", worker->current_request->path)) {
 			if (NO_SESSION_SID == sid) {
-				sid = applicationSessionStart(application);
+				sid = applicationSessionStart(this->application, NULL, 0);
 			}
 
 			worker->current_response = 
 				(HttpMessage)httpResponseSession(
-						applicationSessionGet(sid));
+						applicationSessionGet(this->application, sid));
 			return;
 		}
 

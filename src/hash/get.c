@@ -56,4 +56,11 @@ hashGet(Hash this, const char * search, size_t nsearch)
 	return found;
 }
 
+void *
+hashGetByVal(Hash this, unsigned long hash)
+{
+	void * found = treeFind(this->root, &hash, hashGetComp);
+
+	return found;
+}
 // vim: set ts=4 sw=4:

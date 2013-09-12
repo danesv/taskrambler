@@ -39,6 +39,9 @@
 #include "logger.h"
 #include "http/worker.h"
 #include "auth.h"
+#include "application/application.h"
+#include "application/adapter/http.h"
+#include "interface/subject.h"
 
 #include "class.h"
 #include "logger.h"
@@ -135,8 +138,8 @@ main()
 		default:
 			{
 				AuthLdap               auth;
-				//Application            application;
-				//ApplicationAdapterHttp adapterHttp;
+				Application            application;
+				ApplicationAdapterHttp adapterHttp;
 				HttpWorker             worker;
 				Server                 server;
 
@@ -199,10 +202,12 @@ main()
 					}
 				} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
-				if (NULL != server) delete(server);
-				if (NULL != worker) delete(worker);
-				if (NULL != auth)   delete(auth);
-				if (NULL != logger) delete(logger);
+				delete(server);
+				delete(worker);
+				delete(adapterHttp);
+				delete(application);
+				delete(auth);
+				delete(logger);
 
 				clearMimeTypes();
 				assetPoolCleanup();

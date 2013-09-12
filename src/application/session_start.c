@@ -20,39 +20,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <search.h>
+#define _GNU_SOURCE
 
-#include "session.h"
+#include <sys/types.h>
+
 #include "class.h"
+#include "session.h"
+#include "hash.h"
+#include "application/application.h"
+
+#include "utils/memory.h"
 
 
-static
-inline
-int
-sessionAddComp(const void * _a, const void * _b)
+unsigned long
+applicationSessionStart(Application this, const char * name, size_t nname)
 {
-	Session a = (Session)_a;
-	Session b = (Session)_b;
-	return (a->id < b->id)? -1 : (a->id > b->id)? 1 : 0;
-}
+	Session session = new(Session, name, nname);
 
-Session
-sessionAdd(const Session * root, Session session)
-{
-	Session * found = tsearch(session, (void**)root, sessionAddComp);
+	hashAdd(this->active_sessions, session);
 
-	if (NULL == found) {
-		return NULL;
-	}
-
-	if (*found != session) {
-		/**
-		 * \todo this should not happen, so do some logging here.
-		 */
-		delete(session);
-	}
-
-	return *found;
+	return session->id;
 }
 
 // vim: set ts=4 sw=4:

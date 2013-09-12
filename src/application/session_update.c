@@ -20,35 +20,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __APPLICATION_H__
-#define __APPLICATION_H__
+#define _GNU_SOURCE
 
+#include <string.h>
 #include <sys/types.h>
-#include "class.h"
 
+#include "class.h"
 #include "session.h"
 #include "hash.h"
-#include "auth/credential.h"
+#include "application/application.h"
 
-struct randval {
-	time_t timestamp;
-	int    value;
-};
+#include "utils/memory.h"
 
-CLASS(Application) {
-	Hash             active_sessions;
-	void           * auth;
-	struct randval * val;
-};
 
-// this should return a user account....now it only return success or failure.
-int           applicationLogin(Application, Credential);
-unsigned long applicationSessionStart(Application, const char *, size_t);
-void          applicationSessionStop(Application, unsigned long);
-void          applicationSessionUpdate(
-		Application, unsigned long, const char *, size_t);
-Session       applicationSessionGet(Application, unsigned long);
+void
+applicationSessionUpdate(
+		Application   this,
+		unsigned long sid,
+		const char *  name,
+		size_t        nname)
+{
+	Session session = hashGetByVal(this->active_sessions, sid);
 
-#endif // __HTTP_HEADER_H__
+	MEM_FREE(session->username);
+
+	session->username        = memMalloc(nname + 1);
+	session->username[nname] = 0;
+	memcpy(session->username, name, nname);
+}
 
 // vim: set ts=4 sw=4:

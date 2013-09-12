@@ -11,7 +11,8 @@ UTILS = utils/hash.c \
 	utils/signalHandling.c \
 	utils/mime_type.c
 
-LIBS = ./http/libhttp.a \
+LIBS = ./application/libapplication.a \
+       ./http/libhttp.a \
        ./auth/libauth.a \
        ./cbuf/libcbuf.a \
        ./class/libclass.a \
@@ -35,4 +36,4 @@ taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
 SUBDIRS = asset auth cbuf class hash queue http \
-	  logger server session socket stream tree
+	  logger server session socket stream tree application

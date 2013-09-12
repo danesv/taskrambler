@@ -24,7 +24,7 @@
 #define __APPLICATION_ADAPTER_HTTP_H__
 
 #include "class.h"
-#include "application.h"
+#include "application/application.h"
 
 
 CLASS(ApplicationAdapterHttp) {

@@ -49,10 +49,14 @@ applicationAdapterHttpDtor(void * _this)
 }
 
 
-void applicationAdapterHttpUpdate(ApplicationAdapterHttp, void *);
+void applicationAdapterHttpUpdate(void *, void *);
 
 
-INIT_IFACE(Class, applicationAdapterHttpCtor, applicationAdapterHttpDtor);
+INIT_IFACE(
+		Class,
+		applicationAdapterHttpCtor,
+		applicationAdapterHttpDtor,
+		NULL);
 INIT_IFACE(Observer, applicationAdapterHttpUpdate);
 CREATE_CLASS(
 		ApplicationAdapterHttp,

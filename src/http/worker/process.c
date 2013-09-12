@@ -41,6 +41,8 @@
 #include "http/response.h"
 #include "http/parser.h"
 
+#include "interface/subject.h"
+
 #include "utils/memory.h"
 #include "utils/mime_type.h"
 #include "commons.h"

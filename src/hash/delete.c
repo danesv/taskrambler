@@ -55,4 +55,12 @@ hashDelete(Hash this, const char * search, size_t nsearch)
 	return found;
 }
 
+void *
+hashDeleteByVal(Hash this, unsigned long hash)
+{
+	void * found = treeDelete(&(this->root), &hash, hashDeleteComp);
+
+	return found;
+}
+
 // vim: set ts=4 sw=4:

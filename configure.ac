@@ -64,5 +64,6 @@ AC_CONFIG_FILES([Makefile
 		 src/socket/Makefile
 		 src/stream/Makefile
 		 src/tree/Makefile
+		 src/application/Makefile
 		 tests/Makefile])
 AC_OUTPUT

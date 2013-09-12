@@ -25,6 +25,7 @@
 #include <stdarg.h>
 
 #include "class.h"
+#include "hash.h"
 #include "application/application.h"
 
 #include "utils/memory.h"
@@ -36,7 +37,9 @@ applicationCtor(void * _this, va_list * params)
 	Application this = _this;
 
 	this->val  = va_arg(*params, struct randval *);
-	this->auth = va_arg(* params, void *);
+	this->auth = va_arg(*params, void *);
+
+	this->active_sessions = new(Hash);
 
 	return 0;
 }
@@ -45,10 +48,13 @@ static
 void
 applicationDtor(void * _this)
 {
+	Application this = _this;
+
+	delete(this->active_sessions);
 }
 
 
-INIT_IFACE(Class, applicationCtor, applicationDtor);
+INIT_IFACE(Class, applicationCtor, applicationDtor, NULL);
 CREATE_CLASS(Application, NULL, IFACE(Class));
 
 // vim: set ts=4 sw=4:

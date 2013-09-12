@@ -38,10 +38,6 @@ CLASS(Session) {
 	char *        username;
 };
 
-Session sessionAdd(const Session *, Session);
-Session sessionGet(const Session *, const unsigned long id);
-void    sessionDelete(const Session *, const unsigned long id);
-
 #endif // __SESSION_H__
 
 // vim: set ts=4 sw=4:

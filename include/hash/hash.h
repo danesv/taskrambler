@@ -36,6 +36,8 @@ CLASS(Hash) {
 void * hashAdd(Hash, void *);
 void * hashDelete(Hash, const char *, size_t);
 void * hashGet(Hash, const char *, size_t);
+void * hashDeleteByVal(Hash, unsigned long);
+void * hashGetByVal(Hash, unsigned long);
 void   hashEach(Hash, void (*)(const void*));
 
 #endif // __HASH_HASH_H__

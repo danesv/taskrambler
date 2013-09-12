@@ -28,6 +28,7 @@
 #include <sys/types.h>
 
 #include "session.h"
+#include "hash.h"
 #include "class.h"
 
 #include "utils/hash.h"
@@ -61,7 +62,23 @@ sessionDtor(void * _this)
 	MEM_FREE(this->username);
 }
 
+static
+unsigned long
+sessionGetId(void * _this)
+{
+	Session this = _this;
+
+	return this->id;
+}
+
+static
+void
+sessionHandleDouble(void * _this, void * _doub)
+{
+}
+
 INIT_IFACE(Class, sessionCtor, sessionDtor, NULL);
-CREATE_CLASS(Session, NULL, IFACE(Class));
+INIT_IFACE(Hashable, sessionGetId, sessionHandleDouble);
+CREATE_CLASS(Session, NULL, IFACE(Class), IFACE(Hashable));
 
 // vim: set ts=4 sw=4:
