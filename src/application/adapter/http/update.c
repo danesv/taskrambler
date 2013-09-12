@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2013  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 
 #define _GNU_SOURCE
 
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -121,8 +122,18 @@ void
 applicationAdapterHttpUpdate(void * _this, void * subject)
 {
 	ApplicationAdapterHttp this = _this;
-	HttpWorker    worker = (HttpWorker)subject;
-	unsigned long sid    = getSessionId(worker->current_request->cookies);
+	HttpWorker    worker  = (HttpWorker)subject;
+	unsigned long sid     = getSessionId(worker->current_request->cookies);
+	Session       session = applicationSessionGet(this->application, sid);
+
+	if (NULL != session) {
+		if (time(NULL) < session->livetime) {
+			session->livetime = time(NULL) + SESSION_LIVETIME;
+		} else {
+			applicationSessionStop(this->application, sid);
+		}
+
+	}
 
 	if (0 == strcmp("POST", worker->current_request->method)) {
 		if (0 == strcmp("/login/", worker->current_request->path)) {

@@ -35,7 +35,8 @@
 void
 applicationSessionStop(Application this, unsigned long sid)
 {
-	hashDeleteByVal(this->active_sessions, sid);
+	Session session = hashDeleteByVal(this->active_sessions, sid);
+	delete(session);
 }
 
 // vim: set ts=4 sw=4:
