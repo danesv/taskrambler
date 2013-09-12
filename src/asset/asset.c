@@ -96,12 +96,14 @@ assetCtor(void * _this, va_list * params)
 		this->nmime_type = 0;
 	}
 
-	this->data = mmap(
-			NULL, this->size, PROT_READ, MAP_PRIVATE, this->handle, 0);
+	if (0 < this->size) {
+		this->data = mmap(
+				NULL, this->size, PROT_READ, MAP_PRIVATE, this->handle, 0);
 
-	if (MAP_FAILED == this->data) {
-		close(this->handle);
-		return -1;
+		if (MAP_FAILED == this->data) {
+			close(this->handle);
+			return -1;
+		}
 	}
 
 	this->ref_count = 1;
