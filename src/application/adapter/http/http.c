@@ -20,18 +20,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _GNU_SOURCE
+
+#include <stdarg.h>
+
 #include "class.h"
+#include "application/application.h"
+#include "application/adapter/http.h"
+
+#include "utils/memory.h"
 #include "interface/observer.h"
 
-const struct interface i_Observer = {
-	"observer",
-	1
-};
-
-void
-observerUpdate(void * observer, void * subject)
+static
+int
+applicationAdapterHttpCtor(void * _this, va_list * params)
 {
-	CALL(observer, Observer, update, subject);
+	ApplicationAdapterHttp this = _this;
+
+	this->application = va_arg(*params, Application);
+
+	return 0;
 }
+
+static
+void
+applicationAdapterHttpDtor(void * _this)
+{
+}
+
+
+void applicationAdapterHttpUpdate(ApplicationAdapterHttp, void *);
+
+
+INIT_IFACE(Class, applicationAdapterHttpCtor, applicationAdapterHttpDtor);
+INIT_IFACE(Observer, applicationAdapterHttpUpdate);
+CREATE_CLASS(
+		ApplicationAdapterHttp,
+		NULL, 
+		IFACE(Class),
+		IFACE(Observer));
 
 // vim: set ts=4 sw=4:

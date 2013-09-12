@@ -20,18 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
-#include "interface/observer.h"
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
-const struct interface i_Observer = {
-	"observer",
-	1
+#include "class.h"
+
+#include "auth/credential.h"
+
+struct randval {
+	time_t timestamp;
+	int    value;
+}
+
+CLASS(Application) {
+	Hash             active_sessions;
+	void           * auth;
+	struct randval * val;
 };
 
-void
-observerUpdate(void * observer, void * subject)
-{
-	CALL(observer, Observer, update, subject);
-}
+// this should return a user account....now it only return success or failure.
+int           applicationLogin(Application, Credential);
+unsigned long applicationSessionStart(Application);
+void          applicationSessionStop(Application, unsigned long);
+Session       applicationSessionGet(Application, unsigned long);
+
+#endif // __HTTP_HEADER_H__
 
 // vim: set ts=4 sw=4:

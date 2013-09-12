@@ -46,9 +46,8 @@
 #include "commons.h"
 
 
-HttpMessage httpWorkerGetAsset(HttpWorker, HttpRequest, const char *);
-void        httpWorkerAddCommonHeader(HttpMessage, HttpMessage);
-char *		httpWorkerGetMimeType(HttpWorker, const char * extension);
+HttpMessage httpWorkerGetAsset(HttpWorker, const char *);
+void        httpWorkerAddCommonHeader(HttpWorker);
 
 
 ssize_t
@@ -62,162 +61,61 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 	if (0 < requests) {
 		while (! queueEmpty(this->parser->queue)) {
-			HttpRequest request  = queueGet(this->parser->queue);
-			HttpMessage response = NULL;
+			this->current_request  = queueGet(this->parser->queue);
+			this->current_response = NULL;
 
-			/**
-			 * \todo store the cookie count in the request to make a simple
-			 * check possible to prevent this lookup if no cookies exists
-			 * at all
+			/*
+			 * let our observers...application (or better their
+			 * http adapter) try to create an answer.
 			 */
-			if (NULL == this->session) {
-				HashValue sidstr = hashGet(request->cookies, CSTRA("sid"));
+			subjectNotify(this);
 
-				if (NULL != sidstr) {
-					unsigned long sid;
-
-					sid = strtoul((char*)(sidstr->value), NULL, 10);
-					this->session = sessionGet(this->sroot, sid);
-				}
+			if (0 == strcmp("POST", this->current_request->method)) {
+				/*
+				 * we can't do post requests on our own...
+				 */
+				this->current_response = (HttpMessage)httpResponse500();
 			}
 
-			if (NULL != this->session) {
-				if (time(NULL) < this->session->livetime) {
-					this->session->livetime = time(NULL) + SESSION_LIVETIME;
+			if (0 == strcmp("GET", this->current_request->method)) {
+				char html_asset[2048] = "./assets/html";
+				char base_asset[2048] = "./assets";
+				char main_asset[]     = "/main.html";
+
+				char * asset_path     = base_asset;
+				char * asset;
+				char * mime_type;
+
+				if (0 == strcmp("/", this->current_request->path)) {
+					asset = main_asset;
 				} else {
-					sessionDelete(this->sroot, this->session->id);
-					delete(this->session);
+					asset = this->current_request->path;
 				}
+
+				mime_type = strrchr(asset, '.');
+				if (NULL != mime_type) {
+					mime_type++;
+					mime_type = getMimeType(mime_type, strlen(mime_type));
+				}
+
+				if (NULL != mime_type &&
+						0 == memcmp(mime_type, CSTRA("text/html"))) {
+					asset_path = html_asset;
+				}
+
+				strcat(asset_path, asset);
+				this->current_response =
+					httpWorkerGetAsset(this, asset_path);
 			}
 
-			if (0 == strcmp("POST", request->method)) {
-				if (0 == strcmp("/login/", request->path)) {
-					char   buffer[200];
-					size_t nbuf;
-
-					HashValue username = hashGet(request->post, CSTRA("username"));
-					HashValue password = hashGet(request->post, CSTRA("password"));
-
-					/**
-					 * \todo This is an application authorization not an HTTP
-					 * authorization...anyway think about sending HTTP 401
-					 * messages if authorization is required and think about
-					 * sending the credentials via header as described in the
-					 * HTTP protocol. Most likely this will lead to hacky thing
-					 * with javascript as i am not sure how far this is implemented
-					 * within browsers.
-					 * Anyway, for now we simply ignore a failed login within the
-					 * response except that no session is initialized. We send
-					 * an empty 200 OK
-					 */
-					if (NULL == password || NULL == username) {
-						response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
-					}
-
-					if (NULL == response) {
-						Credential cred = new(Credential,
-								CRED_PASSWORD,
-								(char*)(username->value), username->nvalue,
-								(char*)(password->value), password->nvalue);
-
-						if (!authenticate(this->auth, cred)) {
-							response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
-						} else {
-							if (NULL == this->session) {
-								this->session = sessionAdd(
-										this->sroot,
-										new(Session,
-											username->value,
-											username->nvalue));
-							} else {
-								this->session->username = memMalloc(username->nvalue + 1);
-								this->session->username[username->nvalue] = 0;
-								memcpy(this->session->username,
-										username->value,
-										username->nvalue);
-							}
-
-							nbuf = sprintf(buffer,
-									"sid=%lu;Path=/",
-									this->session->id);
-
-							response = (HttpMessage)httpResponseSession(
-									this->session);
-
-							hashAdd(response->header,
-									new(HttpHeader,
-										CSTRA("Set-Cookie"),
-										buffer, nbuf));
-						}
-						delete(cred);
-					}
-				}
+			if (NULL == this->current_response) {
+				this->current_response = (HttpMessage)httpResponse404();
 			}
 
-			if (0 == strcmp("GET", request->method)) {
-				if (0 == strcmp("/sessinfo/", request->path)) {
-					response = (HttpMessage)httpResponseSession(this->session);
-				}
-
-				else if (0 == strcmp("/sess/", request->path)) {
-					if (NULL == this->session) {
-						this->session = sessionAdd(
-								this->sroot,
-								new(Session, NULL, 0));
-					}
-					response = (HttpMessage)httpResponseSession(this->session);
-				}
-
-				else if (0 == strcmp("/randval/", request->path)) {
-					if (NULL != this->session) {
-						response = (HttpMessage)httpResponseRandval(
-								this->val->timestamp,
-								this->val->value);
-					} else {
-						response = (HttpMessage)httpResponse403();
-					}
-				}
-
-				else {
-					char html_asset[2048] = "./assets/html";
-					char base_asset[2048] = "./assets";
-					char main_asset[]     = "/main.html";
-
-					char * asset_path     = base_asset;
-					char * asset;
-					char * mime_type;
-
-					if (0 == strcmp("/", request->path)) {
-						asset = main_asset;
-					} else {
-						asset = request->path;
-					}
-
-					mime_type = strrchr(asset, '.');
-					if (NULL != mime_type) {
-						mime_type++;
-						mime_type = getMimeType(mime_type, strlen(mime_type));
-					}
-
-					if (NULL != mime_type &&
-							0 == memcmp(mime_type, CSTRA("text/html"))) {
-						asset_path = html_asset;
-					}
-
-					strcat(asset_path, asset);
-					response = httpWorkerGetAsset(this, request, asset_path);
-				}
-
-			}
-
-			if (NULL == response) {
-				response = (HttpMessage)httpResponse404();
-			}
-
-			httpWorkerAddCommonHeader((HttpMessage)request, response);
-			delete(request);
-			queuePut(this->writer->queue, response);
-			response = NULL;
+			httpWorkerAddCommonHeader(this);
+			delete(this->current_request);
+			queuePut(this->writer->queue, this->current_response);
+			this->current_response = NULL;
 		}
 	}
 

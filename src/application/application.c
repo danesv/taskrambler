@@ -20,18 +20,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _GNU_SOURCE
+
+#include <stdarg.h>
+
 #include "class.h"
-#include "interface/observer.h"
+#include "application/application.h"
 
-const struct interface i_Observer = {
-	"observer",
-	1
-};
+#include "utils/memory.h"
 
-void
-observerUpdate(void * observer, void * subject)
+static
+int
+applicationCtor(void * _this, va_list * params)
 {
-	CALL(observer, Observer, update, subject);
+	Application this = _this;
+
+	this->val  = va_arg(*params, struct randval *);
+	this->auth = va_arg(* params, void *);
+
+	return 0;
 }
+
+static
+void
+applicationDtor(void * _this)
+{
+}
+
+
+INIT_IFACE(Class, applicationCtor, applicationDtor);
+CREATE_CLASS(Application, NULL, IFACE(Class));
 
 // vim: set ts=4 sw=4:

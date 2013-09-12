@@ -32,10 +32,7 @@
 #include "hash.h"
 
 HttpMessage
-httpWorkerGetAsset(
-		HttpWorker   this,
-		HttpRequest  request,
-		const char * fname)
+httpWorkerGetAsset(HttpWorker this, const char * fname)
 {
 	char *      match;
 	size_t      nmatch;
@@ -45,7 +42,7 @@ httpWorkerGetAsset(
 	size_t nfname = strlen(fname);
 
 	header = hashGet(
-			((HttpMessage)request)->header,
+			((HttpMessage)this->current_request)->header,
 			CSTRA("If-None-Match"));
 
 	if (NULL == header) {

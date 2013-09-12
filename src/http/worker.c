@@ -38,6 +38,8 @@
 #include "http/writer.h"
 
 #include "utils/memory.h"
+#include "interface/subject.h"
+#include "interface/observer.h"
 
 static
 int
@@ -50,8 +52,6 @@ httpWorkerCtor(void * _this, va_list * params)
 	this->id  = memMalloc(strlen(id) + 1);
 	strcpy(this->id, id);
 
-	this->val = va_arg(*params, struct randval *);
-
 	this->asset_pool = new(Hash);
 
 	sprintf(cbuf_id, "%s_%s", "parser", id);
@@ -60,18 +60,7 @@ httpWorkerCtor(void * _this, va_list * params)
 	this->parser = new(HttpParser, this->pbuf);
 	this->writer = new(HttpWriter);
 
-	this->sroot  = &(this->session);
-	this->auth   = va_arg(* params, void *);
-
 	return 0;
-}
-
-static
-inline
-void
-tDelete(void * node)
-{
-	delete(node);
 }
 
 static
@@ -88,7 +77,6 @@ httpWorkerDtor(void * _this)
 	if (NULL != this->pbuf) {
 		delete(this->asset_pool);
 		delete(this->pbuf); //!< cloned workers have NULL, so delete won't do anything
-		tdestroy(*(this->sroot), tDelete);
 	}
 }
 
@@ -99,9 +87,8 @@ httpWorkerClone(void * _this, void * _base)
 	HttpWorker this = _this;
 	HttpWorker base = _base;
 
-	this->val  = base->val;
-
-	this->asset_pool = base->asset_pool;
+	this->asset_pool          = base->asset_pool;
+	this->application_adapter = base->application_adapter;
 
 	this->parser = new(HttpParser, base->pbuf);
 	/*
@@ -124,22 +111,59 @@ httpWorkerClone(void * _this, void * _base)
 	 *   it is.
 	 */
 	this->writer = new(HttpWriter);
-
-	this->sroot  = &(base->session);
-	this->auth   = base->auth;
 }
 
 ssize_t httpWorkerProcess(void *, Stream);
 ssize_t httpWorkerWrite(void *, Stream);
 
+static
+void
+httpWorkerDetach(void * _this, void * adapter)
+{
+	HttpWorker this = (HttpWorker)_this;
+
+	if (NULL != this->application_adapter) {
+		delete(this->application_adapter);
+	}
+}
+
+static
+void
+httpWorkerAttach(void * _this, void * adapter)
+{
+	HttpWorker this = (HttpWorker)_this;
+
+	/*
+	 * right now only one adapter is allowed and the last
+	 * added will be used....all others will be deleted in
+	 * assumption that no other handle does exist anymore
+	 * (because it was added as an adapter and thus is good
+	 * for nothing else.)
+	 */
+	httpWorkerDetach(_this, adapter);
+
+	this->application_adapter = adapter;
+}
+
+static
+void
+httpWorkerNotify(void * _this)
+{
+	HttpWorker this = (HttpWorker)_this;
+
+	observerUpdate(this->application_adapter, _this);
+}
+
 INIT_IFACE(Class, httpWorkerCtor, httpWorkerDtor, httpWorkerClone);
 INIT_IFACE(StreamReader, httpWorkerProcess);
 INIT_IFACE(StreamWriter, httpWorkerWrite);
+INIT_IFACE(Subject, httpWorkerAttach, httpWorkerDetach, httpWorkerNotify);
 CREATE_CLASS(
 		HttpWorker,
 		NULL, 
 		IFACE(Class),
 		IFACE(StreamReader),
-		IFACE(StreamWriter));
+		IFACE(StreamWriter),
+		IFACE(Subject));
 
 // vim: set ts=4 sw=4:

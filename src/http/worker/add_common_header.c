@@ -26,7 +26,7 @@
 
 #include "http/message.h"
 #include "http/header.h"
-#include "http/response.h"
+#include "http/worker.h"
 
 #include "hash.h"
 
@@ -35,35 +35,35 @@
 
 
 void
-httpWorkerAddCommonHeader(HttpMessage request, HttpMessage response)
+httpWorkerAddCommonHeader(HttpWorker this)
 {
 	char   buffer[200];
 	size_t nbuf;
 
-	if (httpMessageHasKeepAlive(request)) {
-		hashAdd(response->header,
+	if (httpMessageHasKeepAlive((HttpMessage)this->current_request)) {
+		hashAdd(this->current_response->header,
 				new(HttpHeader, CSTRA("Connection"), CSTRA("Keep-Alive")));
 	}
 	else {
-		hashAdd(response->header,
+		hashAdd(this->current_response->header,
 				new(HttpHeader, CSTRA("Connection"), CSTRA("Close")));
 	}
 
-	hashAdd(response->header,
+	hashAdd(this->current_response->header,
 			new(HttpHeader, CSTRA("Server"), CSTRA("testserver")));
 
-	switch(((HttpResponse)response)->status) {
+	switch(((HttpResponse)this->current_response)->status) {
 		case 304:
 			break;
 
 		default:
-			nbuf = sprintf(buffer, "%d", response->nbody);
-			hashAdd(response->header,
+			nbuf = sprintf(buffer, "%d", this->current_response->nbody);
+			hashAdd(this->current_response->header,
 					new(HttpHeader, CSTRA("Content-Length"), buffer, nbuf));
 	}
 
 	nbuf = rfc1123GmtNow(buffer, sizeof(buffer));
-	hashAdd(response->header,
+	hashAdd(this->current_response->header,
 			new(HttpHeader, CSTRA("Date"), buffer, nbuf));
 }
 

@@ -20,18 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
-#include "interface/observer.h"
+#ifndef __APPLICATION_ADAPTER_HTTP_H__
+#define __APPLICATION_ADAPTER_HTTP_H__
 
-const struct interface i_Observer = {
-	"observer",
-	1
+#include "class.h"
+#include "application.h"
+
+
+CLASS(ApplicationAdapterHttp) {
+	Application application;
 };
 
-void
-observerUpdate(void * observer, void * subject)
-{
-	CALL(observer, Observer, update, subject);
-}
+#endif // __APPLICATION_ADAPTER_HTTP_H__
 
 // vim: set ts=4 sw=4:

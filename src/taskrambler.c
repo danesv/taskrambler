@@ -134,9 +134,11 @@ main()
 
 		default:
 			{
-				AuthLdap   auth;
-				HttpWorker worker;
-				Server     server;
+				AuthLdap               auth;
+				//Application            application;
+				//ApplicationAdapterHttp adapterHttp;
+				HttpWorker             worker;
+				Server                 server;
 
 				value = mmap (0, sizeof(int), PROT_READ|PROT_WRITE,
 						MAP_SHARED, shm, 0);
@@ -146,9 +148,13 @@ main()
 
 				logger = new(LoggerSyslog, LOGGER_DEBUG);
 				auth   = new(AuthLdap,
-						"ldap://localhost/",
+						"ldap://hosted/",
 						CSTRA("ou=user,dc=yabrog,dc=weird-web-workers,dc=org"));
-				worker = new(HttpWorker, "testserver", value, auth);
+				worker      = new(HttpWorker, "testserver");
+				application = new(Application, value, auth);
+				adapterHttp = new(ApplicationAdapterHttp, application);
+				subjectAttach(worker, adapterHttp);
+
 				server = new(Server, logger, worker, 11212, SOMAXCONN);
 
 				if (NULL != server) {

@@ -34,28 +34,24 @@
 #include "cbuf.h"
 #include "session.h"
 
+#include "http/request.h"
+#include "http/response.h"
 #include "commons.h"
-
-struct randval {
-	time_t timestamp;
-	int    value;
-};
 
 
 CLASS(HttpWorker) {
-	char           * id;
-	struct randval * val;
+	char * id;
 
-	Cbuf       pbuf;
+	Cbuf   pbuf;
+	Hash   asset_pool;
 
-	Hash       asset_pool;
+	void * application_adapter;
+
+	HttpRequest current_request;
+	HttpMessage current_response;
 
 	HttpParser parser;
 	HttpWriter writer;
-	Session    session;
-	Session  * sroot;
-
-	void *     auth;
 };
 
 #endif // __HTTP_WORKER_H__

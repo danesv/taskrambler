@@ -24,16 +24,16 @@
 #ifndef __OBSERVER_H__
 #define __OBSERVER_H__
 
-typedef void (* fptr_observerNotify)(void *, void*);
+typedef void (* fptr_observerUpdate)(void *, void*);
 
 extern const struct interface i_Observer;
 
 struct i_Observer {
 	const struct interface * const _;
-	fptr_observerNotify      notify;
+	fptr_observerUpdate      update;
 };
 
-extern void observerNotify(void *, void *);
+extern void observerUpdate(void *, void *);
 
 #endif // __OBSERVER_H__
 
