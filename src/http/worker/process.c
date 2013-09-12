@@ -72,42 +72,44 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			 */
 			subjectNotify(this);
 
-			if (0 == strcmp("POST", this->current_request->method)) {
-				/*
-				 * we can't do post requests on our own...
-				 */
-				this->current_response = (HttpMessage)httpResponse500();
-			}
-
-			if (0 == strcmp("GET", this->current_request->method)) {
-				char html_asset[2048] = "./assets/html";
-				char base_asset[2048] = "./assets";
-				char main_asset[]     = "/main.html";
-
-				char * asset_path     = base_asset;
-				char * asset;
-				char * mime_type;
-
-				if (0 == strcmp("/", this->current_request->path)) {
-					asset = main_asset;
-				} else {
-					asset = this->current_request->path;
+			if (NULL == this->current_response) {
+				if (0 == strcmp("POST", this->current_request->method)) {
+					/*
+					 * we can't do post requests on our own...
+					 */
+					this->current_response = (HttpMessage)httpResponse500();
 				}
 
-				mime_type = strrchr(asset, '.');
-				if (NULL != mime_type) {
-					mime_type++;
-					mime_type = getMimeType(mime_type, strlen(mime_type));
-				}
+				if (0 == strcmp("GET", this->current_request->method)) {
+					char html_asset[2048] = "./assets/html";
+					char base_asset[2048] = "./assets";
+					char main_asset[]     = "/main.html";
 
-				if (NULL != mime_type &&
-						0 == memcmp(mime_type, CSTRA("text/html"))) {
-					asset_path = html_asset;
-				}
+					char * asset_path     = base_asset;
+					char * asset;
+					char * mime_type;
 
-				strcat(asset_path, asset);
-				this->current_response =
-					httpWorkerGetAsset(this, asset_path);
+					if (0 == strcmp("/", this->current_request->path)) {
+						asset = main_asset;
+					} else {
+						asset = this->current_request->path;
+					}
+
+					mime_type = strrchr(asset, '.');
+					if (NULL != mime_type) {
+						mime_type++;
+						mime_type = getMimeType(mime_type, strlen(mime_type));
+					}
+
+					if (NULL != mime_type &&
+							0 == memcmp(mime_type, CSTRA("text/html"))) {
+						asset_path = html_asset;
+					}
+
+					strcat(asset_path, asset);
+					this->current_response =
+						httpWorkerGetAsset(this, asset_path);
+				}
 			}
 
 			if (NULL == this->current_response) {

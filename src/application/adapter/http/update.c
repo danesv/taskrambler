@@ -85,7 +85,8 @@ loginAdapter(Application application, HttpWorker worker, unsigned long sid)
 		char    buffer[200];
 		size_t  nbuf;
 
-		if (NO_SESSION_SID == sid) {
+		if (NO_SESSION_SID == sid
+				|| NULL == applicationSessionGet(application, sid)) {
 			sid = applicationSessionStart(
 					application,
 					(char *)(username->value),
@@ -139,7 +140,8 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 		}
 		
 		if (0 == strcmp("/sess/", worker->current_request->path)) {
-			if (NO_SESSION_SID == sid) {
+			if (NO_SESSION_SID == sid
+				|| NULL == applicationSessionGet(this->application, sid)) {
 				sid = applicationSessionStart(this->application, NULL, 0);
 			}
 

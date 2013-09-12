@@ -42,11 +42,13 @@ applicationSessionUpdate(
 {
 	Session session = hashGetByVal(this->active_sessions, sid);
 
-	MEM_FREE(session->username);
+	if (NULL != session) {
+		MEM_FREE(session->username);
 
-	session->username        = memMalloc(nname + 1);
-	session->username[nname] = 0;
-	memcpy(session->username, name, nname);
+		session->username        = memMalloc(nname + 1);
+		session->username[nname] = 0;
+		memcpy(session->username, name, nname);
+	}
 }
 
 // vim: set ts=4 sw=4:
