@@ -66,7 +66,7 @@ assetCtor(void * _this, va_list * params)
 			(unsigned char *)this->fname,
 			this->nfname);
 
-	if (-1 == access(this->fname, O_RDONLY)) {
+	if (-1 == access(this->fname, R_OK)) {
 		return -1;
 	} else {
 		this->handle = open(this->fname, O_RDONLY);
