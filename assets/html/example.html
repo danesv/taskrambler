@@ -3,48 +3,90 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<title>My own little Web-App</title>
+		<title>Taskrambler - Example</title>
 		<link rel="stylesheet" type="text/css" href="/style/common.css">
+		<link rel="stylesheet" type="text/css" href="/style/taskrambler.css">
 		<script type="text/javascript" src="/js/jquery.js"></script>
 		<script type="text/javascript" src="/js/serverval.js"></script>
 		<script type="text/javascript" src="/js/session.js"></script>
 		<script type="text/javascript" src="/js/init.js"></script>
 	</head>
+
 	<body> 
-		<ul id="menu">
-			<li>random Value</li>
-			<li>start session</li>
-			<li>login</li>
-			<li><a href="/main.html">homepage</a></li>
-		</ul>
-		<div id="sessinfo" class="x-small">
-			Session: <span></span><br />
-			<canvas width="100px" height="3px"></canvas>
+		<div id="page">
+			<div id="title">
+				<a href="/main.html">
+					<div class="left">
+						<h1>Task</h1>
+					</div>
+					<img src="/image/rambler-logo2-small.jpg" />
+					<div class="right">
+						<h1>Rambler</h1>
+					</div>
+					<div class="clear"></div>
+				</a>
+			</div>
+
+			<div id="menu">
+				<ul>
+					<li><span>random Value</span></li>
+					<li><span>start session</span></li>
+					<li><span>login</span></li>
+				</ul>
+			</div>
+
+			<div id="main">
+				<h1>Example</h1>
+
+				<hr />
+				<p class="abstract">
+					<span class="author">[GH]</span>
+					Unlike the other pages here you can see some
+					dynamic interaction with taskrambler as application.
+					Right now only I can login because the only
+					authentication method is agains my ldap serve.
+					But this will change soon. Anyway, you can start
+					a session and as soon as you can register and
+					login you can read a random value generated in
+					a second process.
+				</p>
+				<hr />
+
+				<h2>Welcome (will show you name if you are logged in)</h2>
+
+				<p>
+				Welcome<span></span>!!!<br />
+				<p>
+
+				<div id="sessinfo" class="x-small">
+					Session: <span></span><br />
+					<canvas width="100px" height="3px"></canvas>
+				</div>
+
+				<div id="login" class="hide">
+					<form>
+						<label for="username">username</label>
+						<input type="text" name="username" /><br />
+						<label for="password">password</label>
+						<input type="password" name="password" /><br />
+						<input type="submit" />
+					</form>
+				</div>
+
+				<div id="randval" class="hide">
+					<span class="small">
+						Value created at: <br />
+						<span></span><br>
+						Next value in: <span></span><br />
+					</span>
+					Value: <span></span>
+				</div>
+
+				<hr />
+				<div id="msg"></div>
+				<hr />
+			</div>
 		</div>
-		<div id="login" class="hide">
-			<form>
-				<label for="username">username</label>
-				<input type="text" name="username" /><br />
-				<label for="password">password</label>
-				<input type="password" name="password" /><br />
-				<input type="submit" />
-			</form>
-		</div>
-		<div id="randval" class="hide">
-			<span class="small">
-				Value created at: <br />
-				<span></span><br>
-				Next value in: <span></span><br />
-			</span>
-			Value: <span></span>
-		</div>
-		<div id="main">
-			<h1>Testpage</h1>
-			Welcome<span></span>!!!<br />
-			<a href="/foo.html"><img src="/image/waldschrat.jpg" /></a>
-		</div>
-		<hr />
-		<div id="msg"></div>
 	</body>
 </html>
 

@@ -20,7 +20,6 @@
 	font-family: old_newspaper;
 }
 
-
 body {
 	color:            rgb(42,44,40);
 	background-color: rgb(52,54,50);
@@ -46,7 +45,89 @@ h3 {
 	text-decoration: underline;
 }
 
-div.main {
+hr {
+	height:     10px;
+	border:     none;
+	background: url(/image/rambler-border-t.jpg);
+}
+
+
+div.border {
+	padding:    0px;
+	margin:     0px;
+}
+
+div.border div {
+	padding:    0px;
+	margin:     0px;
+}
+
+div.border div.tl {
+	float:      left;
+	width:      10px;
+	height:     10px;
+	background: url(/image/rambler-border-tl.jpg);
+}
+
+div.border div.t {
+	float:      left;
+	width:      250px;
+	height:     10px;
+	background: url(/image/rambler-border-t.jpg);
+}
+
+div.border div.tr {
+	float:      left;
+	width:      10px;
+	height:     10px;
+	background: url(/image/rambler-border-tr.jpg);
+}
+
+div.border div.l {
+	clear:      left;
+	float:      left;
+	width:      10px;
+	height:     250px;
+	background: url(/image/rambler-border-l.jpg);
+}
+
+div.border div.img {
+	float:      left;
+	background: url(/image/rambler-border-tr.jpg);
+}
+
+div.border div.r {
+	float:        left;
+	margin-right: 20px;
+	width:        10px;
+	height:       250px;
+	background:   url(/image/rambler-border-r.jpg);
+}
+
+div.border div.bl {
+	clear:      left;
+	float:      left;
+	width:      10px;
+	height:     10px;
+	background: url(/image/rambler-border-bl.jpg);
+}
+
+div.border div.b {
+	float:      left;
+	width:      250px;
+	height:     10px;
+	background: url(/image/rambler-border-b.jpg);
+}
+
+div.border div.br {
+	float:      left;
+	width:      10px;
+	height:     10px;
+	background: url(/image/rambler-border-br.jpg);
+}
+
+
+#page {
 	top:              50px;
 	margin-left:      auto;
 	margin-right:     auto;
@@ -56,10 +137,16 @@ div.main {
 	border:           1px solid black;
 }
 
-div.main h1 {
+#page h1 {
 	text-align:  center;
 	font-size:   xx-large;
 	font-family: old_newspaper;
+}
+
+#main a {
+	text-decoration: none;
+	font-weight:     bold;
+	color:           rgb(42,44,40);
 }
 
 #title {
@@ -123,9 +210,18 @@ div.main h1 {
 	color:            rgb(255,253,200);
 }
 
+#menu ul li span {
+	cursor: pointer;
+}
+
 #menu ul li a {
 	text-decoration: none;
 	color:           rgb(255,253,200);
+}
+
+#main a {
+	text-decoration: none;
+	font-weight:     bold;
 }
 
 // vim: set ft=css ts=4 sw=4:

@@ -9,7 +9,7 @@
 	</head>
 
 	<body> 
-		<div class="main">
+		<div id="page">
 			<div id="title">
 				<a href="/main.html">
 					<div class="left">
@@ -35,13 +35,14 @@
 				<div class="clear"></div>
 			</div>
 
-			<div>
+			<div id="main">
 				<img
 					style="float:left;margin-right:10px;"
 					src="/image/rambler-logo-small.jpg" />
 
 				<h1>Taskrambler</h1>
 
+				<hr />
 				<p class="abstract">
 					<span class="author">[GH]</span>
 					Welcome to taskrambler, the multi user task organization
@@ -49,17 +50,34 @@
 					is difficult and I really don't know whats going on at
 					the moment this tool might be helpful.
 				</p>
+				<hr />
 
 				<br />
 
 				<h2>What is taskrambler</h2>
 
-				<h3>What will it be</h3>
+				<h3>What is it right now.</h3>
+
+				<p>
+				&nbsp;&nbsp;Right now this is a HTTP server. It's written from
+				scratch in C and serves as the user interface provider for
+				taskrambler.
+				</p>
+				
+				<p>
+				&nbsp;&nbsp;It delivers static assets placed within the project
+				to webbrowsers. In fact the pages you read right now are
+				delivered by taskrambler.
+				</p>
+
+				<h3>What it will be</h3>
 
 				<p>
 				&nbsp;&nbsp;The plan is to build a multi user task
 				management system inspired by 
-				<a href="http://taskwarrior.org/projects/show/taskwarrio">
+				<a
+					href="http://taskwarrior.org/"
+					target="_blank">
 					taskwarrior</a>.
 				Users may log in and manage the tasks they have to do.
 				Priorize them, assign them to projects, track the time
@@ -81,33 +99,22 @@
 				on a project.
 				</p>
 
-				<h3>What is it right now.</h3>
-
-				<p>
-				&nbsp;&nbsp;Right now this is a HTTP server. It's written from
-				scratch in C and serves as the user interface provider for
-				taskrambler.
-				</p>
-				
-				<p>
-				&nbsp;&nbsp;It delivers static assets placed within the project
-				to webbrowsers. In fact the pages you read right now are
-				delivered by taskrambler.
-				</p>
-
 				<h2>What is it not</h2>
 
 				<p>
 				&nbsp;&nbsp;It is not another web server and it is not a
-				web application as u might be used to. It will not run under
-				any given web server.
+				web application as you might be used to. It will not run
+				under any given web server. It brings it's own web server.
 				</p>
 
 				<h2>History</h2>
 				
 				<p>
 				&nbsp;&nbsp;About two year ago I stepped across the
-				<a href="http://en.wikipedia.org/wiki/C10k_problem">C10k</a>
+				<a
+					href="http://en.wikipedia.org/wiki/C10k_problem"
+					target="_blank">
+					C10k</a>
 				problem. At that time, and in fact still right now, I don't
 				feel experienced enough to face this problem. But anyway, 
 				it made me curious. Curious if I would be able to write an
@@ -136,7 +143,9 @@
 				<p>
 				&nbsp;&nbsp;Approximately at the same time I started working
 				with
-				<a href="http://taskwarrior.org/projects/show/taskwarrio">
+				<a
+					href="http://taskwarrior.org/"
+					target="_blank">
 					taskwarrior</a> which I found a really useful tool.
 				I thought what about making something like this but for
 				multiple users. It is pretty clear to you what you need for
@@ -172,7 +181,9 @@
 
 				<p>
 				&nbsp;&nbsp;Some time ago I had read a book called
-				<a href="https://ritdml.rit.edu/handle/1850/8544">
+				<a
+					href="https://ritdml.rit.edu/handle/1850/8544"
+					target="_blank">
 				Object oriented programming with ANSI-C</a> from 
 				Axel-Tobias Schreiner. It has some really interesting
 				concepts in it but goes a step to for for my taste with

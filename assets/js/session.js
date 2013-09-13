@@ -23,7 +23,7 @@ Session.prototype.loadJSON = function(data)
 	this.username = data.username;
 
 	this.eSid.empty().append(this.id);
-	$("#main span:eq(0)").empty().append(" " + this.username);
+	$("#main p:eq(1) span:eq(0)").empty().append(" " + this.username);
 
 	this.draw();
 	if (0 < this.timeleft)
@@ -70,7 +70,7 @@ Session.prototype.stop = function()
 	this.username = "";
 
 	this.eSid.empty().append(this.id);
-	$("#main span:eq(0)").empty().append(" " + this.username);
+	$("#main p:eq(1) span:eq(0)").empty().append(" " + this.username);
 
 	this.draw();
 }
