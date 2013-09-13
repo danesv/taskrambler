@@ -143,12 +143,6 @@ div.border div.br {
 	font-family: old_newspaper;
 }
 
-#main a {
-	text-decoration: none;
-	font-weight:     bold;
-	color:           rgb(42,44,40);
-}
-
 #title {
 	width:        677px;
 	margin-left:  auto;
@@ -222,6 +216,21 @@ div.border div.br {
 #main a {
 	text-decoration: none;
 	font-weight:     bold;
+	color:           rgb(42,44,40);
 }
+
+
+#footer {
+	margin-top: 10px;
+	text-align: center;
+	font-size:  11px;
+}
+
+#footer a {
+	text-decoration: none;
+	font-weight:     bold;
+	color:           rgb(42,44,40);
+}
+
 
 // vim: set ft=css ts=4 sw=4:
