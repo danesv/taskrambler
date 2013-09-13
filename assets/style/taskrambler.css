@@ -1,0 +1,131 @@
+@font-face {
+	font-family: 'old_typewriter';
+	src: url(/other/old_typewriter.ttf);
+}
+
+@font-face {
+	font-family: 'old_newspaper';
+	src: url(/other/OldNewspaperTypes.ttf);
+}
+
+.clear {
+	clear: both;
+}
+
+.author {
+	font-weight: bold;
+}
+
+.abstract {
+	font-family: old_newspaper;
+}
+
+
+body {
+	color:            rgb(42,44,40);
+	background-color: rgb(52,54,50);
+	padding-top:      20px;
+	padding-bottom:   20px;
+	font-size:        15px;
+}
+
+h1 {
+	font-family: old_newspaper;
+	font-size:   30px;
+}
+
+h2 {
+	font-family: old_newspaper;
+	font-size:   20px;
+}
+
+h3 {
+	font-family:     old_newspaper;
+	font-weight:     bold;
+	font-size:       15px;
+	text-decoration: underline;
+}
+
+div.main {
+	top:              50px;
+	margin-left:      auto;
+	margin-right:     auto;
+	width:            800px;
+	padding:          10px;
+	background-image: url(/image/rambler-bg.jpg);
+	border:           1px solid black;
+}
+
+div.main h1 {
+	text-align:  center;
+	font-size:   xx-large;
+	font-family: old_newspaper;
+}
+
+#title {
+	width:        677px;
+	margin-left:  auto;
+	margin-right: auto;
+}
+
+#title div {
+	float:    left;
+	height:   100px;
+	position: relative;
+	padding:  0px;
+}
+
+#title div.left {
+	width: 200px;
+}
+
+#title div.right {
+	width: 300px;
+}
+
+#title div h1 {
+	font-size: 60px;
+	position:  absolute;
+	bottom:    0px;
+	margin:    0px;
+	color:     rgb(42,44,40);
+}
+
+#title div.left h1 {
+	right: 0px;
+}
+
+#title div.right h1 {
+	left: 0px;
+}
+
+#title img {
+	float: left;
+}
+
+#menu {
+	text-align: center;
+	width:      100%;
+}
+
+#menu ul {
+	display:    inline-block;
+	list-style: none;
+	padding:    0px;
+}
+
+#menu ul li {
+	float:            left;
+	padding:          10px 34px;
+	font-family:      old_newspaper;
+	font-size:        20px;
+	background-color: rgb(42,44,40);
+	color:            rgb(255,253,200);
+}
+
+#menu ul li a {
+	text-decoration: none;
+	color:           rgb(255,253,200);
+}
+
+// vim: set ft=css ts=4 sw=4:
