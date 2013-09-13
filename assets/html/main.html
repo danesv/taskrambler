@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>Taskrambler</title>
+		<link rel="stylesheet" type="text/css" href="/style/taskrambler.css">
+	</head>
+
+	<body> 
+		<div class="main">
+			<div id="title">
+				<a href="/taskrambler.html">
+					<div class="left">
+						<h1>Task</h1>
+					</div>
+					<img src="/image/rambler-logo2-small.jpg" />
+					<div class="right">
+						<h1>Rambler</h1>
+					</div>
+					<div class="clear"></div>
+				</a>
+			</div>
+
+			<div id="menu">
+				<ul>
+					<li>&nbsp;</li>
+					<li><a href="/author.html">author</a></li>
+					<li><a href="/documentation.html">documentation</a></li>
+					<li><a href="/download.html">download</a></li>
+					<li><a href="/example.html">example</a></li>
+					<li>&nbsp;</li>
+				</ul>
+				<div class="clear"></div>
+			</div>
+
+			<div>
+				<img
+					style="float:left;margin-right:10px;"
+					src="/image/rambler-logo-small.jpg" />
+
+				<h1>Taskrambler</h1>
+
+				<p class="abstract">
+					<span class="author">[GH]</span>
+					Welcome to taskrambler, the multi user task organization
+					and management tool. If you ever felt working together
+					is difficult and I really don't know whats going on at
+					the moment this tool might be helpful.
+				</p>
+
+				<br />
+
+				<h2>What is taskrambler</h2>
+
+				<h3>What will it be</h3>
+
+				<p>
+				&nbsp;&nbsp;The plan is to build a multi user task
+				management system inspired by 
+				<a href="http://taskwarrior.org/projects/show/taskwarrio">
+					taskwarrior</a>.
+				Users may log in and manage the tasks they have to do.
+				Priorize them, assign them to projects, track the time
+				spend on a given task and so on.
+				Users also can configure who would be able to see what
+				task and users with special roles, like managers will
+				be able to see all tasks of their team, etc.
+				It will be possible to create reports about what work was
+				done etc.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;Additionally this will serve as a ticket system.
+				Tasks may be assigned to users and all the things
+				possible with a ticket system will be possible here too.
+				So this will combine a personal task management tool with a
+				ticket system. Thus providing a getting things done tool
+				that will improve the productivity of all persons working
+				on a project.
+				</p>
+
+				<h3>What is it right now.</h3>
+
+				<p>
+				&nbsp;&nbsp;Right now this is a HTTP server. It's written from
+				scratch in C and serves as the user interface provider for
+				taskrambler.
+				</p>
+				
+				<p>
+				&nbsp;&nbsp;It delivers static assets placed within the project
+				to webbrowsers. In fact the pages you read right now are
+				delivered by taskrambler.
+				</p>
+
+				<h2>What is it not</h2>
+
+				<p>
+				&nbsp;&nbsp;It is not another web server and it is not a
+				web application as u might be used to. It will not run under
+				any given web server.
+				</p>
+
+				<h2>History</h2>
+				
+				<p>
+				&nbsp;&nbsp;About two year ago I stepped across the
+				<a href="http://en.wikipedia.org/wiki/C10k_problem">C10k</a>
+				problem. At that time, and in fact still right now, I don't
+				feel experienced enough to face this problem. But anyway, 
+				it made me curious. Curious if I would be able to write an
+				HTTP server by my own. So I started work on this.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;Well, there are enough web servers available
+				right now, even the C10k problem has brought up some really
+				interesting exemplars. So I decided not to build another
+				multi purpose HTTP server application but try another thing.
+				I wanted to build an application with a user interface
+				provided via browser. But what kind of application.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;At the time I started this I was working for
+				bigpoint, which is one of the worlds biggest browser
+				game providers. So the first answer was obviously to build
+				a game. But soon I realized that it needs much to build
+				a game from scratch. You need a fascinating storyboard,
+				well ballancing and game design and so on. So I dropped this
+				idea again.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;Approximately at the same time I started working
+				with
+				<a href="http://taskwarrior.org/projects/show/taskwarrio">
+					taskwarrior</a> which I found a really useful tool.
+				I thought what about making something like this but for
+				multiple users. It is pretty clear to you what you need for
+				this and it would be cool to have something like this...
+				and with some luck there are others who might be interested in
+				such a thing too.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;From the first day on the idea was to build
+				this completely in C. This primary decision for this was
+				that I really like the language and it had been a very long
+				time since I last had the opportunity to do something in that
+				language. Maybe another reason was that I had the hope to
+				compete with some of the other C10k webservers. And well,
+				taskrambler does not perform to bad at all. I did not
+				choose C++ also I like some of the object oriented
+				concepts because as most other OOP languages I think of
+				it as bloated with stuff I never need. Please don"t flame
+				on this, its only my opinion.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;There are three things I really like in OOP,
+				objects and their definition via classes, interfaces
+				and inheritance. Why? Because if you ask me the whole topic
+				is about reusability and maintanability.
+				Obviously a well designed class is reusable. What makes
+				it well defined? It implements an interface an reacts in
+				a sane way on it. Well and inheritance is "sometimes" a good
+				way to prevent duplicate code.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;Some time ago I had read a book called
+				<a href="https://ritdml.rit.edu/handle/1850/8544">
+				Object oriented programming with ANSI-C</a> from 
+				Axel-Tobias Schreiner. It has some really interesting
+				concepts in it but goes a step to for for my taste with
+				creating an own code preprocessor and other things. Anyway
+				this was the base of a class like code framework which
+				consists mostly of preprocessor code and some C code lines,
+				as well as a code convention.
+				This gives me the possibility to implement a well defined
+				interface on various objects. I can extend and inject
+				classes. All objects have a constructor and a destructor and
+				if needed a clone constructor.
+				Finishing this was the first building block of taskrambler.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;The next goal was a working HTTP server
+				implementation. I created a lot of classes, rewrote then
+				dropped them again and thought about other solutions.
+				At a given point I was really disappointed because on heave
+				load the servers droped connection and I was unable to
+				find out why. At that point I stopped working on this for
+				over a year. But now I started again added some new cool
+				code and think that the connection wasn"t been dropped by
+				taskrambler but by the kernel. Shortly before I loose
+				connection I found a kernel log entry that says that
+				syn flood protection was been activated.
+				</p>
+
+				<p>
+				&nbsp;&nbsp;Right now this is an HTTP server that is able
+				to handle cookies, speeks SSL and implements the subset
+				of the HTTP protocol that I need. It performs not to bad
+				but others should mesure this, I have no time for this.
+				I know a lot of places where optimization is still possible.
+				</p>
+			</div>
+		</div>
+	</body>
+</html>
+
+<!-- vim: set ts=4 sw=4: -->
