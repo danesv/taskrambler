@@ -145,8 +145,13 @@ div.border div.br {
 
 #title {
 	width:        677px;
+	height:       120px;
 	margin-left:  auto;
 	margin-right: auto;
+}
+
+#title a {
+	text-decoration: none;
 }
 
 #title div {
@@ -185,27 +190,44 @@ div.border div.br {
 }
 
 #menu {
-	text-align: center;
-	width:      100%;
+	text-align:     center;
+	margin:         0px;
 }
 
 #menu ul {
-	display:    inline-block;
-	list-style: none;
-	padding:    0px;
+	display:          inline-block;
+	width:            750px;
+	height:           40px;
+	list-style:       none;
+	padding:          0px;
+	margin:           0px;
+	text-align:       justify;
+	text-justify:     distribute-all-lines;
+	background-color: rgb(42,44,40);
 }
 
 #menu ul li {
-	float:            left;
-	padding:          10px 34px;
-	font-family:      old_newspaper;
-	font-size:        20px;
-	background-color: rgb(42,44,40);
-	color:            rgb(255,253,200);
+	display:        inline-block;
+	font-family:    old_newspaper;
+	font-size:      20px;
+	color:          rgb(255,253,200);
+}
+
+#menu ul li.menuedge {
+	width: 50px;
+	vertical-align: center;
+}
+
+#menu ul div {
+	width: 100%;
+	display: inline-block;
+	font-size: 0;
+	line-height: 0;
 }
 
 #menu ul li span {
 	cursor: pointer;
+	color:  rgb(255,253,200);
 }
 
 #menu ul li a {

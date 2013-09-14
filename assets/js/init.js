@@ -9,15 +9,15 @@ $(document).ready(function() {
 		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 	});
 
-	$("div#menu ul li:eq(0)").click(function() {
+	$("div#menu ul li:eq(1)").click(function() {
 		sval.start();
 	});
 
-	$("div#menu ul li:eq(1)").click(function() {
+	$("div#menu ul li:eq(2)").click(function() {
 		$.getJSON("/sess/", $.proxy(sess.loadJSON, sess));
 	});
 
-	$("div#menu ul li:eq(2)").click(function() {
+	$("div#menu ul li:eq(3)").click(function() {
 		$("#login").removeClass("hide");
 	});
 
