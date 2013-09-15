@@ -59,6 +59,7 @@
 
 struct memSegment
 {
+	size_t   ref_count;
     size_t   size;
     void   * ptr;
 
@@ -75,13 +76,7 @@ struct memSegment
 struct memSegment *
 newElement(size_t size)
 {
-	long psize = sysconf(_SC_PAGESIZE);
-
-	/* allocate only blocks of a multiple of pagesize, similar to cbuf */
-	size  = (0 >= size)? 1 : (0 != size%psize)? (size/psize)+1 : size/psize;
-	size *= psize;
-
-    struct memSegment * element = malloc(size + sizeof(struct memSegment));
+    struct memSegment * element = malloc(size);
 
     element->size   = size;
     element->ptr    = (void*)element + sizeof(struct memSegment);
@@ -759,48 +754,6 @@ cleanup(struct memSegment * node, int depth)
 
 struct memSegment * segments = NULL;
 
-// /**
-//  * this will interpret any memory segment that is not smaller
-//  * than the expected size as fitting.
-//  *
-//  * @param void * size_ptr  a pointer to a size_t value searched for
-//  * @param void * subject   a pointer to the currently analysed tree element
-//  */
-// static
-// int
-// segmentFindCmp(const void * size_ptr, const void * subject)
-// {
-// 	if (*(size_t *)size_ptr > ((struct memSegment *)subject)->size)
-// 		return 1;
-// 
-// 	return 0;
-// }
-// 
-// /**
-//  * this returns exact fits....uhh.....I can't relate solely on
-//  * the size argument as then same sized segments will never
-//  * be stored. 
-//  * Maybe a tree is not the best data structure to use to store
-//  * these.
-//  * Anyway, right now take the ptr into account if size if equal.
-//  */
-// static
-// int
-// segmentSearchCmp(const void * search, const void * subject)
-// {
-// 	size_t idx =
-// 		((struct memSegment *)search)->size -
-// 		((struct memSegment *)subject)->size;
-// 
-// 	if (0 == idx) {
-// 		return
-// 			((struct memSegment *)search)->ptr -
-// 			((struct memSegment *)subject)->ptr;
-// 	}
-// 
-// 	return idx;
-// }
-
 static
 void
 segmentFree(struct memSegment * segment, int depth)
@@ -812,6 +765,15 @@ segmentFree(struct memSegment * segment, int depth)
     }
 }
 
+void *
+memNewRef(void * mem)
+{
+	struct memSegment * seg = (mem - sizeof(struct memSegment));
+
+	seg->ref_count++;
+
+	return mem;
+}
 
 /*
  * This will always allocate a multiple of PAGESIZE
@@ -820,9 +782,13 @@ void *
 memMalloc(size_t size)
 {
 	struct memSegment * seg;
-	long   psize = sysconf(_SC_PAGESIZE);
+	//long                psize = sysconf(_SC_PAGESIZE);
+	long                psize = 64;
 
-	size  = (0 >= size)? 1 : (0 != size%psize)? (size/psize)+1 : size/psize; 
+	size += sizeof(struct memSegment);
+
+	/* allocate only blocks of a multiple of pagesize, similar to cbuf */
+	size  = (0>=size)?1:(0!=size%psize)?(size/psize)+1:size/psize;
 	size *= psize;
 
 	seg = findElement(segments, size);
@@ -861,7 +827,13 @@ void
 memFree(void ** mem)
 {
 	if (NULL != *mem) {
-		insertElement(&segments, (struct memSegment *)(*mem - sizeof(struct memSegment)));
+		struct memSegment * seg = (*mem - sizeof(struct memSegment));
+
+		if (1 < seg->ref_count) {
+			seg->ref_count--;
+		} else {
+			insertElement(&segments, seg);
+		}
 
 		*mem = NULL;
 	}
