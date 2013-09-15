@@ -12,6 +12,8 @@ UTILS = utils/hash.c \
 	utils/mime_type.c
 
 LIBS = ./application/libapplication.a \
+       ./user/libuser.a \
+       ./storage/libstorage.a \
        ./http/libhttp.a \
        ./auth/libauth.a \
        ./cbuf/libcbuf.a \
@@ -32,8 +34,9 @@ bin_PROGRAMS = taskrambler
 
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
 taskrambler_CFLAGS  = $(CFLAGS) -Wall -DPWD=\"$(PWD)\" -I ../include/# $(COVERAGE_CFLAGS)
-taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap
+taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap -lgdbm
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
 SUBDIRS = asset auth cbuf class hash queue http \
-	  logger server session socket stream tree application
+	  logger server session socket stream tree application \
+	  storage user

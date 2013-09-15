@@ -65,5 +65,7 @@ AC_CONFIG_FILES([Makefile
 		 src/stream/Makefile
 		 src/tree/Makefile
 		 src/application/Makefile
+		 src/storage/Makefile
+		 src/user/Makefile
 		 tests/Makefile])
 AC_OUTPUT
