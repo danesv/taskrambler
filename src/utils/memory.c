@@ -78,16 +78,17 @@ newElement(size_t size)
 {
     struct memSegment * element = malloc(size);
 
-    element->size   = size;
-    element->ptr    = (void*)element + sizeof(struct memSegment);
+	element->ref_count = 1;
+    element->size      = size;
+    element->ptr       = (void*)element + sizeof(struct memSegment);
 
-    element->next   = NULL;
-    element->last   = NULL;
+    element->next      = NULL;
+    element->last      = NULL;
 
-    element->color  = rbRed;
-    element->parent = NULL;
-    element->left   = NULL;
-    element->right  = NULL;
+    element->color     = rbRed;
+    element->parent    = NULL;
+    element->left      = NULL;
+    element->right     = NULL;
 
     return element;
 }
