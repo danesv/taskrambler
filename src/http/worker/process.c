@@ -50,6 +50,7 @@
 
 HttpMessage httpWorkerGetAsset(HttpWorker, const char *);
 void        httpWorkerAddCommonHeader(HttpWorker);
+void		httpWorkerAddComputedHeader(HttpWorker);
 
 
 ssize_t
@@ -117,6 +118,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			}
 
 			httpWorkerAddCommonHeader(this);
+			httpWorkerAddComputedHeader(this);
 			delete(this->current_request);
 			queuePut(this->writer->queue, this->current_response);
 			this->current_response = NULL;

@@ -39,26 +39,92 @@
 #include "utils/memory.h"
 
 
-#define NO_SESSION_SID		0
+#define NO_SESSION_SID		NULL
+#define SESS_HEADER "{\"id\":\"%s\",\"timeout\":%d,\"timeleft\":%ld}"
 
 
 static
 inline
-unsigned long
+char *
 getSessionId(Hash cookies)
 {
 	HashValue sidstr = hashGet(cookies, CSTRA("sid"));
 
 	if (NULL != sidstr) {
-		return strtoul((char*)(sidstr->value), NULL, 10);
+		return (char*)sidstr->value;
 	}
 
 	return NO_SESSION_SID;
 }
 
 static
+Session
+getSession(Queue sess_queue, const char * sid)
+{
+	Session sess = NULL;
+	time_t  now  = time(NULL);
+
+	/**
+	 * session start or update
+	 *
+	 * @TODO
+	 * I need to walk through the whole hash at this point to find
+	 * expired sessions and remove them....this is not good and
+	 * probably I need another(faster) way to identify expired
+	 * sessions....
+	 *
+	 * @TODO
+	 * Build a way to cleanup the hash by a filter...currently 
+	 * there is nothing I could use for this.
+	 * Well this is practically impossible in reasonable time
+	 * because every time I remove one element the tree has to 
+	 * be rebalanced....
+	 * 
+	 * I have to store all nodes in a different structure that
+	 * gives me the possibility to find fast expired objects.
+	 * These can then be removed from both structures....
+	 *
+	 * Anyway this is the pure horror...because I have to compute
+	 * the condition for every stored session....and I really have to
+	 * do this...else the tree would grow and grow all the time...
+	 * 
+	 * I think the best I can do at this point is, at least for the moment,
+	 * to store the sessions in a list and not in a stack.
+	 * Each request will than have to walk through that list, 
+	 * remove expired sessions and pick out its own....
+	 * this is O(n), but currently I gave no better idea at all.
+	 */
+	while (NULL != sess_queue->next) {
+		Session session = (Session)sess_queue->next->msg;
+
+		if (now >= session->livetime) {
+			Queue to_delete  = sess_queue->next;
+			sess_queue->next = sess_queue->next->next;
+			delete(session);
+			delete(to_delete);
+			continue;
+		}
+
+		if (NULL != sid && 0 == memcmp(session->id, sid, 36)) {
+			session->livetime = time(NULL) + SESSION_LIVETIME;
+			sess              = session;
+		}
+
+		sess_queue = sess_queue->next;
+	}
+
+	if (NULL == sess) {
+		sess = new(Session);
+		queuePut(sess_queue, sess);
+	}
+
+	return sess;
+}
+
+
+static
 void
-loginAdapter(Application application, HttpWorker worker, unsigned long sid)
+loginAdapter(Application application, HttpWorker worker, Session session)
 {
 	HashValue  username;
 	HashValue  password;
@@ -82,34 +148,7 @@ loginAdapter(Application application, HttpWorker worker, unsigned long sid)
 			(char *)(username->value), username->nvalue,
 			(char *)(password->value), password->nvalue);
 
-	if (applicationLogin(application, credential)) {
-		char    buffer[200];
-		size_t  nbuf;
-
-		if (NO_SESSION_SID == sid
-				|| NULL == applicationSessionGet(application, sid)) {
-			sid = applicationSessionStart(
-					application,
-					(char *)(username->value),
-					username->nvalue);
-		} else {
-			applicationSessionUpdate(
-					application,
-					sid,
-					username->value,
-					username->nvalue);
-		}
-
-		nbuf = sprintf(buffer, "sid=%lu;Path=/", sid);
-
-		worker->current_response = 
-			(HttpMessage)httpResponseSession(
-					applicationSessionGet(application, sid));
-
-		hashAdd(
-				worker->current_response->header,
-				new(HttpHeader, CSTRA("Set-Cookie"), buffer, nbuf));
-	} else {
+	if (! applicationLogin(application, credential, session)) {
 		worker->current_response =
 			new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
 	}
@@ -117,53 +156,42 @@ loginAdapter(Application application, HttpWorker worker, unsigned long sid)
 	delete(credential);
 }
 
-
 void
 applicationAdapterHttpUpdate(void * _this, void * subject)
 {
 	ApplicationAdapterHttp this = _this;
-	HttpWorker    worker  = (HttpWorker)subject;
-	unsigned long sid     = getSessionId(worker->current_request->cookies);
-	Session       session = applicationSessionGet(this->application, sid);
+	HttpWorker worker  = (HttpWorker)subject;
+	char *     sid;
+	Session    session;
+	char       buf[200];
+	size_t     nbuf;
 
-	if (NULL != session) {
-		if (time(NULL) < session->livetime) {
-			session->livetime = time(NULL) + SESSION_LIVETIME;
-		} else {
-			applicationSessionStop(this->application, sid);
-		}
+	sid     = getSessionId(worker->current_request->cookies);
+	session = getSession(this->application->active_sessions, sid);
 
-	}
+	nbuf = sprintf(buf, SESS_HEADER,
+			session->id, 
+			SESSION_LIVETIME,
+			session->livetime - time(NULL));
+	queuePut(
+			worker->additional_headers, 
+			new(HttpHeader, CSTRA("X-TaskramblerSession"), buf, nbuf));
+
+	nbuf = sprintf(buf, "sid=%s;Path=/", session->id);
+	queuePut(
+			worker->additional_headers, 
+			new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
 
 	if (0 == strcmp("POST", worker->current_request->method)) {
 		if (0 == strcmp("/login/", worker->current_request->path)) {
-			loginAdapter(this->application, worker, sid);
+			loginAdapter(this->application, worker, session);
 			return;
 		}
 	}
 
 	if (0 == strcmp("GET", worker->current_request->method)) {
-		if (0 == strcmp("/sessinfo/", worker->current_request->path)) {
-			worker->current_response = 
-				(HttpMessage)httpResponseSession(
-						applicationSessionGet(this->application, sid));
-			return;
-		}
-		
-		if (0 == strcmp("/sess/", worker->current_request->path)) {
-			if (NO_SESSION_SID == sid
-				|| NULL == applicationSessionGet(this->application, sid)) {
-				sid = applicationSessionStart(this->application, NULL, 0);
-			}
-
-			worker->current_response = 
-				(HttpMessage)httpResponseSession(
-						applicationSessionGet(this->application, sid));
-			return;
-		}
-
 		if (0 == strcmp("/randval/", worker->current_request->path)) {
-			if (NO_SESSION_SID != sid) {
+			if (NO_SESSION_SID != session->id) {
 				worker->current_response = 
 					(HttpMessage)httpResponseRandval(
 							this->application->val->timestamp,

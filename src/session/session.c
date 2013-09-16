@@ -26,6 +26,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <uuid/uuid.h>
 
 #include "session.h"
 #include "hash.h"
@@ -40,15 +41,13 @@ int
 sessionCtor(void * _this, va_list * params)
 {
 	Session this  = _this;
-	char * uname  = va_arg(* params, char *);
-	size_t nuname = va_arg(* params, size_t);
+	uuid_t  uuid;
 
 	this->livetime = time(NULL) + SESSION_LIVETIME;
-	this->id       = sdbm((unsigned char *)uname, nuname) ^ this->livetime;
+	uuid_generate(uuid);
+	uuid_unparse(uuid, this->id);
 
-	this->username = memMalloc(nuname + 1);
-	this->username[nuname] = 0;
-	memcpy(this->username, uname, nuname);
+	this->hash = sdbm((unsigned char *)this->id, 36);
 
 	return 0;
 }
@@ -57,18 +56,15 @@ static
 void
 sessionDtor(void * _this)
 {
-	Session this = _this;
-
-	MEM_FREE(this->username);
 }
 
 static
 unsigned long
-sessionGetId(void * _this)
+sessionGetHash(void * _this)
 {
 	Session this = _this;
 
-	return this->id;
+	return this->hash;
 }
 
 static
@@ -78,7 +74,7 @@ sessionHandleDouble(void * _this, void * _doub)
 }
 
 INIT_IFACE(Class, sessionCtor, sessionDtor, NULL);
-INIT_IFACE(Hashable, sessionGetId, sessionHandleDouble);
+INIT_IFACE(Hashable, sessionGetHash, sessionHandleDouble);
 CREATE_CLASS(Session, NULL, IFACE(Class), IFACE(Hashable));
 
 // vim: set ts=4 sw=4:

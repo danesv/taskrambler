@@ -36,19 +36,19 @@
 void
 applicationSessionUpdate(
 		Application   this,
-		unsigned long sid,
+		const char *  sid,
 		const char *  name,
 		size_t        nname)
 {
-	Session session = hashGetByVal(this->active_sessions, sid);
-
-	if (NULL != session) {
-		MEM_FREE(session->username);
-
-		session->username        = memMalloc(nname + 1);
-		session->username[nname] = 0;
-		memcpy(session->username, name, nname);
-	}
+//	Session session = hashGet(this->active_sessions, sid, 36);
+//
+//	if (NULL != session) {
+//		MEM_FREE(session->username);
+//
+//		session->username        = memMalloc(nname + 1);
+//		session->username[nname] = 0;
+//		memcpy(session->username, name, nname);
+//	}
 }
 
 // vim: set ts=4 sw=4:

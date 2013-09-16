@@ -55,6 +55,9 @@
 //#define DEFAULT_SECS	1
 #define DEFAULT_USECS	0
 
+#define LDAP_BASE	"ou=user,dc=yabrog,dc=weird-web-workers,dc=org"
+
+
 void nullhandler() {}
 
 void daemonize(void);
@@ -137,7 +140,7 @@ main()
 
 		default:
 			{
-				AuthLdap               auth;
+				AuthLdap               ldap;
 				Application            application;
 				ApplicationAdapterHttp adapterHttp;
 				HttpWorker             worker;
@@ -150,11 +153,12 @@ main()
 				close(shm);
 
 				logger = new(LoggerSyslog, LOGGER_DEBUG);
-				auth   = new(AuthLdap,
-						"ldap://hosted/",
-						CSTRA("ou=user,dc=yabrog,dc=weird-web-workers,dc=org"));
+
 				worker      = new(HttpWorker, "testserver");
-				application = new(Application, value, auth);
+				ldap        = new(
+						AuthLdap, "ldap://hosted/", CSTRA(LDAP_BASE));
+				application = new(Application, value, 1, ldap);
+
 				adapterHttp = new(ApplicationAdapterHttp, application);
 				subjectAttach(worker, adapterHttp);
 
@@ -206,7 +210,6 @@ main()
 				delete(worker);
 				delete(adapterHttp);
 				delete(application);
-				delete(auth);
 				delete(logger);
 
 				clearMimeTypes();

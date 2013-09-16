@@ -25,17 +25,20 @@
 
 #include <time.h>
 #include <sys/types.h>
+#include <user.h>
 
 #include "class.h"
 
-#define SESSION_LIVETIME	30
+// livetime of a session in seconds
+#define SESSION_LIVETIME	300 // 5 minutes
 
 
 CLASS(Session) {
-	unsigned long id;
+	char          id[37];
+	unsigned long hash;
 	time_t        livetime;
 
-	char *        username;
+	User          user;
 };
 
 #endif // __SESSION_H__

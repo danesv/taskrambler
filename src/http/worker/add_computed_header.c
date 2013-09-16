@@ -1,6 +1,5 @@
 /**
  * \file
- * Worker for processing HTTP request, response cycles.
  *
  * \author	Georg Hopp
  *
@@ -21,42 +20,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __HTTP_WORKER_H__
-#define __HTTP_WORKER_H__
-
 #include <sys/types.h>
-#include <time.h>
 
 #include "class.h"
-#include "hash.h"
-#include "http/parser.h"
-#include "http/writer.h"
-#include "cbuf.h"
-#include "session.h"
 
-#include "http/request.h"
-#include "http/response.h"
+#include "http/message.h"
+#include "http/header.h"
+#include "http/worker.h"
+
 #include "queue.h"
-#include "commons.h"
+
+#include "utils/memory.h"
 
 
-CLASS(HttpWorker) {
-	char * id;
+void
+httpWorkerAddComputedHeader(HttpWorker this)
+{
+	HttpHeader header = (HttpHeader)queueGet(this->additional_headers);
 
-	Cbuf   pbuf;
-	Hash   asset_pool;
-
-	void * application_adapter;
-
-	HttpRequest current_request;
-	HttpMessage current_response;
-
-	Queue  additional_headers;
-
-	HttpParser parser;
-	HttpWriter writer;
-};
-
-#endif // __HTTP_WORKER_H__
+	while(NULL != header) {
+		hashAdd(this->current_response->header, header);
+		header = (HttpHeader)queueGet(this->additional_headers);
+	}
+}
 
 // vim: set ts=4 sw=4:

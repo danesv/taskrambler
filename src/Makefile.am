@@ -34,7 +34,7 @@ bin_PROGRAMS = taskrambler
 
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
 taskrambler_CFLAGS  = $(CFLAGS) -Wall -DPWD=\"$(PWD)\" -I ../include/# $(COVERAGE_CFLAGS)
-taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap -lgdbm
+taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap -lgdbm -luuid
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
 SUBDIRS = asset auth cbuf class hash queue http \

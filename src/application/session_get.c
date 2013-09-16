@@ -33,9 +33,10 @@
 
 
 Session
-applicationSessionGet(Application this, unsigned long sid)
+applicationSessionGet(Application this, const char * sid)
 {
-	return hashGetByVal(this->active_sessions, sid);
+//	return hashGet(this->active_sessions, sid, 36);
+	return NULL;
 }
 
 // vim: set ts=4 sw=4:
