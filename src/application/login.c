@@ -34,9 +34,38 @@
 
 
 int
-applicationLogin(Application this, Credential credential)
+applicationLogin(
+		Application this,
+		Credential  credential,
+		Session     session)
 {
-	return authenticate(this->auth, credential);
+	size_t i;
+
+	for (i=0; i<this->nauth; i++) {
+		if (authenticate(this->auth, credential)) {
+			session->user = new(User, NULL);
+
+			switch (credential->type) {
+				case CRED_PASSWORD:
+					session->user->email  = CRED_PWD(credential).user;
+					session->user->nemail = &CRED_PWD(credential).nuser;
+
+					if (NULL == userLoad(session->user, this->users)) {
+						session->user->email = NULL;
+						session->user->nemail = NULL;
+					}
+
+					break;
+
+				default:
+					break;
+			}
+
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 // vim: set ts=4 sw=4:

@@ -31,7 +31,8 @@ WORKER = worker.c \
 	 worker/process.c \
 	 worker/answer.c \
 	 worker/get_asset.c \
-	 worker/add_common_header.c
+	 worker/add_common_header.c \
+	 worker/add_computed_header.c
 HEADER = header.c \
 	 header/to_string.c
 

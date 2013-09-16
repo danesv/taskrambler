@@ -33,6 +33,7 @@
 #include "class.h"
 #include "stream.h"
 #include "hash.h"
+#include "queue.h"
 #include "http/worker.h"
 #include "http/parser.h"
 #include "http/writer.h"
@@ -57,6 +58,8 @@ httpWorkerCtor(void * _this, va_list * params)
 	sprintf(cbuf_id, "%s_%s", "parser", id);
 	this->pbuf   = new(Cbuf, cbuf_id, PARSER_MAX_BUF);
 
+	this->additional_headers = new(Queue);
+
 	this->parser = new(HttpParser, this->pbuf);
 	this->writer = new(HttpWriter);
 
@@ -70,6 +73,8 @@ httpWorkerDtor(void * _this)
 	HttpWorker this = _this;
 
 	MEM_FREE(this->id);
+
+	delete(this->additional_headers);
 
 	delete(this->parser);
 	delete(this->writer);
@@ -89,6 +94,8 @@ httpWorkerClone(void * _this, void * _base)
 
 	this->asset_pool          = base->asset_pool;
 	this->application_adapter = base->application_adapter;
+
+	this->additional_headers = new(Queue);
 
 	this->parser = new(HttpParser, base->pbuf);
 	/*

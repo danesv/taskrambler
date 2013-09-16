@@ -25,8 +25,9 @@
 #include <stdarg.h>
 
 #include "class.h"
-#include "hash.h"
+#include "queue.h"
 #include "application/application.h"
+#include "storage.h"
 
 #include "utils/memory.h"
 
@@ -35,11 +36,20 @@ int
 applicationCtor(void * _this, va_list * params)
 {
 	Application this = _this;
+	size_t      i;
 
-	this->val  = va_arg(*params, struct randval *);
-	this->auth = va_arg(*params, void *);
+	this->val   = va_arg(*params, struct randval *);
 
-	this->active_sessions = new(Hash);
+	// initialize authenticators to use.
+	this->nauth = va_arg(*params, size_t);
+	this->auth  = memMalloc(this->nauth * sizeof(void*));
+	for (i=0; i<this->nauth; i++) {
+		this->auth[i] = va_arg(*params, void *);
+	}
+
+	this->active_sessions = new(Queue);
+
+	this->users = new(Storage, "./run/users.db");
 
 	return 0;
 }
@@ -49,8 +59,15 @@ void
 applicationDtor(void * _this)
 {
 	Application this = _this;
+	size_t      i;
 
 	delete(this->active_sessions);
+
+	for (i=0; i<this->nauth; i++) {
+		delete(this->auth[i]);
+	}
+
+	MEM_FREE(this->auth);
 }
 
 

@@ -27,8 +27,11 @@
 #include "class.h"
 
 #include "session.h"
-#include "hash.h"
+#include "queue.h"
 #include "auth/credential.h"
+#include "storage.h"
+#include "session.h"
+
 
 struct randval {
 	time_t timestamp;
@@ -36,18 +39,24 @@ struct randval {
 };
 
 CLASS(Application) {
-	Hash             active_sessions;
-	void           * auth;
-	struct randval * val;
+	// should be a list and not a queue but currently queue is 
+	// the closest I have.
+	Queue             active_sessions;
+
+	void           ** auth;
+	size_t            nauth;
+	struct randval  * val;
+
+	Storage           users;
 };
 
-// this should return a user account....now it only return success or failure.
-int           applicationLogin(Application, Credential);
-unsigned long applicationSessionStart(Application, const char *, size_t);
-void          applicationSessionStop(Application, unsigned long);
-void          applicationSessionUpdate(
-		Application, unsigned long, const char *, size_t);
-Session       applicationSessionGet(Application, unsigned long);
+int     applicationLogin(Application, Credential, Session);
+
+Session applicationSessionStart(Application);
+Session applicationSessionGet(Application, const char *);
+void    applicationSessionStop(Application, const char *);
+void    applicationSessionUpdate(
+		Application, const char *, const char *, size_t);
 
 #endif // __HTTP_HEADER_H__
 

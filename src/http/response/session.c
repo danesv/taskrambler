@@ -36,7 +36,7 @@
 #include "utils/memory.h"
 #include "hash.h"
 
-#define RESP_DATA "{\"id\":\"%lu\",\"timeout\":%d,\"timeleft\":%ld,\"username\":\"%s\"}"
+#define RESP_DATA "{\"id\":\"%s\",\"timeout\":%d,\"timeleft\":%ld}"
 
 HttpResponse
 httpResponseSession(Session session)
@@ -53,10 +53,9 @@ httpResponseSession(Session session)
 			new(HttpHeader, CSTRA("Content-Type"), CSTRA("application/json")));
 
 	nbuf = sprintf(buffer, RESP_DATA,
-			(NULL != session)? session->id : 0,
+			(NULL != session)? session->id : "",
 			(NULL != session)? SESSION_LIVETIME : 0,
-			(NULL != session)? session->livetime - time(NULL) : 0,
-			(NULL != session)? session->username : "");
+			(NULL != session)? session->livetime - time(NULL) : 0);
 
 	message->nbody = nbuf;
 	message->body  = memMalloc(nbuf);

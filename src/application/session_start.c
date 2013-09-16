@@ -26,20 +26,20 @@
 
 #include "class.h"
 #include "session.h"
-#include "hash.h"
+#include "queue.h"
 #include "application/application.h"
 
 #include "utils/memory.h"
 
 
-unsigned long
-applicationSessionStart(Application this, const char * name, size_t nname)
+Session
+applicationSessionStart(Application this)
 {
-	Session session = new(Session, name, nname);
+	Session session = new(Session);
 
-	hashAdd(this->active_sessions, session);
+	queuePut(this->active_sessions, session);
 
-	return session->id;
+	return session;
 }
 
 // vim: set ts=4 sw=4:
