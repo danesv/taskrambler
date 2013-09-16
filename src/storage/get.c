@@ -47,6 +47,9 @@ storageGet(
 		memcpy(*data, value.dptr, value.dsize);
 
 		free(value.dptr);
+	} else {
+		*data  = NULL;
+		*ndata = 0;
 	}
 }
 
