@@ -39,8 +39,8 @@ treeDestroy(Tree * this, TreeAction action)
          * If we come from the right so nothing and go to our
          * next parent.
          */
-        if (((NULL == TREE_LEFT(node) || previous == TREE_LEFT(node))
-					&& NULL == TREE_RIGHT(node))
+        if (((NULL == TREE_LEFT(node)
+				|| previous == TREE_LEFT(node)) && NULL == TREE_RIGHT(node))
 				|| previous == TREE_RIGHT(node)) {
             
             Tree parent = TREE_PARENT(node);
