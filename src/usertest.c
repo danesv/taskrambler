@@ -60,6 +60,11 @@ main(int argc, char * argv[])
 
     insertUser(
             users,
+            CSTRA("georg"),
+            CSTRA("Georg"),
+            CSTRA("Hopp"));
+    insertUser(
+            users,
             CSTRA("georg@steffers.org"),
             CSTRA("Georg"),
             CSTRA("Hopp"));
