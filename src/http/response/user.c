@@ -20,52 +20,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
-
-#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <time.h>
 #include <sys/types.h>
 
 #include "class.h"
-#include "auth.h"
+
+#include "http/response.h"
+#include "http/message.h"
+#include "http/header.h"
+#include "session.h"
 
 #include "utils/memory.h"
-#include "application/application.h"
+#include "hash.h"
 
+#define RESP_DATA "{\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
 
-int
-applicationLogin(
-		Application this,
-		Credential  credential,
-		Session     session)
+HttpResponse
+httpResponseUser(User user)
 {
-	size_t i;
+	char         buffer[200];
+	HttpResponse response;
+	HttpMessage  message;
+	size_t       nbuf;
 
-	for (i=0; i<this->nauth; i++) {
-		if (authenticate(this->auth[i], credential)) {
-			session->user = new(User, NULL);
+	response = new(HttpResponse, "HTTP/1.1", 200, "OK");
+	message  = (HttpMessage)response;
 
-			switch (credential->type) {
-				case CRED_PASSWORD:
-					session->user->email  = CRED_PWD(credential).user;
-					session->user->nemail = &CRED_PWD(credential).nuser;
+	hashAdd(message->header,
+			new(HttpHeader, CSTRA("Content-Type"), CSTRA("application/json")));
 
-					if (NULL == userLoad(session->user, this->users)) {
-						session->user->email = NULL;
-						session->user->nemail = NULL;
-					}
+	nbuf = sprintf(buffer, RESP_DATA,
+			(NULL != user)? user->email : "",
+			(NULL != user)? user->firstname : "",
+			(NULL != user)? user->surname : "");
 
-					break;
+	message->nbody = nbuf;
+	message->body  = memMalloc(nbuf);
+	memcpy(message->body, buffer, nbuf);
 
-				default:
-					break;
-			}
-
-			return 1;
-		}
-	}
-
-	return 0;
+	return response;
 }
 
 // vim: set ts=4 sw=4:

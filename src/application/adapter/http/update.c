@@ -151,6 +151,9 @@ loginAdapter(Application application, HttpWorker worker, Session session)
 	if (! applicationLogin(application, credential, session)) {
 		worker->current_response =
 			new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
+	} else {
+		worker->current_response =
+			(HttpMessage)httpResponseUser(session->user);
 	}
 
 	delete(credential);
@@ -190,8 +193,26 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	}
 
 	if (0 == strcmp("GET", worker->current_request->method)) {
+		if (0 == strcmp("/user/get/", worker->current_request->path)) {
+			worker->current_response = 
+				(HttpMessage)httpResponseUser(session->user);
+			return;
+		}
+
+//		if (0 == strcmp("/sess/", worker->current_request->path)) {
+//			if (NO_SESSION_SID == sid
+//					|| NULL == applicationSessionGet(this->application, sid)) {
+//				sid = applicationSessionStart(this->application, NULL, 0);
+//			}
+//
+//			worker->current_response = 
+//				(HttpMessage)httpResponseSession(
+//						applicationSessionGet(this->application, sid));
+//			return;
+//		}
+
 		if (0 == strcmp("/randval/", worker->current_request->path)) {
-			if (NO_SESSION_SID != session->id) {
+			if (NULL != session->user) {
 				worker->current_response = 
 					(HttpMessage)httpResponseRandval(
 							this->application->val->timestamp,

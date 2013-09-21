@@ -30,6 +30,7 @@
 #include "class.h"
 #include "http/message.h"
 #include "session.h"
+#include "user.h"
 #include "asset.h"
 
 
@@ -51,6 +52,7 @@ HttpResponse httpResponseMe();
 HttpResponse httpResponseLoginForm();
 HttpResponse httpResponseRandval(time_t, int);
 HttpResponse httpResponseSession(Session);
+HttpResponse httpResponseUser(User);
 HttpResponse httpResponseAsset(const char *, size_t);
 
 #endif // __HTTP_RESPONSE_H__

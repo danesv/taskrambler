@@ -8,6 +8,9 @@ function Session(sId)
 	this.timeout  = 0;
 	this.timeleft = 0;
 	this.username = "";
+	this.email     = "";
+	this.firstname = "";
+	this.surname   = "";
 	this.interval = null;
 
 	this.draw();
@@ -18,12 +21,15 @@ Session.prototype.loadJSON = function(data)
 	this.stop();
 
 	this.id       = ("0" == data.id)? "none" : data.id;
-	this.timeout  = data.timeout * 10;
-	this.timeleft = data.timeleft * 10;
-	this.username = data.username;
+	//this.timeout  = data.timeout * 10;
+	//this.timeleft = data.timeleft * 10;
+	//this.username = data.username;
+	this.email     = data.email;
+	this.firstname = data.firstname;
+	this.surname   = data.surname;
 
 	this.eSid.empty().append(this.id);
-	$("#main p:eq(1) span:eq(0)").empty().append(" " + this.username);
+	$("#main p:eq(1) span:eq(0)").empty().append(" " + this.firstname + " " + this.surname);
 
 	this.draw();
 	if (0 < this.timeleft)
@@ -68,6 +74,9 @@ Session.prototype.stop = function()
 	this.timeout  = 0;
 	this.timeleft = 0;
 	this.username = "";
+	this.email     = "";
+	this.firstname = "";
+	this.surname   = "";
 
 	this.eSid.empty().append(this.id);
 	$("#main p:eq(1) span:eq(0)").empty().append(" " + this.username);

@@ -17,7 +17,8 @@ RESP   = response.c \
 	 response/login_form.c \
 	 response/asset.c \
 	 response/randval.c \
-	 response/session.c
+	 response/session.c \
+	 response/user.c
 PARSER = parser.c \
 	 parser/parse.c \
 	 parser/new_message.c \
