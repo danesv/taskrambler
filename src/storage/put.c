@@ -24,8 +24,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "storage.h"
 #include "class.h"
+#include "storage/storage.h"
 
 #include "utils/memory.h"
 

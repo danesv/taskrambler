@@ -29,7 +29,7 @@
 #include "session.h"
 #include "queue.h"
 #include "auth/credential.h"
-#include "storage.h"
+#include "storage/storage.h"
 #include "session.h"
 #include "user.h"
 

@@ -195,14 +195,14 @@ signupAdapter(Application application, HttpWorker worker, Session session)
 			NULL == firstname ||
 			NULL == surname) {
 		// maybe this is not a 500...have to check repsonse codes.
-		worker->current_response = httpResponse500();
+		worker->current_response = (HttpMessage)httpResponse500();
 		return;
 	}
 
 	if (password->nvalue != pwrepeat->nvalue ||
 			0 != memcmp(password->value, pwrepeat->value, password->nvalue)) {
 		// maybe this is not a 500...have to check repsonse codes.
-		worker->current_response = httpResponse500();
+		worker->current_response = (HttpMessage)httpResponse500();
 		return;
 	}
 
@@ -217,7 +217,7 @@ signupAdapter(Application application, HttpWorker worker, Session session)
 			(char *)(surname->value), surname->nvalue);
 
 	if (! applicationSignup(application, credential, user, session)) {
-		worker->current_response = httpResponse500();
+		worker->current_response = (HttpMessage)httpResponse500();
 	} else {
 		loginAdapter(application, worker, session);
 	}

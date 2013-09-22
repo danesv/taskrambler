@@ -27,7 +27,7 @@
 #include "class.h"
 #include "queue.h"
 #include "application/application.h"
-#include "storage.h"
+#include "storage/storage.h"
 
 #include "utils/memory.h"
 
@@ -40,6 +40,16 @@ applicationCtor(void * _this, va_list * params)
 
 	this->val   = va_arg(*params, struct randval *);
 
+	/*
+	 * @TODO for both of these...each user should be identified
+	 * by a number...that way I could use that number in the
+	 * passwords db and no direct association between email and
+	 * password could be made when someone get the hands on the
+	 * password database.
+	 */
+	this->users     = va_arg(*params, Storage);
+	this->passwords = va_arg(*params, Storage);
+
 	// initialize authenticators to use.
 	this->nauth = va_arg(*params, size_t);
 	this->auth  = memMalloc(this->nauth * sizeof(void*));
@@ -48,16 +58,6 @@ applicationCtor(void * _this, va_list * params)
 	}
 
 	this->active_sessions = new(Queue);
-
-	/*
-	 * @TODO for both of these...each user should be identified
-	 * by a number...that way I could use that number in the
-	 * passwords db and no direct association between email and
-	 * password could be made when someone get the hands on the
-	 * password database.
-	 */
-	this->users     = new(Storage, "./run/users.db");
-	this->passwords = new(Storage, "./run/passwords.db");
 
 	return 0;
 }
@@ -69,8 +69,6 @@ applicationDtor(void * _this)
 	Application this = _this;
 	size_t      i;
 
-	delete(this->passwords);
-	delete(this->users);
 	delete(this->active_sessions);
 
 	for (i=0; i<this->nauth; i++) {

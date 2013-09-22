@@ -21,7 +21,7 @@
  */
 
 #include "class.h"
-#include "storage.h"
+#include "storage/storage.h"
 #include "auth.h"
 #include "commons.h"
 #include "utils/memory.h"
@@ -90,6 +90,6 @@ authStorageAuthenticate(void * _this, Credential cred)
 
 INIT_IFACE(Class, authStorageCtor, authStorageDtor, NULL);
 INIT_IFACE(Auth, authStorageAuthenticate);
-CREATE_CLASS(AuthLdap, NULL, IFACE(Class), IFACE(Auth));
+CREATE_CLASS(AuthStorage, NULL, IFACE(Class), IFACE(Auth));
 
 // vim: set ts=4 sw=4:

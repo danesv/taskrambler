@@ -52,21 +52,4 @@ sdbm(const unsigned char * str, size_t len)
 	return hash;
 }
 
-
-/*
- * this will use openssl to hash a given password with a given salt.
- * If salt is NULL a random salt is generated and returned in salt.
- * The memory for this is allocated via memMalloc and has to be freed
- * by the caller via MEM_FREE.
- * The size of the salt is always SALT_SIZE and that of hash is always
- * hash size. Both are defined in auth/storage.h
- */
-int
-hash_pw(
-		const char    *  password,
-		const size_t     npassword,
-		unsigned char *  pw_hash,
-		unsigned char ** salt)
-{
-}
 // vim: set ts=4 sw=4:
