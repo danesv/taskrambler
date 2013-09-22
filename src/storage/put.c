@@ -29,13 +29,32 @@
 
 #include "utils/memory.h"
 
-void
+typedef enum e_StoragePutResults {
+	SPR_OK        = 0,
+	SPR_READ_ONLY = 1,
+	SPR_EXISTS    = 2,
+	SPR_UNKNOWN   = -1
+} StoragePutResult;
+
+
+StoragePutResult
 storagePut(Storage this, char * _key, size_t nkey, char * data, size_t ndata)
 {
 	datum key   = {_key, nkey};
 	datum value = {data, ndata};
 
-	gdbm_store(this->gdbm, key, value, GDBM_REPLACE);
+	switch (gdbm_store(this->gdbm, key, value, GDBM_INSERT)) {
+		case 0:
+			return SPR_OK;
+		case 1:
+			return SPR_EXISTS;
+		case -1:
+			return SPR_READ_ONLY;
+		default:
+			return SPR_UNKNOWN;
+	}
+
+	return SPR_UNKNOWN;
 }
 
 // vim: set ts=4 sw=4:

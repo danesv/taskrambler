@@ -35,6 +35,7 @@
 #include "http/header.h"
 #include "http/response.h"
 #include "auth/credential.h"
+#include "user.h"
 
 #include "utils/memory.h"
 
@@ -121,7 +122,6 @@ getSession(Queue sess_queue, const char * sid)
 	return sess;
 }
 
-
 static
 void
 loginAdapter(Application application, HttpWorker worker, Session session)
@@ -159,6 +159,73 @@ loginAdapter(Application application, HttpWorker worker, Session session)
 	delete(credential);
 }
 
+static
+void
+signupAdapter(Application application, HttpWorker worker, Session session)
+{
+	HashValue email;
+	HashValue password;
+	HashValue pwrepeat;
+	HashValue firstname;
+	HashValue surname;
+
+	Credential credential;
+	User       user;
+
+	email = hashGet(
+			worker->current_request->post,
+			CSTRA("email"));
+	password = hashGet(
+			worker->current_request->post,
+			CSTRA("password"));
+	pwrepeat = hashGet(
+			worker->current_request->post,
+			CSTRA("pwrepeat"));
+	firstname = hashGet(
+			worker->current_request->post,
+			CSTRA("firstname"));
+	surname = hashGet(
+			worker->current_request->post,
+			CSTRA("surname"));
+
+	if (
+			NULL == email ||
+			NULL == password ||
+			NULL == pwrepeat ||
+			NULL == firstname ||
+			NULL == surname) {
+		// maybe this is not a 500...have to check repsonse codes.
+		worker->current_response = httpResponse500();
+		return;
+	}
+
+	if (password->nvalue != pwrepeat->nvalue ||
+			0 != memcmp(password->value, pwrepeat->value, password->nvalue)) {
+		// maybe this is not a 500...have to check repsonse codes.
+		worker->current_response = httpResponse500();
+		return;
+	}
+
+	credential = new(Credential,
+			CRED_PASSWORD,
+			(char *)(email->value), email->nvalue,
+			(char *)(password->value), password->nvalue);
+
+	user = new(User,
+			(char *)(email->value), email->nvalue,
+			(char *)(firstname->value), firstname->nvalue,
+			(char *)(surname->value), surname->nvalue);
+
+	if (! applicationSignup(application, credential, user, session)) {
+		worker->current_response = httpResonse500();
+	} else {
+		loginAdapter(application, worker, session);
+	}
+
+	delete(credential);
+}
+
+
 void
 applicationAdapterHttpUpdate(void * _this, void * subject)
 {
@@ -188,6 +255,11 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	if (0 == strcmp("POST", worker->current_request->method)) {
 		if (0 == strcmp("/login/", worker->current_request->path)) {
 			loginAdapter(this->application, worker, session);
+			return;
+		}
+
+		if (0 == strcmp("/signup/", worker->current_request->path)) {
+			signupAdapter(this->application, worker, session);
 			return;
 		}
 	}
