@@ -1,0 +1,45 @@
+#
+# This is a valgrind suppression file that should be used when using valgrind.
+#
+# See Misc/README.valgrind for more information.
+{
+	GDBM open on non existent file
+	Memcheck:Param
+	write(buf)
+	fun:__write_nocancel
+	fun:_gdbm_full_write
+	fun:gdbm_open
+	fun:storageCtor
+	fun:classNew
+	fun:main
+}
+
+{
+	GDBM close - to be honest I don't know what it complains about.
+	Memcheck:Param
+	msync(start)
+	fun:__msync_nocancel
+	fun:gdbm_close
+	fun:storageDtor
+	fun:classDelete
+	fun:main
+}
+
+{
+	Uninitialized bytes in openldap
+	Memcheck:Param
+	sendmsg(mmsg[0].msg_hdr)
+	fun:sendmmsg
+	fun:__libc_res_nsend
+	fun:__libc_res_nquery
+	fun:__libc_res_nquerydomain
+	fun:__libc_res_nsearch
+	fun:_nss_dns_gethostbyname4_r
+	fun:gaih_inet
+	fun:getaddrinfo
+	fun:ldap_connect_to_host
+	fun:ldap_int_open_connection
+	fun:ldap_new_connection
+	fun:ldap_open_defconn
+}
+
