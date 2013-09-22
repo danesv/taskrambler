@@ -26,7 +26,7 @@
 #include <sys/types.h>
 
 #include "class.h"
-#include "storage.h"
+#include "storage/storage.h"
 
 
 CLASS(User) {

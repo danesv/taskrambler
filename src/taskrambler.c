@@ -140,7 +140,10 @@ main()
 
 		default:
 			{
-				AuthLdap               ldap;
+				Storage                users;
+				Storage                passwords;
+				AuthLdap               authLdap;
+				AuthStorage            authStorage;
 				Application            application;
 				ApplicationAdapterHttp adapterHttp;
 				HttpWorker             worker;
@@ -154,12 +157,27 @@ main()
 
 				logger = new(LoggerSyslog, LOGGER_DEBUG);
 
-				worker      = new(HttpWorker, "testserver");
-				ldap        = new(
-						AuthLdap, "ldap://hosted/", CSTRA(LDAP_BASE));
-				application = new(Application, value, 1, ldap);
+				authLdap = new(
+						AuthLdap,
+						"ldap://hosted/",
+						CSTRA(LDAP_BASE));
+
+				users       = new(Storage, "./run/users.db");
+				passwords   = new(Storage, "./run/passwords.db");
+				authStorage = new(AuthStorage, passwords);
+
+				application = new(
+						Application,
+						value,
+						users,
+						passwords,
+						2,
+						authLdap,
+						authStorage);
 
 				adapterHttp = new(ApplicationAdapterHttp, application);
+
+				worker = new(HttpWorker, "testserver");
 				subjectAttach(worker, adapterHttp);
 
 				server = new(Server, logger, worker, 11212, SOMAXCONN);
@@ -210,6 +228,10 @@ main()
 				delete(worker);
 				delete(adapterHttp);
 				delete(application);
+				delete(authStorage);
+				delete(passwords);
+				delete(users);
+				delete(authLdap);
 				delete(logger);
 
 				clearMimeTypes();

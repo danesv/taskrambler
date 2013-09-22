@@ -41,8 +41,8 @@ applicationSignup(
 		Session     session)
 {
 	unsigned char   hash_data[SALT_SIZE+HASH_SIZE];
-	unsigned char * salt = hash_data;
-	unsigned char * hash = hash_data + SALT_SIZE;
+	unsigned char * salt = NULL;
+	unsigned char * hash = hash_data+SALT_SIZE;
 
 	if (NULL != userLoad(user, this->users)) {
 		/*
@@ -66,6 +66,10 @@ applicationSignup(
 		 */
 		return 0;
 	}
+
+	memcpy(hash_data, salt, SALT_SIZE);
+
+	MEM_FREE(salt);
 
 	storagePut(
 			this->passwords,

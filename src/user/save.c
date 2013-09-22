@@ -24,7 +24,7 @@
 #include <string.h>
 
 #include "user.h"
-#include "storage.h"
+#include "storage/storage.h"
 #include "class.h"
 
 #include "utils/memory.h"
