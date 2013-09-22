@@ -20,33 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __STORAGE_H__
-#define __STORAGE_H__
+#ifndef __AUTH_STORAGE_H__
+#define __AUTH_STORAGE_H__
 
-#include <gdbm.h>
 #include <sys/types.h>
+
+#include <openssl/sha.h>
 
 #include "class.h"
 
 
-typedef enum e_StoragePutResults {
-	SPR_OK        = 0,
-	SPR_READ_ONLY = 1,
-	SPR_EXISTS    = 2,
-	SPR_UNKNOWN   = -1
-} StoragePutResult;
+#define SALT_SIZE	32
+#define HASH_SIZE	SHA512_DIGEST_LENGTH
 
 
-CLASS(Storage) {
-	GDBM_FILE   gdbm;
-	char      * db_name;
+CLASS(AuthStorage) {
+	Storage store;
 };
 
-StoragePutResult storagePut(Storage, char *, size_t, char *, size_t);
-StoragePutResult storageUpdate(Storage, char *, size_t, char *, size_t);
-void storageGet(Storage, char *, size_t, char **, size_t *);
+/*
+ * @TODO In future this should use a more general purpose hash
+ * function, which then will be in utils/hash.c
+ */
+int hash_pw(const char *, const size_t, unsigned char *, unsigned char **);
 
-#endif // __STORAGE_H__
+#endif // __AUTH_STORAGE_H__
 
 // vim: set ts=4 sw=4:
-

@@ -39,7 +39,10 @@ userSave(User this, Storage storage)
 		*this->nsurname + 1 +
 		3 * sizeof(size_t);
 
-	storagePut(
+	/*
+	 * @TODO user return value for error handling 
+	 */
+	storageUpdate(
 			storage,
 			this->email, *this->nemail,
 			this->email, storage_size);

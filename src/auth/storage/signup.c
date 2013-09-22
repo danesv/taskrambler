@@ -20,33 +20,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __STORAGE_H__
-#define __STORAGE_H__
-
-#include <gdbm.h>
 #include <sys/types.h>
 
 #include "class.h"
+#include "storage.h"
+#include "auth/storage.h"
+#include "auth/credential.h"
 
+int
+authStorageSignup(AuthStorage this, Credential cred)
+{
+	unsigned char hash[SALT_SIZE+HASH_SIZE];
 
-typedef enum e_StoragePutResults {
-	SPR_OK        = 0,
-	SPR_READ_ONLY = 1,
-	SPR_EXISTS    = 2,
-	SPR_UNKNOWN   = -1
-} StoragePutResult;
+	if (FALSE == hash_pw(
+				CRED_PWD(cred).pass,
+				CRED_PWD(cred).npass,
+				&hash,
+				&(hash+SALT_SIZE))) {
+		return 0;
+	}
 
+	storagePut(
+			this->store,
+			CRED_PWD(cred).user,
+			CRED_PWD(cred).nuser,
+			hash,
+			SALT_SIZE + HASH_SIZE);
 
-CLASS(Storage) {
-	GDBM_FILE   gdbm;
-	char      * db_name;
-};
-
-StoragePutResult storagePut(Storage, char *, size_t, char *, size_t);
-StoragePutResult storageUpdate(Storage, char *, size_t, char *, size_t);
-void storageGet(Storage, char *, size_t, char **, size_t *);
-
-#endif // __STORAGE_H__
+	return 1;
+}
 
 // vim: set ts=4 sw=4:
-

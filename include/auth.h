@@ -25,6 +25,7 @@
 
 #include "auth/auth.h"
 #include "auth/ldap.h"
+#include "auth/storage.h"
 #include "auth/credential.h"
 #include "auth/interface/auth.h"
 

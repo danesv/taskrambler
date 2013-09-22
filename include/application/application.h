@@ -31,6 +31,7 @@
 #include "auth/credential.h"
 #include "storage.h"
 #include "session.h"
+#include "user.h"
 
 
 struct randval {
@@ -48,9 +49,11 @@ CLASS(Application) {
 	struct randval  * val;
 
 	Storage           users;
+	Storage           passwords;
 };
 
 int     applicationLogin(Application, Credential, Session);
+int     applicationSignup(Application, Credential, User, Session);
 
 Session applicationSessionStart(Application);
 Session applicationSessionGet(Application, const char *);
