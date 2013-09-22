@@ -217,7 +217,7 @@ signupAdapter(Application application, HttpWorker worker, Session session)
 			(char *)(surname->value), surname->nvalue);
 
 	if (! applicationSignup(application, credential, user, session)) {
-		worker->current_response = httpResonse500();
+		worker->current_response = httpResponse500();
 	} else {
 		loginAdapter(application, worker, session);
 	}

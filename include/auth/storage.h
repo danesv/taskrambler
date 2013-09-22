@@ -28,6 +28,8 @@
 #include <openssl/sha.h>
 
 #include "class.h"
+#include <storage.h> // storage must move to storage/storage.h
+                     // to be loadable with "
 
 
 #define SALT_SIZE	32

@@ -57,7 +57,7 @@ applicationCtor(void * _this, va_list * params)
 	 * password database.
 	 */
 	this->users     = new(Storage, "./run/users.db");
-	this->passwords = new(Storage, "./run/passwords.db")
+	this->passwords = new(Storage, "./run/passwords.db");
 
 	return 0;
 }
