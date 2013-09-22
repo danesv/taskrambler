@@ -22,9 +22,9 @@
 
 #include "class.h"
 #include "storage.h"
-#include "auth/storage.h"
-#include "auth/credential.h"
+#include "auth.h"
 #include "commons.h"
+#include "utils/memory.h"
 
 static
 int
@@ -61,7 +61,7 @@ authStorageAuthenticate(void * _this, Credential cred)
 			this->store,
 			CRED_PWD(cred).user,
 			CRED_PWD(cred).nuser,
-			&found_hash,
+			(char **)&found_hash,
 			&nfound_hash);
 
 	if (NULL == found_hash || (SALT_SIZE + HASH_SIZE) != nfound_hash) {

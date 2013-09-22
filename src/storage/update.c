@@ -30,7 +30,12 @@
 #include "utils/memory.h"
 
 StoragePutResult
-storagePut(Storage this, char * _key, size_t nkey, char * data, size_t ndata)
+storageUpdate(
+		Storage   this,
+		char    * _key,
+		size_t    nkey,
+		char    * data,
+		size_t    ndata)
 {
 	datum key   = {_key, nkey};
 	datum value = {data, ndata};

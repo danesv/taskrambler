@@ -29,13 +29,6 @@
 
 #include "utils/memory.h"
 
-typedef enum e_StoragePutResults {
-	SPR_OK        = 0,
-	SPR_READ_ONLY = 1,
-	SPR_EXISTS    = 2,
-	SPR_UNKNOWN   = -1
-} StoragePutResult;
-
 
 StoragePutResult
 storagePut(Storage this, char * _key, size_t nkey, char * data, size_t ndata)

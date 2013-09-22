@@ -36,11 +36,13 @@
 int
 applicationSignup(
 		Application this,
-		Credential  credential,
+		Credential  cred,
 		User        user,
 		Session     session)
 {
-	unsigned char hash[SALT_SIZE+HASH_SIZE];
+	unsigned char   hash_data[SALT_SIZE+HASH_SIZE];
+	unsigned char * salt = hash_data;
+	unsigned char * hash = hash_data + SALT_SIZE;
 
 	if (NULL != userLoad(user, this->users)) {
 		/*
@@ -56,8 +58,8 @@ applicationSignup(
 	if (FALSE == hash_pw(
 				CRED_PWD(cred).pass,
 				CRED_PWD(cred).npass,
-				&hash,
-				&(hash+SALT_SIZE))) {
+				hash,
+				&salt)) {
 		/*
 		 * @TODO if we come here we have to delete the previously saved
 		 * user again...
@@ -69,7 +71,7 @@ applicationSignup(
 			this->passwords,
 			CRED_PWD(cred).user,
 			CRED_PWD(cred).nuser,
-			hash,
+			(char *)hash_data,
 			SALT_SIZE + HASH_SIZE);
 
 	return 0;
