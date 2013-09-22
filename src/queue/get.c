@@ -26,8 +26,8 @@
 void *
 queueGet(Queue this)
 {
-	Queue  first;
-	void * msg;
+	Queue   first;
+	void  * msg;
 
 	if (NULL == this->first) {
 		return NULL;

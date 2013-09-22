@@ -223,6 +223,7 @@ signupAdapter(Application application, HttpWorker worker, Session session)
 	}
 
 	delete(credential);
+	delete(user);
 }
 
 

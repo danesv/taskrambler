@@ -28,8 +28,15 @@ Session.prototype.loadJSON = function(data)
 	this.firstname = data.firstname;
 	this.surname   = data.surname;
 
+	name = " ";
+
 	this.eSid.empty().append(this.id);
-	$("#main p:eq(1) span:eq(0)").empty().append(" " + this.firstname + " " + this.surname);
+	if ('(null)' == this.firstname || '(null)' == this.surname) {
+		name += this.email;
+	} else {
+		name += this.firstname + " " + this.surname;
+	}
+	$("#main p:eq(1) span:eq(0)").empty().append(name);
 
 	this.draw();
 	if (0 < this.timeleft)

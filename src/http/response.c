@@ -45,7 +45,7 @@ httpResponseCtor(void * _this, va_list * params)
 	this->status = va_arg(* params, unsigned int);
 	reason       = va_arg(* params, char *);
 
-	this->reason  = memCalloc(1, strlen(reason)+1);
+	this->reason = memCalloc(1, strlen(reason)+1);
 	strcpy(this->reason, reason);
 
 	return 0;
