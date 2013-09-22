@@ -50,11 +50,7 @@ applicationLogin(
 					session->user->email  = CRED_PWD(credential).user;
 					session->user->nemail = &CRED_PWD(credential).nuser;
 
-					if (NULL == userLoad(session->user, this->users)) {
-						session->user->email = NULL;
-						session->user->nemail = NULL;
-					}
-
+					userLoad(session->user, this->users);
 					break;
 
 				default:

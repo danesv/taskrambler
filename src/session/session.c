@@ -40,7 +40,7 @@ static
 int
 sessionCtor(void * _this, va_list * params)
 {
-	Session this  = _this;
+	Session this = _this;
 	uuid_t  uuid;
 
 	this->livetime = time(NULL) + SESSION_LIVETIME;
@@ -56,6 +56,9 @@ static
 void
 sessionDtor(void * _this)
 {
+	Session this = _this;
+
+	delete(this->user);
 }
 
 static

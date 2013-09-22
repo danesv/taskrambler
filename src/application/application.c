@@ -71,10 +71,6 @@ applicationDtor(void * _this)
 
 	delete(this->active_sessions);
 
-	for (i=0; i<this->nauth; i++) {
-		delete(this->auth[i]);
-	}
-
 	MEM_FREE(this->auth);
 }
 

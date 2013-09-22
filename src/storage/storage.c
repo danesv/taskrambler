@@ -60,7 +60,10 @@ storageDtor(void * _this)
 	Storage this = _this;
 
 	if (NULL != this->db_name) MEM_FREE(this->db_name);
-	if (NULL != this->gdbm)    gdbm_close(this->gdbm);
+	if (NULL != this->gdbm) {
+		gdbm_close(this->gdbm);
+		this->gdbm = NULL;
+	}
 }
 
 INIT_IFACE(Class, storageCtor, storageDtor, NULL);
