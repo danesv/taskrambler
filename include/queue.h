@@ -40,6 +40,8 @@ CLASS(Queue) {
 	 * first and last are only available in the initial queue
 	 * element (the root). This elelment does not contain any message
 	 * and exists only for organizational purpose.
+	 * @TODO next and first always have to be the same...so get rid
+	 * of first.
 	 */
 	Queue  first;
 	Queue  last;

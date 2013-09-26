@@ -62,8 +62,9 @@ static
 Session
 getSession(Queue sess_queue, const char * sid)
 {
-	Session sess = NULL;
-	time_t  now  = time(NULL);
+	Session sess    = NULL;
+	Queue   current = sess_queue;
+	time_t  now     = time(NULL);
 
 	/**
 	 * session start or update
@@ -95,12 +96,25 @@ getSession(Queue sess_queue, const char * sid)
 	 * remove expired sessions and pick out its own....
 	 * this is O(n), but currently I gave no better idea at all.
 	 */
-	while (NULL != sess_queue->next) {
-		Session session = (Session)sess_queue->next->msg;
+	while (NULL != current->next) {
+		Session session = (Session)current->next->msg;
 
 		if (now >= session->livetime) {
-			Queue to_delete  = sess_queue->next;
-			sess_queue->next = sess_queue->next->next;
+			Queue to_delete = current->next;
+
+			if (to_delete == sess_queue->first) {
+				sess_queue->first = to_delete->next;
+			}
+			if (to_delete == sess_queue->last) {
+				if (to_delete == sess_queue->next) {
+					sess_queue->last = NULL;
+				} else {
+					sess_queue->last = current;
+				}
+			}
+
+			current->next = to_delete->next;
+
 			delete(session);
 			delete(to_delete);
 			continue;
@@ -111,7 +125,7 @@ getSession(Queue sess_queue, const char * sid)
 			sess              = session;
 		}
 
-		sess_queue = sess_queue->next;
+		current = current->next;
 	}
 
 	if (NULL == sess) {
