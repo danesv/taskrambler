@@ -67,7 +67,6 @@ void
 applicationDtor(void * _this)
 {
 	Application this = _this;
-	size_t      i;
 
 	delete(this->active_sessions);
 
