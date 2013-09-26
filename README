@@ -1,3 +1,5 @@
+$Id$
+
 Actually this is some kind of server toolkit, also containing
 a class and interface toolkit for C.
 I use a gcc preprocessor extension to use empty variadoc
