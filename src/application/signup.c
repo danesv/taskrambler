@@ -78,7 +78,7 @@ applicationSignup(
 			(char *)hash_data,
 			SALT_SIZE + HASH_SIZE);
 
-	return 0;
+	return 1;
 }
 
 // vim: set ts=4 sw=4:

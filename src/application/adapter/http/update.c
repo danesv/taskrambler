@@ -151,6 +151,12 @@ loginAdapter(Application application, HttpWorker worker, Session session)
 			worker->current_request->post,
 			CSTRA("password"));
 
+	if (NULL == username) {
+		username = hashGet(
+				worker->current_request->post,
+				CSTRA("email"));
+	}
+
 	if (NULL == username || NULL == password) {
 		worker->current_response =
 			new(HttpResponse, "HTTP/1.1", 403, "Forbidden");

@@ -18,6 +18,10 @@ $(document).ready(function() {
 	});
 
 	$("div#menu ul li:eq(3)").click(function() {
+		$("#signup").removeClass("hide");
+	});
+
+	$("div#menu ul li:eq(4)").click(function() {
 		$("#login").removeClass("hide");
 	});
 
@@ -31,6 +35,14 @@ $(document).ready(function() {
 			$("#login form").serialize(),
 			$.proxy(sess.loadJSON, sess));
 		$("#login").addClass("hide");
+	});
+
+	$("#signup form").submit(function(event) {
+		event.preventDefault();
+		$.post("/signup/",
+			$("#signup form").serialize(),
+			$.proxy(sess.loadJSON, sess));
+		$("#signup").addClass("hide");
 	});
 });
 

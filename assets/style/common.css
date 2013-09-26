@@ -8,8 +8,20 @@ div#randval {
     border-radius:    10px;
 }
 
+div#signup {
+    padding:          5px;
+    top:              20px;
+    left:             20px;
+    position:         fixed;
+    background-color: white;
+    border:           1px solid black;
+    border-radius:    10px;
+}
+
 div#login {
     padding:          5px;
+    top:              20px;
+    left:             20px;
     position:         fixed;
     background-color: white;
     border:           1px solid black;
