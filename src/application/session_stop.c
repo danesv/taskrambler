@@ -26,17 +26,15 @@
 
 #include "class.h"
 #include "session.h"
-#include "hash.h"
 #include "application/application.h"
 
 #include "utils/memory.h"
 
 
 void
-applicationSessionStop(Application this, const char * sid)
+applicationSessionStop(Application this, Session session)
 {
-	//Session session = hashDelete(this->active_sessions, sid, 36);
-	//delete(session);
+	session->livetime = 0;
 }
 
 // vim: set ts=4 sw=4:
