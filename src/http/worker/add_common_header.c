@@ -33,6 +33,8 @@
 #include "utils/memory.h"
 #include "utils/http.h"
 
+#include "config.h"
+
 
 void
 httpWorkerAddCommonHeader(HttpWorker this)
@@ -50,7 +52,7 @@ httpWorkerAddCommonHeader(HttpWorker this)
 	}
 
 	hashAdd(this->current_response->header,
-			new(HttpHeader, CSTRA("Server"), CSTRA("testserver")));
+			new(HttpHeader, CSTRA("Server"), CSTRA(PACKAGE_STRING)));
 
 	switch(((HttpResponse)this->current_response)->status) {
 		case 304:
