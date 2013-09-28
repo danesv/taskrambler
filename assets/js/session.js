@@ -13,7 +13,7 @@ function Session(sInfo, sId, sUser)
 	this.surname   = "";
 	this.interval = null;
 
-	this.draw();
+	//this.draw();
 }
 
 Session.prototype.loadUserJSON = function(data)
@@ -25,13 +25,20 @@ Session.prototype.loadUserJSON = function(data)
 	name = "";
 	if ('' == this.email) {
 		name = "not logged in";
+		$("li.signup").removeClass("hide");
+		$("li.login").removeClass("hide");
+		$("li.logout").addClass("hide");
 	} else {
 		if ('' == this.firstname || '' == this.surname) {
 			name += this.email;
 		} else {
 			name += this.firstname + " " + this.surname;
 		}
+		$("li.signup").addClass("hide");
+		$("li.login").addClass("hide");
+		$("li.logout").removeClass("hide");
 	}
+
 	this.eUser.empty().append(name);
 }
 
@@ -64,7 +71,7 @@ Session.prototype.draw = function()
 Session.prototype.start = function()
 {
 	if (null === this.interval) {
-		this.interval = setInterval($.proxy(this.process, this), 500);
+		this.interval = setInterval($.proxy(this.process, this), 1000);
 	}
 }
 
@@ -75,7 +82,7 @@ Session.prototype.process = function()
 	}
 
 	else {
-		this.timeleft-=5;
+		this.timeleft -= 10;
 		this.draw();
 	}
 }

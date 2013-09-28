@@ -28,8 +28,9 @@ div#login {
     border-radius:    10px;
 }
 
-div.hide {
-    top: -500px !important;
+.hide {
+    top:     -500px !important;
+    display: none !important;
 }
 
 .small {

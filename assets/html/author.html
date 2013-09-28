@@ -5,12 +5,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
 		<title>Taskrambler - Author</title>
+		<link rel="stylesheet" type="text/css" href="/style/common.css">
 		<link rel="stylesheet" type="text/css" href="/style/taskrambler.css" />
 		<link rel="shortcut icon" href="/favicon.ico?v=2" />
+		<script type="text/javascript" src="/js/jquery.js"></script>
+		<script type="text/javascript" src="/js/serverval.js"></script>
+		<script type="text/javascript" src="/js/session.js"></script>
+		<script type="text/javascript" src="/js/init.js"></script>
 	</head>
 
 	<body> 
 		<div id="page">
+			<div id="statusline">
+				<ul>
+					<li>
+					<div id="sessinfo">
+						Session: <canvas width="100px" height="5px"></canvas>
+					</div>
+					</li>
+					<li id="user"></li>
+					<li id="version"></li>
+				</ul>
+				<br />Session ID: <span id="sessid"></span>
+			</div>
+
 			<div id="title">
 				<a href="/main.html">
 					<div class="left">
@@ -29,11 +47,12 @@
 					<li><a href="/author.html">author</a></li>
 					<li><a href="/documentation.html">documentation</a></li>
 					<li><a href="/download.html">download</a></li>
-					<li><a href="/example.html">example</a></li>
+					<li class="signup"><span>signup</span></li>
+					<li class="login"><span>login</span></li>
+					<li class="logout hide"><span>logout</span></li>
 					<li class="menuedge"></li>
 					<div></div>
 				</ul>
-				<div class="clear"></div>
 			</div>
 
 			<div id="main">
@@ -79,6 +98,32 @@
 				&copy; 2013 Georg Hopp -
 				<a href="mailto:georg@steffers.org">contact-email</a>
 			</div>
+		</div>
+
+		<div id="login" class="hide">
+			<form>
+				<label for="username">username</label>
+				<input type="text" name="username" /><br />
+				<label for="password">password</label>
+				<input type="password" name="password" /><br />
+				<input type="submit" />
+			</form>
+		</div>
+
+		<div id="signup" class="hide">
+			<form>
+				<label for="firstname">firstname</label>
+				<input type="text" name="firstname" /><br />
+				<label for="surname">surname</label>
+				<input type="text" name="surname" /><br />
+				<label for="mail">email</label>
+				<input type="text" name="email" /><br />
+				<label for="password">password</label>
+				<input type="password" name="password" /><br />
+				<label for="pwrepeat">password (again)</label>
+				<input type="password" name="pwrepeat" /><br />
+				<input type="submit" />
+			</form>
 		</div>
 	</body>
 </html>

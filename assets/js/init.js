@@ -19,12 +19,17 @@ $(document).ready(function() {
 		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 	});
 
-	$("div#menu ul li:eq(5)").click(function() {
+	$("div#menu ul li.signup").click(function() {
 		$("#signup").removeClass("hide");
 	});
 
-	$("div#menu ul li:eq(6)").click(function() {
+	$("div#menu ul li.login").click(function() {
 		$("#login").removeClass("hide");
+	});
+
+	$("div#menu ul li.logout").click(function() {
+		$.getJSON("/logout/", $.proxy(sess.loadUserJSON, sess));
+		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 	});
 
 	$("#randval").click(function() {
@@ -37,6 +42,7 @@ $(document).ready(function() {
 			$("#login form").serialize(),
 			$.proxy(sess.loadUserJSON, sess));
 		$("#login").addClass("hide");
+		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 	});
 
 	$("#signup form").submit(function(event) {
@@ -45,6 +51,7 @@ $(document).ready(function() {
 			$("#signup form").serialize(),
 			$.proxy(sess.loadUserJSON, sess));
 		$("#signup").addClass("hide");
+		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 	});
 });
 
