@@ -36,10 +36,13 @@ storageGet(
 		char * _key, size_t nkey,
 		char ** data, size_t * ndata)
 {
-	datum key   = {_key, nkey};
-	datum value;
+	char  * key      = memMalloc(nkey);
+	datum   gdbm_key = {key, nkey};
+	datum   value;
 
-	value = gdbm_fetch(this->gdbm, key);
+	memcpy(key, _key, nkey);
+	value = gdbm_fetch(this->gdbm, gdbm_key);
+	MEM_FREE(key);
 
 	if (NULL != value.dptr) {
 		*ndata = value.dsize;
