@@ -54,8 +54,9 @@ CLASS(Application) {
 	const char *      version;
 };
 
-int     applicationLogin(Application, Credential, Session);
-int     applicationSignup(Application, Credential, User, Session);
+int  applicationLogin(Application, Credential, Session);
+void applicationLogout(Application, Session);
+int  applicationSignup(Application, Credential, User, Session);
 
 Session applicationSessionStart(Application);
 Session applicationSessionGet(Application, const char *);

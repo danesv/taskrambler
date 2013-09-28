@@ -3,6 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 APPLICATION = application.c \
 	      login.c \
+	      logout.c \
 	      signup.c \
 	      session_start.c \
 	      session_stop.c \

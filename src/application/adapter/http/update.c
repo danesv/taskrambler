@@ -178,7 +178,6 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	Session    session;
 	char       buf[200];
 	size_t     nbuf;
-	time_t     now = time(NULL);
 
 	sid     = getSessionId(worker->current_request->cookies);
 
@@ -219,15 +218,7 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 		}
 
 		if (0 == strcmp("/logout/", worker->current_request->path)) {
-			applicationSessionStop(
-					this->application,
-					session);
-
-			// remove session cookie
-			nbuf = sprintf(buf, "sid=%s;Path=/;Max-Age=-3600", session->id);
-			queuePut(
-					worker->additional_headers, 
-					new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
+			applicationLogout(this->application, session);
 
 			worker->current_response = 
 				(HttpMessage)httpResponseUser(session->user);
