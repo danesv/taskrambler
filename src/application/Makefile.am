@@ -6,7 +6,6 @@ APPLICATION = application.c \
 	      signup.c \
 	      session_start.c \
 	      session_stop.c \
-	      session_update.c \
 	      session_get.c
 ADAPTERHTTP = adapter/http/http.c \
 	      adapter/http/update.c
