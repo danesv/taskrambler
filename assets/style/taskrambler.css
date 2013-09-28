@@ -126,6 +126,28 @@ div.border div.br {
 	background: url(/image/rambler-border-br.jpg);
 }
 
+#statusline {
+	position:    absolute;
+	margin:      0px;
+	font-family: old_newspaper;
+	font-size:   12px;
+	text-align:  right;
+}
+
+#statusline ul {
+	display:          inline-block;
+	width:            780px;
+	height:           15px;
+	list-style:       none;
+	padding:          0px;
+	margin:           0px;
+}
+
+#statusline ul li {
+	display:      inline-block;
+	border-right: 1px solid black;
+	padding-right: 5px;
+}
 
 #page {
 	top:              50px;

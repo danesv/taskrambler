@@ -3,34 +3,27 @@ var sess = null;
 $(document).ready(function() {
 	var sval    = new ServerVal("#randval");
 
-	sess = new Session("#sessinfo");
-
-//	$(window).focus(function() {
-//		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
-//	});
+	sess = new Session("#sessinfo", "#sessid", "#user");
 
 	$.getJSON(
 		"/version/",
 		function(data) {
-			$.each(result, function(i, field){
-				$("#version").empty().append("version: " + field);
-			});
+			$("#version").empty().append("version: " + data.version);
 		}
 	);
 
-	$("div#menu ul li:eq(1)").click(function() {
-		sval.start();
+	$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
+	$.getJSON("/user/get/", $.proxy(sess.loadUserJSON, sess));
+
+	$(window).focus(function() {
+		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 	});
 
-	$("div#menu ul li:eq(2)").click(function() {
-		$.getJSON("/sess/", $.proxy(sess.loadJSON, sess));
-	});
-
-	$("div#menu ul li:eq(3)").click(function() {
+	$("div#menu ul li:eq(5)").click(function() {
 		$("#signup").removeClass("hide");
 	});
 
-	$("div#menu ul li:eq(4)").click(function() {
+	$("div#menu ul li:eq(6)").click(function() {
 		$("#login").removeClass("hide");
 	});
 
@@ -42,7 +35,7 @@ $(document).ready(function() {
 		event.preventDefault();
 		$.post("/login/",
 			$("#login form").serialize(),
-			$.proxy(sess.loadJSON, sess));
+			$.proxy(sess.loadUserJSON, sess));
 		$("#login").addClass("hide");
 	});
 
@@ -50,7 +43,7 @@ $(document).ready(function() {
 		event.preventDefault();
 		$.post("/signup/",
 			$("#signup form").serialize(),
-			$.proxy(sess.loadJSON, sess));
+			$.proxy(sess.loadUserJSON, sess));
 		$("#signup").addClass("hide");
 	});
 });

@@ -1,13 +1,13 @@
-function Session(sId)
+function Session(sInfo, sId, sUser)
 {
-	this.eSid     = $(sId + " span");
-	this.canvas   = $(sId + " canvas").get(0);
+	this.eUser    = $(sUser);
+	this.eId      = $(sId);
+	this.canvas   = $(sInfo + " canvas").get(0);
 	this.context  = this.canvas.getContext("2d");
 
 	this.id       = "none"
 	this.timeout  = 0;
 	this.timeleft = 0;
-	this.username = "";
 	this.email     = "";
 	this.firstname = "";
 	this.surname   = "";
@@ -16,27 +16,34 @@ function Session(sId)
 	this.draw();
 }
 
-Session.prototype.loadJSON = function(data)
+Session.prototype.loadUserJSON = function(data)
 {
-	this.stop();
-
-	this.id       = ("0" == data.id)? "none" : data.id;
-	//this.timeout  = data.timeout * 10;
-	//this.timeleft = data.timeleft * 10;
-	//this.username = data.username;
 	this.email     = data.email;
 	this.firstname = data.firstname;
 	this.surname   = data.surname;
 
-	name = " ";
-
-	this.eSid.empty().append(this.id);
-	if ('(null)' == this.firstname || '(null)' == this.surname) {
-		name += this.email;
+	name = "";
+	if ('' == this.email) {
+		name = "not logged in";
 	} else {
-		name += this.firstname + " " + this.surname;
+		if ('' == this.firstname || '' == this.surname) {
+			name += this.email;
+		} else {
+			name += this.firstname + " " + this.surname;
+		}
 	}
-	$("#main p:eq(1) span:eq(0)").empty().append(name);
+	this.eUser.empty().append(name);
+}
+
+Session.prototype.loadJSON = function(data)
+{
+	// this.stop();
+
+	this.id        = ("0" == data.id)? "none" : data.id;
+	this.timeout   = data.timeout * 10;
+	this.timeleft  = data.timeleft * 10;
+
+	this.eId.empty().append(this.id);
 
 	this.draw();
 	if (0 < this.timeleft)
@@ -57,7 +64,7 @@ Session.prototype.draw = function()
 Session.prototype.start = function()
 {
 	if (null === this.interval) {
-		this.interval = setInterval($.proxy(this.process, this), 100);
+		this.interval = setInterval($.proxy(this.process, this), 500);
 	}
 }
 
@@ -68,7 +75,7 @@ Session.prototype.process = function()
 	}
 
 	else {
-		this.timeleft--;
+		this.timeleft-=5;
 		this.draw();
 	}
 }
@@ -85,8 +92,8 @@ Session.prototype.stop = function()
 	this.firstname = "";
 	this.surname   = "";
 
-	this.eSid.empty().append(this.id);
-	$("#main p:eq(1) span:eq(0)").empty().append(" " + this.username);
+	this.eId.empty().append("");
+	this.eUser.empty().append("not logged in");
 
 	this.draw();
 }
