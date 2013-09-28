@@ -50,6 +50,8 @@ CLASS(Application) {
 
 	Storage           users;
 	Storage           passwords;
+
+	const char *      version;
 };
 
 int     applicationLogin(Application, Credential, Session);

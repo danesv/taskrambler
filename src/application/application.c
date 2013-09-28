@@ -30,6 +30,7 @@
 #include "storage/storage.h"
 
 #include "utils/memory.h"
+#include "config.h"
 
 static
 int
@@ -58,6 +59,7 @@ applicationCtor(void * _this, va_list * params)
 	}
 
 	this->active_sessions = new(Queue);
+	this->version         = VERSION;
 
 	return 0;
 }

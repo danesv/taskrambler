@@ -14,4 +14,4 @@ ADAPTERHTTP = adapter/http/http.c \
 noinst_LIBRARIES = libapplication.a
 
 libapplication_a_SOURCES = $(APPLICATION) $(ADAPTERHTTP)
-libapplication_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/
+libapplication_a_CFLAGS  = $(CFLAGS) -Wall -I ../../ -I ../../include/

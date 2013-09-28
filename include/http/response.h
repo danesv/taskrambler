@@ -53,6 +53,7 @@ HttpResponse httpResponseLoginForm();
 HttpResponse httpResponseRandval(time_t, int);
 HttpResponse httpResponseSession(Session);
 HttpResponse httpResponseUser(User);
+HttpResponse httpResponseVersion(const char *);
 HttpResponse httpResponseAsset(const char *, size_t);
 
 #endif // __HTTP_RESPONSE_H__

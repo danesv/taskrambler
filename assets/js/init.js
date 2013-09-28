@@ -1,13 +1,22 @@
 var sess = null;
 
 $(document).ready(function() {
-	var sval = new ServerVal("#randval");
+	var sval    = new ServerVal("#randval");
 
 	sess = new Session("#sessinfo");
 
-	$(window).focus(function() {
-		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
-	});
+//	$(window).focus(function() {
+//		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
+//	});
+
+	$.getJSON(
+		"/version/",
+		function(data) {
+			$.each(result, function(i, field){
+				$("#version").empty().append("version: " + field);
+			});
+		}
+	);
 
 	$("div#menu ul li:eq(1)").click(function() {
 		sval.start();
