@@ -173,31 +173,25 @@ void
 applicationAdapterHttpUpdate(void * _this, void * subject)
 {
 	ApplicationAdapterHttp this = _this;
-	HttpWorker worker  = (HttpWorker)subject;
+	HttpWorker worker = (HttpWorker)subject;
 	char *     sid;
 	Session    session;
 	char       buf[200];
 	size_t     nbuf;
+	time_t     now = time(NULL);
 
 	sid     = getSessionId(worker->current_request->cookies);
 
 	session = applicationSessionGet(this->application, sid);
 	if (NULL == session) {
 		session = applicationSessionStart(this->application);
+
+		// send session cookie
+		nbuf = sprintf(buf, "sid=%s;Path=/", session->id);
+		queuePut(
+				worker->additional_headers, 
+				new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
 	}
-
-	nbuf = sprintf(buf, SESS_HEADER,
-			session->id, 
-			SESSION_LIVETIME,
-			session->livetime - time(NULL));
-	queuePut(
-			worker->additional_headers, 
-			new(HttpHeader, CSTRA("X-TaskramblerSession"), buf, nbuf));
-
-	nbuf = sprintf(buf, "sid=%s;Path=/", session->id);
-	queuePut(
-			worker->additional_headers, 
-			new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
 
 	if (0 == strcmp("POST", worker->current_request->method)) {
 		if (0 == strcmp("/login/", worker->current_request->path)) {
@@ -224,17 +218,27 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 			return;
 		}
 
-//		if (0 == strcmp("/sess/", worker->current_request->path)) {
-//			if (NO_SESSION_SID == sid
-//					|| NULL == applicationSessionGet(this->application, sid)) {
-//				sid = applicationSessionStart(this->application, NULL, 0);
-//			}
-//
-//			worker->current_response = 
-//				(HttpMessage)httpResponseSession(
-//						applicationSessionGet(this->application, sid));
-//			return;
-//		}
+		if (0 == strcmp("/logout/", worker->current_request->path)) {
+			applicationSessionStop(
+					this->application,
+					session);
+
+			// remove session cookie
+			nbuf = sprintf(buf, "sid=%s;Path=/;Max-Age=-3600", session->id);
+			queuePut(
+					worker->additional_headers, 
+					new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
+
+			worker->current_response = 
+				(HttpMessage)httpResponseUser(session->user);
+			return;
+		}
+
+		if (0 == strcmp("/sessinfo/", worker->current_request->path)) {
+			worker->current_response = 
+				(HttpMessage)httpResponseSession(session);
+			return;
+		}
 
 		if (0 == strcmp("/randval/", worker->current_request->path)) {
 			if (NULL != session->user) {
@@ -247,6 +251,20 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 			}
 		}
 	}
+
+	// if (0 < session->livetime - now) {
+	// 	nbuf = sprintf(buf, SESS_HEADER,
+	// 			session->id, 
+	// 			SESSION_LIVETIME,
+	// 			session->livetime - now);
+
+	// 	queuePut(
+	// 			worker->additional_headers, 
+	// 			new(HttpHeader, CSTRA("X-TaskramblerSession"), buf, nbuf));
+
+	// } else {
+	// 	nbuf = sprintf(buf, "sid=%s;Path=/;Max-Age=-3600", session->id);
+	// }
 }
 
 // vim: set ts=4 sw=4:
