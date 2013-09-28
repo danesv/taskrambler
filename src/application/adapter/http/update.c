@@ -59,84 +59,6 @@ getSessionId(Hash cookies)
 }
 
 static
-Session
-getSession(Queue sess_queue, const char * sid)
-{
-	Session sess    = NULL;
-	Queue   current = sess_queue;
-	time_t  now     = time(NULL);
-
-	/**
-	 * session start or update
-	 *
-	 * @TODO
-	 * I need to walk through the whole hash at this point to find
-	 * expired sessions and remove them....this is not good and
-	 * probably I need another(faster) way to identify expired
-	 * sessions....
-	 *
-	 * @TODO
-	 * Build a way to cleanup the hash by a filter...currently 
-	 * there is nothing I could use for this.
-	 * Well this is practically impossible in reasonable time
-	 * because every time I remove one element the tree has to 
-	 * be rebalanced....
-	 * 
-	 * I have to store all nodes in a different structure that
-	 * gives me the possibility to find fast expired objects.
-	 * These can then be removed from both structures....
-	 *
-	 * Anyway this is the pure horror...because I have to compute
-	 * the condition for every stored session....and I really have to
-	 * do this...else the tree would grow and grow all the time...
-	 * 
-	 * I think the best I can do at this point is, at least for the moment,
-	 * to store the sessions in a list and not in a stack.
-	 * Each request will than have to walk through that list, 
-	 * remove expired sessions and pick out its own....
-	 * this is O(n), but currently I gave no better idea at all.
-	 */
-	while (NULL != current->next) {
-		Session session = (Session)current->next->msg;
-
-		if (now >= session->livetime) {
-			Queue to_delete = current->next;
-
-			if (to_delete == sess_queue->first) {
-				sess_queue->first = to_delete->next;
-			}
-			if (to_delete == sess_queue->last) {
-				if (to_delete == sess_queue->next) {
-					sess_queue->last = NULL;
-				} else {
-					sess_queue->last = current;
-				}
-			}
-
-			current->next = to_delete->next;
-
-			delete(session);
-			delete(to_delete);
-			continue;
-		}
-
-		if (NULL != sid && 0 == memcmp(session->id, sid, 36)) {
-			session->livetime = time(NULL) + SESSION_LIVETIME;
-			sess              = session;
-		}
-
-		current = current->next;
-	}
-
-	if (NULL == sess) {
-		sess = new(Session);
-		queuePut(sess_queue, sess);
-	}
-
-	return sess;
-}
-
-static
 void
 loginAdapter(Application application, HttpWorker worker, Session session)
 {
@@ -258,7 +180,11 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	size_t     nbuf;
 
 	sid     = getSessionId(worker->current_request->cookies);
-	session = getSession(this->application->active_sessions, sid);
+
+	session = applicationSessionGet(this->application, sid);
+	if (NULL == session) {
+		session = applicationSessionStart(this->application);
+	}
 
 	nbuf = sprintf(buf, SESS_HEADER,
 			session->id, 
@@ -286,6 +212,12 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	}
 
 	if (0 == strcmp("GET", worker->current_request->method)) {
+		if (0 == strcmp("/version/", worker->current_request->path)) {
+			worker->current_response = 
+				(HttpMessage)httpResponseVersion(this->application->version);
+			return;
+		}
+
 		if (0 == strcmp("/user/get/", worker->current_request->path)) {
 			worker->current_response = 
 				(HttpMessage)httpResponseUser(session->user);

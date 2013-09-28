@@ -35,8 +35,43 @@
 Session
 applicationSessionGet(Application this, const char * sid)
 {
-//	return hashGet(this->active_sessions, sid, 36);
-	return NULL;
+	Session sess    = NULL;
+	Queue   current = this->active_sessions;
+	time_t  now     = time(NULL);
+
+	while (NULL != current->next) {
+		Session session = (Session)current->next->msg;
+
+		if (now >= session->livetime) {
+			Queue to_delete = current->next;
+
+			if (to_delete == this->active_sessions->first) {
+				this->active_sessions->first = to_delete->next;
+			}
+			if (to_delete == this->active_sessions->last) {
+				if (to_delete == this->active_sessions->next) {
+					this->active_sessions->last = NULL;
+				} else {
+					this->active_sessions->last = current;
+				}
+			}
+
+			current->next = to_delete->next;
+
+			delete(session);
+			delete(to_delete);
+			continue;
+		}
+
+		if (NULL != sid && 0 == memcmp(session->id, sid, 36)) {
+			session->livetime = time(NULL) + SESSION_LIVETIME;
+			sess              = session;
+		}
+
+		current = current->next;
+	}
+
+	return sess;
 }
 
 // vim: set ts=4 sw=4:
