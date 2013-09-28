@@ -59,9 +59,7 @@ int     applicationSignup(Application, Credential, User, Session);
 
 Session applicationSessionStart(Application);
 Session applicationSessionGet(Application, const char *);
-void    applicationSessionStop(Application, const char *);
-void    applicationSessionUpdate(
-		Application, const char *, const char *, size_t);
+void    applicationSessionStop(Application, Session);
 
 #endif // __HTTP_HEADER_H__
 
