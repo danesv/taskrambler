@@ -50,7 +50,18 @@ applicationLogin(
 					session->user->email  = CRED_PWD(credential).user;
 					session->user->nemail = &CRED_PWD(credential).nuser;
 
-					userLoad(session->user, this->users);
+					if (NULL == userLoad(session->user, this->users)) {
+						// this is an ldap user that has not yet set
+						// additional user informations.
+						/* @TODO again...change the keys to id's */
+						delete(session->user);
+						session->user = new(User,
+								CRED_PWD(credential).user,
+								CRED_PWD(credential).nuser,
+								CSTRA(""),
+								CSTRA(""));
+					}
+
 					break;
 
 				default:
