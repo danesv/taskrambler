@@ -105,8 +105,9 @@ authLdapAuthenticate(void * _this, Credential cred)
 			NULL,
 			&ldap_servcred);
 
+	ldap_unbind_ext_s(this->ldap, NULL, NULL);
+
 	if (0 == ldap_err) {
-		ldap_unbind_ext_s(this->ldap, NULL, NULL);
 		//! \todo here we need to get and return the user id
 		return TRUE;
 	}
