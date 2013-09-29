@@ -32,8 +32,13 @@ AM_CFLAGS = -Wall -I ../include/
 
 bin_PROGRAMS = taskrambler
 
+
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
-taskrambler_CFLAGS  = $(CFLAGS) -Wall -DPWD=\"$(PWD)\" -I../include/ # $(COVERAGE_CFLAGS)
+taskrambler_CFLAGS  = $(CFLAGS) \
+		      -Wall \
+		      -DPWD=\"$(PWD)\" \
+		      $(MEM_OPT_FLAGS) \
+		      -I../include/ # $(COVERAGE_CFLAGS)
 taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap -lgdbm -luuid
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 

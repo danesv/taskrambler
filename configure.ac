@@ -6,7 +6,7 @@ AC_INIT([taskrambler], [0.1.6], [Georg Hopp <georg@steffers.org>])
 LT_INIT
 AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
-AM_SILENT_RULES([yes])
+#AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2013 Georg Hopp])
 AC_REVISION([$Revision: 0.02 $])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
@@ -18,6 +18,9 @@ AC_TDD_GCOV
 AC_SUBST(COVERAGE_CFLAGS)
 AC_SUBST(COVERAGE_CXXFLAGS)
 AC_SUBST(COVERAGE_LDFLAGS)
+
+m4_include([m4/memopt.m4])
+AC_MEM_OPT
 
 PWD=$(/bin/pwd)
 AC_SUBST(PWD)
