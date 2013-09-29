@@ -5,7 +5,7 @@ ACLOCAL_AMFLAGS = -I m4
 #create_token_LDADD   = src/libtoken.la $(LIBOBJS)
 #create_token_CFLAGS  = -Wall -I include
 
-EXTRA_DIST = include assets certs config
+EXTRA_DIST = include assets certs config run
 
 SUBDIRS = src tests
 
