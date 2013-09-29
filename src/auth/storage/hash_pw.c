@@ -78,7 +78,7 @@ hash_pw(
 		unsigned char ** salt)
 {
 	if (NULL == *salt) {
-		*salt = memMalloc(SALT_SIZE * sizeof(unsigned char));
+		*salt = memCalloc(SALT_SIZE, sizeof(unsigned char));
 		if (0 > RAND_pseudo_bytes(*salt, SALT_SIZE)) {
 			MEM_FREE(*salt);
 			return FALSE;
