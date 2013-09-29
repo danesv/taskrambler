@@ -54,6 +54,7 @@ applicationLogin(
 						// this is an ldap user that has not yet set
 						// additional user informations.
 						/* @TODO again...change the keys to id's */
+						session->user->email = NULL;
 						delete(session->user);
 						session->user = new(User,
 								CRED_PWD(credential).user,

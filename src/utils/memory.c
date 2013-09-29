@@ -782,6 +782,7 @@ memNewRef(void * mem)
 void *
 memMalloc(size_t size)
 {
+#ifdef MEM_OPT
 	struct memSegment * seg;
 	//long                psize = sysconf(_SC_PAGESIZE);
 	long                psize = 64;
@@ -801,8 +802,10 @@ memMalloc(size_t size)
 		seg = deleteElement(&segments, seg);
 	}
 
-
 	return seg->ptr;
+#else
+	return malloc(size);
+#endif
 }
 
 /**
@@ -816,17 +819,22 @@ memMalloc(size_t size)
 void *
 memCalloc(size_t nmemb, size_t size)
 {
+#ifdef MEM_OPT
 	size_t   _size = nmemb * size;
 	void   * mem   = memMalloc(_size);
 
 	memset(mem, 0, _size);
 
 	return mem;
+#else
+	return calloc(nmemb, size);
+#endif
 }
 
 void
 memFree(void ** mem)
 {
+#ifdef MEM_OPT
 	if (NULL != *mem) {
 		struct memSegment * seg = (*mem - sizeof(struct memSegment));
 
@@ -838,11 +846,18 @@ memFree(void ** mem)
 
 		*mem = NULL;
 	}
+#else
+	if (NULL != *mem) {
+		free(*mem);
+		*mem = NULL;
+	}
+#endif
 }
 
 size_t
 memGetSize(void * mem)
 {
+#ifdef MEM_OPT
 	struct memSegment * segment;
 
 	if (NULL == mem) {
@@ -851,21 +866,17 @@ memGetSize(void * mem)
 
 	segment = (struct memSegment *)(mem - sizeof(struct memSegment));
 	return segment->size;
+#else
+	return 0;
+#endif
 }
 
 void
 memCleanup()
 {
+#ifdef MEM_OPT
 	post(segments, segmentFree);
+#endif
 }
-
-void
-ffree(void ** data)
-{
-	if (NULL != *data) {
-		free(*data);
-		*data = NULL;
-	}
-}   
 
 // vim: set ts=4 sw=4:
