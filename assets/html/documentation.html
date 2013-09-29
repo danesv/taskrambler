@@ -62,11 +62,61 @@
 				<hr />
 				<p class="abstract">
 					<span class="author">[GH]</span>
-					This has to be written and will come in future.
+					Currently this is more a changelog and a description
+					how to use new features.
 				</p>
 				<hr />
 
-				<br /><br /><br /><br /><br /><br />
+				<h2>Version 0.1.5</h2>
+
+				<p>
+				Another step on the way. Now basic signup is possible.
+				Users and credential will be stored in gdbm files.
+				</p>
+
+				<h3>Usage</h3>
+
+				<p>
+				The signup and login can be testes by clicking on
+				signup or login in the menu. A popup should occur where
+				you can enter the neccessary informations. Currently
+				no sanity checks are done on the given data. The key
+				is the email address.
+				</p>
+				
+				<p>
+				If you signup with an email address
+				that is already in the database nothing happens, else
+				a user will be created and logged in.
+				</p>
+
+				<p>
+				After a successful login the first and surname will be
+				visible in the upper right corner of the page.
+				</p>
+
+				<p>
+				Additionally to the name you can find the version,
+				session id as well as an indicator how long the session
+				lasts. A session lasts 5 minutes since the last preocessed
+				request.
+				</p>
+
+				<h3>Changes</h3>
+
+				<p>
+				<ul>
+					<li>add storage layer</li>
+					<li>add signup functionality</li>
+					<ul>
+						<li>store users</li>
+						<li>store passwords as PBKDF2 sha512</li>
+					</ul>
+					<li>make login work agains ldap and stored passwords</li>
+					<li>add favicon</li>
+					<li>show version, session info and login info on each page</li>
+				</ul>
+				</p>
 			</div>
 
 			<div id="footer">
