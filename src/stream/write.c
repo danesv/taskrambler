@@ -63,12 +63,34 @@ streamWrite(Stream this, void * buf, size_t count)
 			break;
 
 		case STREAM_SSL:
+			/*
+			 * @TODO I got a segfault in this call under unclear 
+			 * circumstances. Most likely it has to do with a
+			 * write on a closed connection.
+			 */
 			done = SSL_write((this->handle).ssl, buf, count);
 
             if (0 >= done) {
                 switch (SSL_get_error((this->handle).ssl, done)) {
-                    case SSL_ERROR_SSL:
                     case SSL_ERROR_SYSCALL:
+						{
+							switch (errno) {
+								case EINTR:
+								case ENOBUFS:
+								case ENOMEM:
+									done = 0;
+									break;
+								case (EAGAIN|EWOULDBLOCK):
+									done = -1;
+									break;
+								default:
+									done = -2;
+									break;
+							}
+						}
+						break;
+
+                    case SSL_ERROR_SSL:
                         {
                             unsigned long err;
 
@@ -82,6 +104,7 @@ streamWrite(Stream this, void * buf, size_t count)
                         // DROP THROUGH
 
                     case SSL_ERROR_ZERO_RETURN:
+					default:
                         done = -2;
                         break;
                 }
