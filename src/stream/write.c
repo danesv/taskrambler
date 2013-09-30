@@ -70,7 +70,9 @@ streamWrite(Stream this, void * buf, size_t count)
 			 */
 			done = SSL_write((this->handle).ssl, buf, count);
 
-            if (0 >= done) {
+			if (0 == done) {
+				done = -2;
+			} else if (0 > done) {
                 switch (SSL_get_error((this->handle).ssl, done)) {
                     case SSL_ERROR_SYSCALL:
 						{
@@ -104,7 +106,6 @@ streamWrite(Stream this, void * buf, size_t count)
                         // DROP THROUGH
 
                     case SSL_ERROR_ZERO_RETURN:
-					default:
                         done = -2;
                         break;
                 }
@@ -113,7 +114,7 @@ streamWrite(Stream this, void * buf, size_t count)
 			break;
 
 		default:
-			done = 0;
+			done = -2;
 			break;
 	}
 
