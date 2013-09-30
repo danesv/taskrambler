@@ -39,6 +39,7 @@ serverCloseConn(Server this, unsigned int i)
 	if (NULL != st && STREAM_SSL == st->type) {
 		SSL_shutdown((st->handle).ssl);
 		SSL_free((st->handle).ssl);
+		(st->handle).ssl = NULL;
 	}
 
 	delete(st);
