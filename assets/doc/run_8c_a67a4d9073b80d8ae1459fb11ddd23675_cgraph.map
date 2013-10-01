@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$logger_2interface_2logger_8h.html#ae9f8662ec8b300dcfb5064906937553e" title="loggerLog" alt="" coords="519,75,599,103"/>
+<area shape="rect" id="node5" href="$handle__accept_8c.html#abc50e74ce8e5c91817ad8cc1ca167541" title="serverHandleAccept" alt="" coords="140,50,281,78"/>
+<area shape="rect" id="node11" href="$poll_8c.html#ab102590167bdff8b5ab2f23069cfcbd3" title="serverPoll" alt="" coords="171,101,251,129"/>
+<area shape="rect" id="node14" href="$server_2read_8c.html#a97cbf012583a54dfd87f131233a18b0a" title="serverRead" alt="" coords="165,177,256,205"/>
+<area shape="rect" id="node21" href="$run_8c.html#ac275efebefdf1c64b30511daa008d3c1" title="serverWrite" alt="" coords="167,278,255,306"/>
+<area shape="rect" id="node8" href="$socket_8h.html#a45ec8fbdb035314da3d390fdcd6dc304" title="socketAccept" alt="" coords="349,50,451,78"/>
+<area shape="rect" id="node17" href="$close__conn_8c.html#ad721e61c8676f0b4c3b8fc401e26f266" title="serverCloseConn" alt="" coords="337,253,463,281"/>
+<area shape="rect" id="node19" href="$reader_8h.html#ad06d56b0fc045531cfbaf0bfc5468b83" title="streamReaderRead" alt="" coords="331,202,469,230"/>
+<area shape="rect" id="node25" href="$stream_2interface_2writer_8h.html#aabe113691016adfe02c4977daee560a0" title="streamWriterWrite" alt="" coords="336,354,464,382"/>
+</map>

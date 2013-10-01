@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$get__data_8c.html#a45b464bf71d1ce027aa11f20fd5be4ab" title="cbufGetData" alt="" coords="171,5,267,33"/>
+<area shape="rect" id="node5" href="$parse_8c.html#a1aa3a9f8959238057fe18ca5bda180db" title="httpParserParse" alt="" coords="335,81,452,109"/>
+<area shape="rect" id="node9" href="$get__line_8c.html#a3b3ab88391b205a30a17885bec781928" title="cbufGetLine" alt="" coords="172,106,265,134"/>
+<area shape="rect" id="node12" href="$skip__non__alpha_8c.html#a1983134b7a26ad2ea077adcd343dca24" title="cbufSkipNonAlpha" alt="" coords="153,157,284,185"/>
+<area shape="rect" id="node15" href="$cbuf_2write_8c.html#a3872748b7d2c563a6e73eb3f2e1e7130" title="cbufWrite" alt="" coords="180,207,257,235"/>
+<area shape="rect" id="node7" href="$process_8c.html#a05882322d98d5710a5512c9255e03d71" title="httpWorkerProcess" alt="" coords="503,81,636,109"/>
+<area shape="rect" id="node17" href="$http_2writer_2write_8c.html#accd7a3cfe29607d72a35fe3e3d187c48" title="httpWriterWrite" alt="" coords="339,207,448,235"/>
+<area shape="rect" id="node19" href="$answer_8c.html#add3fe105c4e782e5b1387cb596792bbe" title="httpWorkerWrite" alt="" coords="511,207,628,235"/>
+</map>

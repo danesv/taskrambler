@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structHttpMessage.html" title="{HttpMessage\n|+ version\l+ header\l+ type\l+ handle\l+ body\l+ nbody\l+ dbody\l|}" alt="" coords="27,201,128,378"/>
+<area shape="rect" id="node4" href="$structHash.html" title="{Hash\n|+ root\l|}" alt="" coords="5,30,61,111"/>
+<area shape="rect" id="node6" href="$structStream.html" title="{Stream\n|+ type\l+ fd\l+ ssl\l+ handle\l|}" alt="" coords="85,6,157,135"/>
+</map>

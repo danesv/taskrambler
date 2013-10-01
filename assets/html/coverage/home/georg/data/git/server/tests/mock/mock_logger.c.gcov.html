@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - Code Coverage - /home/georg/data/git/server/tests/mock/mock_logger.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">home/georg/data/git/server/tests/mock</a> - mock_logger.c<span style="font-size: 80%;"> (source / <a href="mock_logger.c.func.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">Code Coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2012-03-28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : #include &lt;stdio.h&gt;</a>
+<span class="lineNum">       2 </span>                :            : 
+<span class="lineNum">       3 </span>                :            : #include &quot;class.h&quot;
+<span class="lineNum">       4 </span>                :            : #include &quot;logger.h&quot;
+<span class="lineNum">       5 </span>                :            : #include &quot;mock/mock_logger.h&quot;
+<span class="lineNum">       6 </span>                :            : 
+<a name="7"><span class="lineNum">       7 </span>                :            : static</a>
+<span class="lineNum">       8 </span>                :            : void
+<span class="lineNum">       9 </span>                :<span class="lineCov">          9 : logMock(void * _this, logger_level level, const char * const msg)</span>
+<span class="lineNum">      10 </span>                :            : {
+<span class="lineNum">      11 </span>                :<span class="lineCov">          9 :         MockLogger this = _this;</span>
+<span class="lineNum">      12 </span>                :            : 
+<span class="lineNum">      13 </span>                :<span class="lineCov">          9 :         snprintf(this-&gt;message,</span>
+<span class="lineNum">      14 </span>                :            :                         MOCK_MESSAGE_MAX - 1,
+<span class="lineNum">      15 </span>                :            :                         &quot;[%s] %s&quot;,
+<span class="lineNum">      16 </span>                :            :                         logger_level_str[level],
+<span class="lineNum">      17 </span>                :            :                         msg);
+<span class="lineNum">      18 </span>                :<span class="lineCov">          9 : }</span>
+<a name="19"><span class="lineNum">      19 </span>                :            : </a>
+<span class="lineNum">      20 </span>                :            : void
+<span class="lineNum">      21 </span>                :<span class="lineCov">          1 : mockLoggerCleanMsg(MockLogger this)</span>
+<span class="lineNum">      22 </span>                :            : {
+<span class="lineNum">      23 </span>                :<span class="lineCov">          1 :         this-&gt;message[0] = 0;</span>
+<span class="lineNum">      24 </span>                :<span class="lineCov">          1 : }</span>
+<a name="25"><span class="lineNum">      25 </span>                :            : </a>
+<span class="lineNum">      26 </span>                :            : INIT_IFACE(Logger, logMock);
+<span class="lineNum">      27 </span>                :<span class="lineCov">          3 : CREATE_CLASS(MockLogger, Logger, IFACE(Logger));</span>
+<span class="lineNum">      28 </span>                :            : 
+<span class="lineNum">      29 </span>                :            : // vim: set ts=4 sw=4:
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.9</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

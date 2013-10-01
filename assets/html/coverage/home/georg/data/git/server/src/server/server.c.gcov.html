@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - Code Coverage - /home/georg/data/git/server/src/server/server.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">home/georg/data/git/server/src/server</a> - server.c<span style="font-size: 80%;"> (source / <a href="server.c.func.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">Code Coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">44</td>
+            <td class="headerCovTableEntry">45</td>
+            <td class="headerCovTableEntryHi">97.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2012-03-28</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Legend:</td>
+            <td class="headerValueLeg">            Lines:
+            <span class="coverLegendCov">hit</span>
+            <span class="coverLegendNoCov">not hit</span>
+            | Branches:
+            <span class="coverLegendCov">+</span> taken
+            <span class="coverLegendNoCov">-</span> not taken
+            <span class="coverLegendNoCov">#</span> not executed
+</td>
+            <td></td>
+            <td class="headerItem">Branches:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">           Branch data     Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>                :            : /**</a>
+<span class="lineNum">       2 </span>                :            :  * \file
+<span class="lineNum">       3 </span>                :            :  *
+<span class="lineNum">       4 </span>                :            :  * \author      Georg Hopp
+<span class="lineNum">       5 </span>                :            :  *
+<span class="lineNum">       6 </span>                :            :  * \copyright
+<span class="lineNum">       7 </span>                :            :  * Copyright © 2012  Georg Hopp
+<span class="lineNum">       8 </span>                :            :  *
+<span class="lineNum">       9 </span>                :            :  * This program is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>                :            :  * it under the terms of the GNU General Public License as published by
+<span class="lineNum">      11 </span>                :            :  * the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>                :            :  * (at your option) any later version.
+<span class="lineNum">      13 </span>                :            :  *
+<span class="lineNum">      14 </span>                :            :  * This program is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>                :            :  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>                :            :  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>                :            :  * GNU General Public License for more details.
+<span class="lineNum">      18 </span>                :            :  *
+<span class="lineNum">      19 </span>                :            :  * You should have received a copy of the GNU General Public License
+<span class="lineNum">      20 </span>                :            :  * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>                :            :  */
+<span class="lineNum">      22 </span>                :            : 
+<span class="lineNum">      23 </span>                :            : #include &lt;fcntl.h&gt;
+<span class="lineNum">      24 </span>                :            : #include &lt;unistd.h&gt;
+<span class="lineNum">      25 </span>                :            : #include &lt;stdlib.h&gt;
+<span class="lineNum">      26 </span>                :            : 
+<span class="lineNum">      27 </span>                :            : #include &lt;openssl/ssl.h&gt;
+<span class="lineNum">      28 </span>                :            : #include &lt;openssl/err.h&gt;
+<span class="lineNum">      29 </span>                :            : 
+<span class="lineNum">      30 </span>                :            : #include &quot;class.h&quot;
+<span class="lineNum">      31 </span>                :            : #include &quot;server.h&quot;
+<span class="lineNum">      32 </span>                :            : #include &quot;socket.h&quot;
+<span class="lineNum">      33 </span>                :            : #include &quot;logger.h&quot;
+<span class="lineNum">      34 </span>                :            : 
+<span class="lineNum">      35 </span>                :            : #include &quot;utils/memory.h&quot;
+<span class="lineNum">      36 </span>                :            : 
+<span class="lineNum">      37 </span>                :            : 
+<span class="lineNum">      38 </span>                :            : void serverCloseConn(Server, unsigned int);
+<span class="lineNum">      39 </span>                :            : 
+<span class="lineNum">      40 </span>                :            : 
+<a name="41"><span class="lineNum">      41 </span>                :            : static</a>
+<span class="lineNum">      42 </span>                :            : int
+<span class="lineNum">      43 </span>                :<span class="lineCov">          1 : serverCtor(void * _this, va_list * params)</span>
+<span class="lineNum">      44 </span>                :            : {
+<span class="lineNum">      45 </span>                :<span class="lineCov">          1 :         Server       this = _this;</span>
+<span class="lineNum">      46 </span>                :            :         in_port_t    port;
+<span class="lineNum">      47 </span>                :            :         unsigned int backlog;
+<span class="lineNum">      48 </span>                :            :         int          flags;
+<span class="lineNum">      49 </span>                :            : 
+<span class="lineNum">      50 </span>                :<span class="lineCov">          1 :         this-&gt;max_fds = sysconf(_SC_OPEN_MAX);</span>
+<span class="lineNum">      51 </span>                :<span class="lineCov">          1 :         if (this-&gt;max_fds &lt;= 10) {        // reserve 10 handles for internal use.</span>
+<span class="lineNum">      52 </span>                :            :                 /**
+<span class="lineNum">      53 </span>                :            :                  * \todo some logging would be appropriate :)
+<span class="lineNum">      54 </span>                :            :                  */
+<span class="lineNum">      55 </span>                :<span class="lineNoCov">          0 :                 return -1;</span>
+<span class="lineNum">      56 </span>                :            :         }
+<span class="lineNum">      57 </span>                :<span class="lineCov">          1 :         this-&gt;max_fds -= 10;</span>
+<span class="lineNum">      58 </span>                :            : 
+<span class="lineNum">      59 </span>                :<span class="lineCov">          1 :         this-&gt;logger = va_arg(* params, Logger);</span>
+<span class="lineNum">      60 </span>                :<span class="lineCov">          1 :         this-&gt;worker = va_arg(* params, void *);</span>
+<span class="lineNum">      61 </span>                :<span class="lineCov">          1 :         port         = va_arg(* params, int);</span>
+<span class="lineNum">      62 </span>                :<span class="lineCov">          1 :         backlog      = va_arg(* params, unsigned int);</span>
+<span class="lineNum">      63 </span>                :            : 
+<span class="lineNum">      64 </span>                :<span class="lineCov">          1 :         this-&gt;fds     = calloc(sizeof(struct pollfd), this-&gt;max_fds);</span>
+<span class="lineNum">      65 </span>                :<span class="lineCov">          1 :         this-&gt;conns   = calloc(sizeof(struct conns), this-&gt;max_fds);</span>
+<span class="lineNum">      66 </span>                :            : 
+<span class="lineNum">      67 </span>                :<span class="lineCov">          1 :         this-&gt;sock    = new(Sock, this-&gt;logger, port);</span>
+<span class="lineNum">      68 </span>                :<span class="lineCov">          1 :         flags = fcntl(this-&gt;sock-&gt;handle, F_GETFL, 0);</span>
+<span class="lineNum">      69 </span>                :<span class="lineCov">          1 :         fcntl(this-&gt;sock-&gt;handle, F_SETFL, flags | O_NONBLOCK);</span>
+<span class="lineNum">      70 </span>                :            : 
+<span class="lineNum">      71 </span>                :<span class="lineCov">          1 :         this-&gt;sockSSL = new(Sock, this-&gt;logger, port+1);</span>
+<span class="lineNum">      72 </span>                :<span class="lineCov">          1 :         flags = fcntl(this-&gt;sockSSL-&gt;handle, F_GETFL, 0);</span>
+<span class="lineNum">      73 </span>                :<span class="lineCov">          1 :         fcntl(this-&gt;sockSSL-&gt;handle, F_SETFL, flags | O_NONBLOCK);</span>
+<span class="lineNum">      74 </span>                :            : 
+<span class="lineNum">      75 </span>                :<span class="lineCov">          1 :         SSL_library_init();</span>
+<span class="lineNum">      76 </span>                :<span class="lineCov">          1 :         SSL_load_error_strings();</span>
+<span class="lineNum">      77 </span>                :<span class="lineCov">          1 :         this-&gt;ctx = SSL_CTX_new(SSLv23_server_method());</span>
+<span class="lineNum">      78 </span>                :<span class="lineCov">          1 :         SSL_CTX_use_certificate_file(</span>
+<span class="lineNum">      79 </span>                :            :                         this-&gt;ctx,
+<span class="lineNum">      80 </span>                :            :                         &quot;./certs/server.crt&quot;,
+<span class="lineNum">      81 </span>                :            :                         SSL_FILETYPE_PEM);
+<span class="lineNum">      82 </span>                :            : 
+<span class="lineNum">      83 </span>                :<span class="lineCov">          1 :         SSL_CTX_use_RSAPrivateKey_file(</span>
+<span class="lineNum">      84 </span>                :            :                         this-&gt;ctx,
+<span class="lineNum">      85 </span>                :            :                         &quot;./certs/server.key&quot;,
+<span class="lineNum">      86 </span>                :            :                         SSL_FILETYPE_PEM);
+<span class="lineNum">      87 </span>                :            : 
+<span class="lineNum">      88 </span>                :<span class="lineCov">          1 :         socketListen(this-&gt;sock, backlog);</span>
+<span class="lineNum">      89 </span>                :<span class="lineCov">          1 :         socketListen(this-&gt;sockSSL, backlog);</span>
+<span class="lineNum">      90 </span>                :            : 
+<span class="lineNum">      91 </span>                :<span class="lineCov">          1 :         (this-&gt;fds)[0].fd     = this-&gt;sock-&gt;handle;</span>
+<span class="lineNum">      92 </span>                :<span class="lineCov">          1 :         (this-&gt;fds)[0].events = POLLIN;</span>
+<span class="lineNum">      93 </span>                :<span class="lineCov">          1 :         (this-&gt;fds)[1].fd     = this-&gt;sockSSL-&gt;handle;</span>
+<span class="lineNum">      94 </span>                :<span class="lineCov">          1 :         (this-&gt;fds)[1].events = POLLIN;</span>
+<span class="lineNum">      95 </span>                :<span class="lineCov">          1 :         this-&gt;nfds = 2;</span>
+<span class="lineNum">      96 </span>                :            : 
+<span class="lineNum">      97 </span>                :<span class="lineCov">          1 :         return 0;</span>
+<span class="lineNum">      98 </span>                :            : }
+<span class="lineNum">      99 </span>                :            : 
+<a name="100"><span class="lineNum">     100 </span>                :            : static</a>
+<span class="lineNum">     101 </span>                :            : void
+<span class="lineNum">     102 </span>                :<span class="lineCov">          2 : serverDtor(void * _this)</span>
+<span class="lineNum">     103 </span>                :            : {
+<span class="lineNum">     104 </span>                :<span class="lineCov">          2 :         Server this = _this;</span>
+<span class="lineNum">     105 </span>                :            :     int    i;
+<span class="lineNum">     106 </span>                :            : 
+<span class="lineNum">     107 </span>                :<span class="lineCov">          7 :     for (i=0; i&lt;this-&gt;nfds; i++) {</span>
+<span class="lineNum">     108 </span>                :<span class="lineCov">          5 :                 if (this-&gt;sock-&gt;handle != (this-&gt;fds)[i].fd &amp;&amp;</span>
+<span class="lineNum">     109 </span>                :<span class="lineCov">          3 :                                 this-&gt;sockSSL-&gt;handle != (this-&gt;fds)[i].fd) {</span>
+<span class="lineNum">     110 </span>                :<span class="lineCov">          1 :                         serverCloseConn(this, i);</span>
+<span class="lineNum">     111 </span>                :            :                 }
+<span class="lineNum">     112 </span>                :            :     }
+<span class="lineNum">     113 </span>                :            : 
+<span class="lineNum">     114 </span>                :<span class="lineCov">          2 :         FREE(this-&gt;fds);</span>
+<span class="lineNum">     115 </span>                :<span class="lineCov">          2 :         FREE(this-&gt;conns);</span>
+<span class="lineNum">     116 </span>                :            : 
+<span class="lineNum">     117 </span>                :<span class="lineCov">          2 :         delete(this-&gt;sock);</span>
+<span class="lineNum">     118 </span>                :<span class="lineCov">          2 :         delete(this-&gt;sockSSL);</span>
+<span class="lineNum">     119 </span>                :            : 
+<span class="lineNum">     120 </span>                :<span class="lineCov">          2 :         SSL_CTX_free(this-&gt;ctx);</span>
+<span class="lineNum">     121 </span>                :<span class="lineCov">          2 :         ERR_free_strings();</span>
+<span class="lineNum">     122 </span>                :<span class="lineCov">          2 : }</span>
+<a name="123"><span class="lineNum">     123 </span>                :            : </a>
+<span class="lineNum">     124 </span>                :            : INIT_IFACE(Class, serverCtor, serverDtor, NULL);
+<span class="lineNum">     125 </span>                :<span class="lineCov">          1 : CREATE_CLASS(Server, NULL, IFACE(Class));</span>
+<span class="lineNum">     126 </span>                :            : 
+<span class="lineNum">     127 </span>                :            : // vim: set ts=4 sw=4:
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.9</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

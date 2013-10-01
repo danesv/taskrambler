@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$cbuf_8h.html#afea7754e8d68ccc6b7e21dc74d7c7226" title="cbufAddrIndex" alt="" coords="148,5,255,33"/>
+<area shape="rect" id="node5" href="$cbuf_8h.html#a652d95658664b0658eceaa09e93a3252" title="cbufGetRead" alt="" coords="305,55,404,83"/>
+<area shape="rect" id="node8" href="$cbuf_8h.html#ac6a5c458373606ebadf44cb631a615cb" title="cbufIncRead" alt="" coords="153,106,249,134"/>
+<area shape="rect" id="node10" href="$cbuf_8h.html#a49cdbb3d52ada4cef5a6e88267aacad3" title="cbufMemchr" alt="" coords="153,157,249,185"/>
+</map>

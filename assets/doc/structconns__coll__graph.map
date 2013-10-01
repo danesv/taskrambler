@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structSock.html" title="{Sock\n|+ log\l+ port\l+ handle\l|}" alt="" coords="13,161,85,274"/>
+<area shape="rect" id="node4" href="$structLogger.html" title="{Logger\n|+ min_level\l|}" alt="" coords="5,6,93,87"/>
+<area shape="rect" id="node6" href="$structStream.html" title="{Stream\n|+ type\l+ fd\l+ ssl\l+ handle\l|}" alt="" coords="109,153,181,282"/>
+</map>
