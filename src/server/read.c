@@ -37,7 +37,7 @@ serverRead(Server this, unsigned int i)
 				this->logger,
 				LOGGER_INFO,
 				"initialization error: NULL reader");
-		return -1;
+		return -2;
 	}
 
 	return streamReaderRead(
