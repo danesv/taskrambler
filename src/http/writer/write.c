@@ -37,114 +37,113 @@ ssize_t
 httpWriterWrite(void * _this, Stream st)
 {
 	HttpWriter this = _this;
-	int        cont = 1;
 
-	while (cont) {
-		switch (this->state) {
-			char    * start;
-			ssize_t   to_write;
-			ssize_t   written;
+	switch (this->state) {
+		char    * start;
+		ssize_t   to_write;
+		ssize_t   written;
 
-			case HTTP_WRITER_GET:
-				if (! queueEmpty(this->queue)) {
-					this->current = queueGet(this->queue);
+		case HTTP_WRITER_GET:
 
-					this->written = 0;
-					this->nheader = httpMessageHeaderSizeGet(this->current);
+		if (! queueEmpty(this->queue)) {
+			this->current = queueGet(this->queue);
 
-					if (this->nheader > memGetSize(this->buffer)) {
-						ssize_t size = this->nheader;
+			this->written = 0;
+			this->nheader = httpMessageHeaderSizeGet(this->current);
 
-						size = (0 != size%WRITER_BUF_CHUNK)?
-							(size/WRITER_BUF_CHUNK)+1 :
-							size/WRITER_BUF_CHUNK;
-						size *= WRITER_BUF_CHUNK;
+			if (this->nheader > memGetSize(this->buffer)) {
+				ssize_t size = this->nheader;
 
-						if (NULL != this->buffer) {
-							MEM_FREE(this->buffer);
-						}
+				size = (0 != size%WRITER_BUF_CHUNK)?
+					(size/WRITER_BUF_CHUNK)+1 :
+					size/WRITER_BUF_CHUNK;
+				size *= WRITER_BUF_CHUNK;
 
-						this->buffer  = memMalloc(size);
-						this->nbuffer = size;
-					}
-
-					httpMessageHeaderToString(this->current, this->buffer);
-
-					this->nbody = MIN(
-							this->current->nbody,
-							this->nbuffer - this->nheader);
-
-					memcpy(
-							this->buffer + this->nheader,
-							this->current->body,
-							this->nbody);
-
-					this->state = HTTP_WRITER_WRITE;
-				}
-				else {
-					cont = 0;
-					break;
+				if (NULL != this->buffer) {
+					MEM_FREE(this->buffer);
 				}
 
-			case HTTP_WRITER_WRITE:
-				if (this->written >= this->nbuffer) {
-					size_t body_done = this->written - this->nheader;
+				this->buffer  = memMalloc(size);
+				this->nbuffer = size;
+			}
 
-					start    = this->current->body + body_done;
-					to_write = this->current->nbody - body_done;
-				} else {
-					start    = this->buffer   + this->written;
-					to_write = (this->nheader + this->nbody) - this->written;
-				}
+			httpMessageHeaderToString(this->current, this->buffer);
 
-				written = streamWrite(st, start, to_write);
+			this->nbody = MIN(
+					this->current->nbody,
+					this->nbuffer - this->nheader);
 
-				if (written < 0) {
-					return written;
-				}
+			memcpy(
+					this->buffer + this->nheader,
+					this->current->body,
+					this->nbody);
 
-				this->written += written;
-
-				if (written != to_write) {
-					/*
-					 * for some reason not all data could be
-					 * written...most likely its a slow connection
-					 * so, not to slow down the server we stop
-					 * writing to this one now and come back to
-					 * it in the next run....maybe it would be
-					 * feasable to also implement some kind of
-					 * timeout mechanism for writes...
-					 * By the way, the same is true for reading,
-					 * so to say, the parser.
-					 */
-					cont = 0;
-					break;
-				}
-
-				if (this->written >= this->nheader + this->current->nbody) {
-					// we are done with this message.
-					this->state = HTTP_WRITER_DONE;
-				} else {
-					break;
-				}
-
-			case HTTP_WRITER_DONE:
-	 			this->state = HTTP_WRITER_GET;
-
-				if (! httpMessageHasKeepAlive(this->current)) {
-					/**
-					 * if the message did not have the keep-alive feature
-					 * we don't care about further pipelined messages and
-					 * return to the caller with a -2 indicating that the
-					 * underlying connection should be closed at their side.
-					 * Then we close to connection.
-					 */
-					return -2;
-				}
-				delete(this->current);
-
-				break;
+			this->state = HTTP_WRITER_WRITE;
 		}
+		else {
+			break;
+		}
+
+		case HTTP_WRITER_WRITE:
+
+		if (this->written >= this->nbuffer) {
+			size_t body_done = this->written - this->nheader;
+
+			start    = this->current->body + body_done;
+			to_write = this->current->nbody - body_done;
+		} else {
+			start    = this->buffer   + this->written;
+			to_write = (this->nheader + this->nbody) - this->written;
+		}
+
+		written = streamWrite(st, start, to_write);
+
+		if (written < 0) {
+			return written;
+		}
+
+		this->written += written;
+
+		if (written != to_write) {
+			/*
+			 * for some reason not all data could be
+			 * written...most likely its a slow connection
+			 * so, not to slow down the server we stop
+			 * writing to this one now and come back to
+			 * it in the next run....maybe it would be
+			 * feasable to also implement some kind of
+			 * timeout mechanism for writes...
+			 * By the way, the same is true for reading,
+			 * so to say, the parser.
+			 */
+			break;
+		}
+
+		if (this->written >= this->nheader + this->current->nbody) {
+			// we are done with this message.
+			this->state = HTTP_WRITER_DONE;
+		} else {
+			break;
+		}
+
+		case HTTP_WRITER_DONE:
+
+		this->state = HTTP_WRITER_GET;
+
+		if (! httpMessageHasKeepAlive(this->current)) {
+			/**
+			 * if the message did not have the keep-alive feature
+			 * we don't care about further pipelined messages and
+			 * return to the caller with a -2 indicating that the
+			 * underlying connection should be closed at their side.
+			 * Then we close to connection.
+			 */
+			delete(this->current);
+			return -2;
+		}
+		delete(this->current);
+
+		break;
 	}
 
 	return NULL == this->current ?

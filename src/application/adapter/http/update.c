@@ -184,13 +184,13 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	session = applicationSessionGet(this->application, sid);
 	if (NULL == session) {
 		session = applicationSessionStart(this->application);
-
-		// send session cookie
-		nbuf = sprintf(buf, "sid=%s;Path=/", session->id);
-		queuePut(
-				worker->additional_headers, 
-				new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
 	}
+
+	// send session cookie
+	nbuf = sprintf(buf, "sid=%s;Path=/", session->id);
+	queuePut(
+			worker->additional_headers, 
+			new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
 
 	if (0 == strcmp("POST", worker->current_request->method)) {
 		if (0 == strcmp("/login/", worker->current_request->path)) {
