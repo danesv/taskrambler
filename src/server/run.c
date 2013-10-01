@@ -55,18 +55,24 @@ serverRun(Server this)
 		 * handle accept
 		 */
 		if (0 != ((this->fds)[0].revents & POLLIN)) {
-			if (0 > serverHandleAccept(this, 0)) {
-				events--;
-			}
+			while (0 < serverHandleAccept(this, 0)) {}
+			events--;
+		}
+
+		if (events == 0) {
+			continue;
 		}
 
 		/**
 		 * handle accept SSL
 		 */
 		if (0 != ((this->fds)[1].revents & POLLIN)) {
-			if (0 > serverHandleAccept(this, 1)) {
-				events--;
-			}
+			while (0 < serverHandleAccept(this, 1)) {}
+			events--;
+		}
+
+		if (events == 0) {
+			continue;
 		}
 
 		for (i=2; i < this->nfds; i++) {
@@ -91,6 +97,10 @@ serverRun(Server this)
 				if (0 < processed) {
 					(this->fds)[i].events |= POLLOUT;
 				}
+			}
+
+			if (events == 0) {
+				break;
 			}
 
 			/**
@@ -122,8 +132,9 @@ serverRun(Server this)
 				}
 			}
 
-			if (0 >= events)
+			if (events == 0) {
 				break; // no more events to handle
+			}
 		}
     }
 }
