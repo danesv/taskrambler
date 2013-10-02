@@ -7,8 +7,9 @@ AC_DEFUN([AC_MEM_OPT],
 		[use_mem_opt=no])
 
 	if test "x$use_mem_opt" = "xyes"; then
-	MEM_OPT_FLAGS="-DMEM_OPT"
-	AC_SUBST(MEM_OPT_FLAGS)
+		AC_MSG_NOTICE("Using best fit tree based memory optimizations")
+		MEM_OPT_FLAGS="-DMEM_OPT"
+		AC_SUBST(MEM_OPT_FLAGS)
 	fi
 ])
 
