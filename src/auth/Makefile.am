@@ -8,4 +8,4 @@ libauth_a_SOURCES = interface/auth.c \
 		    ldap.c \
 		    storage/storage.c \
 		    storage/hash_pw.c
-libauth_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/
+libauth_a_CFLAGS  = $(CFLAGS) $(DRAGONEGG_FLAGS) -Wall -I ../../include/

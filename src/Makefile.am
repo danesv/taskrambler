@@ -35,6 +35,7 @@ bin_PROGRAMS = taskrambler
 
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
 taskrambler_CFLAGS  = $(CFLAGS) \
+		      $(DRAGONEGG_FLAGS) \
 		      -Wall \
 		      -DPWD=\"$(PWD)\" \
 		      $(MEM_OPT_FLAGS) \

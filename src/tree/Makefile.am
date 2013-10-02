@@ -7,4 +7,4 @@ TREE = tree.c find.c insert.c inOrderSuccessor.c delete.c walk.c \
 noinst_LIBRARIES = libtree.a
 
 libtree_a_SOURCES = $(TREE)
-libtree_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/
+libtree_a_CFLAGS  = $(CFLAGS) $(DRAGONEGG_FLAGS) -Wall -I ../../include/

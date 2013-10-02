@@ -8,4 +8,4 @@ IFACE  = interface/reader.c \
 noinst_LIBRARIES = libstream.a
 
 libstream_a_SOURCES = $(STREAM) $(IFACE)
-libstream_a_CFLAGS  = $(CFLAGS) -Wall -I ../../include/
+libstream_a_CFLAGS  = $(CFLAGS) $(DRAGONEGG_FLAGS) -Wall -I ../../include/
