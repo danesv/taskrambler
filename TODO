@@ -1,8 +1,42 @@
 FOR VERSION 0.2
 
-- add a first simple session persistence stuff.
-  This could store informations like the username and the last login
-  date and present these to the user.
+- use memNewRef instead of memcpy wherever possible. This should
+  improve the performance again. On the other hand. Don't stop
+  thinking before doing any memory transfers at all.
+
+- build a json parser and builder...
+  There are several solutions out there but I think it will be best
+  to use my own one that nicely fits into the rest of this code.
+
+  A json builder and parser are different things with different effords.
+  - parser: a state machine that might either fill a data structur in a
+    given way or calls callbacks with the relevant informations.
+
+    I just tought about is and have decided to create a json class
+    which consists only of a void pointer that is the root element
+    of the json data and an information about what type it is.
+    This will be a JsonValue. A json value always contains the type
+    of the value as well as a representation of the value itself.
+    The might be string, number(which also includes true and false),
+    hash or array. A value of type hash will be indexed by strings and
+    might hold arbitrary JsonValues as its values. The array is a NULL
+    terminated array of JsonValues.
+
+    OK, that has the drawback that I need to organize the data structures
+    of my other classes to be json capable.
+
+    Another idea. I create an interface "initjson" or something like this.
+    This interface must define the methods to set given data by json
+    values. A list of these might be:
+      - start_hash
+      - start_array
+      - end_hash
+      - end_array
+      - key
+      - value
+
+  - a set of helper methods that serialize given data into a json string
+    representation.
 
 - Let a user being able to create tasks and get them again after login.
 
