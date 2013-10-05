@@ -782,8 +782,7 @@ memNewRef(void * mem)
 void *
 memMalloc(size_t size)
 {
-#ifdef MEM_OPT
-	struct memSegment * seg;
+	struct memSegment * seg = NULL;
 	//long                psize = sysconf(_SC_PAGESIZE);
 	long                psize = 64;
 
@@ -793,7 +792,9 @@ memMalloc(size_t size)
 	size  = (0>=size)?1:(0!=size%psize)?(size/psize)+1:size/psize;
 	size *= psize;
 
+#ifdef MEM_OPT
 	seg = findElement(segments, size);
+#endif
 
 	if (NULL == seg) {
 		seg = newElement(size);
@@ -803,9 +804,6 @@ memMalloc(size_t size)
 	}
 
 	return seg->ptr;
-#else
-	return malloc(size);
-#endif
 }
 
 /**
@@ -819,45 +817,37 @@ memMalloc(size_t size)
 void *
 memCalloc(size_t nmemb, size_t size)
 {
-#ifdef MEM_OPT
 	size_t   _size = nmemb * size;
 	void   * mem   = memMalloc(_size);
 
 	memset(mem, 0, _size);
 
 	return mem;
-#else
-	return calloc(nmemb, size);
-#endif
 }
 
 void
 memFree(void ** mem)
 {
-#ifdef MEM_OPT
 	if (NULL != *mem) {
 		struct memSegment * seg = (*mem - sizeof(struct memSegment));
 
 		if (1 < seg->ref_count) {
 			seg->ref_count--;
 		} else {
+#ifdef MEM_OPT
 			insertElement(&segments, seg);
+#else
+			free(seg);
+#endif
 		}
 
 		*mem = NULL;
 	}
-#else
-	if (NULL != *mem) {
-		free(*mem);
-		*mem = NULL;
-	}
-#endif
 }
 
 size_t
 memGetSize(void * mem)
 {
-#ifdef MEM_OPT
 	struct memSegment * segment;
 
 	if (NULL == mem) {
@@ -866,9 +856,6 @@ memGetSize(void * mem)
 
 	segment = (struct memSegment *)(mem - sizeof(struct memSegment));
 	return segment->size;
-#else
-	return 0;
-#endif
 }
 
 void
