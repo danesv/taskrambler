@@ -71,6 +71,9 @@ AC_DEFUN([AC_TDD_GCOV],
   COVERAGE_CFLAGS="-O0 -fprofile-arcs -ftest-coverage"
   COVERAGE_CXXFLAGS="-O0 -fprofile-arcs -ftest-coverage"	
   COVERAGE_LDFLAGS="-lgcov"
+  AC_SUBST(COVERAGE_CFLAGS)
+  AC_SUBST(COVERAGE_CXXFLAGS)
+  AC_SUBST(COVERAGE_LDFLAGS)
 
 fi
 ]) # AC_TDD_GCOV
