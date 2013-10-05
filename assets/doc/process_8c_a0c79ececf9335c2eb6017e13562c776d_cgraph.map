@@ -1,7 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$hash_2hash_8h.html#a15c5c8fa9517a5dadcdbdd024f3dea88" title="hashAdd" alt="" coords="315,5,389,33"/>
-<area shape="rect" id="node7" href="$message_8h.html#a822f6dbc57aa48a7b04af28d5c664a77" title="httpMessageHasKeepAlive" alt="" coords="261,55,443,83"/>
-<area shape="rect" id="node5" href="$hashable_8h.html#a18043293eb74b036ff3adf679afd7606" title="hashableHandleDouble" alt="" coords="491,5,651,33"/>
-<area shape="rect" id="node9" href="$hash_2hash_8h.html#ae63f5dffd0f7894f09a5f9b725cb6113" title="hashGet" alt="" coords="535,55,607,83"/>
-<area shape="rect" id="node11" href="$utils_2hash_8h.html#a4fd82572cce0e6beb14977a4d527dd25" title="sdbm" alt="" coords="700,55,753,83"/>
-</map>

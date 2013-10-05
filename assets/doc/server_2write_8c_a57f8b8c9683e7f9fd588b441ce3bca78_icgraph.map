@@ -1,6 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$run_8c.html#ac4ce64f06fd2cb9d70953fed86a607e7" title="serverRead" alt="" coords="179,5,269,33"/>
-<area shape="rect" id="node9" href="$server_2write_8c.html#a0100b8630247e3ab19280ca0d38c480e" title="serverWrite" alt="" coords="180,55,268,83"/>
-<area shape="rect" id="node5" href="$run_8c.html#a67a4d9073b80d8ae1459fb11ddd23675" title="serverRun" alt="" coords="319,30,401,58"/>
-<area shape="rect" id="node7" href="$webgameserver_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="main" alt="" coords="451,30,501,58"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$cbuf_2read_8c.html#a5582ca70b847b9dd308d8234055c1dde" title="cbufRead" alt="" coords="161,55,239,83"/>
-<area shape="rect" id="node9" href="$http_2writer_2write_8c.html#accd7a3cfe29607d72a35fe3e3d187c48" title="httpWriterWrite" alt="" coords="301,55,411,83"/>
-<area shape="rect" id="node13" href="$set__data_8c.html#a36cbbbaa48b1d59925a70d18d0f4f4cd" title="cbufSetData" alt="" coords="152,5,248,33"/>
-<area shape="rect" id="node5" href="$parse_8c.html#a1aa3a9f8959238057fe18ca5bda180db" title="httpParserParse" alt="" coords="297,5,415,33"/>
-<area shape="rect" id="node7" href="$process_8c.html#a05882322d98d5710a5512c9255e03d71" title="httpWorkerProcess" alt="" coords="465,5,599,33"/>
-<area shape="rect" id="node11" href="$answer_8c.html#add3fe105c4e782e5b1387cb596792bbe" title="httpWorkerWrite" alt="" coords="473,55,591,83"/>
-</map>

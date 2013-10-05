@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node3" href="$header__size__get_8c.html#ab30885fa82741d068d75401e2b56c388" title="httpMessageHeaderSizeGet" alt="" coords="173,5,363,33"/>
-<area shape="rect" id="node5" href="$http_2writer_2write_8c.html#accd7a3cfe29607d72a35fe3e3d187c48" title="httpWriterWrite" alt="" coords="411,5,520,33"/>
-<area shape="rect" id="node7" href="$answer_8c.html#add3fe105c4e782e5b1387cb596792bbe" title="httpWorkerWrite" alt="" coords="568,5,685,33"/>
-</map>
