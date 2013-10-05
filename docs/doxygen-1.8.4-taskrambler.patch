@@ -1,0 +1,90 @@
+diff --git a/src/code.l b/src/code.l
+index 01636fa..0f98649 100644
+--- a/src/code.l
++++ b/src/code.l
+@@ -1753,7 +1753,7 @@ TEMPLIST "<"[^\"\}\{\(\)\/\n\>]*">"
+ SCOPETNAME (((({ID}{TEMPLIST}?){BN}*)?{SEP}{BN}*)*)((~{BN}*)?{ID})
+ SCOPEPREFIX ({ID}{TEMPLIST}?{BN}*{SEP}{BN}*)+
+ KEYWORD_OBJC ("@public"|"@private"|"@protected"|"@class"|"@implementation"|"@interface"|"@end"|"@selector"|"@protocol"|"@optional"|"@required"|"@throw"|"@synthesize"|"@property")
+-KEYWORD ("asm"|"__assume"|"auto"|"class"|"const"|"delete"|"enum"|"explicit"|"extern"|"false"|"friend"|"gcnew"|"gcroot"|"get"|"inline"|"internal"|"mutable"|"namespace"|"new"|"nullptr"|"override"|"operator"|"pin_ptr"|"private"|"protected"|"public"|"raise"|"register"|"remove"|"self"|"sizeof"|"static"|"struct"|"__super"|"function"|"template"|"generic"|"this"|"true"|"typedef"|"typeid"|"typename"|"union"|"using"|"virtual"|"volatile"|"abstract"|"final"|"import"|"synchronized"|"transient"|"alignas"|"alignof"|{KEYWORD_OBJC})
++KEYWORD ("asm"|"__assume"|"auto"|"class"|"const"|"delete"|"enum"|"explicit"|"extern"|"false"|"friend"|"gcnew"|"gcroot"|"get"|"inline"|"internal"|"mutable"|"namespace"|"new"|"nullptr"|"override"|"operator"|"pin_ptr"|"private"|"protected"|"public"|"raise"|"register"|"remove"|"self"|"sizeof"|"static"|"struct"|"CLASS"|"__super"|"function"|"template"|"generic"|"this"|"true"|"typedef"|"typeid"|"typename"|"union"|"using"|"virtual"|"volatile"|"abstract"|"final"|"import"|"synchronized"|"transient"|"alignas"|"alignof"|{KEYWORD_OBJC})
+ FLOWKW  ("break"|"case"|"catch"|"continue"|"default"|"do"|"else"|"finally"|"for"|"foreach"|"for each"|"goto"|"if"|"return"|"switch"|"throw"|"throws"|"try"|"while"|"@try"|"@catch"|"@finally")
+ TYPEKW  ("bool"|"char"|"double"|"float"|"int"|"long"|"object"|"short"|"signed"|"unsigned"|"void"|"wchar_t"|"size_t"|"boolean"|"id"|"SEL"|"string"|"nullptr")
+ CASTKW ("const_cast"|"dynamic_cast"|"reinterpret_cast"|"static_cast")
+@@ -1832,6 +1832,13 @@ RAWEND    ")"[^ \t\(\)\\]{0,16}\"
+   					  codifyLines(yytext);
+ 					  endFontClass();
+ 					}
++<Body>CLASS"("                          {
++  					  startFontClass("keyword");
++  					  codifyLines(yytext);
++					  endFontClass();
++  					  if (!g_insideTemplate) 
++					    BEGIN( ClassName ); 
++					}
+ <Body>(KEYWORD_CPPCLI_DATATYPE|("partial"{B}+)?"class"|"struct"|"union"|"namespace"|"interface"){B}+ { 
+   					  startFontClass("keyword");
+   					  codifyLines(yytext);
+@@ -2109,6 +2116,10 @@ RAWEND    ")"[^ \t\(\)\\]{0,16}\"
+ 					    BEGIN( ClassVar );
+                                           }
+ 					}
++<ClassVar>")"				{
++					    g_code->codify(yytext);
++					    BEGIN( ClassVar );
++					}
+ <AlignAs>"("                            { 
+                                           g_bracketCount=1;
+ 					  g_code->codify(yytext);
+diff --git a/src/scanner.l b/src/scanner.l
+index b3cdfb9..c3dedc5 100644
+--- a/src/scanner.l
++++ b/src/scanner.l
+@@ -605,7 +605,7 @@ static int yyread(char *buf,int max_size)
+ 
+        /* start command character */
+ CMD	  ("\\"|"@")
+-SECTIONCMD {CMD}("image"|"author"|"internal"|"version"|"date"|"deprecated"|"param"|"exception"|"return"[s]?|"retval"|"bug"|"warning"|"par"|"sa"|"see"|"pre"|"post"|"invariant"|"note"|"remark"[s]?|"todo"|"test"|"xrefitem"|"ingroup"|"callgraph"|"callergraph"|"latexonly"|"htmlonly"|"xmlonly"|"docbookonly"|"manonly"|"{"|"verbatim"|"dotfile"|"dot"|"defgroup"|"addtogroup"|"weakgroup"|"class"|"namespace"|"union"|"struct"|"fn"|"var"|"details"|"typedef"|"def"|"overload")|("<"{PRE}">")
++SECTIONCMD {CMD}("image"|"author"|"internal"|"version"|"date"|"deprecated"|"param"|"exception"|"return"[s]?|"retval"|"bug"|"warning"|"par"|"sa"|"see"|"pre"|"post"|"invariant"|"note"|"remark"[s]?|"todo"|"test"|"xrefitem"|"ingroup"|"callgraph"|"callergraph"|"latexonly"|"htmlonly"|"xmlonly"|"docbookonly"|"manonly"|"{"|"verbatim"|"dotfile"|"dot"|"defgroup"|"addtogroup"|"weakgroup"|"class"|"namespace"|"union"|"struct"|"CLASS"|"fn"|"var"|"details"|"typedef"|"def"|"overload")|("<"{PRE}">")
+ BN        [ \t\n\r]
+ BL        [ \t\r]*"\n" 
+ B         [ \t]
+@@ -635,6 +635,7 @@ RAWEND    ")"[^ \t\(\)\\]{0,16}\"
+ %x	DefineEnd
+ %x	CompoundName
+ %x	ClassVar
++%x	CClassName
+ %x	CSConstraintName
+ %x	CSConstraintType
+ %x 	CSIndexer
+@@ -1703,8 +1704,30 @@ RAWEND    ")"[^ \t\(\)\\]{0,16}\"
+ 					  if (yytext[yyleng-1]=='{') unput('{');
+ 					  BEGIN( CompoundName ) ;
+ 					}
++<FindMembers>{B}*"CLASS("               {
++  					  current->section = Entry::CLASS_SEC ;
++					  current->spec    = Entry::Struct |
++					    (current->spec & Entry::Published); // preserve UNO IDL
++					  addType( current ) ;
++					  current->type += " CLASS" ;
++					  current->fileName  = yyFileName;
++					  current->startLine = yyLineNr;
++					  current->startColumn = yyColNr;
++					  current->bodyLine  = yyLineNr;
++					  lineCount() ;
++					  BEGIN( CClassName ) ;
++					}
++<CClassName>{SCOPENAME}			{
++					  current->name = yytext ;
++					  lineCount();
++					  BEGIN( CClassName );
++					}
++<CClassName>")"				{
++					  BEGIN( ClassVar );
++					}
+ <FindMembers>{B}*"value struct{" |      // C++/CLI extension
+ <FindMembers>{B}*"value struct"{BN}+     {
++						printf("DEBUG: myclass 3\n");
+   					  isTypedef=FALSE;
+   					  current->section = Entry::CLASS_SEC;
+                                           current->spec    = Entry::Struct | Entry::Value;
