@@ -2,13 +2,15 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([taskrambler], [0.1.6], [Georg Hopp <georg@steffers.org>])
+AC_INIT([taskrambler],
+        [m4_esyscmd_s([git describe --always --abbrev=0])],
+        [Georg Hopp <georg@steffers.org>])
 LT_INIT
 AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
-#AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2013 Georg Hopp])
-AC_REVISION([$Id:$])
+AC_REVISION([m4_esyscmd_s([git describe --always])])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -22,9 +24,6 @@ AC_SUBST(COVERAGE_LDFLAGS)
 m4_include([m4/memopt.m4])
 AC_MEM_OPT
 
-m4_include([m4/dragonegg.m4])
-AC_DRAGONEGG
-
 PWD=$(/bin/pwd)
 AC_SUBST(PWD)
 
@@ -34,6 +33,17 @@ AC_PROG_CC
 AC_PROG_CC_C99
 AC_PROG_LIBTOOL
 AM_PROG_CC_C_O
+
+# Doxygen
+AC_CHECK_PROGS([DOXYGEN], [doxygen])
+if test -z "$DOXYGEN";
+   then AC_MSG_WARN([Doxygen not found - continuing without Doxygen support])
+fi
+
+AM_CONDITIONAL([HAVE_DOXYGEN],
+               [test -n "$DOXYGEN"])
+AM_COND_IF([HAVE_DOXYGEN],
+	   [AC_CONFIG_FILES([docs/Doxyfile])])
 
 # # Checks for libraries.
 # AC_CHECK_LIB([json], [json_object_new_object], [],
@@ -73,5 +83,6 @@ AC_CONFIG_FILES([Makefile
 		 src/application/Makefile
 		 src/storage/Makefile
 		 src/user/Makefile
+		 docs/Makefile
 		 tests/Makefile])
 AC_OUTPUT

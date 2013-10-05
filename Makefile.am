@@ -7,6 +7,16 @@ ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = include assets certs config run
 
-SUBDIRS = src tests
+SUBDIRS = src tests docs
 
-include $(top_srcdir)/Makefile.am.coverage
+.PHONY: docs coverage-html
+
+if HAVE_DOXYGEN
+docs:
+	-$(MAKE) -C docs $(AM_MAKEFLAGS) -k $@
+endif
+
+if HAVE_GCOV
+coverage-html:
+	-$(MAKE) -C tests $(AM_MAKEFLAGS) -k $@
+endif
