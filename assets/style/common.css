@@ -6,6 +6,7 @@ div#randval {
     background-color: white;
     border:           1px solid black;
     border-radius:    10px;
+    z-index:          20;
 }
 
 div#signup {
@@ -16,6 +17,7 @@ div#signup {
     background-color: white;
     border:           1px solid black;
     border-radius:    10px;
+    z-index:          20;
 }
 
 div#login {
@@ -26,6 +28,7 @@ div#login {
     background-color: white;
     border:           1px solid black;
     border-radius:    10px;
+    z-index:          20;
 }
 
 .hide {
