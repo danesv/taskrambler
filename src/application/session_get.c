@@ -35,40 +35,28 @@
 Session
 applicationSessionGet(Application this, const char * sid)
 {
-	Session sess    = NULL;
-	Queue   current = this->active_sessions;
-	time_t  now     = time(NULL);
+	Session sess  = NULL;
+	int     index;
 
-	while (NULL != current->next) {
-		Session session = (Session)current->next->msg;
-
-		if (now >= session->livetime) {
-			Queue to_delete = current->next;
-
-			if (to_delete == this->active_sessions->first) {
-				this->active_sessions->first = to_delete->next;
+	if (NULL != sid) {
+		/**
+		 * now get the session if not expired
+		 */
+		for (index=0; index<SESSION_LIVETIME; index++) {
+			sess = (Session)hashDelete(
+					(this->active_sessions)[index], sid, 36);
+			if (NULL != sess) {
+				break;
 			}
-			if (to_delete == this->active_sessions->last) {
-				if (to_delete == this->active_sessions->next) {
-					this->active_sessions->last = NULL;
-				} else {
-					this->active_sessions->last = current;
-				}
-			}
-
-			current->next = to_delete->next;
-
-			delete(session);
-			delete(to_delete);
-			continue;
 		}
 
-		if (NULL != sid && 0 == memcmp(session->id, sid, 36)) {
-			session->livetime = time(NULL) + SESSION_LIVETIME;
-			sess              = session;
+		/**
+		 * update livetime of session if found
+		 */
+		if (NULL != sess) {
+			sess->livetime = this->session_time_ofs + SESSION_LIVETIME;
+			hashAdd((this->active_sessions)[0], sess);
 		}
-
-		current = current->next;
 	}
 
 	return sess;

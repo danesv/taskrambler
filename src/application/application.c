@@ -25,7 +25,7 @@
 #include <stdarg.h>
 
 #include "class.h"
-#include "queue.h"
+#include "hash.h"
 #include "application/application.h"
 #include "storage/storage.h"
 
@@ -58,8 +58,12 @@ applicationCtor(void * _this, va_list * params)
 		this->auth[i] = va_arg(*params, void *);
 	}
 
-	this->active_sessions = new(Queue);
-	this->version         = VERSION;
+	this->active_sessions = memCalloc(SESSION_LIVETIME, sizeof(Hash));
+	for (i=0; i<SESSION_LIVETIME; i++) {
+		this->active_sessions[i] = new(Hash);
+	}
+
+	this->version = VERSION;
 
 	return 0;
 }
@@ -69,9 +73,13 @@ void
 applicationDtor(void * _this)
 {
 	Application this = _this;
+	size_t      i;
 
-	delete(this->active_sessions);
+	for (i=0; i<SESSION_LIVETIME; i++) {
+		delete(this->active_sessions[i]);
+	}
 
+	MEM_FREE(this->active_sessions);
 	MEM_FREE(this->auth);
 }
 

@@ -34,7 +34,12 @@
 void
 applicationSessionStop(Application this, Session session)
 {
-	session->livetime = 0;
+	int index = SESSION_LIVETIME - 
+		(session->livetime - this->session_time_ofs);
+
+	if (SESSION_LIVETIME > index) {
+		hashDeleteByVal((this->active_sessions)[index], session->hash);
+	}
 }
 
 // vim: set ts=4 sw=4:

@@ -32,6 +32,7 @@
 #include "application/application.h"
 
 #include "utils/memory.h"
+#include "commons.h"
 
 int
 applicationSignup(

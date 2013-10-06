@@ -20,29 +20,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __HASH_HASH_H__
-#define __HASH_HASH_H__
+#include <stdio.h>
 
+#include <search.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "hash.h"
 #include "tree.h"
+#include "utils/hash.h"
 
-#define HASH_IS_EMPTY(h)	((h)->root)
-
-CLASS(Hash) {
-	Tree root;
-};
-
-void * hashAdd(Hash, void *);
-void * hashDelete(Hash, const char *, size_t);
-void * hashGet(Hash, const char *, size_t);
-void * hashGetFirst(Hash);
-void * hashDeleteByVal(Hash, unsigned long);
-void * hashGetByVal(Hash, unsigned long);
-void   hashEach(Hash, void (*)(const void*));
-void   hashCleanup(Hash);
-
-#endif // __HASH_HASH_H__
+void *
+hashGetFirst(Hash this)
+{
+	return this->root;
+}
 
 // vim: set ts=4 sw=4:

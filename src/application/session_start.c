@@ -22,24 +22,24 @@
 
 #define _GNU_SOURCE
 
+#include <stdlib.h>
 #include <sys/types.h>
 
 #include "class.h"
 #include "session.h"
-#include "queue.h"
+#include "hash.h"
 #include "application/application.h"
 
 #include "utils/memory.h"
 
-
 Session
 applicationSessionStart(Application this)
 {
-	Session session = new(Session);
+	Session sess = new(Session);
 
-	queuePut(this->active_sessions, session);
+	hashAdd((this->active_sessions)[0], sess);
 
-	return session;
+	return sess;
 }
 
 // vim: set ts=4 sw=4:

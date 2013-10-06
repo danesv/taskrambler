@@ -22,7 +22,7 @@
 
 #define _GNU_SOURCE
 
-#include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 
 #include "class.h"
@@ -32,23 +32,38 @@
 
 #include "utils/memory.h"
 
-
 void
-applicationSessionUpdate(
-		Application   this,
-		const char *  sid,
-		const char *  name,
-		size_t        nname)
+applicationSessionCleanup(Application this, time_t now)
 {
-//	Session session = hashGet(this->active_sessions, sid, 36);
-//
-//	if (NULL != session) {
-//		MEM_FREE(session->username);
-//
-//		session->username        = memMalloc(nname + 1);
-//		session->username[nname] = 0;
-//		memcpy(session->username, name, nname);
-//	}
+	unsigned int expired = now - this->session_time_ofs;
+	unsigned int i       = 0;
+
+	if (SESSION_LIVETIME <= expired) {
+		expired = SESSION_LIVETIME;
+	}
+
+	if (0 < expired && SESSION_LIVETIME > expired) {
+		Hash         * tmp_buf = memCalloc(SESSION_LIVETIME, sizeof(Hash));
+		unsigned int   i       = 0;
+
+		memcpy(
+				&(tmp_buf[expired]),
+				this->active_sessions,
+				(SESSION_LIVETIME - expired) * sizeof(Hash));
+		memcpy(
+				tmp_buf,
+				&(this->active_sessions[SESSION_LIVETIME - expired]),
+				expired * sizeof(Hash));
+				
+		MEM_FREE(this->active_sessions);
+		this->active_sessions = tmp_buf;
+	}
+
+	for (i=0; i<expired; i++) {
+		hashCleanup(this->active_sessions[i]);
+	}
+
+	this->session_time_ofs = now;
 }
 
 // vim: set ts=4 sw=4:

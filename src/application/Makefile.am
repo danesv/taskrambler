@@ -7,7 +7,8 @@ APPLICATION = application.c \
 	      signup.c \
 	      session_start.c \
 	      session_stop.c \
-	      session_get.c
+	      session_get.c \
+	      session_cleanup.c
 ADAPTERHTTP = adapter/http/http.c \
 	      adapter/http/update.c
 	      

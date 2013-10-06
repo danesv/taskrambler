@@ -172,16 +172,20 @@ signupAdapter(Application application, HttpWorker worker, Session session)
 void
 applicationAdapterHttpUpdate(void * _this, void * subject)
 {
-	ApplicationAdapterHttp this = _this;
-	HttpWorker worker = (HttpWorker)subject;
-	char *     sid;
-	Session    session;
-	char       buf[200];
-	size_t     nbuf;
+	ApplicationAdapterHttp this    = _this;
+	HttpWorker             worker  = (HttpWorker)subject;
+	Session                session = NULL;
+	time_t                 now     = time(NULL);
 
-	sid     = getSessionId(worker->current_request->cookies);
+	char   * sid;
+	char     buf[1000];
+	size_t   nbuf;
 
+	applicationSessionCleanup(this->application, now);
+
+	sid = getSessionId(worker->current_request->cookies);
 	session = applicationSessionGet(this->application, sid);
+
 	if (NULL == session) {
 		session = applicationSessionStart(this->application);
 	}

@@ -24,10 +24,11 @@
 #define __APPLICATION_H__
 
 #include <sys/types.h>
+
 #include "class.h"
 
 #include "session.h"
-#include "queue.h"
+#include "hash.h"
 #include "auth/credential.h"
 #include "storage/storage.h"
 #include "session.h"
@@ -40,9 +41,8 @@ struct randval {
 };
 
 CLASS(Application) {
-	// should be a list and not a queue but currently queue is 
-	// the closest I have.
-	Queue             active_sessions;
+	Hash            * active_sessions;
+	time_t            session_time_ofs;
 
 	void           ** auth;
 	size_t            nauth;
@@ -61,6 +61,7 @@ int  applicationSignup(Application, Credential, User, Session);
 Session applicationSessionStart(Application);
 Session applicationSessionGet(Application, const char *);
 void    applicationSessionStop(Application, Session);
+void    applicationSessionCleanup(Application, time_t);
 
 #endif // __HTTP_HEADER_H__
 

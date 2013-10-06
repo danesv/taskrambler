@@ -49,7 +49,7 @@ hashDtor(void * _this)
 {
 	Hash this = _this;
 
-	treeDestroy(&this->root, tDelete);
+	hashCleanup(this);
 }
 
 INIT_IFACE(Class, hashCtor, hashDtor, NULL);
