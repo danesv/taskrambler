@@ -5,6 +5,8 @@ if HAVE_DOXYGEN
 # $(directory)/man_page_1.3: doxyfile.stamp
 # $(directory)/man_page_2.3: doxyfile.stamp
 
+EXTRA_DIST = Doxyfile.in
+
 .PHONY: docs
 
 docs:
