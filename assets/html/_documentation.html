@@ -16,12 +16,33 @@
 	Both don't cover the complete code.<br />
 
 	There is the beginning of a generated API doc
-	<a href="/doc/index.html" target="_blank">here</a>.<br />
+	<a href="/doc/v0.1.6/index.html" target="_blank">here</a>.<br />
 
 	I also started automated regression tests. The
 	results can be seen 
-	<a href="/coverage/index.html" target="_blank">here</a>.
+	<a href="/coverage/v0.1.6/index.html" target="_blank">here</a>.
 </p>
+
+<h2>Version 0.1.6</h2>
+
+This is a bugfix release. No obvious visible changes at the UI.
+<br/ ><br />
+<b>64 files changed, 1433 insertions(+), 1076 deletions(-)</b>
+<br/ >
+<ul>
+	<li>Bugfixes and optmizations in the server main loop.</li>
+	<li>Load parts of the UI via ajax calls thus preventing code
+	repitition in there.</li>
+	<li>Add m4 macros to build with dragonegg. I also tried to build
+	with clang and it works without any change for me.</li>
+	<li>Fix build system. Now it is again possible to build actual
+	coverage reports and API docs.</li>
+	<li>Fix memory handling when optimizations are not in place.</li>
+	<li>Optimize session handling. The way I did it before reduced the
+	overall server performance. Apache Bench made only about
+	200 to 400 requests per second. Now it is again up at around 13000
+	requests per second on my core2 development machine.</li>
+</ul>
 
 <h2>Version 0.1.5</h2>
 
