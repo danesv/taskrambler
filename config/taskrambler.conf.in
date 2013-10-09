@@ -1,0 +1,23 @@
+##
+# basic configuration file for taskrambler
+#
+# syntax: <ws><key><ws><value><ws>
+#
+# <ws>     ::= any whitespace as defined by isspace
+# <key>    ::= any character except whitespace
+# <value>  ::= <string> | <number>
+# <string> ::= <quote>any character<quote>
+# <quote>  ::= " | '
+# <number> ::= <digit><number>
+# <digit>  ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+#
+# Whitespaces at the beginning or the end of a line are
+# ignored.
+# everything after a # is ignored.
+#
+
+ldap_base	"ou=user,dc=yabrog,dc=weird-web-workers,dc=org"
+ldap_host	"ldap://hosted/"
+assets_dir	"@prefix@/var/lib/taskrambler"
+runtime_dir	"@prefix@/var/run/taskrambler"
+port            11212
