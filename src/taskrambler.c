@@ -42,6 +42,8 @@
 #include "application/application.h"
 #include "application/adapter/http.h"
 #include "interface/subject.h"
+#include "config/config.h"
+#include "config/value.h"
 
 #include "class.h"
 #include "logger.h"
@@ -55,14 +57,13 @@
 //#define DEFAULT_SECS	1
 #define DEFAULT_USECS	0
 
-#define LDAP_BASE	"ou=user,dc=yabrog,dc=weird-web-workers,dc=org"
-
 
 void nullhandler() {}
 
 void daemonize(void);
 
 Logger logger;
+Config config;
 
 int
 main()
@@ -72,6 +73,8 @@ main()
 	int              status;
 	int              shm;
 	struct randval * value;
+
+	config = new(Config, CONFIGDIR "/taskrambler.conf");
 
 	struct rlimit limit = {RLIM_INFINITY, RLIM_INFINITY};
 	setrlimit(RLIMIT_CPU, &limit);
@@ -149,6 +152,23 @@ main()
 				HttpWorker             worker;
 				Server                 server;
 
+				ConfigValue	ldap_base   =
+					configGet(config, CSTRA("ldap_base"));
+				ConfigValue	ldap_host   =
+					configGet(config, CSTRA("ldap_host"));
+				ConfigValue	runtime_dir =
+					configGet(config, CSTRA("runtime_dir"));
+				ConfigValue	port        =
+					configGet(config, CSTRA("port"));
+
+				char user_storage[512];
+				char password_storage[512];
+
+				strcpy(user_storage, (runtime_dir->value).string);
+				strcpy(password_storage, (runtime_dir->value).string);
+				strcat(user_storage, "/users.db");
+				strcat(password_storage, "/passwords.db");
+
 				value = mmap (0, sizeof(int), PROT_READ|PROT_WRITE,
 						MAP_SHARED, shm, 0);
 
@@ -159,11 +179,11 @@ main()
 
 				authLdap = new(
 						AuthLdap,
-						"ldap://hosted/",
-						CSTRA(LDAP_BASE));
+						(ldap_host->value).string,
+						CONFSTRA(ldap_base));
 
-				users       = new(Storage, "./run/users.db");
-				passwords   = new(Storage, "./run/passwords.db");
+				users       = new(Storage, user_storage);
+				passwords   = new(Storage, password_storage);
 				authStorage = new(AuthStorage, passwords);
 
 				application = new(
@@ -177,10 +197,15 @@ main()
 
 				adapterHttp = new(ApplicationAdapterHttp, application);
 
-				worker = new(HttpWorker, "testserver");
+				worker = new(HttpWorker, "taskrambler");
 				subjectAttach(worker, adapterHttp);
 
-				server = new(Server, logger, worker, 11212, SOMAXCONN);
+				server = new(
+						Server,
+						logger,
+						worker,
+						(int)(port->value).number,
+						SOMAXCONN);
 
 				if (NULL != server) {
 					serverRun(server);
@@ -236,11 +261,13 @@ main()
 
 				clearMimeTypes();
 				assetPoolCleanup();
-				memCleanup();
 			}
 
 			break;
 	}
+
+	delete(config);
+	memCleanup();
 
 	return 0;
 }

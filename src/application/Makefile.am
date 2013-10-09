@@ -12,7 +12,9 @@ APPLICATION = application.c \
 ADAPTERHTTP = adapter/http/http.c \
 	      adapter/http/update.c
 	      
+AM_CFLAGS += -I../../include/
+
 noinst_LIBRARIES = libapplication.a
 
 libapplication_a_SOURCES = $(APPLICATION) $(ADAPTERHTTP)
-libapplication_a_CFLAGS  = $(CFLAGS) $(DRAGONEGG_FLAGS) -Wall -I ../../ -I ../../include/
+libapplication_a_CFLAGS  = $(AM_CFLAGS)

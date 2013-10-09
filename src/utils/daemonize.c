@@ -57,10 +57,10 @@ void daemonize(void) {
 
     // set umask and change to working directory to /
     umask(UMASK);
-    if (-1 == chdir(PWD)) {  // this should root and assets needs to be found
-		perror("daemonize"); // via some kind of configuration.
+    if (-1 == chdir("/")) {
+		perror("daemonize");
 		exit(EXIT_FAILURE);
-	}
+    }
 
     // we should close all open filedescriptors now.
     // But I assume that this function is called at the very start of the
@@ -72,3 +72,5 @@ void daemonize(void) {
     stdin  = freopen("/dev/null", "r", stdin);
     stdout = freopen("/dev/null", "w", stdout);
 }
+
+// vim: set ts=4 sw=4:

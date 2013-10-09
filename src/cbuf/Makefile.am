@@ -8,7 +8,9 @@ CB = cbuf.c read.c \
      skip_non_alpha.c is_locked.c lock.c release.c \
      empty.c
 
+AM_CFLAGS += -I../../include/
+
 noinst_LIBRARIES = libcbuf.a
 
 libcbuf_a_SOURCES = $(CB)
-libcbuf_a_CFLAGS  = $(CFLAGS) $(DRAGONEGG_FLAGS) -Wall -I ../../include/
+libcbuf_a_CFLAGS  = $(AM_CFLAGS)

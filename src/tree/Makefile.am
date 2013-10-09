@@ -4,7 +4,9 @@ AUTOMAKE_OPTIONS = subdir-objects
 TREE = tree.c find.c insert.c inOrderSuccessor.c delete.c walk.c \
        rotateLeft.c rotateRight.c destroy.c
 
+AM_CFLAGS += -I../../include/
+
 noinst_LIBRARIES = libtree.a
 
 libtree_a_SOURCES = $(TREE)
-libtree_a_CFLAGS  = $(CFLAGS) $(DRAGONEGG_FLAGS) -Wall -I ../../include/
+libtree_a_CFLAGS  = $(AM_CFLAGS)

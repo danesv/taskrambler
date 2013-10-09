@@ -40,6 +40,8 @@
 #include "http/request.h"
 #include "http/response.h"
 #include "http/parser.h"
+#include "config/config.h"
+#include "config/value.h"
 
 #include "interface/subject.h"
 
@@ -52,6 +54,7 @@ HttpMessage httpWorkerGetAsset(HttpWorker, const char *);
 void        httpWorkerAddCommonHeader(HttpWorker);
 void		httpWorkerAddComputedHeader(HttpWorker);
 
+extern Config config;
 
 ssize_t
 httpWorkerProcess(HttpWorker this, Stream st)
@@ -82,13 +85,19 @@ httpWorkerProcess(HttpWorker this, Stream st)
 				}
 
 				if (0 == strcmp("GET", this->current_request->method)) {
-					char html_asset[2048] = "./assets/html";
-					char base_asset[2048] = "./assets";
-					char main_asset[]     = "/main.html";
+					ConfigValue assets_dir =
+						configGet(config, CSTRA("assets_dir"));
 
-					char * asset_path     = base_asset;
+					char asset_path[2048];
+
+					char html_asset[] = "/assets/html";
+					char base_asset[] = "/assets";
+					char main_asset[] = "/main.html";
+
 					char * asset;
 					char * mime_type;
+
+					strcpy(asset_path, (assets_dir->value).string);
 
 					if (0 == strcmp("/", this->current_request->path)) {
 						asset = main_asset;
@@ -104,7 +113,9 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 					if (NULL != mime_type &&
 							0 == memcmp(mime_type, CSTRA("text/html"))) {
-						asset_path = html_asset;
+						strcat(asset_path, html_asset);
+					} else {
+						strcat(asset_path, base_asset);
 					}
 
 					strcat(asset_path, asset);

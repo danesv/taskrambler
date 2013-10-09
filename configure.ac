@@ -62,6 +62,24 @@ AC_TYPE_SIZE_T
 #AC_FUNC_MALLOC
 AC_CHECK_FUNCS([memset])
 
+myetcdir=${sysconfdir}/taskrambler
+varlibdir=${localstatedir}/lib/taskrambler
+varrundir=${localstatedir}/run/taskrambler
+trdatadir=${datadir}/taskrambler
+AC_SUBST(myetcdir)
+AC_SUBST(varlibdir)
+AC_SUBST(varrundir)
+AC_SUBST(trdatadir)
+
+AM_CFLAGS="${AM_CFLAGS} ${DRAGONEGG_FLAGS}"
+AM_CFLAGS="${AM_CFLAGS} ${MEM_OPT_FLAGS}"
+AM_CFLAGS="${AM_CFLAGS} -DPWD=\\\"${PWD}\\\""
+AM_CFLAGS="${AM_CFLAGS} -DCONFIGDIR=\\\"${myetcdir}\\\""
+AM_CFLAGS="${AM_CFLAGS} ${CFLAGS}"
+AC_SUBST(AM_CFLAGS)
+
+AC_CONFIG_FILES([config/taskrambler.conf])
+
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 src/asset/Makefile
@@ -80,6 +98,7 @@ AC_CONFIG_FILES([Makefile
 		 src/application/Makefile
 		 src/storage/Makefile
 		 src/user/Makefile
+		 src/config/Makefile
 		 docs/Makefile
 		 tests/Makefile])
 AC_OUTPUT

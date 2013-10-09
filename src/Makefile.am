@@ -26,23 +26,18 @@ LIBS = ./application/libapplication.a \
        ./session/libsession.a \
        ./socket/libsocket.a \
        ./stream/libstream.a \
-       ./tree/libtree.a
+       ./tree/libtree.a \
+       ./config/libconfig.a
 
-AM_CFLAGS = -Wall -I ../include/
+AM_CFLAGS += -I../include/
 
 bin_PROGRAMS = taskrambler
 
-
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
-taskrambler_CFLAGS  = $(CFLAGS) \
-		      $(DRAGONEGG_FLAGS) \
-		      -Wall \
-		      -DPWD=\"$(PWD)\" \
-		      $(MEM_OPT_FLAGS) \
-		      -I../include/ # $(COVERAGE_CFLAGS)
+taskrambler_CFLAGS  = $(AM_CFLAGS)
 taskrambler_LDADD   = $(LIBS) -lrt -lssl -lldap -lgdbm -luuid
 #taskrambler_LDFLAGS = $(COVERAGE_LDFLAGS)
 
 SUBDIRS = asset auth cbuf class hash queue http \
 	  logger server session socket stream tree application \
-	  storage user
+	  storage user config

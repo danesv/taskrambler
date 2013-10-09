@@ -38,8 +38,8 @@ Hash mime_types = NULL;
 void
 readMimeTypes(void)
 {
-	if (0 == access("./config/mime.types", O_RDONLY)) {
-		FILE * handle = fopen("./config/mime.types", "r");
+	if (0 == access(CONFIGDIR "/mime.types", O_RDONLY)) {
+		FILE * handle = fopen(CONFIGDIR "/mime.types", "r");
 
 		if (NULL != handle) {
 			char buffer[512];
