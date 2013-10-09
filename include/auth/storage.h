@@ -39,8 +39,8 @@ CLASS(AuthStorage) {
 	Storage store;
 };
 
-/*
- * @TODO In future this should use a more general purpose hash
+/**
+ * \todo In future this should use a more general purpose hash
  * function, which then will be in utils/hash.c
  */
 int hash_pw(const char *, const size_t, unsigned char *, unsigned char **);

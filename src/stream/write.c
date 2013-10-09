@@ -63,8 +63,8 @@ streamWrite(Stream this, void * buf, size_t count)
 			break;
 
 		case STREAM_SSL:
-			/*
-			 * @TODO I got a segfault in this call under unclear 
+			/**
+			 * \todo I got a segfault in this call under unclear 
 			 * circumstances. Most likely it has to do with a
 			 * write on a closed connection.
 			 */

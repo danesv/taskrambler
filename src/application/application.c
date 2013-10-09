@@ -41,8 +41,8 @@ applicationCtor(void * _this, va_list * params)
 
 	this->val   = va_arg(*params, struct randval *);
 
-	/*
-	 * @TODO for both of these...each user should be identified
+	/**
+	 * \todo for both of these...each user should be identified
 	 * by a number...that way I could use that number in the
 	 * passwords db and no direct association between email and
 	 * password could be made when someone get the hands on the

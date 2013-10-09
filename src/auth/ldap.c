@@ -113,7 +113,7 @@ authLdapAuthenticate(void * _this, Credential cred)
 	}
 
 	//fprintf(stderr, "%s\n", ldap_err2string(ldap_err));
-	// @TODO do error logging instead.
+	/** \todo do error logging instead. */
 	return FALSE;
 }
 

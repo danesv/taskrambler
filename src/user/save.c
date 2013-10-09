@@ -39,8 +39,8 @@ userSave(User this, Storage storage)
 		*this->nsurname + 1 +
 		3 * sizeof(size_t);
 
-	/*
-	 * @TODO user return value for error handling 
+	/**
+	 * \todo user return value for error handling 
 	 */
 	storageUpdate(
 			storage,

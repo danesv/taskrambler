@@ -53,7 +53,7 @@ applicationLogin(
 					if (NULL == userLoad(session->user, this->users)) {
 						// this is an ldap user that has not yet set
 						// additional user informations.
-						/* @TODO again...change the keys to id's */
+						/** \todo again...change the keys to id's */
 						session->user->email = NULL;
 						delete(session->user);
 						session->user = new(User,

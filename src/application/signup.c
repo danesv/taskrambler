@@ -61,8 +61,8 @@ applicationSignup(
 				CRED_PWD(cred).npass,
 				hash,
 				&salt)) {
-		/*
-		 * @TODO if we come here we have to delete the previously saved
+		/**
+		 * \todo if we come here we have to delete the previously saved
 		 * user again...
 		 */
 		return 0;
