@@ -16,11 +16,11 @@
 	Both don't cover the complete code.<br />
 
 	There is the beginning of a generated API doc
-	<a href="/doc/v0.1.6/index.html" target="_blank">here</a>.<br />
+	<a href="/doc/@PACKAGE_VERSION@/index.html" target="_blank">here</a>.<br />
 
 	I also started automated regression tests. The
 	results can be seen 
-	<a href="/coverage/v0.1.6/index.html" target="_blank">here</a>.
+	<a href="/coverage/@PACKAGE_VERSION@/index.html" target="_blank">here</a>.
 </p>
 
 <h2>Version 0.1.6</h2>
