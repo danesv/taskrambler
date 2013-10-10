@@ -1,0 +1,19 @@
+[ req ]
+prompt             = no
+default_keyfile    = taskrambler.pem
+default_bits       = 2048
+distinguished_name = req_distinguished_name
+x509_extensions    = v3_ca
+
+[ req_distinguished_name ]
+C            = IE
+O            = Weird Web Workers
+CN           = Taskrambler Example
+emailAddress = georg@steffers.org
+
+[ v3_ca ]
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+#basicConstraints      = critical,CA:true
+basicConstraints       = CA:true
+

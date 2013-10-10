@@ -5,9 +5,12 @@ ACLOCAL_AMFLAGS = -I m4
 #create_token_LDADD   = src/libtoken.la $(LIBOBJS)
 #create_token_CFLAGS  = -Wall -I include
 
-EXTRA_DIST = include certs assets config run
+EXTRA_DIST = include certs assets run
 
-myetc_DATA = config/mime.types config/taskrambler.conf
+myetc_DATA = config/mime.types \
+	     config/taskrambler.conf \
+	     config/taskrambler.pem \
+	     config/taskrambler.crt
 
 nobase_varlib_DATA = assets/html/example.html \
 		     assets/html/_footer.html \
@@ -55,7 +58,7 @@ nobase_varlib_DATA = assets/html/example.html \
 		     assets/style/common.css \
 		     assets/favicon.ico
 
-SUBDIRS = src tests docs
+SUBDIRS = src tests docs config
 
 .PHONY: docs coverage-html
 

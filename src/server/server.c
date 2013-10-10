@@ -83,12 +83,12 @@ serverCtor(void * _this, va_list * params)
 	this->ctx = SSL_CTX_new(SSLv23_server_method());
 	SSL_CTX_use_certificate_file(
 			this->ctx,
-			"./certs/server.crt",
+			CONFIGDIR "/taskrambler.crt",
 			SSL_FILETYPE_PEM);
 
 	SSL_CTX_use_RSAPrivateKey_file(
 			this->ctx,
-			"./certs/server.key",
+			CONFIGDIR "/taskrambler.pem",
 			SSL_FILETYPE_PEM);
 
 	socketListen(this->sock, backlog);
