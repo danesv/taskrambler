@@ -36,15 +36,11 @@
 #include "utils/memory.h"
 #include "hash.h"
 
-#define RESP_DATA "{\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
-
 HttpResponse
-httpResponseUser(User user)
+httpResponseJson(const char * body, size_t nbody)
 {
-	char         buffer[200];
 	HttpResponse response;
 	HttpMessage  message;
-	size_t       nbuf;
 
 	response = new(HttpResponse, "HTTP/1.1", 200, "OK");
 	message  = (HttpMessage)response;
@@ -52,14 +48,9 @@ httpResponseUser(User user)
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"), CSTRA("application/json")));
 
-	nbuf = sprintf(buffer, RESP_DATA,
-			(NULL != user)? user->email : "",
-			(NULL != user)? user->firstname : "",
-			(NULL != user)? user->surname : "");
-
-	message->nbody = nbuf;
-	message->body  = memMalloc(nbuf);
-	memcpy(message->body, buffer, nbuf);
+	message->nbody = nbody;
+	message->body  = memMalloc(nbody);
+	memcpy(message->body, body, nbody);
 
 	return response;
 }

@@ -14,12 +14,8 @@ RESP   = response.c \
 	 response/404.c \
 	 response/403.c \
 	 response/500.c \
-	 response/login_form.c \
 	 response/asset.c \
-	 response/randval.c \
-	 response/session.c \
-	 response/version.c \
-	 response/user.c
+	 response/json.c
 PARSER = parser.c \
 	 parser/parse.c \
 	 parser/new_message.c \

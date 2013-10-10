@@ -48,12 +48,7 @@ HttpResponse httpResponse304(
 HttpResponse httpResponse403();
 HttpResponse httpResponse404();
 HttpResponse httpResponse500();
-HttpResponse httpResponseMe();
-HttpResponse httpResponseLoginForm();
-HttpResponse httpResponseRandval(time_t, int);
-HttpResponse httpResponseSession(Session);
-HttpResponse httpResponseUser(User);
-HttpResponse httpResponseVersion(const char *);
+HttpResponse httpResponseJson(const char *, size_t);
 HttpResponse httpResponseAsset(const char *, size_t);
 
 #endif // __HTTP_RESPONSE_H__

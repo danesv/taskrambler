@@ -41,8 +41,12 @@
 
 
 #define NO_SESSION_SID		NULL
-#define SESS_HEADER "{\"id\":\"%s\",\"timeout\":%d,\"timeleft\":%ld}"
 
+#define RANDVAL_JSON	"{\"ctime\":%ld,\"vnext\":%ld,\"value\":\"%02d\"}"
+#define SESSION_JSON	"{\"id\":\"%s\",\"timeout\":%d,\"timeleft\":%ld}"
+#define USER_JSON		\
+	"{\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
+#define VERSION_JSON	"{\"version\":\"%s\"}"
 
 static
 inline
@@ -56,6 +60,63 @@ getSessionId(Hash cookies)
 	}
 
 	return NO_SESSION_SID;
+}
+
+HttpMessage
+responseVersion(const char * version)
+{
+	char     buffer[200];
+	size_t   nbuf;
+
+	nbuf = sprintf(buffer, VERSION_JSON, version? version : "");
+	return (HttpMessage)httpResponseJson(buffer, nbuf);
+}
+
+HttpMessage
+responseRandval(struct randval * val)
+{
+	char     buffer[200];
+	size_t   nbuf;
+	time_t   remaining;
+
+	remaining = 10 - (time(NULL) - val->timestamp);
+
+	nbuf = sprintf(
+			buffer,
+			RANDVAL_JSON,
+			val->timestamp,
+			remaining,
+			val->value);
+
+	return (HttpMessage)httpResponseJson(buffer, nbuf);
+}
+
+HttpMessage
+responseSession(Session session)
+{
+	char     buffer[200];
+	size_t   nbuf;
+
+	nbuf = sprintf(buffer, SESSION_JSON,
+			(NULL != session)? session->id : "",
+			(NULL != session)? SESSION_LIVETIME : 0,
+			(NULL != session)? session->livetime - time(NULL) : 0);
+
+	return (HttpMessage)httpResponseJson(buffer, nbuf);
+}
+
+HttpMessage
+responseUser(User user)
+{
+	char     buffer[200];
+	size_t   nbuf;
+
+	nbuf = sprintf(buffer, USER_JSON,
+			(NULL != user)? user->email : "",
+			(NULL != user)? user->firstname : "",
+			(NULL != user)? user->surname : "");
+
+	return (HttpMessage)httpResponseJson(buffer, nbuf);
 }
 
 static
@@ -80,8 +141,7 @@ loginAdapter(Application application, HttpWorker worker, Session session)
 	}
 
 	if (NULL == username || NULL == password) {
-		worker->current_response =
-			new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
+		worker->current_response = (HttpMessage)httpResponse403();
 		return;
 	}
 
@@ -91,11 +151,9 @@ loginAdapter(Application application, HttpWorker worker, Session session)
 			(char *)(password->value), password->nvalue);
 
 	if (! applicationLogin(application, credential, session)) {
-		worker->current_response =
-			new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
+		worker->current_response = (HttpMessage)httpResponse403();
 	} else {
-		worker->current_response =
-			(HttpMessage)httpResponseUser(session->user);
+		worker->current_response = responseUser(session->user);
 	}
 
 	delete(credential);
@@ -168,7 +226,6 @@ signupAdapter(Application application, HttpWorker worker, Session session)
 	delete(user);
 }
 
-
 void
 applicationAdapterHttpUpdate(void * _this, void * subject)
 {
@@ -211,36 +268,32 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	if (0 == strcmp("GET", worker->current_request->method)) {
 		if (0 == strcmp("/version/", worker->current_request->path)) {
 			worker->current_response = 
-				(HttpMessage)httpResponseVersion(this->application->version);
+				responseVersion(this->application->version);
 			return;
 		}
 
 		if (0 == strcmp("/user/get/", worker->current_request->path)) {
-			worker->current_response = 
-				(HttpMessage)httpResponseUser(session->user);
+			worker->current_response = responseUser(session->user);
 			return;
 		}
 
 		if (0 == strcmp("/logout/", worker->current_request->path)) {
 			applicationLogout(this->application, session);
 
-			worker->current_response = 
-				(HttpMessage)httpResponseUser(session->user);
+			worker->current_response = responseUser(session->user);
 			return;
 		}
 
 		if (0 == strcmp("/sessinfo/", worker->current_request->path)) {
-			worker->current_response = 
-				(HttpMessage)httpResponseSession(session);
+			worker->current_response = responseSession(session);
 			return;
 		}
 
 		if (0 == strcmp("/randval/", worker->current_request->path)) {
 			if (NULL != session->user) {
 				worker->current_response = 
-					(HttpMessage)httpResponseRandval(
-							this->application->val->timestamp,
-							this->application->val->value);
+					responseRandval(this->application->val);
+				return;
 			} else {
 				worker->current_response = (HttpMessage)httpResponse403();
 			}
@@ -248,7 +301,7 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	}
 
 	// if (0 < session->livetime - now) {
-	// 	nbuf = sprintf(buf, SESS_HEADER,
+	// 	nbuf = sprintf(buf, SESSION_JSON,
 	// 			session->id, 
 	// 			SESSION_LIVETIME,
 	// 			session->livetime - now);
