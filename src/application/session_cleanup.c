@@ -44,7 +44,6 @@ applicationSessionCleanup(Application this, time_t now)
 
 	if (0 < expired && SESSION_LIVETIME > expired) {
 		Hash         * tmp_buf = memCalloc(SESSION_LIVETIME, sizeof(Hash));
-		unsigned int   i       = 0;
 
 		memcpy(
 				&(tmp_buf[expired]),
