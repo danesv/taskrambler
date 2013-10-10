@@ -1,6 +1,6 @@
-if HAVE_DOXYGEN
-
 EXTRA_DIST = Doxyfile.in
+
+if HAVE_DOXYGEN
 
 .PHONY: docs
 
