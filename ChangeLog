@@ -1,3 +1,1381 @@
+2013-10-09	Georg Hopp	georg@steffers.org
+	* A config/taskrambler.conf.in:
+		add forgotten taskramble.conf.in
+	* M Makefile.am:
+	* M configure.ac:
+	* A include/config/config.h:
+	* A include/config/value.h:
+	* M src/Makefile.am:
+	* M src/application/Makefile.am:
+	* M src/asset/Makefile.am:
+	* M src/auth/Makefile.am:
+	* M src/cbuf/Makefile.am:
+	* M src/class/Makefile.am:
+	* A src/config/Makefile.am:
+	* A src/config/config.c:
+	* A src/config/get.c:
+	* A src/config/value.c:
+	* A src/configtest.c:
+	* M src/hash/Makefile.am:
+	* M src/http/Makefile.am:
+	* M src/http/worker/process.c:
+	* M src/logger/Makefile.am:
+	* M src/queue/Makefile.am:
+	* M src/server/Makefile.am:
+	* M src/session/Makefile.am:
+	* M src/socket/Makefile.am:
+	* M src/socket/listen.c:
+	* M src/storage/Makefile.am:
+	* M src/stream/Makefile.am:
+	* M src/taskrambler.c:
+	* A src/testconfig.cfg:
+	* M src/tree/Makefile.am:
+	* M src/user/Makefile.am:
+	* M src/utils/daemonize.c:
+	* M src/utils/mime_type.c:
+		make install works now. So from now on taskrambler will not
+		work when run from its build dir, because it can't find its
+		assets then. To make installation work a basic config file
+		reader class was implemented.
+	* D .doxygen:
+	* M .gitignore:
+	* M docs/Doxyfile.in:
+	* M docs/Makefile.am:
+	* M include/auth/storage.h:
+	* M include/queue.h:
+	* M src/application/application.c:
+	* M src/application/login.c:
+	* M src/application/signup.c:
+	* M src/auth/ldap.c:
+	* M src/stream/write.c:
+	* M src/user/save.c:
+		some more changes for documentation generation
+
+2013-10-06	Georg Hopp	georg@steffers.org
+	* M assets/html/_download.html:
+		add link to v0.1.6 download
+	* M assets/html/_documentation.html:
+		update documentation
+	* M assets/style/common.css:
+		raise dialogs above everyting
+	* M docs/Makefile.am:
+		and put it to extra_dist
+	* A docs/Doxyfile.in:
+		add forgotton Doxyfile.in
+	* M include/application/application.h:
+	* M include/hash/hash.h:
+	* M src/application/Makefile.am:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+	* A src/application/session_cleanup.c:
+	* M src/application/session_get.c:
+	* M src/application/session_start.c:
+	* M src/application/session_stop.c:
+	* D src/application/session_update.c:
+	* M src/application/signup.c:
+	* M src/hash/Makefile.am:
+	* A src/hash/cleanup.c:
+	* A src/hash/get_first.c:
+	* M src/hash/hash.c:
+		optimized session handling. closes #41
+
+2013-10-05	Georg Hopp	georg@steffers.org
+	* M configure.ac:
+		there is a AC_SUBST for the coverage variables in gcov.m4 now
+	* A docs/doxygen-1.8.4-r9999.ebuild:
+	* A docs/doxygen-1.8.4-taskrambler.patch:
+		added patch to doxygen to get identify my class definitions
+		as structures
+	* A assets/html/_author.html:
+	* A assets/html/_documentation.html:
+	* A assets/html/_download.html:
+	* A assets/html/_main.html:
+	* D assets/html/author.html:
+	* A assets/html/author.html:
+	* D assets/html/documentation.html:
+	* A assets/html/documentation.html:
+	* D assets/html/download.html:
+	* A assets/html/download.html:
+	* A assets/html/layout.html:
+	* D assets/html/main.html:
+	* A assets/html/main.html:
+	* M assets/js/init.js:
+		now use one layout file and load even the content as a partial
+	* M src/utils/memory.c:
+		use memSegment of when tree based optimizations where not
+		used. That way all other features implemented here are still
+		available
+	* M TODO:
+		update TODO
+	* M m4/dragonegg.m4:
+	* M m4/gcov.m4:
+	* M m4/memopt.m4:
+		add m4 to build via dragonegg and update gcov and memopt m4
+	* M Makefile.am:
+	* D Makefile.am.coverage:
+	* M configure.ac
+	* A docs/Makefile.am:
+	* M tests/Makefile.am:
+		actual coverage reports and api docs can be build via make
+		again ... now project name and version are taken from
+		configure ... ahh and configure holds version information
+		from git.
+	* D assets/coverage/:
+	* D assets/doc/:
+		remove generated documentations from repository.
+
+2013-10-02	Georg Hopp	georg@steffers.org
+	* M assets/style/taskrambler.css:
+		status line always above title
+	* M configure.ac:
+	* M src/Makefile.am:
+	* M src/application/Makefile.am:
+	* M src/asset/Makefile.am:
+	* M src/auth/Makefile.am:
+	* M src/cbuf/Makefile.am:
+	* M src/class/Makefile.am:
+	* M src/hash/Makefile.am:
+	* M src/http/Makefile.am:
+	* M src/logger/Makefile.am:
+	* M src/queue/Makefile.am:
+	* M src/server/Makefile.am:
+	* M src/session/Makefile.am:
+	* M src/socket/Makefile.am:
+	* M src/storage/Makefile.am:
+	* M src/stream/Makefile.am:
+	* M src/tree/Makefile.am:
+	* M src/user/Makefile.am:
+		use dragonegg config
+	* M TODO:
+		update TODO
+	* A m4/dragonegg.m4:
+	* M m4/memopt.m4:
+		add m4 macros to build with dragonegg and make the memopt m4
+		show a message if it is active
+	* A assets/html/_footer.html:
+	* A assets/html/_login.html:
+	* A assets/html/_menu.html:
+	* A assets/html/_signup.html:
+	* A assets/html/_statusline.html:
+	* A assets/html/_title.html:
+	* M assets/html/author.html:
+	* M assets/html/documentation.html:
+	* M assets/html/download.html:
+	* D assets/html/foo.html:
+	* M assets/html/main.html:
+	* D assets/html/robots.txt:
+	* M assets/js/init.js:
+	* M assets/style/taskrambler.css:
+		load partials via javascript, so I do not need the server at
+		all. closes #35
+
+2013-10-01	Georg Hopp	georg@weird-web-workers.org
+	* A assets/coverage/:
+	* A assets/doc/:
+		add content, coverage report an api doc
+	* M src/server/run.c:
+		accept as much as possible and stop processing as soon as
+		possible
+	* M src/server/read.c:
+		fix return value...the situation should result in a
+		connection close.
+	* M src/application/adapter/http/update.c:
+	* M src/http/writer/write.c:
+		make write more fair...until now it was written as long a
+		possible given no chance for reading anymore...
+
+2013-09-30	Georg Hopp	georg@steffers.org
+	* M src/stream/read.c:
+	* M src/stream/write.c:
+		fix the fix...with the last change taskrambler closes
+		connections unexpectedly. Hopefully this fixes ssl handling.
+	* M src/stream/read.c:
+		and do the same when read
+	* M src/server/close_conn.c:
+	* M src/stream/write.c:
+		improved ssl write error handling...this hopefully fixes
+		occasionally crashes when using ssl
+
+2013-09-29	Georg Hopp	georg@steffers.org
+	* M assets/html/download.html:
+		and add information about new download file
+	* M assets/html/documentation.html:
+		add informations about guest user
+	* M assets/html/documentation.html:
+		wrote some informations about the new version
+	* M configure.ac:
+		redo version bump
+	* A m4/memopt.m4:
+		m4 makros to select memory optimizations
+	* M configure.ac:
+		revert version to 0.1.5 after fixes from next have been
+		merged...I have to obey my workflows to prevent such things
+		in future.
+	* M configure.ac:
+		use silent build again
+	* M src/auth/storage/hash_pw.c:
+		fix use of uninitialized value
+	* M src/application/login.c:
+		fix remove of user. As email is in that case a part of
+		credential it must be set to NULL before delete.
+	* M configure.ac:
+	* M include/utils/memory.h:
+	* M src/Makefile.am:
+	* M src/utils/memory.c:
+		add facility to de/activate tree base memory optimizations
+	* M Makefile.am:
+		add run to extra dists
+	* M configure.ac:
+		version bump
+	* M assets/html/author.html:
+	* M assets/html/documentation.html:
+	* M assets/html/download.html:
+	* M assets/html/main.html:
+	* M assets/js/init.js:
+	* M assets/js/session.js:
+	* M assets/style/common.css:
+		make login, signup and logout available on all pages
+	* M include/application/application.h:
+	* M src/application/Makefile.am:
+	* M src/application/adapter/http/update.c:
+	* A src/application/logout.c:
+		logout no longer tries to stop the session. Now simply the
+		user is removed.
+
+2013-09-28	Georg Hopp	georg@steffers.org
+	* M src/auth/ldap.c:
+		call to ldap_unbind is necessary to free memory even when
+		ldap_bind failed.
+	* M assets/html/example.html:
+	* M assets/html/main.html:
+	* M assets/js/init.js:
+	* M assets/js/session.js:
+	* M assets/style/common.css:
+	* M assets/style/taskrambler.css:
+		reflect current changes in main.html (and styles and
+		javascript)
+	* M include/application/application.h:
+		update prototypes
+	* M src/application/Makefile.am:
+		there is no session_update method anymore...
+		this will be done in session_get at least at the moment
+	* M src/application/adapter/http/update.c:
+		some changes on session handlings.
+	* M src/application/login.c:
+		create a real new user object when the fetch fails.
+	* M src/application/session_stop.c:
+		to stop a session is as simple as setting their livetime
+		to 0. On the next request this session will be removed.
+	* M src/storage/get.c:
+		As gdbm_fetch changes the key I copy it before I try to get
+		data with it.
+	* A src/http/response/version.c:
+		add forgotten version response.
+	* A assets/image/fav128.png:
+	* A assets/image/fav16.png:
+	* A assets/image/fav256.png:
+	* A assets/image/fav32.png:
+	* A assets/image/fav64.png:
+	* A assets/image/favicon.ico:
+		add favicon...
+	* M src/application/adapter/http/update.c:
+	* M src/application/session_get.c:
+		move session handling from adapter into application and some
+		more stuff of the version thing...when the version thing
+		works I will add the session livetime to every page.
+	* M assets/html/main.html:
+	* M assets/js/init.js:
+	* M include/application/application.h:
+	* M include/http/response.h:
+	* M src/application/Makefile.am:
+	* M src/application/application.c:
+	* M src/http/Makefile.am:
+		show taskrambler version in Frontend
+	* M src/http/worker/add_common_header.c:
+		get server name from config.h
+
+2013-09-27	Georg Hopp	georg@steffers.org
+	* M assets/html/example.html:
+	* M assets/js/init.js:
+	* M assets/style/common.css:
+	* M src/application/adapter/http/update.c:
+	* M src/application/signup.c:
+		signup works...only logout has to be added then the new
+		version is complete. refs #36
+
+2013-09-26	Georg Hopp	georg@steffers.org
+	* M include/queue.h:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+		fix wrong handling of session queue and thus the memory leak.
+	* A .gitattributes:
+	* M README:
+		experiment with attributes
+
+2013-09-24	Georg Hopp	georg@steffers.org
+	* M assets/html/author.html:
+	* M assets/html/documentation.html:
+	* M assets/html/download.html:
+	* M assets/html/example.html:
+		html fixes
+	* M assets/html/author.html:
+	* M assets/html/documentation.html:
+	* M assets/html/download.html:
+	* M assets/html/example.html:
+	* M assets/html/main.html:
+		add link tag to favicon on every page
+	* M assets/favicon.ico
+	* A assets/favicon.ico:
+
+2013-09-22	Georg Hopp	georg@steffers.org
+	* M tests/Makefile.am:
+	* A tests/suppress/external.supp:
+		add some valgrind suppressions for opanldap and gdbm stuff
+	* M assets/js/session.js:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+	* M src/application/login.c:
+	* M src/auth/ldap.c:
+	* M src/http/response.c:
+	* M src/queue/get.c:
+	* M src/session/session.c:
+	* M src/storage/storage.c:
+		login via ldap and gdbm now works. Signup stores the user
+		account as well as the credentials but still returns a 500
+		and I have a memory leak most likely within the queue code.
+		To reproduce this one has to start the server and send two
+		requests via telnet to the server...no keep-alive just a
+		single GET. refs #36
+	* M include/application/application.h:
+	* M include/auth/storage.h:
+	* D include/storage.h:
+	* A include/storage/storage.h:
+	* M include/user.h:
+	* A signuptest.html:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+	* M src/application/signup.c:
+	* M src/auth/storage/storage.c:
+	* M src/storage/get.c:
+	* M src/storage/put.c:
+	* M src/storage/storage.c:
+	* M src/storage/update.c:
+	* M src/taskrambler.c:
+	* M src/user/load.c:
+	* M src/user/save.c:
+	* M src/user/user.c:
+	* M src/utils/hash.c:
+		now signup and login with storage of a hashed password works.
+	* M include/auth/storage.h:
+	* M src/Makefile.am:
+	* M src/application/Makefile.am:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+	* M src/application/signup.c:
+	* M src/auth/Makefile.am:
+	* M src/auth/storage/hash_pw.c:
+	* M src/auth/storage/storage.c:
+	* M src/storage/Makefile.am:
+	* M src/storage/put.c:
+	* M src/storage/update.c:
+		everything builds again
+	* D src/auth/storage/signup.c:
+		removed signup from auth adapter as signup is no auth at all.
+	* M include/application/application.h:
+	* M include/auth.h:
+	* A include/auth/storage.h:
+	* M include/storage.h:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+	* A src/application/signup.c:
+	* A src/auth/storage/hash_pw.c:
+	* A src/auth/storage/signup.c:
+	* A src/auth/storage/storage.c:
+	* M src/storage/put.c:
+	* A src/storage/update.c:
+	* M src/user/save.c:
+	* M src/utils/hash.c:
+		put most of the parts for simple signup/login in place...
+		not tested now as it is late. Hopefully tomorrow I find the
+		time to setup a small testform and bring this whole thing
+		finally to work. refs #36
+
+2013-09-21	Georg Hopp	georg@steffers.org
+	* M assets/js/session.js:
+	* M include/http/response.h:
+	* M src/application/adapter/http/update.c:
+	* M src/application/login.c:
+	* M src/http/Makefile.am:
+	* A src/http/response/user.c:
+	* M src/usertest.c:
+		use user class to load and get user informations.
+
+2013-09-16	Georg Hopp	georg@steffers.org
+	* M include/application/application.h:
+	* M include/http/worker.h:
+	* M include/session.h:
+	* M src/Makefile.am:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+	* M src/application/login.c:
+	* M src/application/session_get.c:
+	* M src/application/session_start.c:
+	* M src/application/session_stop.c:
+	* M src/application/session_update.c:
+	* M src/http/Makefile.am:
+	* M src/http/response/session.c:
+	* M src/http/worker.c:
+	* A src/http/worker/add_computed_header.c:
+	* M src/http/worker/process.c:
+	* M src/session/session.c:
+	* M src/taskrambler.c:
+	* A src/uuid.c:
+		make sessions start on any request and clean them when they
+		have timed out.
+	* A run/.keep-me:
+	* M src/storage/get.c:
+	* M src/usertest.c:
+		some more testing on the user class
+
+2013-09-15	Georg Hopp	georg@steffers.org
+	* M configure.ac:
+	* A include/storage.h:
+	* A include/user.h:
+	* M src/Makefile.am:
+	* A src/storage/Makefile.am:
+	* A src/storage/get.c:
+	* A src/storage/put.c:
+	* A src/storage/storage.c:
+	* A src/user/Makefile.am:
+	* A src/user/load.c:
+	* A src/user/save.c:
+	* A src/user/user.c:
+	* A src/usertest.c:
+		add first user class and persistence experiments. refs #36
+	* M src/utils/memory.c:
+		initialize ref_count correctly
+	* M src/utils/memory.c:
+		add a ref_count to the memory segments...this way I could
+		increase references and only insert the memory segment in the
+		tree again if the ref_count is one.
+
+2013-09-14	Georg Hopp	georg@steffers.org
+	* M assets/js/init.js:
+		fixed linking in example section
+	* M assets/html/author.html:
+	* M assets/html/documentation.html:
+	* M assets/html/download.html:
+	* M assets/html/example.html:
+	* M assets/html/main.html:
+	* M assets/style/taskrambler.css:
+		make the pages look not so bad on my wifes ipad
+
+2013-09-13	Georg Hopp	georg@steffers.org
+	* M assets/html/author.html:
+	* M assets/html/documentation.html:
+	* M assets/html/download.html:
+	* M assets/html/example.html:
+	* M assets/html/main.html:
+	* M assets/style/taskrambler.css:
+		add copyright notice and contact-email to pages
+	* M assets/html/download.html:
+		fill the download page with some links.
+	* M assets/html/author.html:
+	* M assets/html/documentation.html:
+	* M assets/html/download.html:
+	* M assets/html/example.html:
+	* M assets/html/main.html:
+	* A assets/image/rambler-border-b.jpg:
+	* A assets/image/rambler-border-bl.jpg:
+	* A assets/image/rambler-border-br.jpg:
+	* A assets/image/rambler-border-l.jpg:
+	* A assets/image/rambler-border-r.jpg:
+	* A assets/image/rambler-border-t.jpg:
+	* A assets/image/rambler-border-tl.jpg:
+	* A assets/image/rambler-border-tr.jpg:
+	* M assets/js/init.js:
+	* M assets/js/session.js:
+	* M assets/style/taskrambler.css:
+		some additions to the project page
+	* A assets/html/author.html:
+	* A assets/html/documentation.html:
+	* A assets/html/download.html:
+	* M assets/html/example.html:
+	* M assets/html/main.html:
+	* A assets/image/rambler-bg.jpg:
+	* A assets/image/rambler-logo-small.jpg:
+	* A assets/image/rambler-logo2-small.jpg:
+	* A assets/other/OldNewspaperTypes.ttf:
+	* A assets/other/old_typewriter.ttf:
+	* A assets/style/taskrambler.css:
+		added first parts of project homepage serverd by taskrambler
+		itself.
+	* A assets/html/main.html:
+		rename taskrambler.html to main.html
+	* A assets/html/example.html:
+	* D assets/html/main.html:
+		rename main.html to example.html
+
+2013-09-12	Georg Hopp	georg@steffers.org
+	* M TODO:
+		update TODO. closes #24
+	* M src/application/adapter/http/update.c:
+	* M src/application/session_stop.c:
+		now it works mostly as before...the only difference is that
+		you really have to be logged in to see the rand value
+	* M src/application/adapter/http/update.c:
+	* M src/application/session_update.c:
+	* M src/http/worker/process.c:
+		most stuff works...
+		the session timeout will not be reset correctly within some
+		answers, anyway it mostly works. refs #24
+	* M configure.ac:
+	* M include/application/adapter/http.h:
+	* M include/application/application.h:
+	* M include/hash/hash.h:
+	* M include/session.h:
+	* M src/Makefile.am:
+	* A src/application/Makefile.am:
+	* M src/application/adapter/http/http.c:
+	* M src/application/adapter/http/update.c:
+	* M src/application/application.c:
+	* A src/application/login.c:
+	* A src/application/session_get.c:
+	* A src/application/session_start.c:
+	* A src/application/session_stop.c:
+	* A src/application/session_update.c:
+	* M src/hash/delete.c:
+	* M src/hash/get.c:
+	* M src/http/worker/process.c:
+	* M src/session/Makefile.am:
+	* D src/session/add.c:
+	* D src/session/delete.c:
+	* D src/session/get.c:
+	* M src/session/session.c:
+	* M src/taskrambler.c:
+		code with abstraced application compiles again, but does not
+		work correctly, start debugging. refs #24
+	* A include/application/adapter/http.h:
+	* A include/application/application.h:
+	* M include/http/worker.h:
+	* M include/interface/observer.h:
+	* A src/application/adapter/http/http.c:
+	* A src/application/adapter/http/update.c:
+	* A src/application/application.c:
+	* M src/http/worker.c:
+	* M src/http/worker/add_common_header.c:
+	* M src/http/worker/get_asset.c:
+	* M src/http/worker/process.c:
+	* M src/interface/observer.c:
+	* M src/taskrambler.c:
+		implemented an application class as well as an http adapter
+		for it and use it to start application logic by http requests
+		as well as creating a fitting repsonse. Not perfect, but a
+		start. This code is not finish and will not work...in fact it
+		won't even compile i think. refs #24
+	* M src/asset/asset.c:
+		only mmap a file if its size is larger than 0 bytes
+	* M src/asset/asset.c:
+		fix wrong constant used in access
+
+2013-09-11	Georg Hopp	georg@steffers.org
+	* M TODO:
+		another thing to do
+	* M include/auth.h:
+		add comment
+	* M TODO:
+		order optional tasks to the botton of the TODO list.
+	* M README.md:
+		add some taskrambler specific informations in README.md
+	* M README.md:
+		changed title in README.md
+	* M TODO:
+		updated TODO with the next things that have to be done.
+
+2013-09-10	Georg Hopp	georg@steffers.org
+	* M src/stream/read.c:
+	* M src/stream/write.c:
+		fix error handling on SSL handles
+	* M src/server/run.c:
+		use any value less than 0 as event done for ssl accept.
+	* M README.md:
+		removed SSL deactivation notice...
+	* M src/server/run.c:
+	* M src/server/server.c:
+	* M src/stream/read.c:
+	* M src/taskrambler.c:
+		checked SSL support, the only thing that was really broken
+		was the error handling while reading data... well maybe
+		writing has also bugs, but it works.
+	* M README.md:
+		add info of my redmine to README.md
+	* M README.md:
+		update README.md
+	* M include/utils/http.h:
+	* M src/asset/asset.c:
+	* M src/http/worker/add_common_header.c:
+	* M src/utils/http.c:
+	* M src/http/worker/add_common_header.c:
+		now every date header is formatted in GMT. Commment: We still
+		have a very weak Etag implementation.
+	* M src/asset/pool.c:
+		now don't add a NULL asset to the hash.
+
+2013-09-09	Georg Hopp	georg@steffers.org
+	* M Makefile.am:
+		add config and thus mime type mapping to distribution
+	* M src/server/server.c:
+		fix deactivation of SSL
+	* M src/Makefile.am:
+	* M src/asset/Makefile.am:
+	* M src/auth/Makefile.am:
+	* M src/cbuf/Makefile.am:
+	* M src/class/Makefile.am:
+	* M src/hash/Makefile.am:
+	* M src/http/Makefile.am:
+	* M src/logger/Makefile.am:
+	* M src/queue/Makefile.am:
+	* M src/server/Makefile.am:
+	* M src/session/Makefile.am:
+	* M src/socket/Makefile.am:
+	* M src/stream/Makefile.am:
+	* M src/tree/Makefile.am:
+		add subdir-objects to each Makefile.am
+	* M tests/Makefile.am:
+	* D tests/stream/Makefile:
+		don't use non automake makefiles under tests anymore
+	* M src/server/run.c:
+	* M src/server/server.c:
+		disabled SSL support for now, cause it seems that it crashed
+		the whole thing right now.
+	* M include/asset.h:
+	* M src/asset/asset.c:
+	* M src/server/handle_accept.c:
+	* M src/socket/accept.c:
+		a fix in size of asset names and change in logging
+
+2013-09-08	Georg Hopp	georg@steffers.org
+	* M src/hash.c:
+	* M src/tree/destroy.c:
+	* M src/utils/memory.c:
+		fix post order traversal used for destruction of existing tree
+	* M src/tree/delete.c:
+		fix the fix...
+
+2013-09-07	Georg Hopp	georg@steffers.org
+	* A src/hash.c:
+		add a small test program for the hash code to find where it
+		leaks memory.
+	* M src/tree/delete.c:
+		add one missing delete for a node, thus fixing a memory leak
+		in there.
+	* M src/rbtree2.c:
+		now do all things within rbtree2 that are also done in rbtree
+	* M src/utils/memory.c:
+		now use at minimum page size for an allocated memory segment,
+		and also store this size. This should use the memory more
+		effective.
+
+2013-09-06	Georg Hopp	georg@steffers.org
+	* M configure.ac:
+	* M include/hash/hash.h:
+	* A include/tree.h:
+	* M src/Makefile.am:
+	* M src/asset/asset.c:
+	* M src/asset/pool.c:
+	* M src/hash/add.c:
+	* M src/hash/delete.c:
+	* M src/hash/each.c:
+	* M src/hash/get.c:
+	* M src/hash/hash.c:
+	* M src/rbtree.c:
+	* A src/rbtree2.c:
+	* M src/server/run.c:
+	* A src/tree/Makefile.am:
+	* A src/tree/delete.c:
+	* A src/tree/destroy.c:
+	* A src/tree/find.c:
+	* A src/tree/inOrderSuccessor.c:
+	* A src/tree/insert.c:
+	* A src/tree/rotateLeft.c:
+	* A src/tree/rotateRight.c:
+	* A src/tree/tree.c:
+	* A src/tree/walk.c:
+	* M src/utils/memory.c:
+		use now my own tree implementation as base for my hashes....
+		sadly this thing is leaking memory again...
+		on the other hand I workarounded the problem of a sometimes
+		occuring infinite loop within connect.
+
+2013-09-04	Georg Hopp	georg@steffers.org
+	* M TODO:
+	* M include/http/response.h:
+	* M src/asset/asset.c:
+	* M src/asset/pool.c:
+	* M src/hash/delete.c:
+	* M src/hash/get.c:
+	* M src/hash/interface/hashable.c:
+	* M src/http/message.c:
+	* M src/http/response/asset.c:
+	* M src/http/worker/get_asset.c:
+	* M src/http/writer/write.c:
+	* M src/server/handle_accept.c:
+	* M src/server/run.c:
+		I thought I had found a bug in tdelete in glibc, but it
+		wasn't. In fact my comparison function was broken.
+	* M src/auth/ldap.c:
+	* M src/hash/each.c:
+	* M src/server/read.c:
+	* M src/server/run.c:
+	* M src/server/write.c:
+	* M src/socket/socket.c:
+		as I currently have no idea whats the problem I first fixed
+		all warnings...included the ldap warnings that where caused
+		by the use of deprecated ldap_simple_bind_s and ldap_unbind_s.
+
+2013-09-03	Georg Hopp	georg@steffers.org
+	* A src/socket/nonblock.c:
+		added forgotten file
+	* M src/server/run.c:
+		I think the problem with keep-alive and concurrency is fixed..
+		the handling in serverRun was still not ok for the non
+		blocking sockets.
+	* M TODO:
+		added some first analyse of new problem
+	* M TODO:
+	* M include/socket.h:
+	* M src/cbuf/read.c:
+	* M src/http/parser/parse.c:
+	* M src/http/worker/process.c:
+	* M src/server/handle_accept.c:
+	* M src/server/run.c:
+	* M src/server/server.c:
+	* M src/socket/Makefile.am:
+	* M src/socket/accept.c:
+	* M src/socket/socket.c:
+	* M src/stream/read.c:
+	* M src/taskrambler.c:
+	* M include/http/worker.h:
+		changed socket handling according to my definition...
+		and make sockets nonblocking as the answer of poll is just a
+		guess...
+	* M include/http/worker.h:
+	* M include/http/writer.h:
+	* M src/http/worker.c:
+		remove occurences of write circular buffer
+	* M src/asset/pool.c:
+		fix cleanup of NULL asset_pool
+	* M include/http/writer.h:
+	* M include/utils/memory.h:
+	* M src/cbuf/Makefile.am:
+	* D src/cbuf/write.c:
+	* M src/http/worker.c:
+	* M src/http/worker/get_asset.c:
+	* M src/http/worker/process.c:
+	* M src/http/writer.c:
+	* M src/http/writer/write.c:
+	* M src/server/run.c:
+	* M src/server/write.c:
+	* M src/stream/write.c:
+	* M src/utils/memory.c:
+		this is a huge one...removed cbuf for writing again....
+		This is not needed any more because I use memory mapped io
+		for these. Additionally sanitised write error handling
+		somewhat...anyway, under huge load I still observer
+		unexpected connection closes. But maybe this is related to
+		interrupt while reading...(reading is not handled very well
+		right now)
+	* M TODO:
+		documented another bug
+	* A docs/socket_states.txt:
+		added some thoughts about socket states while reading and
+		writing. This is not handled very well right now in my code
+		which result in connections to be closed to early.
+
+2013-09-01	Georg Hopp	georg@steffers.org
+	* M include/asset.h:
+	* M src/asset/asset.c:
+	* M src/asset/pool.c:
+	* M src/hash/delete.c:
+		now asset is by itself hashable...
+		and the leaking issue seems to be fixed.
+
+2013-08-29	Georg Hopp	georg@steffers.org
+	* M assets/html/main.html:
+	* M configure.ac:
+	* M include/asset.h:
+	* M include/http/message.h:
+	* M include/http/worker.h:
+	* M src/Makefile.am:
+	* A src/asset/Makefile.am:
+	* M src/asset/asset.c:
+	* A src/asset/pool.c:
+	* M src/cbuf/write.c:
+	* M src/hash/delete.c:
+	* M src/http/Makefile.am:
+	* M src/http/message.c:
+	* A src/http/response/500.c:
+	* M src/http/response/asset.c
+	* M src/http/worker.c:
+	* M src/http/worker/get_asset.c:
+	* D src/http/worker/get_mime_type.c:
+	* M src/http/worker/process.c:
+	* M src/http/writer/write.c:
+	* M src/server/read.c:
+	* M src/server/run.c:
+	* M src/server/server.c:
+	* M src/server/write.c:
+	* M src/taskrambler.c:
+		try to use memory mapped io for asset access, but this one
+		leaks like a rotten barge
+	* M include/http/message.h:
+	* M include/http/response.h:
+	* M src/http/response/304.c:
+	* M src/http/response/403.c:
+	* M src/http/response/404.c:
+	* M src/http/response/login_form.c:
+	* M src/http/response/randval.c:
+	* M src/http/response/session.c:
+		remove message type (PIPED or BUFFERED)
+	* A include/asset.h:
+	* A include/utils/mime_type.h:
+	* A src/asset/asset.c:
+	* A src/mmapfiletest2.c:
+	* A src/utils/mime_type.c:
+		added asset class and move mimetype handling in separate
+		helper. Tested this with mmapfiletest2.c
+	* A docs/idea_for_asset_access.md:
+	* A src/mmapfiletest.c:
+		added thought about memory mapped asset handling, as well
+		as a small mmap file test program.
+
+2013-08-28	Georg Hopp	georg@steffers.org
+	* M assets/html/main.html:
+	* M src/http/worker.c:
+	* M src/http/worker/process.c:
+		remove specialized asset loadings and use generic one.
+	* M src/utils/memory.c:
+		now allocate only a multiple of pagesize / this has been
+		reverted later on.
+	* A assets/other/.keep-me:
+	* M src/http/worker.c:
+	* M src/http/worker/process.c:
+		now sending non html data from one of the other folders
+		also works
+	* A assets/html/foo.html:
+	* A assets/html/robots.txt:
+	* A config/mime.types:
+	* M include/http/worker.h:
+	* M src/http/Makefile.am:
+	* M src/http/worker.c
+	* A src/http/worker/get_mime_type.c:
+	* M src/http/worker/process.c:
+		add suppport for file extension based mime type detection.
+	* A docs/mime.types:
+		add a file with file extension to mime-type mappings
+	* M src/http/message.c:
+	* M src/http/response/asset.c:
+	* M src/http/worker/get_asset.c:
+	* M src/http/worker/process.c:
+		now every file accessible under assets/html will be delivered.
+
+2013-08-27	Georg Hopp	georg@steffers.org
+	* M src/rbtree.c:
+	* M src/taskrambler.c:
+	* M src/utils/memory.c:
+		now valgrind shows no more violations...but cleanup does not
+		work correcly. The memory usage depends now on the amount of
+		paralell connections...ab show approximately 10% to 20%
+		performance improvement / and the code is far from optimal.
+	* M src/rbtree.c:
+	* M src/utils/memory.c:
+		tree based memory management does not segfault anymore, but
+		reusage does not seem to work, as well as free
+	* M TODO:
+	* M src/rbtree.c:
+		update todo and make my rbtree implementation use externally
+		allocated elements.
+
+2013-08-24	Georg Hopp	georg@steffers.org
+	* M src/rbtree.c:
+		rbtree insert and delete now as one function and working as
+		expected...still has to be checked on sideeffects.
+	* M src/binarytree.c:
+		realize that delete does not work correct.
+	* M src/rbtree.c:
+		all insert cases merged in one insertElement function.
+
+2013-08-23	Georg Hopp	georg@steffers.org
+	* M src/rbtree.c:
+		now the memory is freed outside the tree delete function....
+	* M src/rbtree.c:
+		now it seems that rb trees are working now...stiff a lot of
+		optimization work to be done, as this is mostly one 2 one the
+		code from wikipedia, with some modifiations to work with NULL
+		leaf nodes.
+	* M src/rbtree.c:
+		inserting in red black tree now works as in my example.
+	* M src/binarytree.c:
+		change the way traversed elements are shown and add some
+		comments
+	* A src/rbtree.c:
+		cope binarytree to play with an rbtree implementation
+	* M src/binarytree.c:
+		fix traversal
+	* M src/binarytree.c:
+		alternative approach on delete of single child nodes. This
+		one really exchanges the nodes, thus preventing large copy on
+		big data that might be in the tree...anyway, for small data i
+		think the other approach is faster.
+	* M src/binarytree.c:
+		now use the parent in element in delete
+
+2013-08-22	Georg Hopp	georg@steffers.org
+	* M src/binarytree.c:
+		fix insert and make another in-order traverse for checking
+	* M src/binarytree.c:
+		remove wrong comment
+	* M src/binarytree.c:
+		add parent in element and implement an iterative in-order
+		traversal with it.
+	* M docs/rbdelete.txt:
+	* M docs/rbinsert.txt:
+		further improvments on the rb examples
+	* M docs/rbdelete.txt:
+		more stuff on rbdelete
+	* M docs/rbdelete.txt:
+		rbdelete stuff
+	* A docs/rbdelete.txt:
+		added first exampled for rbtree delete stuff...
+	* M docs/rbinsert.txt:
+		small fix in rbinsert doc
+	* A docs/rbinsert.txt:
+		add small example on rbtree insert, just to see what I have
+		to care about when implementing this
+	* A src/binarytree.c:
+		add first own binary tree testcode. Not ballanced right now.
+
+2013-08-21	Georg Hopp	georg@steffers.org
+	* M configure.ac:
+	* M src/server/handle_accept.c:
+	* M src/stream/read.c:
+	* M src/stream/write.c:
+	* M src/taskrambler.c:
+	* M src/utils/daemonize.c:
+	* M tests/loggerTest.c:
+	* M tests/serverTest.c:
+		fix some warnings
+	* M configure.ac:
+	* M m4/gcov.m4:
+	* M src/Makefile.am:
+	* M src/auth/Makefile.am:
+	* M src/cbuf/Makefile.am:
+	* M src/class/Makefile.am:
+	* M src/hash/Makefile.am:
+	* M src/http/Makefile.am:
+	* M src/logger/Makefile.am:
+	* M src/queue/Makefile.am:
+	* M src/server/Makefile.am:
+	* M src/session/Makefile.am:
+	* M src/socket/Makefile.am:
+	* M src/stream/Makefile.am:
+		change build system to accept CFLAGS
+	* M TODO:
+	* M src/server/poll.c:
+	* M src/server/read.c:
+	* M src/server/run.c:
+		probably fixed problem in main look under load.
+		This still has to be tested.
+	* M src/http/worker/process.c:
+		code formatting
+
+2013-08-20	Georg Hopp	georg@steffers.org
+	* M src/taskrambler.c:
+		add memCleanup before process end
+	* M src/http/parser.c:
+		change last FREE to MEM_FREE
+	* M src/session/session.c:
+		replace malloc in session/session.c with quick fit approach.
+	* M src/http/worker/process.c:
+		replace calloc http/worker/process.c with quick fit approach.
+	* M src/http/worker.c:
+		replace calloc http/worker.c with quick fit approach.
+	* M src/http/parser/parse.c:
+		replace calloc http/parser.c with quick fit approach.
+	* M src/http/parser/p_request_vars.c:
+	* M src/http/request.c:
+		replace calloc http/request.c with quick fit approach.
+	* M src/auth/credential.c:
+		replace calloc auth/credentials.c with quick fit approach.
+	* M src/auth/ldap.c:
+		replace calloc auth/ldap.c with quick fit approach.
+	* M src/http/header.c:
+		replace calloc in http/cookie.c with quick fit approach.
+	* M src/http/cookie.c:
+		replace calloc in http/cookie.c with quick fit approach.
+		It seems that domain and path are never set...have to check
+		this (most likely its not implemented now
+	* M src/hash/value.c:
+		replace calloc in hash/value.c with quick fit approach
+	* M src/server/server.c:
+		replace calloc in server.c with quick fit approach
+	* M src/http/response.c:
+		replace calloc in response.c with quick fit approach
+	* M src/http/message.c:
+	* M src/http/parser/p_header.c:
+	* M src/http/response/404.c:
+	* M src/http/response/login_form.c:
+	* M src/http/response/randval.c:
+	* M src/http/response/session.c:
+		use quick fit approach in message
+	* M src/logger/interface/i_logger.c:
+	* M src/utils/memory.c:
+		fix the last issues with using quick fit with the class
+		interface.
+	* M src/class/interface/i_class.c:
+	* M src/logger/interface/i_logger.c:
+	* M src/utils/memory.c:
+	* M tests/Makefile.am:
+		added new memory management to the most fragile part in this
+		matter...the class system...well, the server test gives me a
+		memory corruption, but all other are running now....anyway
+		most likely this is in an unusable state right now.
+	* M include/cbuf.h:
+	* M include/utils/memory.h:
+	* M src/cbuf/cbuf.c:
+	* M src/logger/interface/i_logger.c:
+	* M src/utils/memory.c:
+		simplified the quick fit interface
+	* M tests/serverTest.c:
+	* M tests/socketTest.c:
+		change port for tests
+	* M include/cbuf.h:
+	* M src/cbuf/cbuf.c:
+		add quick fit to cbuf
+	* M src/logger/interface/i_logger.c:
+	* M tests/Makefile.am:
+		to test it use Best Fit memory management in logger.
+	* M include/utils/memory.h:
+	* M src/utils/memory.c:
+		first version of Quick Fit memory management
+	* M .gitignore:
+		now ignore log tsr files under tests
+	* M include/cbufpool.h:
+		more comments regarding cbuf pools.
+	* M include/http/writer.h:
+		more comments regarding cbuf pools.
+	* M src/utils/memory.c:
+		fix the new functions so that they compile at least.
+	* A include/cbufpool.h:
+		added idea comment for a cbuf pool to not always
+		reinitialize these all the time...
+	* A src/cbufpool.c:
+		added idea comment for a cbuf pool to not always
+		reinitialize these all the time...
+	* M src/utils/memory.c:
+		started implementing the Quick Fit memory management
+	* M src/utils/memory.c:
+		added comment about idea of Quick Fit memory management
+		system to improve performance
+
+2013-08-12	Georg Hopp	georg@steffers.org
+	* M .gitignore:
+		add test-driver to git ignores
+	* M src/taskrambler.c:
+		put daemonize before our working child is forked.
+	* M src/http/parser/parse.c:
+	* M src/server/server.c:
+		only code format changes
+	* M src/utils/daemonize.c:
+		make a more real daemonizing
+	* M configure.ac:
+		add build dir as macro definition to daemonze.c thus been
+		able to chdir there so that all assets would be found.
+
+2013-08-09	Georg Hopp	georg@steffers.org
+	* M Makefile.am.coverage:
+	* M m4/gcov.m4:
+		small changes in build system
+
+2013-03-16	Georg Hopp	georg@steffers.org
+	* M README.md:
+		first README.md
+	* M m4/gcov.m4:
+		update gcov m4 to include version 1.10
+	* A .gitignore:
+	* A README.md:
+		Initial commit
+
+2012-03-29	Georg Hopp	georg@steffers.org
+	* M configure.ac:
+	* D include/http/message/queue.h:
+	* M include/http/parser.h:
+	* M include/http/writer.h:
+	* A include/queue.h:
+	* M src/Makefile.am:
+	* M src/http/Makefile.am:
+	* D src/http/message/queue.c:
+	* D src/http/message/queue/get.c:
+	* D src/http/message/queue/put.c:
+	* M src/http/parser.c:
+	* M src/http/parser/parse.c:
+	* M src/http/worker/process.c:
+	* M src/http/writer.c:
+	* M src/http/writer/write.c:
+	* A src/queue/Makefile.am:
+	* A src/queue/get.c:
+	* A src/queue/put.c:
+	* A src/queue/queue.c:
+		moved httpMessageQueue to a generalized Queue class as in
+		fact it was nothing else except that it only stored
+		HttpMessages.
+	* M src/http/message/queue/get.c:
+		fix message queue get. Problem was not correctly updated
+		last value on empty queue
+	* M src/http/worker/process.c:
+		remove no longer needed variable
+	* M include/http/message/queue.h:
+	* M src/http/Makefile.am:
+	* M src/http/message/queue.c:
+	* A src/http/message/queue/get.c:
+	* A src/http/message/queue/put.c:
+	* M src/http/parser/parse.c:
+	* M src/http/worker/process.c:
+	* M src/http/writer/write.c:
+		changed HttpMessageQueue to be a real queue and not a fixed
+		size array
+	* M .gitignore:
+		ignore profile information files
+	* M Makefile.am.coverage:
+	* M tests/Makefile.am:
+		change on coverage generation...i still don't get any branch
+		info, and i am not sure what it would describe
+
+2012-03-28	Georg Hopp	georg@steffers.org
+	* M tests/Makefile.am:
+	* M tests/stream/Makefile:
+		fix in Makefiles for tests
+	* M src/Makefile.am:
+	* M tests/Makefile.am:
+	* D tests/loggerTest:
+	* A tests/stream/Makefile:
+		latest additions to tests and code coverage
+
+2012-03-27	Georg Hopp	georg@steffers.org
+	* M src/stream/Makefile.am:
+	* A src/stream/interface/reader.c:
+	* D src/stream/interface/stream_reader.c:
+	* D src/stream/interface/stream_writer.c:
+	* A src/stream/interface/writer.c:
+	* M tests/Makefile.am:
+	* M tests/loggerTest:
+	* A tests/mock/mock_worker.c:
+	* A tests/mock/mock_worker.h:
+	* M tests/serverTest.c:
+		added first tests for server class
+	* M .gitignore:
+	* M tests/Makefile.am:
+	* M tests/socketTest.c:
+		some tests for socket class
+	* M .gitignore:
+	* M Makefile.am.coverage:
+	* M include/class/class.h:
+	* M src/class/Makefile.am:
+	* D src/class/interface/class.c:
+	* A src/class/interface/i_class.c:
+	* M src/http/Makefile.am:
+	* D src/http/interface/http_intro.c:
+	* A src/http/interface/i_http_intro.c:
+	* D src/http/parser/body.c:
+	* D src/http/parser/header.c:
+	* A src/http/parser/p_body.c:
+	* A src/http/parser/p_header.c:
+	* A src/http/parser/p_post_vars.c:
+	* A src/http/parser/p_request_vars.c:
+	* D src/http/parser/post_vars.c:
+	* D src/http/parser/request_vars.c:
+	* A src/http/worker/answer.c:
+	* D src/http/worker/write.c:
+	* M src/logger/Makefile.am:
+	* A src/logger/interface/i_logger.c:
+	* D src/logger/interface/logger.c:
+	* M tests/Makefile.am:
+	* M tests/classTest.c:
+	* A tests/loggerTest:
+	* M tests/loggerTest.c:
+	* M tests/mock/mock_class.c:
+	* A tests/mock/mock_logger.c:
+	* A tests/mock/mock_logger.h:
+	* M tests/runtest.c:
+	* M tests/runtest.h:
+		more tests...and some little structural changes to make then
+		happen correctly with coverage reports. KEEP IN MIND:
+		coverage reports lie to you. (But they are a good hint to
+		see whats not testes enough
+
+2012-03-26	Georg Hopp	georg@steffers.org
+	* M .gitignore:
+	* M Makefile.am.coverage:
+	* M configure.ac:
+	* M include/class/class.h:
+	* M m4/gcov.m4:
+	* M src/http/Makefile.am:
+	* M src/logger/Makefile.am:
+	* M tests/Makefile.am:
+	* D tests/cclassTest.c:
+	* A tests/classTest.c:
+	* D tests/mock/class.c:
+	* D tests/mock/class.h:
+	* A tests/mock/mock_class.c:
+	* A tests/mock/mock_class.h:
+	* M tests/runtest.c:
+	* M tests/runtest.h:
+		started tests and coverage report.
+	* M configure.ac:
+	* D include/interface/stream_reader.h:
+	* D include/interface/stream_writer.h:
+	* M include/stream.h:
+	* A include/stream/interface/reader.h:
+	* A include/stream/interface/writer.h:
+	* A include/stream/stream.h:
+	* M src/Makefile.am:
+	* M src/http/parser.c:
+	* M src/http/worker.c:
+	* M src/http/writer.c:
+	* D src/interface/stream_reader.c:
+	* D src/interface/stream_writer.c:
+	* D src/server.c:
+	* A src/server/Makefile.am:
+	* M src/server/read.c:
+	* A src/server/server.c:
+	* M src/server/write.c:
+	* D src/session.c:
+	* A src/session/Makefile.am:
+	* A src/session/session.c:
+	* D src/socket.c:
+	* A src/socket/Makefile.am:
+	* A src/socket/socket.c:
+	* D src/stream.c:
+	* A src/stream/Makefile.am:
+	* A src/stream/interface/stream_reader.c:
+	* A src/stream/interface/stream_writer.c:
+	* A src/stream/stream.c:
+		Now all classes are moved in according archives. Coming
+		closer to the original purpose of the class construct to
+		build small independent reusable code fragments.
+	* M .gitignore:
+		now ignore archive files
+	* D src/auth/libauth.a:
+	* D src/cbuf/libcbuf.a:
+	* D src/class/libclass.a:
+	* D src/hash/libhash.a:
+	* D src/http/libhttp.a:
+	* D src/logger/liblogger.a:
+	* M configure.ac:
+		moved logger to separate archive
+	* M include/http.h:
+	* A include/http/interface/http_intro.h:
+	* D include/interface/http_intro.h:
+	* D include/interface/logger.h:
+	* M include/logger.h:
+	* A include/logger/interface/logger.h:
+	* A include/logger/logger.h:
+	* M src/Makefile.am:
+	* M src/auth/libauth.a:
+	* M src/cbuf/libcbuf.a:
+	* M src/class/libclass.a:
+	* M src/hash/libhash.a:
+	* M src/http/Makefile.am:
+	* A src/http/interface/http_intro.c:
+	* M src/http/libhttp.a:
+	* M src/http/message/header_size_get.c:
+	* M src/http/message/header_to_string.c:
+	* M src/http/parser/parse.c:
+	* M src/http/request.c:
+	* M src/http/response.c:
+	* D src/interface/http_intro.c:
+	* D src/interface/logger.c:
+	* M src/interface/stream_reader.c
+	* D src/logger.c:
+	* A src/logger/Makefile.am:
+	* A src/logger/interface/logger.c:
+	* A src/logger/liblogger.a:
+	* A src/logger/logger.c:
+	* M src/logger/stderr.c:
+	* M src/logger/syslog.c:
+	* M src/server/handle_accept.c:
+	* M src/server/poll.c:
+	* M src/server/read.c:
+	* M src/server/run.c:
+	* M src/server/write.c:
+	* M src/socket.c:
+	* M src/socket/accept.c:
+	* M src/socket/connect.c:
+	* M src/socket/listen.c:
+	* M src/taskrambler.c:
+		moved logger to separate archive
+	* M .gitignore:
+	* M Makefile.am:
+	* A Makefile.am.coverage:
+	* M configure.ac:
+	* M include/auth.h:
+	* A include/auth/auth.h:
+	* A include/auth/credential.h:
+	* A include/auth/interface/auth.h:
+	* D include/credential.h:
+	* M include/hash.h:
+	* A include/hash/hash.h:
+	* A include/hash/interface/hashable.h:
+	* A include/hash/value.h:
+	* D include/hash_value.h:
+	* A include/http.h:
+	* M include/http/message.h:
+	* D include/interface/auth.h:
+	* D include/interface/hashable.h:
+	* A m4/gcov.m4:
+	* M src/Makefile.am:
+	* A src/auth/Makefile.am:
+	* A src/auth/credential.c:
+	* A src/auth/interface/auth.c:
+	* M src/auth/ldap.c:
+	* A src/auth/libauth.a:
+	* D src/cbuf.c:
+	* A src/cbuf/Makefile.am:
+	* A src/cbuf/cbuf.c:
+	* A src/cbuf/libcbuf.a:
+	* M src/class/Makefile.am:
+	* M src/class/libclass.a:
+	* D src/credential.c:
+	* D src/hash.c:
+	* A src/hash/Makefile.am:
+	* M src/hash/add.c:
+	* M src/hash/delete.c:
+	* M src/hash/get.c:
+	* A src/hash/hash.c:
+	* A src/hash/interface/hashable.c:
+	* A src/hash/libhash.a:
+	* A src/hash/value.c:
+	* D src/hash_value.c:
+	* A src/http/Makefile.am:
+	* M src/http/cookie.c:
+	* M src/http/header.c:
+	* A src/http/libhttp.a:
+	* M src/http/message.c:
+	* M src/http/parser/header.c:
+	* M src/http/parser/post_vars.c:
+	* M src/http/parser/request_vars.c:
+	* M src/http/request.c:
+	* M src/http/worker.c:
+	* M src/http/worker/process.c:
+	* D src/interface/auth.c:
+	* D src/interface/hashable.c:
+	* M src/taskrambler.c:
+	* M tests/Makefile.am:
+		huge changes in build system. Moved a lot of stuff to
+		separate archives, not finished right now. Additionally add
+		some support for coverage reports. Next step after build
+		restructuring is to write tests.
+
 2012-02-23 17:40:00 +0100 Georg Hopp 
 
 	* add cookie header again (HEAD, origin/master, origin/HEAD, master)
