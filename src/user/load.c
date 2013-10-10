@@ -35,8 +35,11 @@ userLoad(User this, Storage storage)
 {
 	char   * storage_data;
 	size_t   nstorage_data;
-
 	size_t * user_data_sizes;
+
+	if (NULL == storage) {
+		return NULL;
+	}
 
 	storageGet(
 			storage,
