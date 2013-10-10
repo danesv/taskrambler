@@ -7,8 +7,11 @@
 .deps/
 Makefile
 Makefile.in
-/config*
 m4/
+/config.*
+*.crt
+*.csr
+*.pem
 *.m4
 /INSTALL
 tests/coverage*
