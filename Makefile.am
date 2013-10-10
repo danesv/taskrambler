@@ -69,7 +69,21 @@ coverage-html:
 	-$(MAKE) -C tests $(AM_MAKEFLAGS) -k $@
 endif
 
+TR_DIRS = $(varlibdir)/assets/doc \
+	  $(varlibdir)/assets/html/doc \
+	  $(varlibdir)/assets/coverage \
+	  $(varlibdir)/assets/html/coverage \
+	  $(varrundir) \
+	  $(trdatadir)/docs/api/
+
 install-data-hook:
-	mkdir -p $(varlibdir)/assets/doc $(varlibdir)/assets/html/doc $(varrundir)
+	mkdir -p $(TR_DIRS)
+	cp -Rfd docs/api/ $(trdatadir)/docs/
+	cp -Rfd tests/coverage/ $(trdatadir)/docs/
 	$(LN_S) -f $(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(varlibdir)/assets/doc/$(PACKAGE_VERSION)
 	$(LN_S) -f $(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(varlibdir)/assets/html/doc/$(PACKAGE_VERSION)
+	$(LN_S) -f $(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(varlibdir)/assets/coverage/$(PACKAGE_VERSION)
+	$(LN_S) -f $(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(varlibdir)/assets/html/coverage/$(PACKAGE_VERSION)
+
+uninstall-hook:
+	rm -Rf $(varlibdir) $(varrundir) $(trdatadir)

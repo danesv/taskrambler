@@ -78,7 +78,8 @@ AM_CFLAGS="${AM_CFLAGS} -DCONFIGDIR=\\\"${myetcdir}\\\""
 AM_CFLAGS="${AM_CFLAGS} ${CFLAGS}"
 AC_SUBST(AM_CFLAGS)
 
-AC_CONFIG_FILES([config/taskrambler.conf])
+AC_CONFIG_FILES([config/taskrambler.conf
+		 assets/html/_documentation.html])
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
