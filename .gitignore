@@ -6,6 +6,7 @@
 .dirstamp
 .deps/
 Makefile
+configure
 Makefile.in
 m4/
 /config.*
@@ -13,6 +14,7 @@ m4/
 *.csr
 *.pem
 *.m4
+taskrambler.conf
 /INSTALL
 tests/coverage*
 /docs/api/
