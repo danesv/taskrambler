@@ -6,7 +6,7 @@ HASH = hash.c add.c get.c get_first.c delete.c each.c value.c \
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libhash.a
+noinst_LTLIBRARIES = libhash.la
 
-libhash_a_SOURCES = $(HASH)
-libhash_a_CFLAGS  = $(AM_CFLAGS)
+libhash_la_SOURCES = $(HASH)
+libhash_la_CFLAGS  = $(AM_CFLAGS)

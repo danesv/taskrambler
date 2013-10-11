@@ -5,7 +5,7 @@ CONFIG = config.c value.c get.c
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libconfig.a
+noinst_LTLIBRARIES = libconfig.la
 
-libconfig_a_SOURCES = $(CONFIG)
-libconfig_a_CFLAGS  = $(AM_CFLAGS)
+libconfig_la_SOURCES = $(CONFIG)
+libconfig_la_CFLAGS  = $(AM_CFLAGS)

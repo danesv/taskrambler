@@ -10,7 +10,7 @@ CB = cbuf.c read.c \
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libcbuf.a
+noinst_LTLIBRARIES = libcbuf.la
 
-libcbuf_a_SOURCES = $(CB)
-libcbuf_a_CFLAGS  = $(AM_CFLAGS)
+libcbuf_la_SOURCES = $(CB)
+libcbuf_la_CFLAGS  = $(AM_CFLAGS)

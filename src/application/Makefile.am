@@ -14,7 +14,7 @@ ADAPTERHTTP = adapter/http/http.c \
 	      
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libapplication.a
+noinst_LTLIBRARIES = libapplication.la
 
-libapplication_a_SOURCES = $(APPLICATION) $(ADAPTERHTTP)
-libapplication_a_CFLAGS  = $(AM_CFLAGS)
+libapplication_la_SOURCES = $(APPLICATION) $(ADAPTERHTTP)
+libapplication_la_CFLAGS  = $(AM_CFLAGS)

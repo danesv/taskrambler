@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libstorage.a
+noinst_LTLIBRARIES = libstorage.la
 
-libstorage_a_SOURCES = storage.c get.c put.c update.c
-libstorage_a_CFLAGS  = $(AM_CFLAGS)
+libstorage_la_SOURCES = storage.c get.c put.c update.c
+libstorage_la_CFLAGS  = $(AM_CFLAGS)

@@ -7,7 +7,7 @@ IFACE  = interface/reader.c \
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libstream.a
+noinst_LTLIBRARIES = libstream.la
 
-libstream_a_SOURCES = $(STREAM) $(IFACE)
-libstream_a_CFLAGS  = $(AM_CFLAGS)
+libstream_la_SOURCES = $(STREAM) $(IFACE)
+libstream_la_CFLAGS  = $(AM_CFLAGS)

@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libasset.a
+noinst_LTLIBRARIES = libasset.la
 
-libasset_a_SOURCES = asset.c pool.c
-libasset_a_CFLAGS  = $(AM_CFLAGS)
+libasset_la_SOURCES = asset.c pool.c
+libasset_la_CFLAGS  = $(AM_CFLAGS)

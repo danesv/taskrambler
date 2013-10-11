@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libqueue.a
+noinst_LTLIBRARIES = libqueue.la
 
-libqueue_a_SOURCES = queue.c get.c put.c
-libqueue_a_CFLAGS  = $(AM_CFLAGS)
+libqueue_la_SOURCES = queue.c get.c put.c
+libqueue_la_CFLAGS  = $(AM_CFLAGS)

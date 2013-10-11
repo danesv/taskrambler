@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libsession.a
+noinst_LTLIBRARIES = libsession.la
 
-libsession_a_SOURCES = session.c
-libsession_a_CFLAGS  = $(AM_CFLAGS)
+libsession_la_SOURCES = session.c
+libsession_la_CFLAGS  = $(AM_CFLAGS)

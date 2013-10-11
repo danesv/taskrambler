@@ -1,10 +1,13 @@
 .*.swp
 *.o
 *.a
+*.lo
+*.la
 *.gcda
 *.gcno
 .dirstamp
 .deps/
+.libs/
 Makefile
 configure
 Makefile.in
@@ -34,4 +37,4 @@ src/taskrambler
 /tests/*.trs
 gmon.out
 test-driver
-
+/assets/html/_documentation.html

@@ -3,7 +3,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libclass.a
+noinst_LTLIBRARIES = libclass.la
 
-libclass_a_SOURCES = interface.c interface/i_class.c
-libclass_a_CFLAGS  = $(AM_CFLAGS)
+libclass_la_SOURCES = interface.c interface/i_class.c
+libclass_la_CFLAGS  = $(AM_CFLAGS)

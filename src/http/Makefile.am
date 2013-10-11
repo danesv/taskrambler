@@ -36,8 +36,8 @@ HEADER = header.c \
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libhttp.a
+noinst_LTLIBRARIES = libhttp.la
 
-libhttp_a_SOURCES = $(MSG) $(REQ) $(RESP) $(PARSER) $(WRITER) \
+libhttp_la_SOURCES = $(MSG) $(REQ) $(RESP) $(PARSER) $(WRITER) \
 		    $(WORKER) $(HEADER) interface/i_http_intro.c
-libhttp_a_CFLAGS  = $(AM_CFLAGS)
+libhttp_la_CFLAGS  = $(AM_CFLAGS)

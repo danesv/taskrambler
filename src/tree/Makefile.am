@@ -6,7 +6,7 @@ TREE = tree.c find.c insert.c inOrderSuccessor.c delete.c walk.c \
 
 AM_CFLAGS += -I../../include/
 
-noinst_LIBRARIES = libtree.a
+noinst_LTLIBRARIES = libtree.la
 
-libtree_a_SOURCES = $(TREE)
-libtree_a_CFLAGS  = $(AM_CFLAGS)
+libtree_la_SOURCES = $(TREE)
+libtree_la_CFLAGS  = $(AM_CFLAGS)
