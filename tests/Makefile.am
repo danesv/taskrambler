@@ -47,7 +47,7 @@ SERVER = $(SOCKET) $(STREAM) \
 	 ../src/utils/signalHandling.c \
 	 mock/mock_worker.c
 
-AM_CFLAGS = -O0 -Wall -ggdb -I ../include -I .. -I . $(MEM_OPT_FLAGS)
+AM_CFLAGS += -O0 -Wall -ggdb -I ../include -I .. -I . $(MEM_OPT_FLAGS)
 AM_LDFLAGS = 
 
 if HAVE_GCOV
@@ -71,7 +71,7 @@ serverTest_SOURCES = $(SERVER) serverTest.c
 serverTest_CFLAGS  = $(AM_CFLAGS) -pg
 serverTest_LDFLAGS = $(STREAM_OBJ) $(AM_LDFLAGS) -lcrypto -pg
 
-EXTRA_DIST = runtest.h mock/mock_class.h mock/mock_logger.h
+EXTRA_DIST = runtest.h mock suppress
 
 if HAVE_GCOV
 
