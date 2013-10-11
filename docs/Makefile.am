@@ -9,5 +9,5 @@ docs:
 	$(DOXYGEN) Doxyfile
 
 clean-local:
-	@rm -rf $(top_srcdir)/docs/docs/$(PACKAGE_VERSION)
+	@rm -rf $(top_srcdir)/docs/api/
 endif 

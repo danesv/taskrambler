@@ -5,7 +5,7 @@ ACLOCAL_AMFLAGS = -I m4
 #create_token_LDADD   = src/libtoken.la $(LIBOBJS)
 #create_token_CFLAGS  = -Wall -I include
 
-EXTRA_DIST = include certs assets run
+EXTRA_DIST = include certs assets
 
 myetc_DATA = config/mime.types \
 	     config/taskrambler.conf \
@@ -81,8 +81,8 @@ TR_DIRS = $(varlibdir)/assets/doc \
 
 install-data-hook:
 	mkdir -p $(TR_DIRS)
-	cp -Rfd docs/api/ $(trdatadir)/docs/
-	cp -Rfd tests/coverage/ $(trdatadir)/docs/
+	if [ -d docs/api/ ]; then cp -Rfd docs/api/ $(trdatadir)/docs/; fi
+	if [ -d tests/coverage/ ]; then cp -Rfd tests/coverage/ $(trdatadir)/docs/; fi
 	$(LN_S) -f $(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(varlibdir)/assets/doc/$(PACKAGE_VERSION)
 	$(LN_S) -f $(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(varlibdir)/assets/html/doc/$(PACKAGE_VERSION)
 	$(LN_S) -f $(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(varlibdir)/assets/coverage/$(PACKAGE_VERSION)
