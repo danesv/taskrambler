@@ -30,6 +30,10 @@
 ConfigValue
 configGet(Config this, const char * key, size_t nkey)
 {
+	if (NULL == this) {
+		return NULL;
+	}
+
 	return hashGet(this->config, key, nkey);
 }
 

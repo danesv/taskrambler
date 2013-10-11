@@ -22,6 +22,7 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <fcntl.h>
 
 #include <sys/time.h>
@@ -68,15 +69,31 @@ Config config;
 int
 main()
 {
-	pid_t            pid;
 	long             psize  = sysconf(_SC_PAGESIZE);
+	struct rlimit    limit = {RLIM_INFINITY, RLIM_INFINITY};
+
+	pid_t            pid;
 	int              status;
 	int              shm;
 	struct randval * value;
 
+	logger = new(LoggerSyslog, LOGGER_DEBUG);
 	config = new(Config, CONFIGDIR "/taskrambler.conf");
 
-	struct rlimit limit = {RLIM_INFINITY, RLIM_INFINITY};
+	if (NULL == config) {
+		loggerLog(logger, LOGGER_INFO,
+				"unable to load configuration file: %s\n",
+				CONFIGDIR "/taskrambler.conf");
+
+		if (! INSTANCE_OF(LoggerStderr, logger)) {
+			fprintf(stderr,
+					"unable to load configuration file: %s\n",
+					CONFIGDIR "/taskrambler.conf");
+		}
+
+		return 1;
+	}
+
 	setrlimit(RLIMIT_CPU, &limit);
 
 	getrlimit(RLIMIT_NOFILE, &limit);
@@ -175,8 +192,6 @@ main()
 				shm_unlink("/fooshm");
 				close(shm);
 
-				logger = new(LoggerSyslog, LOGGER_DEBUG);
-
 				authLdap = new(
 						AuthLdap,
 						(ldap_host->value).string,
@@ -257,7 +272,6 @@ main()
 				delete(passwords);
 				delete(users);
 				delete(authLdap);
-				delete(logger);
 
 				clearMimeTypes();
 				assetPoolCleanup();
@@ -267,6 +281,7 @@ main()
 	}
 
 	delete(config);
+	delete(logger);
 	memCleanup();
 
 	return 0;
