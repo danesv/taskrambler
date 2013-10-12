@@ -81,12 +81,30 @@ TR_DIRS = $(DESTDIR)/$(trdatadir)/assets/doc \
 
 install-data-hook:
 	$(INSTALL) -d -m 755 $(TR_DIRS)
-	if [ -d docs/api/ ]; then cp -Rfd docs/api/ $(DESTDIR)/$(trdatadir)/docs/; fi
-	if [ -d tests/coverage/ ]; then cp -Rfd tests/coverage/ $(DESTDIR)/$(trdatadir)/docs/; fi
-	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(DESTDIR)/$(trdatadir)/assets/doc/$(PACKAGE_VERSION)
-	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(DESTDIR)/$(trdatadir)/assets/html/doc/$(PACKAGE_VERSION)
-	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(DESTDIR)/$(trdatadir)/assets/coverage/$(PACKAGE_VERSION)
-	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(DESTDIR)/$(trdatadir)/assets/html/coverage/$(PACKAGE_VERSION)
+	if [ -d docs/api/ ]; then \
+	  cp -Rfd docs/api/ $(DESTDIR)/$(trdatadir)/docs/; \
+	fi
+	if [ -d tests/coverage/ ]; then \
+	  cp -Rfd tests/coverage/ $(DESTDIR)/$(trdatadir)/docs/; \
+	fi
+	if [ -e $(DESTDIR)/$(trdatadir)/docs/api/$(PACKAGE_VERSION)/html ]; \
+	then \
+	  $(LN_S) -f \
+	    $(DESTDIR)/$(trdatadir)/docs/api/$(PACKAGE_VERSION)/html \
+	    $(DESTDIR)/$(trdatadir)/assets/doc/$(PACKAGE_VERSION); \
+	  $(LN_S) -f \
+	    $(DESTDIR)/$(trdatadir)/docs/api/$(PACKAGE_VERSION)/html \
+	    $(DESTDIR)/$(trdatadir)/assets/html/doc/$(PACKAGE_VERSION); \
+	fi
+	if [ -e $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) ]; \
+	then \
+	  $(LN_S) -f \
+	    $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) \
+	    $(DESTDIR)/$(trdatadir)/assets/coverage/$(PACKAGE_VERSION); \
+	  $(LN_S) -f \
+	    $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) \
+	    $(DESTDIR)/$(trdatadir)/assets/html/coverage/$(PACKAGE_VERSION); \
+	fi
 
 uninstall-hook:
 	rm -Rf $(varlibdir) $(varrundir) $(trdatadir)
