@@ -40,6 +40,11 @@ storageGet(
 	datum   gdbm_key = {key, nkey};
 	datum   value;
 
+	if (NULL == this) {
+		*data  = NULL;
+		*ndata = 0;
+	}
+
 	memcpy(key, _key, nkey);
 	value = gdbm_fetch(this->gdbm, gdbm_key);
 	MEM_FREE(key);
