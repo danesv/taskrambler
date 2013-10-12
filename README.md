@@ -33,31 +33,21 @@ The main development page can be found
 INSTALLATION
 ------------
 
-Currently there is no finished installation process.
-Further more, packages are required for building this thing,
-that in fact are only requered for the testing part.
+This can be installed via the usual configure, make, make install
+cycle.
 
-### BUILD REQUIREMENTS
+### API DOC
 
-You need the following to build this thing.
+To generate the api doc a patched version of doxygen is
+neccessary. A patch is included under docs.
 
-- A GNU Autobuild (autoconf, automake, etc.) installation.
-- GCC as well as binutils.
+*make docs* creates the api doc.
 
-### BUILDING
+### TEST COVERAGE REPORT
 
-Call ./bootstrap and then run ./configure.
-After that run make. After that you will hopefully find a binary called
-*taskrambler* under *src/*.
-This is a test application for the library. It's name comes from the
-first intention what i would like to do with it. Some kind of task management
-system.
+gcov and lcov are needed to build these.
 
-### INSTALLING
-
-No care has been taken that this thing installs correctly. Anyway
-simply call *./src/taskrambler* will run this. After started this you
-should be able to connect with any browser on localhost port 11212.
+*make coverage-html* creates the converage reports.
 
 ### PLAY AROUND
 
