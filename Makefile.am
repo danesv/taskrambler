@@ -12,7 +12,7 @@ myetc_DATA = config/mime.types \
 	     config/taskrambler.pem \
 	     config/taskrambler.crt
 
-nobase_varlib_DATA = assets/html/example.html \
+nobase_trdata_DATA = assets/html/example.html \
 		     assets/html/_footer.html \
 		     assets/html/_login.html \
 		     assets/html/_menu.html \
@@ -72,21 +72,21 @@ coverage-html:
 	-$(MAKE) -C tests $(AM_MAKEFLAGS) -k $@
 endif
 
-TR_DIRS = $(varlibdir)/assets/doc \
-	  $(varlibdir)/assets/html/doc \
-	  $(varlibdir)/assets/coverage \
-	  $(varlibdir)/assets/html/coverage \
-	  $(varrundir) \
-	  $(trdatadir)/docs/api/
+TR_DIRS = $(DESTDIR)/$(trdatadir)/assets/doc \
+	  $(DESTDIR)/$(trdatadir)/assets/html/doc \
+	  $(DESTDIR)/$(trdatadir)/assets/coverage \
+	  $(DESTDIR)/$(trdatadir)/assets/html/coverage \
+	  $(DESTDIR)/$(trstatedir) \
+	  $(DESTDIR)/$(trdatadir)/docs/
 
 install-data-hook:
-	mkdir -p $(TR_DIRS)
-	if [ -d docs/api/ ]; then cp -Rfd docs/api/ $(trdatadir)/docs/; fi
-	if [ -d tests/coverage/ ]; then cp -Rfd tests/coverage/ $(trdatadir)/docs/; fi
-	$(LN_S) -f $(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(varlibdir)/assets/doc/$(PACKAGE_VERSION)
-	$(LN_S) -f $(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(varlibdir)/assets/html/doc/$(PACKAGE_VERSION)
-	$(LN_S) -f $(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(varlibdir)/assets/coverage/$(PACKAGE_VERSION)
-	$(LN_S) -f $(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(varlibdir)/assets/html/coverage/$(PACKAGE_VERSION)
+	$(INSTALL) -d -m 755 $(TR_DIRS)
+	if [ -d docs/api/ ]; then cp -Rfd docs/api/ $(DESTDIR)/$(trdatadir)/docs/; fi
+	if [ -d tests/coverage/ ]; then cp -Rfd tests/coverage/ $(DESTDIR)/$(trdatadir)/docs/; fi
+	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(DESTDIR)/$(trdatadir)/assets/doc/$(PACKAGE_VERSION)
+	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/api/$(PACKAGE_VERSION)/html $(DESTDIR)/$(trdatadir)/assets/html/doc/$(PACKAGE_VERSION)
+	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(DESTDIR)/$(trdatadir)/assets/coverage/$(PACKAGE_VERSION)
+	$(LN_S) -f $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) $(DESTDIR)/$(trdatadir)/assets/html/coverage/$(PACKAGE_VERSION)
 
 uninstall-hook:
 	rm -Rf $(varlibdir) $(varrundir) $(trdatadir)

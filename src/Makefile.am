@@ -54,7 +54,7 @@ libtrhttpserver_la_LIBADD  = $(TRHTTPSERVER)
 
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
 taskrambler_CFLAGS  = $(AM_CFLAGS)
-taskrambler_LDADD   = $(TRLIBS) $(USEDLIBS) $(TR)
+taskrambler_LDADD   = $(TRLIBS) $(TR) $(USEDLIBS)
 
 SUBDIRS = asset auth cbuf class hash queue http \
 	  logger server session socket stream tree application \

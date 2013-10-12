@@ -8,7 +8,7 @@ AC_INIT([taskrambler],
 LT_INIT
 AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
-#AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2013 Georg Hopp])
 AC_REVISION([m4_esyscmd_s([git describe --always])])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
@@ -62,16 +62,12 @@ AC_TYPE_SIZE_T
 #AC_FUNC_MALLOC
 AC_CHECK_FUNCS([memset])
 
-myetcdir=${sysconfdir}/taskrambler
-varlibdir=${localstatedir}/lib/taskrambler
-varrundir=${localstatedir}/run/taskrambler
-trdatadir=${datadir}/taskrambler
-trlibdir=${libdir}/taskrambler
+myetcdir="${sysconfdir}/taskrambler"
+trstatedir="${localstatedir}/taskrambler"
+trdatadir="${datarootdir}/taskrambler"
 AC_SUBST(myetcdir)
-AC_SUBST(varlibdir)
-AC_SUBST(varrundir)
+AC_SUBST(trstatedir)
 AC_SUBST(trdatadir)
-AC_SUBST(trlibdir)
 
 AM_CFLAGS="${AM_CFLAGS} ${DRAGONEGG_FLAGS}"
 AM_CFLAGS="${AM_CFLAGS} ${MEM_OPT_FLAGS}"
@@ -80,8 +76,7 @@ AM_CFLAGS="${AM_CFLAGS} -DCONFIGDIR=\\\"${myetcdir}\\\""
 AM_CFLAGS="${AM_CFLAGS} ${CFLAGS}"
 AC_SUBST(AM_CFLAGS)
 
-AC_CONFIG_FILES([config/taskrambler.conf
-		 assets/html/_documentation.html])
+AC_CONFIG_FILES([assets/html/_documentation.html])
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile

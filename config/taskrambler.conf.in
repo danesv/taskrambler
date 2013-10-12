@@ -18,6 +18,6 @@
 
 ldap_base	"ou=user,dc=yabrog,dc=weird-web-workers,dc=org"
 ldap_host	"ldap://hosted/"
-assets_dir	"@prefix@/var/lib/taskrambler"
-runtime_dir	"@prefix@/var/run/taskrambler"
+assets_dir	"@trdatadir@"
+runtime_dir	"@trstatedir@"
 port            11212
