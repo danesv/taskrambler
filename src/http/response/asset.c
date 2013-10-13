@@ -49,17 +49,20 @@
 #include "http/header.h"
 
 #include "utils/memory.h"
+#include "utils/http.h"
 #include "hash.h"
 
 #include "asset.h"
 
 
 HttpResponse
-httpResponseAsset(const char * fname, size_t nfname)
+httpResponseAsset(const char * fname, size_t nfname, time_t exptime)
 {
 	HttpResponse response;
 	HttpMessage  message;
 	Asset        asset = assetPoolGet(fname, nfname);
+	char         expires[200];
+	size_t       nexpires;
 
 	if (NULL == asset) {
 		return NULL;
@@ -72,11 +75,15 @@ httpResponseAsset(const char * fname, size_t nfname)
 	message->body  = asset->data;
 	message->nbody = asset->size;
 
+	nexpires = rfc1123Gmt(expires, sizeof(expires), &exptime);
+
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Content-Type"),
 				asset->mime_type, asset->nmime_type));
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("ETag"), asset->etag, asset->netag));
+	hashAdd(message->header,
+			new(HttpHeader, CSTRA("Expires"), expires, nexpires));
 	hashAdd(message->header,
 			new(HttpHeader, CSTRA("Last-Modified"),
 				asset->mtime, asset->nmtime));

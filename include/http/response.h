@@ -49,7 +49,7 @@ HttpResponse httpResponse403();
 HttpResponse httpResponse404();
 HttpResponse httpResponse500();
 HttpResponse httpResponseJson(const char *, size_t);
-HttpResponse httpResponseAsset(const char *, size_t);
+HttpResponse httpResponseAsset(const char *, size_t, time_t);
 
 #endif // __HTTP_RESPONSE_H__
 

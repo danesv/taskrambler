@@ -21,6 +21,7 @@
  */
 
 #include <sys/types.h>
+#include <time.h>
 
 #include "http/header.h"
 #include "http/message.h"
@@ -54,7 +55,10 @@ httpWorkerGetAsset(HttpWorker this, const char * fname)
 		nmatch = (header->nvalue)[0];
 	}
 
-	message = (HttpMessage)httpResponseAsset(fname, nfname);
+	message = (HttpMessage)httpResponseAsset(
+			fname,
+			nfname,
+			time(NULL) + 604800);
 
 	if (NULL == message) {
 		return (HttpMessage)httpResponse404();
