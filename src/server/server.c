@@ -71,12 +71,9 @@ serverCtor(void * _this, va_list * params)
 
 	this->sock = new(Sock, this->logger, port);
 	socketNonblock(this->sock);
-	flags      = fcntl(this->sock->handle, F_GETFL, 0);
-	fcntl(this->sock->handle, F_SETFL, flags | O_NONBLOCK);
 
 	this->sockSSL = new(Sock, this->logger, port+1);
-	flags         = fcntl(this->sockSSL->handle, F_GETFL, 0);
-	fcntl(this->sockSSL->handle, F_SETFL, flags | O_NONBLOCK);
+	socketNonblock(this->sockSSL);
 
 	SSL_library_init();
 	SSL_load_error_strings();
