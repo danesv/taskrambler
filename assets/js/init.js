@@ -46,21 +46,27 @@ $(document).ready(function() {
 		);
 
 		$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
-		$.getJSON("/user/get/", $.proxy(sess.loadUserJSON, sess));
+		$.getJSON("/currentuser/", $.proxy(sess.loadUserJSON, sess));
 
 		$(window).focus(function() {
 			$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 		});
 
 		$("div#menu ul li.logout").click(function() {
-			$.getJSON("/logout/", $.proxy(sess.loadUserJSON, sess));
+			$.ajax({
+				dataType: "json",
+				url: "/authenticate/",
+				type: 'DELETE',
+				success: $.proxy(sess.loadUserJSON, sess)
+			});
+			//$.getJSON("/authenticate/", $.proxy(sess.loadUserJSON, sess));
 			$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 		});
 
 		$("#login").load("/_login.html", function (){
 			$("#login form").submit(function(event) {
 				event.preventDefault();
-				$.post("/login/",
+				$.post("/authenticate/",
 					$("#login form").serialize(),
 					$.proxy(sess.loadUserJSON, sess));
 				$("#login").addClass("hide");
@@ -71,7 +77,7 @@ $(document).ready(function() {
 		$("#signup").load("/_signup.html", function (){
 			$("#signup form").submit(function(event) {
 				event.preventDefault();
-				$.post("/signup/",
+				$.post("/user/",
 					$("#signup form").serialize(),
 					$.proxy(sess.loadUserJSON, sess));
 				$("#signup").addClass("hide");

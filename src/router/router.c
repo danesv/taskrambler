@@ -1,11 +1,10 @@
 /**
  * \file
- * Represents one HTTP request.
  *
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2013  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,44 +20,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __HTTP_REQUEST_H__
-#define __HTTP_REQUEST_H__
+#include <stdarg.h>
+
+// for dlopen, dlsym
+#include <dlfcn.h>
 
 #include "class.h"
-#include "http/message.h"
+#include "router.h"
 #include "hash.h"
+#include "application/application.h"
 
-#define N_HTTP_METHOD	8
+#define PREFIX		"controller"
 
-extern char * http_method[N_HTTP_METHOD];
+static
+int
+routerCtor(void * _this, va_list * params)
+{
+	Router this = _this;
 
-typedef enum e_HttpMethod {
-	HTTP_OPTIONS = 0,
-	HTTP_GET,
-	HTTP_HEAD,
-	HTTP_POST,
-	HTTP_PUT,
-	HTTP_DELETE,
-	HTTP_TRACE,
-	HTTP_CONNECT
-} HttpMethod;
+	this->application = va_arg(*params, Application);
+	this->functions   = new(Hash);
+	this->handle      = dlopen(NULL, RTLD_LAZY);
+	this->prefix      = PREFIX;
+	this->nprefix     = sizeof(PREFIX) - 1;
 
-CLASS(HttpRequest) {
-	EXTENDS(HttpMessage);
+	if (NULL == this->handle) {
+		return -1;
+	}
 
-	char *     method;
-	char *     uri;
-	char *     path;
+	return 0;
+}
 
-	HttpMethod method_id;
+static
+void
+routerDtor(void * _this) {
+	Router this = _this;
 
-	Hash       get;
-	Hash       post;
-	Hash       cookies;
-};
+	delete(this->functions);
+	dlclose(this->handle);
+}
 
-HttpMethod httpRequestGetMethodId(HttpRequest);
-
-#endif // __HTTP_REQUEST_H__
+INIT_IFACE(Class, routerCtor, routerDtor, NULL);
+CREATE_CLASS(Router, NULL, IFACE(Class));
 
 // vim: set ts=4 sw=4:

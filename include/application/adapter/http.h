@@ -24,11 +24,13 @@
 #define __APPLICATION_ADAPTER_HTTP_H__
 
 #include "class.h"
+#include "router.h"
 #include "application/application.h"
 
 
 CLASS(ApplicationAdapterHttp) {
 	Application application;
+	Router      router;
 };
 
 #endif // __APPLICATION_ADAPTER_HTTP_H__

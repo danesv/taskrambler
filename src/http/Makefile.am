@@ -8,7 +8,7 @@ MSG    = message.c \
 	 message/get_version.c \
 	 message/has_valid_version.c
 REQ    = request.c \
-	 request/has_valid_method.c
+	 request/get_method_id.c
 RESP   = response.c \
 	 response/304.c \
 	 response/404.c \

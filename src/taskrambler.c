@@ -165,6 +165,7 @@ main()
 				AuthLdap               authLdap;
 				AuthStorage            authStorage;
 				Application            application;
+				Router                 router;
 				ApplicationAdapterHttp adapterHttp;
 				HttpWorker             worker;
 				Server                 server;
@@ -210,7 +211,8 @@ main()
 						authLdap,
 						authStorage);
 
-				adapterHttp = new(ApplicationAdapterHttp, application);
+				router      = new(Router, application);
+				adapterHttp = new(ApplicationAdapterHttp, application, router);
 
 				worker = new(HttpWorker, "taskrambler");
 				subjectAttach(worker, adapterHttp);
@@ -267,6 +269,7 @@ main()
 				delete(server);
 				delete(worker);
 				delete(adapterHttp);
+				delete(router);
 				delete(application);
 				delete(authStorage);
 				delete(passwords);

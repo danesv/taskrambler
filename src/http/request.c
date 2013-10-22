@@ -56,6 +56,18 @@ httpRequestCtor(void * _this, va_list * params)
 	this->uri[ulen] = 0;
 	memcpy(this->uri, uri, ulen);
 
+	this->method_id = httpRequestGetMethodId(this);
+
+	if (-1 == this->method_id) {
+		MEM_FREE(this->uri);
+		MEM_FREE(this->method);
+		MEM_FREE(this->path); /** \todo looks like path is not used at all */
+
+		PARENTCALL(_this, Class, dtor);
+
+		return -1;
+	}
+
 	this->get     = new(Hash);
 	this->post    = new(Hash);
 	this->cookies = new(Hash);

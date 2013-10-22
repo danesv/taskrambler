@@ -27,13 +27,14 @@ TRHTTPSERVER = http/libhttp.la \
 
 TR = ./application/.libs/libapplication.a \
      ./user/.libs/libuser.a \
-     ./storage/.libs/libstorage.a \
      ./auth/.libs/libauth.a \
+     ./storage/.libs/libstorage.a \
      ./session/.libs/libsession.a \
-     ./config/.libs/libconfig.a
+     ./config/.libs/libconfig.a \
+     ./router/.libs/librouter.a
 
 TRLIBS = -ltrutils -ltrhttpserver -ltrbase
-USEDLIBS = -lrt -lssl -lldap -lgdbm -luuid
+USEDLIBS = -lrt -lssl -lldap -lgdbm -luuid -ldl
 
 AM_CFLAGS += -I../include/
 
@@ -55,7 +56,9 @@ libtrhttpserver_la_LIBADD  = $(TRHTTPSERVER)
 taskrambler_SOURCES = taskrambler.c $(IFACE) $(UTILS)
 taskrambler_CFLAGS  = $(AM_CFLAGS)
 taskrambler_LDADD   = $(TRLIBS) $(TR) $(USEDLIBS)
+taskrambler_LDFLAGS = -Wl,--export-dynamic \
+		      -Wl,--whole-archive,./application/.libs/libapplication.a,--no-whole-archive
 
 SUBDIRS = asset auth cbuf class hash queue http \
 	  logger server session socket stream tree application \
-	  storage user config
+	  storage user config router

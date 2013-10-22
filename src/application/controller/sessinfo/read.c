@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2013  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,48 +22,38 @@
 
 #define _GNU_SOURCE
 
-#include <stdarg.h>
+#include <stdio.h>
+#include <sys/types.h>
 
-#include "class.h"
-#include "router.h"
 #include "application/application.h"
-#include "application/adapter/http.h"
+#include "session.h"
+#include "hash.h"
 
 #include "utils/memory.h"
-#include "interface/observer.h"
 
-static
-int
-applicationAdapterHttpCtor(void * _this, va_list * params)
+#define SESSION_JSON	"{\"id\":\"%s\",\"timeout\":%d,\"timeleft\":%ld}"
+
+
+char *
+controllerSessinfoRead(
+		Application application,
+		Session     session,
+		Hash        args)
 {
-	ApplicationAdapterHttp this = _this;
+	char   * buffer;
+	size_t   nbuffer;
 
-	this->application = va_arg(*params, Application);
-	this->router      = va_arg(*params, Router);
+	nbuffer = snprintf(NULL, 0, SESSION_JSON,
+			(NULL != session)? session->id : "",
+			(NULL != session)? SESSION_LIVETIME : 0,
+			(NULL != session)? session->livetime - time(NULL) : 0);
+	buffer  = memMalloc(nbuffer);
+	sprintf(buffer, SESSION_JSON,
+			(NULL != session)? session->id : "",
+			(NULL != session)? SESSION_LIVETIME : 0,
+			(NULL != session)? session->livetime - time(NULL) : 0);
 
-	return 0;
+	return buffer;
 }
-
-static
-void
-applicationAdapterHttpDtor(void * _this)
-{
-}
-
-
-void applicationAdapterHttpUpdate(void *, void *);
-
-
-INIT_IFACE(
-		Class,
-		applicationAdapterHttpCtor,
-		applicationAdapterHttpDtor,
-		NULL);
-INIT_IFACE(Observer, applicationAdapterHttpUpdate);
-CREATE_CLASS(
-		ApplicationAdapterHttp,
-		NULL, 
-		IFACE(Class),
-		IFACE(Observer));
 
 // vim: set ts=4 sw=4:

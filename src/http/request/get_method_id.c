@@ -32,22 +32,27 @@ char * http_method[N_HTTP_METHOD] = {
 	"PUT",
 	"DELETE",
 	"TRACE",
-	"CONNECT"};
+	"CONNECT"
+};
 
-int
-httpRequestHasValidMethod(HttpRequest this)
+HttpMethod
+httpRequestGetMethodId(HttpRequest this)
 {
 	int i;
 
 	if (NULL == this->method)
-		return 0;
+		return -1;
 
 	for (i=0; i<N_HTTP_METHOD; i++) {
 		if (0 == strcmp(http_method[i], this->method))
 			break;
 	}
 
-	return (i != N_HTTP_METHOD);
+	if (i >= N_HTTP_METHOD) {
+		return -1;
+	}
+
+	return (i);
 }
 
 // vim: set ts=4 sw=4:
