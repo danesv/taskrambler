@@ -59,7 +59,6 @@ $(document).ready(function() {
 				type: 'DELETE',
 				success: $.proxy(sess.loadUserJSON, sess)
 			});
-			//$.getJSON("/authenticate/", $.proxy(sess.loadUserJSON, sess));
 			$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 		});
 
