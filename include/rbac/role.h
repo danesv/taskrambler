@@ -26,12 +26,15 @@
 #include <sys/types.h>
 
 #include "class.h"
+#include "ebac/permission.h"
 #include "storage/storage.h"
 
 
 CLASS(RbacRole) {
-	char   * name;
-	size_t   nname;
+	char           * name;
+	size_t           nname;
+
+	RbacPermission * permissions;
 };
 
 #endif // __RBAC_ROLE_H__
