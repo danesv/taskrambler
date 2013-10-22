@@ -45,7 +45,6 @@ serverCtor(void * _this, va_list * params)
 	Server       this = _this;
 	in_port_t    port;
 	unsigned int backlog;
-	int          flags;
 
 	this->max_fds = sysconf(_SC_OPEN_MAX);
 	if (this->max_fds <= 10) {	// reserve 10 handles for internal use.
