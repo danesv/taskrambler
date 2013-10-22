@@ -98,3 +98,17 @@ FOR VERSION 0.2
 FOR VERSION 1.0
 
 - support for multiple worker processes. (optional)
+- I need a distributed storage system and a way to distribute
+  sessions to be able to scale horizontally.
+  I first thought about using couchdb, but I think I will try
+  to implement a network layer over gdbm.
+  This will result in a small daemon handling connections to
+  various gdbm files and a bunch of connected clients.
+  Over one client connection several gdbm database files
+  might be accessed. Each request might send the file handle
+  to the database file which it first gets via ngdbm_open.
+  In fact I think I will create a one to one mapping of
+  gdbm commands to network requests and the client lib will
+  provide each gdbm function just with a 'n' prefix.
+  All this might result in either synchronization or performance
+  problems but at least I will give it a try.
