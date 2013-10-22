@@ -37,10 +37,10 @@ serverRun(Server this)
 {
 	int events = 0;
 
-    loggerLog(this->logger, LOGGER_INFO, "service started");
+	loggerLog(this->logger, LOGGER_INFO, "service started");
 
-    while (!doShutdown) //! until error or signal 
-    {
+	while (!doShutdown) //! until error or signal 
+	{
 		unsigned int i;
 
 		if (0 <= events) {
@@ -136,7 +136,7 @@ serverRun(Server this)
 				break; // no more events to handle
 			}
 		}
-    }
+	}
 }
 
 // vim: set ts=4 sw=4:
