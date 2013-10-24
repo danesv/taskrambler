@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __RBAC_ROLE_H__
-#define __RBAC_ROLE_H__
+#ifndef __ROLE_H__
+#define __ROLE_H__
 
 #include <sys/types.h>
 
@@ -30,14 +30,23 @@
 #include "storage/storage.h"
 
 
-CLASS(RbacRole) {
-	char           * name;
-	size_t           nname;
+CLASS(Role) {
+	char            id[37];
+	unsigned long   hash;
 
-	RbacPermission * permissions;
+	char          * name;
+	size_t          nname;
+
+	/**
+	 * \todo We need a good way to serialize a hash.
+	 * If I can't find any I should choose a different
+	 * data structure here...but I think there is a way.
+	 */
+	Hash            permissions;
+	Hash            users;
 };
 
-#endif // __RBAC_ROLE_H__
+#endif // __ROLE_H__
 
 // vim: set ts=4 sw=4:
 

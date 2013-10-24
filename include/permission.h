@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __RBAC_PERMIOSSION_H__
-#define __RBAC_PERMIOSSION_H__
+#ifndef __PERMISSION_H__
+#define __PERMISSION_H__
 
 #include <sys/types.h>
 
@@ -29,12 +29,15 @@
 #include "storage/storage.h"
 
 
-CLASS(RbacPermission) {
-	char   * name;
-	size_t   nname;
+CLASS(Permission) {
+	char            id[37];
+	unsigned long   hash;
+
+	char          * resource;
+	int             action;
 };
 
-#endif // __RBAC_PERMIOSSION_H__
+#endif // __PERMISSION_H__
 
 // vim: set ts=4 sw=4:
 
