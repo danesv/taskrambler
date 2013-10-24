@@ -44,7 +44,7 @@ userSave(User this, Storage storage)
 	 */
 	storageUpdate(
 			storage,
-			this->email, *this->nemail,
+			this->id, 36,
 			this->email, storage_size);
 }
 

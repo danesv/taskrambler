@@ -98,6 +98,7 @@ AC_CONFIG_FILES([Makefile
 		 src/user/Makefile
 		 src/config/Makefile
 		 src/router/Makefile
+		 src/uuid/Makefile
 		 docs/Makefile
 		 config/Makefile
 		 tests/Makefile])

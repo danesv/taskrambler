@@ -30,13 +30,16 @@
 
 
 CLASS(User) {
-	char * email;
-	char * firstname;
-	char * surname;
+	char            id[37];
+	unsigned long   hash;
 
-	size_t * nemail;
-	size_t * nfirstname;
-	size_t * nsurname;
+	char          * email;
+	char          * firstname;
+	char          * surname;
+
+	size_t        * nemail;
+	size_t        * nfirstname;
+	size_t        * nsurname;
 };
 
 User userLoad(User, Storage);

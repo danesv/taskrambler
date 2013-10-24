@@ -18,7 +18,8 @@ TRBASELIBS = class/libclass.la \
 	     queue/libqueue.la \
 	     logger/liblogger.la \
 	     tree/libtree.la \
-	     stream/libstream.la
+	     stream/libstream.la \
+	     uuid/libuuid.la
 
 TRHTTPSERVER = http/libhttp.la \
 	       asset/libasset.la \
@@ -34,7 +35,7 @@ TR = ./application/.libs/libapplication.a \
      ./router/.libs/librouter.a
 
 TRLIBS = -ltrutils -ltrhttpserver -ltrbase
-USEDLIBS = -lrt -lssl -lldap -lgdbm -luuid -ldl
+USEDLIBS = -lrt -lssl -lcrypto -lldap -lgdbm -luuid -ldl
 
 AM_CFLAGS += -I../include/
 
@@ -61,4 +62,4 @@ taskrambler_LDFLAGS = -Wl,--export-dynamic \
 
 SUBDIRS = asset auth cbuf class hash queue http \
 	  logger server session socket stream tree application \
-	  storage user config router
+	  storage user config router uuid

@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2013  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __SESSION_H__
-#define __SESSION_H__
-
-#include <time.h>
-#include <sys/types.h>
-#include <user.h>
+#include <stdarg.h>
+#include <string.h>
 
 #include "class.h"
-
-// livetime of a session in seconds
-#define SESSION_LIVETIME	300 // 5 minutes
+#include "uuid.h"
 
 
-CLASS(Session) {
-	char          id[37];
-	unsigned long hash;
+static
+int
+uuidCtor(void * _this, va_list * params)
+{
+	return 0;
+}
 
-	time_t        livetime;
-	User          user;
-};
+static
+void
+uuidDtor(void * _this)
+{
+}
 
-#endif // __SESSION_H__
+static
+void
+uuidClone(void * _this, void * _base)
+{
+	Uuid this = _this;
+	Uuid base = _base;
+
+	memcpy((this->uuid).value, (base->uuid).value, 16);
+}
+
+INIT_IFACE(Class, uuidCtor, uuidDtor, uuidClone);
+CREATE_CLASS(Uuid, NULL, IFACE(Class));
 
 // vim: set ts=4 sw=4:

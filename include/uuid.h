@@ -29,6 +29,7 @@
 #ifndef __UUID_H__
 #define __UUID_H__
 
+#include <stdint.h>
 #include <sys/types.h>
 #include <uuid/uuid.h>
 
@@ -36,21 +37,35 @@
 #include "commons.h"
 
 
+typedef char UuidString[37];
+
 CLASS(Uuid) {
 	union {
 		uuid_t value;
 		struct {
-			uint32_t time_low;
-			uint16_t time_mid;
-			uint16_t time_low_version;
-			uint8_t  clk_seq_hi_res;
-			uint8_t  clk_seq_low;
-			uint16_t node_hi;
-			uint32_t node_low;
+			uint32_t      time_low;
+			uint16_t      time_mid;
+			uint16_t      time_hi_version;
+			uint8_t       clk_seq_hi_res;
+			uint8_t       clk_seq_low;
+			unsigned char node[6];
 		} elements;
 	} uuid;
 };
 
-#endif // __ASSET_H__
+/*
+ * generator functions...these are not really part of the object
+ * but generate a uuid object.
+ */
+Uuid uuidVersion1();
+Uuid uuidVersion3(const unsigned char *, size_t, Uuid);
+Uuid uuidVersion5(const unsigned char *, size_t, Uuid);
+
+void uuidUnparse(Uuid, UuidString);
+Uuid uuidParse(const UuidString);
+
+int uuidCompare(Uuid, Uuid);
+
+#endif // __UUID_H__
 
 // vim: set ts=4 sw=4:

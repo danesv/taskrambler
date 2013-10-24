@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2013  Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,27 +20,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __SESSION_H__
-#define __SESSION_H__
-
-#include <time.h>
-#include <sys/types.h>
-#include <user.h>
+// for already available uuid functionality
+#include <uuid/uuid.h>
 
 #include "class.h"
+#include "uuid.h"
 
-// livetime of a session in seconds
-#define SESSION_LIVETIME	300 // 5 minutes
+Uuid
+uuidParse(const UuidString uuid_str)
+{
+	Uuid uuid = new(Uuid);
+	uuid_parse(uuid_str, (uuid->uuid).value);
 
-
-CLASS(Session) {
-	char          id[37];
-	unsigned long hash;
-
-	time_t        livetime;
-	User          user;
-};
-
-#endif // __SESSION_H__
+	return uuid;
+}
 
 // vim: set ts=4 sw=4:
