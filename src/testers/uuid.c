@@ -19,7 +19,7 @@ main(int argc, char * argv[])
     Uuid nsid = uuidParse(UUID_NS);
     Uuid ver1 = uuidVersion1();
     Uuid ver3 = uuidVersion3("foo", 3, nsid);
-    Uuid ver5 = uuidVersion3("foo", 5, nsid);
+    Uuid ver5 = uuidVersion5("foo", 3, nsid);
 
     uuidUnparse(nsid, uuid_str);
     printf("nsid: %s\n", uuid_str);
@@ -32,6 +32,9 @@ main(int argc, char * argv[])
 
     uuidUnparse(ver5, uuid_str);
     printf("nsid: %s\n", uuid_str);
+
+    printf("equal     | expected  0 : got %d\n", uuidCompare(ver5, ver5));
+    printf("not equal | expected !0 : got %d\n", uuidCompare(ver3, ver5));
 
     delete(ver5);
     delete(ver3);
