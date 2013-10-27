@@ -75,8 +75,12 @@ serverCtor(void * _this, va_list * params)
 	socketNonblock(this->sockSSL);
 
 	SSL_library_init();
+	OpenSSL_add_all_algorithms();
 	SSL_load_error_strings();
 	this->ctx = SSL_CTX_new(SSLv23_server_method());
+	SSL_CTX_set_cipher_list(
+			this->ctx,
+			"ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!AECDH:!MD5:!DSS");
 	SSL_CTX_use_certificate_file(
 			this->ctx,
 			CONFIGDIR "/taskrambler.crt",
