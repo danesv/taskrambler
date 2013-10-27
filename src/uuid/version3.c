@@ -61,6 +61,8 @@ uuidVersion3(const unsigned char * name, size_t nname, Uuid nsid)
 	MD5_Update(&ctx, name, nname);
 	MD5_Final(hash, &ctx);
 
+	delete(net_nsid);
+
 	_uuidFormat3or5(uuid, hash, 3);
 
 	return uuid;

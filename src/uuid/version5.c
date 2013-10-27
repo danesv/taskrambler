@@ -61,6 +61,8 @@ uuidVersion5(const unsigned char * name, size_t nname, Uuid nsid)
 	SHA1_Update(&ctx, name, nname);
 	SHA1_Final(hash, &ctx);
 
+	delete(net_nsid);
+
 	_uuidFormat3or5(uuid, hash, 5);
 
 	return uuid;
