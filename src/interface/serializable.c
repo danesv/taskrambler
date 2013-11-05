@@ -20,48 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sys/types.h>
-#include <string.h>
-
-#include "user.h"
-#include "storage/storage.h"
 #include "class.h"
+#include "interface/serializable.h"
 
-#include "utils/memory.h"
+const struct interface i_Serializable = {
+	"serializable",
+	2
+};
 
-
-User
-userLoad(User this, Storage storage)
+void
+serialize(
+		void           *  serializable,
+		unsigned char ** serialized,
+		size_t         *  nserialized)
 {
-	char   * storage_data;
-	size_t   nstorage_data;
-	size_t * user_data_sizes;
+	CALL(serializable, Serializable, serialize, serialized, nserialized);
+}
 
-	if (NULL == storage) {
-		return NULL;
-	}
-
-	storageGet(
-			storage,
-			this->email, *this->nemail,
-			&storage_data, &nstorage_data);
-
-	if (NULL == storage_data) {
-		return NULL;
-	}
-
-	user_data_sizes =
-		(size_t *)(storage_data + nstorage_data - 3 * sizeof(size_t));
-
-	this->nemail     = user_data_sizes;
-	this->nfirstname = user_data_sizes + 1;
-	this->nsurname   = user_data_sizes + 2;
-
-	this->email     = storage_data;
-	this->firstname = this->email + *this->nemail + 1;
-	this->surname   = this->firstname + *this->nfirstname + 1;
-	
-	return this;
+void
+unserialize(
+		void                * serializable,
+		const unsigned char * serialized,
+		size_t                nserialized)
+{
+	CALL(serializable, Serializable, unserialize, serialized, nserialized);
 }
 
 // vim: set ts=4 sw=4:

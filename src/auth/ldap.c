@@ -27,6 +27,7 @@
 #include <ldap.h>
 
 #include "class.h"
+#include "uuid.h"
 #include "utils/memory.h"
 #include "commons.h"
 
@@ -69,7 +70,7 @@ authLdapDtor(void * _this)
 
 static
 int
-authLdapAuthenticate(void * _this, Credential cred)
+authLdapAuthenticate(void * _this, Credential cred, Uuid user_index)
 {
 	AuthLdap this = _this;
 	char     who[256];

@@ -28,6 +28,11 @@
 
 #include "class.h"
 #include "auth.h"
+#include "uuid.h"
+#include "storage/storage.h"
+
+#include "interface/serializable.h"
+#include "interface/indexable.h"
 
 #include "utils/memory.h"
 #include "application/application.h"
@@ -40,40 +45,63 @@ applicationLogin(
 		Session     session)
 {
 	size_t i;
+	Uuid   search;
+	int    authenticated = 0;
+
+	User   user = new(User, NULL);
+
+	user->email  = CRED_PWD(credential).user;
+	user->nemail = &CRED_PWD(credential).nuser;
+	search = indexUuid(user, this->user_namespace);
 
 	for (i=0; i<this->nauth; i++) {
-		if (authenticate(this->auth[i], credential)) {
-			session->user = new(User, NULL);
+		if (authenticate(this->auth[i], credential, search)) {
+			session->user = user;
 
 			switch (credential->type) {
 				case CRED_PASSWORD:
-					session->user->email  = CRED_PWD(credential).user;
-					session->user->nemail = &CRED_PWD(credential).nuser;
+					{
+						char   * user_serialized;
+						size_t   nuser_serialized;
 
-					if (NULL == userLoad(session->user, this->users)) {
-						// this is an ldap user that has not yet set
-						// additional user informations.
-						/** \todo again...change the keys to id's */
-						session->user->email = NULL;
-						delete(session->user);
-						session->user = new(User,
-								CRED_PWD(credential).user,
-								CRED_PWD(credential).nuser,
-								CSTRA(""),
-								CSTRA(""));
+						storageGet(
+								this->users, 
+								(char *)(search->uuid).value,
+								sizeof((search->uuid).value),
+								&user_serialized,
+								&nuser_serialized);
+
+						if (NULL != user_serialized) {
+							unserialize(
+									session->user,
+									(unsigned char *)user_serialized,
+									nuser_serialized);
+							MEM_FREE(user_serialized);
+						} else {
+							// this is a user authenticated via another method
+							// than the password database and has not yet set
+							// additional user informations.
+							session->user = NULL;
+							delete(session->user);
+							session->user = new(User,
+									CRED_PWD(credential).user,
+									CRED_PWD(credential).nuser,
+									CSTRA(""),
+									CSTRA(""));
+						}
 					}
-
 					break;
 
 				default:
 					break;
 			}
 
-			return 1;
+			authenticated = 1;
+			break;
 		}
 	}
 
-	return 0;
+	return authenticated;
 }
 
 // vim: set ts=4 sw=4:

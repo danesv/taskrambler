@@ -33,6 +33,7 @@
 #include "storage/storage.h"
 #include "session.h"
 #include "user.h"
+#include "uuid.h"
 
 
 struct randval {
@@ -50,6 +51,12 @@ CLASS(Application) {
 
 	Storage           users;
 	Storage           passwords;
+	Storage           roles;
+
+	Uuid              user_namespace;
+
+	Hash              roles_user_index;
+	Hash              roles_resource_index;
 
 	const char *      version;
 };

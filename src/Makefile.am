@@ -10,7 +10,9 @@ TRUTILS = utils/hash.c \
 	  utils/mime_type.c
 
 TRBASESRC = interface/subject.c \
-	    interface/observer.c
+	    interface/observer.c \
+	    interface/serializable.c \
+	    interface/indexable.c
 
 TRBASELIBS = class/libclass.la \
 	     cbuf/libcbuf.la \

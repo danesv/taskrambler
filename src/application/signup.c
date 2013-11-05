@@ -29,7 +29,12 @@
 #include "class.h"
 #include "auth.h"
 #include "user.h"
+#include "uuid.h"
+#include "storage/storage.h"
 #include "application/application.h"
+
+#include "interface/serializable.h"
+#include "interface/indexable.h"
 
 #include "utils/memory.h"
 #include "commons.h"
@@ -44,17 +49,12 @@ applicationSignup(
 	unsigned char   hash_data[SALT_SIZE+HASH_SIZE];
 	unsigned char * salt = NULL;
 	unsigned char * hash = hash_data+SALT_SIZE;
+	char          * user_serialized;
+	size_t          nuser_serialized;
+	Uuid            index;
 
-	if (NULL != userLoad(user, this->users)) {
-		/*
-		 * if any user is found with this email return false
-		 * as on signup equal email adresses are not allowed
-		 * at all.
-		 */
-		return 0;
-	}
-
-	userSave(user, this->users);
+	index = indexUuid(user, this->user_namespace);
+	serialize(user, (unsigned char **)&user_serialized, &nuser_serialized);
 
 	if (FALSE == hash_pw(
 				CRED_PWD(cred).pass,
@@ -69,13 +69,23 @@ applicationSignup(
 	}
 
 	memcpy(hash_data, salt, SALT_SIZE);
-
 	MEM_FREE(salt);
+
+	/**
+	 * \todo
+	 * Add error handling here...
+	 */
+	storagePut(
+			this->users,
+			(char *)(index->uuid).value,
+			sizeof((index->uuid).value),
+			user_serialized,
+			nuser_serialized);
 
 	storagePut(
 			this->passwords,
-			CRED_PWD(cred).user,
-			CRED_PWD(cred).nuser,
+			(char *)(index->uuid).value,
+			sizeof((index->uuid).value),
 			(char *)hash_data,
 			SALT_SIZE + HASH_SIZE);
 

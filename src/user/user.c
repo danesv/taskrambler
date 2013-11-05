@@ -21,8 +21,11 @@
  */
 
 #include "user.h"
-#include "storage/storage.h"
+#include "uuid.h"
 #include "class.h"
+
+#include "interface/serializable.h"
+#include "interface/indexable.h"
 
 #include "utils/memory.h"
 
@@ -31,9 +34,8 @@ static
 int
 userCtor(void * _this, va_list * params)
 {
-	User this = _this;
-
-	char   * email      = va_arg(* params, char *);
+	User   this  = _this;
+	char * email = va_arg(* params, char *);
 
 	if (NULL != email) {
 		size_t   nemail     = va_arg(* params, size_t);
@@ -84,7 +86,66 @@ userDtor(void * _this)
 	}
 }
 
+static
+void
+userSerialize(
+		void           * _this,
+		unsigned char ** serialized,
+		size_t         * nserialized)
+{
+	User this = _this;
+
+	*nserialized =
+		*this->nemail + 1 +
+		*this->nfirstname + 1 +
+		*this->nsurname + 1 + 
+		3 * sizeof(size_t); 
+
+	*serialized = memMalloc(*nserialized);
+
+	memcpy(*serialized, this->email, *nserialized);
+}
+
+static
+void
+userUnserialize(
+		void                * _this,
+		const unsigned char * serialized,
+		size_t                nserialized)
+{
+	User     this = _this;
+	size_t * user_data_sizes;
+
+	this->email = memMalloc(nserialized);
+	memcpy(this->email, serialized, nserialized);
+
+	user_data_sizes =
+		(size_t *)(this->email + nserialized - 3 * sizeof(size_t));
+
+	this->nemail     = user_data_sizes;
+	this->nfirstname = user_data_sizes + 1;
+	this->nsurname   = user_data_sizes + 2;
+
+	this->firstname = this->email + *this->nemail + 1;
+	this->surname   = this->firstname + *this->nfirstname + 1;
+}
+
+static
+Uuid
+userIndexUuid(void * _this, Uuid namespace)
+{
+	User this = _this;
+
+	return uuidVersion3(
+			(unsigned char *)this->email,
+			*this->nemail,
+			namespace);
+}
+
+
 INIT_IFACE(Class, userCtor, userDtor, NULL);
-CREATE_CLASS(User, NULL, IFACE(Class));
+INIT_IFACE(Serializable, userSerialize, userUnserialize);
+INIT_IFACE(Indexable, userIndexUuid);
+CREATE_CLASS(User, NULL, IFACE(Class), IFACE(Serializable), IFACE(Indexable));
 
 // vim: set ts=4 sw=4:

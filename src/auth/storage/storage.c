@@ -23,6 +23,8 @@
 #include "class.h"
 #include "storage/storage.h"
 #include "auth.h"
+#include "uuid.h"
+#include "user.h"
 #include "commons.h"
 #include "utils/memory.h"
 
@@ -45,7 +47,7 @@ authStorageDtor(void * _this)
 
 static
 int
-authStorageAuthenticate(void * _this, Credential cred)
+authStorageAuthenticate(void * _this, Credential cred, Uuid user_index)
 {
 	AuthStorage this = _this;
 
@@ -59,8 +61,8 @@ authStorageAuthenticate(void * _this, Credential cred)
 
 	storageGet(
 			this->store,
-			CRED_PWD(cred).user,
-			CRED_PWD(cred).nuser,
+			(char *)(user_index->uuid).value,
+			sizeof((user_index->uuid).value),
 			(char **)&found_hash,
 			&nfound_hash);
 

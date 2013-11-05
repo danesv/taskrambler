@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "uuid.h"
 #include "auth/auth.h"
 #include "auth/credential.h"
 #include "auth/interface/auth.h"
@@ -30,11 +31,11 @@ const struct interface i_Auth = {
 };
 
 int
-authenticate(void * auth, Credential cred)
+authenticate(void * auth, Credential cred, Uuid user_index)
 {
 	int ret;
 
-	RETCALL(auth, Auth, authenticate, ret, cred);
+	RETCALL(auth, Auth, authenticate, ret, cred, user_index);
 
 	return ret;
 }

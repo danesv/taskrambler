@@ -1,10 +1,12 @@
 /**
  * \file
- * The authentication interface.
- *
- * This is the authentication interface. It's only pupose is to
- * authenticate someone or somewhat. It is called AUTH.
- * The concrete access rights are managed within a class called ACL.
+ * This interface provides only one function at all.
+ * indexUuid will generate a uuid to the current object.
+ * 
+ * \todo
+ * Maybe merge hashable and indexable. Thus we might get an
+ * easy way to exchange the hashing mechanism used for my
+ * associative arrays.
  *
  * \author	Georg Hopp
  *
@@ -25,26 +27,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __AUTH_INTERFACE_AUTH_H__
-#define __AUTH_INTERFACE_AUTH_H__
+#ifndef __INDEXABLE_H__
+#define __INDEXABLE_H__
 
-#include <stdarg.h>
-
-#include "class.h"
 #include "uuid.h"
-#include "auth/credential.h"
 
-typedef int (* fptr_authenticate)(void *, Credential, Uuid);
 
-extern const struct interface i_Auth;
+typedef Uuid (* fptr_indexUuid)(void *, Uuid);
 
-struct i_Auth {
+extern const struct interface i_Indexable;
+
+struct i_Indexable {
 	const struct interface * const _;
-	fptr_authenticate              authenticate;
+	fptr_indexUuid                 uuid;
 };
 
-extern int authenticate(void *, Credential, Uuid);
+extern Uuid indexUuid(void *, Uuid);
 
-#endif // __AUTH_INTERFACE_AUTH_H__
+#endif // __INDEXABLE_H__
 
 // vim: set ts=4 sw=4:

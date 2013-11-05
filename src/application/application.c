@@ -26,6 +26,7 @@
 
 #include "class.h"
 #include "hash.h"
+#include "uuid.h"
 #include "application/application.h"
 #include "storage/storage.h"
 
@@ -50,6 +51,9 @@ applicationCtor(void * _this, va_list * params)
 	 */
 	this->users     = va_arg(*params, Storage);
 	this->passwords = va_arg(*params, Storage);
+	//this->roles     = va_arg(*params, Storage);
+
+	this->user_namespace = uuidParse(va_arg(*params, char *));
 
 	// initialize authenticators to use.
 	this->nauth = va_arg(*params, size_t);
@@ -74,6 +78,8 @@ applicationDtor(void * _this)
 {
 	Application this = _this;
 	size_t      i;
+
+	delete(this->user_namespace);
 
 	for (i=0; i<SESSION_LIVETIME; i++) {
 		delete(this->active_sessions[i]);

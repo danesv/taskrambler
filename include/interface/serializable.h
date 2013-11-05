@@ -20,32 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sys/types.h>
-#include <string.h>
+#ifndef __SERIALIZABLE_H__
+#define __SERIALIZABLE_H__
 
-#include "user.h"
-#include "storage/storage.h"
-#include "class.h"
+typedef void (* fptr_serialize)(void *, unsigned char **, size_t *);
+typedef void (* fptr_unserialize)(void *, const unsigned char *, size_t);
 
-#include "utils/memory.h"
+extern const struct interface i_Serializable;
 
+struct i_Serializable {
+	const struct interface * const _;
+	fptr_serialize                 serialize;
+	fptr_unserialize               unserialize;
+};
 
-void
-userSave(User this, Storage storage)
-{
-	size_t storage_size =
-		*this->nemail + 1 +
-		*this->nfirstname + 1 +
-		*this->nsurname + 1 +
-		3 * sizeof(size_t);
+extern void serialize(void *, unsigned char **, size_t *);
+extern void unserialize(void *, const unsigned char *, size_t);
 
-	/**
-	 * \todo user return value for error handling 
-	 */
-	storageUpdate(
-			storage,
-			this->id, 36,
-			this->email, storage_size);
-}
+#endif // __SERIALIZABLE_H__
 
 // vim: set ts=4 sw=4:

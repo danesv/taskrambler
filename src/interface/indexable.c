@@ -1,10 +1,5 @@
 /**
  * \file
- * The authentication interface.
- *
- * This is the authentication interface. It's only pupose is to
- * authenticate someone or somewhat. It is called AUTH.
- * The concrete access rights are managed within a class called ACL.
  *
  * \author	Georg Hopp
  *
@@ -25,26 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __AUTH_INTERFACE_AUTH_H__
-#define __AUTH_INTERFACE_AUTH_H__
-
-#include <stdarg.h>
-
 #include "class.h"
 #include "uuid.h"
-#include "auth/credential.h"
+#include "interface/indexable.h"
 
-typedef int (* fptr_authenticate)(void *, Credential, Uuid);
-
-extern const struct interface i_Auth;
-
-struct i_Auth {
-	const struct interface * const _;
-	fptr_authenticate              authenticate;
+const struct interface i_Indexable = {
+	"indexable",
+	1
 };
 
-extern int authenticate(void *, Credential, Uuid);
+Uuid
+indexUuid(void * indexable, Uuid namespace)
+{
+	Uuid ret;
 
-#endif // __AUTH_INTERFACE_AUTH_H__
+	RETCALL(indexable, Indexable, uuid, ret, namespace);
+
+	return ret;
+}
 
 // vim: set ts=4 sw=4:
