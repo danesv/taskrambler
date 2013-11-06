@@ -26,11 +26,10 @@
 #include <sys/types.h>
 
 #include "class.h"
+#include "uuid.h"
 #include "storage/storage.h"
 
-
 CLASS(User) {
-	char            id[37];
 	unsigned long   hash;
 
 	char          * email;
@@ -41,12 +40,6 @@ CLASS(User) {
 	size_t        * nfirstname;
 	size_t        * nsurname;
 };
-
-User userLoad(User, Storage);
-void userSave(User, Storage);
-
-// void userSerialize(User, void **, size_t *);
-// void userDeserialize(User, void *, size_t);
 
 #endif // __USER_H__
 
