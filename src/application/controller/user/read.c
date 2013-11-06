@@ -22,42 +22,40 @@
 
 #define _GNU_SOURCE
 
+#include <sys/types.h>
+#include <stdio.h>
+
+#include "class.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
-#include "auth/credential.h"
-#include "user.h"
 
 #include "utils/memory.h"
 
-char * controllerCurrentuserRead(Application, Session, Hash);
-int   _controllerProcessUserCreateArgs(Hash, User *, Credential *);
+
+#define USER_JSON \
+	"{\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
 
 char *
-controllerUserCreate(
-		Application application,
-		Session     session,
-		Hash        args)
+controllerUserRead(Application app, Session sess, Hash args)
 {
-	Credential   credential;
-	User         user;
-	char       * response_data;
+	char      * buffer;
+	size_t      nbuffer;
+	HashValue   id     = hashGet(args, CSTRA("id"));
+	Uuid        search = uuidParse(id->value);
+	User        user   = applicationGetUser(app, search);
 
-	_controllerProcessUserCreateArgs(args, &user, &credential);
+	nbuffer = snprintf(NULL, 0, USER_JSON,
+			user->email,
+			user->firstname,
+			user->surname);
+	buffer  = memMalloc(nbuffer);
+	nbuffer = sprintf(buffer, USER_JSON,
+			user->email,
+			user->firstname,
+			user->surname);
 
-	if (0 == uuidCompare(
-				uuidZero,
-				applicationCreateUser(application, credential, user)))
-	{
-		response_data = NULL;
-	} else {
-		response_data = controllerCurrentuserRead(application, session, NULL);
-	}
-
-	delete(credential);
-	delete(user);
-
-	return response_data;
+	return buffer;
 }
 
 // vim: set ts=4 sw=4:

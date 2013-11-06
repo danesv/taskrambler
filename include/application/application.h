@@ -64,6 +64,9 @@ CLASS(Application) {
 int  applicationLogin(Application, Credential, Session);
 void applicationLogout(Application, Session);
 int  applicationSignup(Application, Credential, User, Session);
+Uuid applicationCreateUser(Application, Credential, User);
+User applicationGetUser(Application, Uuid);
+int  applicationUpdatePassword(Application, Credential, User);
 
 Session applicationSessionStart(Application);
 Session applicationSessionGet(Application, const char *);

@@ -20,44 +20,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
-
-#include "application/application.h"
-#include "session.h"
 #include "hash.h"
 #include "auth/credential.h"
-#include "user.h"
 
 #include "utils/memory.h"
+#include "commons.h"
 
-char * controllerCurrentuserRead(Application, Session, Hash);
-int   _controllerProcessUserCreateArgs(Hash, User *, Credential *);
-
-char *
-controllerUserCreate(
-		Application application,
-		Session     session,
-		Hash        args)
+int
+_controllerValidatePasswordRepeat(
+		char   * password,
+		size_t   npassword,
+		char   * pwrepeat,
+		size_t   npwrepeat)
 {
-	Credential   credential;
-	User         user;
-	char       * response_data;
-
-	_controllerProcessUserCreateArgs(args, &user, &credential);
-
-	if (0 == uuidCompare(
-				uuidZero,
-				applicationCreateUser(application, credential, user)))
+	if (
+			npassword != npwrepeat ||
+			0 != memcmp(password, pwrepeat, npassword))
 	{
-		response_data = NULL;
-	} else {
-		response_data = controllerCurrentuserRead(application, session, NULL);
+		return FALSE;
 	}
 
-	delete(credential);
-	delete(user);
-
-	return response_data;
+	return TRUE;
 }
 
 // vim: set ts=4 sw=4:

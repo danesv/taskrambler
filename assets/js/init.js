@@ -76,7 +76,7 @@ $(document).ready(function() {
 		$("#signup").load("/_signup.html", function (){
 			$("#signup form").submit(function(event) {
 				event.preventDefault();
-				$.post("/user/",
+				$.post("/signup/",
 					$("#signup form").serialize(),
 					$.proxy(sess.loadUserJSON, sess));
 				$("#signup").addClass("hide");

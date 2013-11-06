@@ -33,8 +33,9 @@
 char * controllerCurrentuserRead(Application, Session, Hash);
 int   _controllerProcessUserCreateArgs(Hash, User *, Credential *);
 
+
 char *
-controllerUserCreate(
+controllerSignupCreate(
 		Application application,
 		Session     session,
 		Hash        args)
@@ -51,6 +52,7 @@ controllerUserCreate(
 	{
 		response_data = NULL;
 	} else {
+		applicationLogin(application, credential, session);
 		response_data = controllerCurrentuserRead(application, session, NULL);
 	}
 
@@ -58,6 +60,7 @@ controllerUserCreate(
 	delete(user);
 
 	return response_data;
+
 }
 
 // vim: set ts=4 sw=4:

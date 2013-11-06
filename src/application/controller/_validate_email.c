@@ -30,34 +30,29 @@
 
 #include "utils/memory.h"
 
-char * controllerCurrentuserRead(Application, Session, Hash);
-int   _controllerProcessUserCreateArgs(Hash, User *, Credential *);
-
-char *
-controllerUserCreate(
-		Application application,
-		Session     session,
-		Hash        args)
+User
+_controllerCreateUserFromArgs(Hash args)
 {
-	Credential   credential;
-	User         user;
-	char       * response_data;
+	HashValue email;
+	HashValue firstname;
+	HashValue surname;
 
-	_controllerProcessUserCreateArgs(args, &user, &credential);
+	email     = hashGet(args, CSTRA("email"));
+	firstname = hashGet(args, CSTRA("firstname"));
+	surname   = hashGet(args, CSTRA("surname"));
 
-	if (0 == uuidCompare(
-				uuidZero,
-				applicationCreateUser(application, credential, user)))
+	if (
+			NULL == email ||
+			NULL == firstname ||
+			NULL == surname)
 	{
-		response_data = NULL;
-	} else {
-		response_data = controllerCurrentuserRead(application, session, NULL);
+		return NULL;
 	}
 
-	delete(credential);
-	delete(user);
-
-	return response_data;
+	return new(User,
+			(char *)(email->value), email->nvalue,
+			(char *)(firstname->value), firstname->nvalue,
+			(char *)(surname->value), surname->nvalue);
 }
 
 // vim: set ts=4 sw=4:

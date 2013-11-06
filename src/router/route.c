@@ -265,8 +265,12 @@ routerRoute(
 			break;
 	}
 
-	response = httpResponseJson(response_data, strlen(response_data));
-	MEM_FREE(response_data);
+	if (NULL != response_data) {
+		response = httpResponseJson(response_data, strlen(response_data));
+		MEM_FREE(response_data);
+	} else {
+		response = httpResponse404();
+	}
 
 	return response;
 }
