@@ -53,6 +53,8 @@ CLASS(Uuid) {
 	} uuid;
 };
 
+extern Uuid uuidZero;
+
 /*
  * generator functions...these are not really part of the object
  * but generate a uuid object.

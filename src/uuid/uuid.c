@@ -53,4 +53,8 @@ uuidClone(void * _this, void * _base)
 INIT_IFACE(Class, uuidCtor, uuidDtor, uuidClone);
 CREATE_CLASS(Uuid, NULL, IFACE(Class));
 
+INSTANCE(Uuid, uuidZero) {
+	.uuid.value = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+}};
+
 // vim: set ts=4 sw=4:
