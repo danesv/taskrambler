@@ -28,13 +28,29 @@
 #include "class.h"
 #include "storage/storage.h"
 
+/**
+ * These might be hardcoded within the application.
+ * In fact, as we are creating a restful CRUD application we might
+ * consider not having these at all but define that each resource
+ * might potentially have either Create, Read, Update and Delete
+ * actions.
+ *
+ * Suggestion Actions as Bitmask...
+ */
+typedef enum e_ResourceActions {
+	CREATE = 1,
+	READ   = 2,
+	UPDATE = 4,
+	DELETE = 8
+} ResourceAction;
+
 
 CLASS(Permission) {
-	char            id[37];
-	unsigned long   hash;
+	char             id[37];
+	unsigned long    hash;
 
-	char          * resource;
-	int             action;
+	char           * resource;
+	ResourceAction   action;
 };
 
 #endif // __PERMISSION_H__
