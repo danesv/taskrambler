@@ -20,34 +20,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __STORAGE_H__
-#define __STORAGE_H__
-
 #include <gdbm.h>
+#include <string.h>
 #include <sys/types.h>
 
 #include "class.h"
+#include "storage/storage.h"
 
+#include "utils/memory.h"
+#include "commons.h"
 
-typedef enum e_StoragePutResults {
-	SPR_OK        = 0,
-	SPR_READ_ONLY = 1,
-	SPR_EXISTS    = 2,
-	SPR_UNKNOWN   = -1
-} StoragePutResult;
+int
+storageDelete(Storage this, char * _key, size_t nkey)
+{
+	datum key = {_key, nkey};
 
+	switch (gdbm_delete(this->gdbm, key)) {
+		case 0:
+			return TRUE;
+		case -1:
+		default:
+			return FALSE;
+	}
 
-CLASS(Storage) {
-	GDBM_FILE   gdbm;
-	char      * db_name;
-};
-
-StoragePutResult storagePut(Storage, char *, size_t, char *, size_t);
-StoragePutResult storageUpdate(Storage, char *, size_t, char *, size_t);
-void storageGet(Storage, char *, size_t, char **, size_t *);
-int  storageDelete(Storage, char *, size_t);
-
-#endif // __STORAGE_H__
+	return FALSE;
+}
 
 // vim: set ts=4 sw=4:
-
