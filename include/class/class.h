@@ -63,7 +63,22 @@
 		sizeof(struct c_##name),                    \
 		_classInit##name##_,                        \
 		INIT_IFACE_IMPL(__VA_ARGS__)                \
-	}; struct class * const _##name = &c_##name
+	}; struct class * const _##name = &c_##name;	\
+	struct c_##name##_object { void * class; struct c_##name data; }
+
+
+/**
+ * create a static instance of a class.
+ * \todo
+ * this macro requires to close the initializer
+ * with an extra curly brancket. This is not nice...find a 
+ * way to prevent this.
+ */
+#define INSTANCE(class, name)             \
+	struct c_##class##_object _##name;    \
+	class name = &(_##name.data);         \
+	struct c_##class##_object _##name = { \
+		&c_##class, 
 
 #define INIT_CLASS(class)			((class)->init? (class)->init() : (class))
 #define GET_CLASS(object)			(INIT_CLASS(*(class_ptr *)((void*)(object) - sizeof(void*))))
