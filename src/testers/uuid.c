@@ -14,33 +14,44 @@
 int
 main(int argc, char * argv[])
 {
-    UuidString uuid_str;
+    int  i;
+    Uuid dummy1 = new(Uuid);
+    Uuid dummy2 = uuidVersion1();
 
-    Uuid nsid = uuidParse(UUID_NS);
-    Uuid ver1 = uuidVersion1();
-    Uuid ver3 = uuidVersion3("foo", 3, nsid);
-    Uuid ver5 = uuidVersion5("foo", 3, nsid);
+    for (i=0; i<10000; i++) {
+        UuidString uuid_str;
 
-    uuidUnparse(nsid, uuid_str);
-    printf("nsid: %s\n", uuid_str);
+        Uuid nsid = uuidParse(UUID_NS);
+        Uuid ver1 = uuidVersion1();
+        Uuid ver3 = uuidVersion3("foo", 3, nsid);
+        Uuid ver5 = uuidVersion5("foo", 3, nsid);
 
-    uuidUnparse(ver1, uuid_str);
-    printf("nsid: %s\n", uuid_str);
+        uuidUnparse(nsid, uuid_str);
+        printf("nsid: %s\n", uuid_str);
 
-    uuidUnparse(ver3, uuid_str);
-    printf("nsid: %s\n", uuid_str);
+        uuidUnparse(ver1, uuid_str);
+        printf("nsid: %s\n", uuid_str);
 
-    uuidUnparse(ver5, uuid_str);
-    printf("nsid: %s\n", uuid_str);
+        uuidUnparse(ver3, uuid_str);
+        printf("nsid: %s\n", uuid_str);
 
-    printf("equal     | expected  0 : got %d\n", uuidCompare(ver5, ver5));
-    printf("not equal | expected !0 : got %d\n", uuidCompare(ver3, ver5));
+        uuidUnparse(ver5, uuid_str);
+        printf("nsid: %s\n", uuid_str);
 
-    delete(ver5);
-    delete(ver3);
-    delete(ver1);
-    delete(nsid);
+        printf("equal     | expected  0 : got %d\n", uuidCompare(ver5, ver5));
+        printf("not equal | expected !0 : got %d\n", uuidCompare(ver3, ver5));
 
+        delete(ver5);
+        delete(ver3);
+        delete(ver1);
+        delete(nsid);
+    }
+
+    printf("compare const with created: %d\n", uuidCompare(uuidZero, dummy1));
+    printf("compare const with created: %d\n", uuidCompare(uuidZero, dummy2));
+
+    delete(dummy1);
+    delete(dummy2);
     memCleanup();
 
     return 0;
