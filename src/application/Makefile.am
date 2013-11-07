@@ -4,7 +4,6 @@ AUTOMAKE_OPTIONS = subdir-objects
 APPLICATION = application.c \
 	      login.c \
 	      logout.c \
-	      signup.c \
 	      get_user.c \
 	      create_user.c \
 	      update_password.c \
@@ -12,8 +11,10 @@ APPLICATION = application.c \
 	      session_stop.c \
 	      session_get.c \
 	      session_cleanup.c
+
 ADAPTERHTTP = adapter/http/http.c \
 	      adapter/http/update.c
+
 CONTROLLER = controller/authenticate/create.c \
 	     controller/authenticate/delete.c \
  	     controller/currentuser/read.c \
