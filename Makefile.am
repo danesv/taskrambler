@@ -75,6 +75,9 @@ endif
 tags:
 	ctags -R -V --langdef=cclass --langmap=cclass:.h --regex-cclass='/^[ \t]*CLASS\(([a-zA-Z0-9_]+)/\1/d,definition/'
 
+loc:
+	find src/ include/ -not -path testers -and -name "*.[ch]" -exec sed '/\/\*/,/\*\//d;/\/\//d' {} \; | wc -l
+
 TR_DIRS = $(DESTDIR)/$(trdatadir)/assets/doc \
 	  $(DESTDIR)/$(trdatadir)/assets/html/doc \
 	  $(DESTDIR)/$(trdatadir)/assets/coverage \
