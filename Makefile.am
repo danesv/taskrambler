@@ -72,6 +72,9 @@ coverage-html:
 	-$(MAKE) -C tests $(AM_MAKEFLAGS) -k $@
 endif
 
+tags:
+	ctags -R -V --langdef=cclass --langmap=cclass:.h --regex-cclass='/^[ \t]*CLASS\(([a-zA-Z0-9_]+)/\1/d,definition/'
+
 TR_DIRS = $(DESTDIR)/$(trdatadir)/assets/doc \
 	  $(DESTDIR)/$(trdatadir)/assets/html/doc \
 	  $(DESTDIR)/$(trdatadir)/assets/coverage \
