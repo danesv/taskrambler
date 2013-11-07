@@ -22,7 +22,6 @@ $(document).ready(function() {
 	}
 
 	$("#title").load("/_title.html");
-	$("#footer").load("/_footer.html");
 	$("#main").load(asset);
 
 	$("#menu").load("/_menu.html", function() {
@@ -83,6 +82,15 @@ $(document).ready(function() {
 				$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 			});
 		});
+	});
+
+	$("#footer").load("/_footer.html", function (){
+		$.getJSON(
+			"/loc/",
+			function(data) {
+				$("#loc").empty().append(data.loc + " lines of C code");
+			}
+		);
 	});
 
 	$("#randval").click(function() {

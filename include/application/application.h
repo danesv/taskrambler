@@ -59,6 +59,7 @@ CLASS(Application) {
 	Hash              roles_resource_index;
 
 	const char *      version;
+	const char *      loc;
 };
 
 int  applicationLogin(Application, Credential, Session);

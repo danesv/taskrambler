@@ -68,6 +68,7 @@ applicationCtor(void * _this, va_list * params)
 	}
 
 	this->version = VERSION;
+	this->loc     = LOC;
 
 	return 0;
 }

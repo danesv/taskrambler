@@ -24,6 +24,7 @@ CONTROLLER = controller/authenticate/create.c \
 	     controller/user/read.c \
 	     controller/signup/create.c \
 	     controller/version/read.c \
+	     controller/loc/read.c \
 	     controller/_validate_password_repeat.c \
 	     controller/_process_user_create_args.c
 	      
