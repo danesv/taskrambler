@@ -76,6 +76,9 @@ AM_CFLAGS="${AM_CFLAGS} -DCONFIGDIR=\\\"${myetcdir}\\\""
 AM_CFLAGS="${AM_CFLAGS} ${CFLAGS}"
 AC_SUBST(AM_CFLAGS)
 
+loc=`find src/ include/ -not -path testers -and -name "*.[[ch]]" -exec sed '/\/\*/,/\*\//d;/\/\//d' {} \; | wc -l`
+AC_DEFINE_UNQUOTED([LOC], ["${loc}"], [Lines of code])
+
 AC_CONFIG_FILES([assets/html/_documentation.html])
 
 AC_CONFIG_FILES([Makefile
