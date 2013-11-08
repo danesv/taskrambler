@@ -46,9 +46,8 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/image/rambler-border-tr.jpg \
 		     assets/image/rambler-logo-small.jpg \
 		     assets/image/rambler-logo2-small.jpg \
-		     assets/js/jquery-1.7.1.js \
-		     assets/js/jquery-1.7.1.min.js \
 		     assets/js/jquery.js \
+		     assets/js/jquery-ui.js \
 		     assets/js/serverval.js \
 		     assets/js/session.js \
 		     assets/js/init.js \
@@ -56,6 +55,21 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/other/old_typewriter.ttf \
 		     assets/style/taskrambler.css \
 		     assets/style/common.css \
+		     assets/style/jquery-ui.css \
+		     assets/style/images/animated-overlay.gif \
+		     assets/style/images/ui-bg_flat_0_aaaaaa_40x100.png \
+		     assets/style/images/ui-bg_flat_75_ffffff_40x100.png \
+		     assets/style/images/ui-bg_glass_55_fbf9ee_1x400.png \
+		     assets/style/images/ui-bg_glass_65_ffffff_1x400.png \
+		     assets/style/images/ui-bg_glass_75_dadada_1x400.png \
+		     assets/style/images/ui-bg_glass_75_e6e6e6_1x400.png \
+		     assets/style/images/ui-bg_glass_95_fef1ec_1x400.png \
+		     assets/style/images/ui-bg_highlight-soft_75_cccccc_1x100.png \
+		     assets/style/images/ui-icons_222222_256x240.png \
+		     assets/style/images/ui-icons_2e83ff_256x240.png \
+		     assets/style/images/ui-icons_454545_256x240.png \
+		     assets/style/images/ui-icons_888888_256x240.png \
+		     assets/style/images/ui-icons_cd0a0a_256x240.png \
 		     assets/favicon.ico
 
 SUBDIRS = src tests docs config
