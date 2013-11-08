@@ -1,4 +1,5 @@
 FOR VERSION 0.2
+===============
 
 - use memNewRef instead of memcpy wherever possible. This should
   improve the performance again. On the other hand. Don't stop
@@ -52,50 +53,8 @@ FOR VERSION 0.2
 
 - IPV6 support (optional)
 
-- optimize session handling. Right now session handling slows down
-  everything incredibly...especially if there would be some clients
-  that don't use cookies...
-  The reason is that for every request all sessions are checked if they
-  could be closed. If the session amount increases this slows down everything.
-  TODO:
-    * add an additional storage layer, an ordered list indexed by lifetime
-      each element of this list is an array of session ids that have this
-      lifetime. This would have been a classical queue, if there wasn't the
-      need to update them in between.
-      So three cases:
-       * delete: the element is on the beginning of the list.
-       * insert: always put to the end of the list.
-       * update: the lifetime could be get in O(log n) from the
-                 session hash. If the list is no list but an array
-		 I could get to the element in O(log n) via successive
-		 approximation. But this would involve a memmov afterwords.
-		 Additionally it will make memory menagement more difficult.
-		 We need a large enough array that may grow in time.
-		 With the optimizes memory management this leaves us with
-		 large memory segments that might be never used...
-		 so this would involve splitting again.
-		 So a better alternative might be again a tree...
-		 Workflow to handle sessions updates would be:
-		   * lookup session in session hash O(log n)
-		   * remove session from session time tree O(log n)
-		   * if session it timeout
-		     * remove session from session hash O(log n)
-		   * else
-		     * update timeout O(1)
-		     * insert session again in session timeout tree O(log n)
-		 So I end up with a complexity of 3*O(log n) not to bad.
-		 But each lifetime might hold sevaral session ids, so 
-		 with an update this again has to be looked up.
-		 Anyway it will be faster than walking through a maybe very 
-		 large monster list of sessions.
-		 Also one should keep in mind that the timeout list has
-		 a maximum of timeout second entries.
-    * store the lowest lifetime (ideally it could be retrieved by the key of
-      the first element of the previous list.
-    * try to delete sessions only if the lowest lifetime is expired.
-    * store the sessions in a hash indexed by id again.
-
 FOR VERSION 1.0
+===============
 
 - support for multiple worker processes. (optional)
 - I need a distributed storage system and a way to distribute
@@ -112,3 +71,15 @@ FOR VERSION 1.0
   provide each gdbm function just with a 'n' prefix.
   All this might result in either synchronization or performance
   problems but at least I will give it a try.
+
+SOONER OR LATER
+===============
+
+- Cookie discloser....(this is used everywhere now)
+    ======
+    Cookie Disclosure
+    This website uses cookies. By continuing to use the website,
+    you consent to the use of cookies.
+    [link]Learn More (on the UPS page this links a pdf document)
+    [link]Do not show this message again(disable showing of this message)
+    ======
