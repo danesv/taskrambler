@@ -62,6 +62,10 @@ $(document).ready(function() {
 		});
 
 		$("#login").load("/_login.html", function (){
+			$(function() {
+				$( "#login" ).draggable();
+			});
+
 			$("#login form").submit(function(event) {
 				event.preventDefault();
 				$.post("/authenticate/",
@@ -73,6 +77,10 @@ $(document).ready(function() {
 		});
 
 		$("#signup").load("/_signup.html", function (){
+			$(function() {
+				$( "#signup" ).draggable();
+			});
+
 			$("#signup form").submit(function(event) {
 				event.preventDefault();
 				$.post("/signup/",
@@ -96,6 +104,7 @@ $(document).ready(function() {
 	$("#randval").click(function() {
 		sval.stop();
 	});
+
 });
 
 // vim: set ts=4 sw=4:
