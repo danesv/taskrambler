@@ -25,12 +25,26 @@ $(document).ready(function() {
 	$("#main").load(asset);
 
 	$("#menu").load("/_menu.html", function() {
-		$("div#menu ul li.signup").click(function() {
-			$("#signup").removeClass("hide");
+		$("div#menu ul li.signup").click(function(e) {
+			if ($("#signup-container").hasClass("hide")) {
+				$("#login-container").addClass("hide");
+				$("#signup-container").css("top", e.pageY + 20);
+				$("#signup-container").css("left", e.pageX - 100);
+				$("#signup-container").removeClass("hide");
+			} else {
+				$("#signup-container").addClass("hide");
+			}
 		});
 
-		$("div#menu ul li.login").click(function() {
-			$("#login").removeClass("hide");
+		$("div#menu ul li.login").click(function(e) {
+			if ($("#login-container").hasClass("hide")) {
+				$("#signup-container").addClass("hide");
+				$("#login-container").css("top", e.pageY + 20);
+				$("#login-container").css("left", e.pageX - 100);
+				$("#login-container").removeClass("hide");
+			} else {
+				$("#login-container").addClass("hide");
+			}
 		});
 	});
 
@@ -63,7 +77,11 @@ $(document).ready(function() {
 
 		$("#login").load("/_login.html", function (){
 			$(function() {
-				$( "#login" ).draggable();
+				$("#login-container").draggable();
+			});
+
+			$("#login-close").click(function (e) {
+				$("#login-container").addClass("hide");
 			});
 
 			$("#login form").submit(function(event) {
@@ -71,14 +89,18 @@ $(document).ready(function() {
 				$.post("/authenticate/",
 					$("#login form").serialize(),
 					$.proxy(sess.loadUserJSON, sess));
-				$("#login").addClass("hide");
+				$("#login-container").addClass("hide");
 				$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 			});
 		});
 
 		$("#signup").load("/_signup.html", function (){
 			$(function() {
-				$( "#signup" ).draggable();
+				$("#signup-container").draggable();
+			});
+
+			$("#signup-close").click(function (e) {
+				$("#signup-container").addClass("hide");
 			});
 
 			$("#signup form").submit(function(event) {
@@ -86,7 +108,7 @@ $(document).ready(function() {
 				$.post("/signup/",
 					$("#signup form").serialize(),
 					$.proxy(sess.loadUserJSON, sess));
-				$("#signup").addClass("hide");
+				$("#signup-container").addClass("hide");
 				$.getJSON("/sessinfo/", $.proxy(sess.loadJSON, sess));
 			});
 		});
