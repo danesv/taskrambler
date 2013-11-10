@@ -52,6 +52,13 @@ extern void * classClone(void *);
 #define delete(object)		classDelete((void **)&(object))
 #define clone(object)		classClone((void *)(object))
 
+/**
+ * With this one we can create a new instance via a
+ * intermidiary that gets the arguments.
+ */
+extern void * classNewParams(class_ptr, va_list *);
+#define newParams(class,args) classNewParams(_##class, args)
+
 #endif // __CLASS_INTERFACE_CLASS_H__
 
 // vim: set ts=4 sw=4:

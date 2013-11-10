@@ -37,22 +37,32 @@ struct interface i_Class = {
 };
 
 void *
-classNew(class_ptr class, ...)
+classNewParams(class_ptr class, va_list * params)
 {
 	void *  object = memCalloc(1, class->object_size + sizeof(void*));
-	va_list params;
 	int     ret;
 
 	* (class_ptr *)object = class;
 	object += sizeof(void*);
 
-	va_start(params, class);
-	RETCALL(object, Class, ctor, ret, &params);
-	va_end(params);
+	RETCALL(object, Class, ctor, ret, params);
 
 	if (-1 == ret) {
 		classDelete(&object);
 	}
+
+	return object;
+}
+
+void *
+classNew(class_ptr class, ...)
+{
+	va_list   params;
+	void    * object;
+
+	va_start(params, class);
+	object = classNewParams(class, &params);
+	va_end(params);
 
 	return object;
 }
