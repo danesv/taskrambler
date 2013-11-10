@@ -3,6 +3,8 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 AUTH = interface/auth.c \
        credential.c \
+       auth.c \
+       create.c \
        ldap.c \
        storage/storage.c \
        storage/hash_pw.c

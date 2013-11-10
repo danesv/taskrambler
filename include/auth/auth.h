@@ -1,5 +1,20 @@
 /**
  * \file
+ * Container for authentication modules.
+ *
+ * This is a single point of authentication no matter how much
+ * authentication modules are in place. Thus it prevents adding
+ * more and more authentication modules to the application.
+ * This is an auth module itself but this one returns 0 if
+ * the authentication has failed otherwise the id of the
+ * successfull auth module. Thus we can identify by what method
+ * the user has been authenticated.
+ *
+ * This can't authenticate by its own. It has to be initialized
+ * with other auth modules by calling authCreate at least once.
+ *
+ * origin intend ... never implemented (but maybe a good idea)
+ *
  * Authenticatio module factory
  *
  * A factory to get a specific authentication module.
@@ -28,17 +43,23 @@
 #define __AUTH_AUTH_H__
 
 #include "class.h"
-#include "auth/ldap.h"
+#include "uuid.h"
+#include "auth.h"
+#include "auth/credential.h"
+
 
 typedef enum e_AuthModule {
-	AUTH_LDAP = 0
+	AUTH_LDAP    = 1,
+	AUTH_STORAGE = 2
 } AuthModule;
 
+#define MAX_AUTH	AUTH_STORAGE
+
 CLASS(Auth) {
+	void * auth[MAX_AUTH + 1];
 };
 
-void *   authCreateById(Auth, int);
-AuthLdap authCreateLdap(Auth);
+int authCreate(Auth, AuthModule, ...);
 
 #endif // __AUTH_AUTH_H__
 
