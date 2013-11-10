@@ -48,6 +48,7 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/image/rambler-logo2-small.jpg \
 		     assets/js/jquery.js \
 		     assets/js/jquery-ui.js \
+		     assets/js/jquery.ui.touch-punch.min.js \
 		     assets/js/serverval.js \
 		     assets/js/session.js \
 		     assets/js/init.js \
