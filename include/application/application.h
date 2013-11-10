@@ -29,6 +29,7 @@
 
 #include "session.h"
 #include "hash.h"
+#include "auth.h"
 #include "auth/credential.h"
 #include "storage/storage.h"
 #include "session.h"
@@ -45,8 +46,8 @@ CLASS(Application) {
 	Hash            * active_sessions;
 	time_t            session_time_ofs;
 
-	void           ** auth;
-	size_t            nauth;
+	Auth              auth;
+
 	struct randval  * val;
 
 	Storage           users;

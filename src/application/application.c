@@ -55,12 +55,7 @@ applicationCtor(void * _this, va_list * params)
 
 	this->user_namespace = uuidParse(va_arg(*params, char *));
 
-	// initialize authenticators to use.
-	this->nauth = va_arg(*params, size_t);
-	this->auth  = memMalloc(this->nauth * sizeof(void*));
-	for (i=0; i<this->nauth; i++) {
-		this->auth[i] = va_arg(*params, void *);
-	}
+	this->auth = va_arg(*params, void *);
 
 	this->active_sessions = memCalloc(SESSION_LIVETIME, sizeof(Hash));
 	for (i=0; i<SESSION_LIVETIME; i++) {

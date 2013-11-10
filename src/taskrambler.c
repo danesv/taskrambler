@@ -162,8 +162,7 @@ main()
 			{
 				Storage                users;
 				Storage                passwords;
-				AuthLdap               authLdap;
-				AuthStorage            authStorage;
+				Auth                   auth;
 				Application            application;
 				Router                 router;
 				ApplicationAdapterHttp adapterHttp;
@@ -193,14 +192,17 @@ main()
 				shm_unlink("/fooshm");
 				close(shm);
 
-				authLdap = new(
-						AuthLdap,
+				auth = new(Auth);
+				authCreate(
+						auth,
+						AUTH_LDAP,
 						(ldap_host->value).string,
 						CONFSTRA(ldap_base));
 
 				users       = new(Storage, user_storage);
 				passwords   = new(Storage, password_storage);
-				authStorage = new(AuthStorage, passwords);
+
+				authCreate(auth, AUTH_STORAGE, passwords);
 
 				application = new(
 						Application,
@@ -208,9 +210,7 @@ main()
 						users,
 						passwords,
 						"14de9e60-d497-4754-be72-f3bed52541fc",
-						2,
-						authLdap,
-						authStorage);
+						auth);
 
 				router      = new(Router, application);
 				adapterHttp = new(ApplicationAdapterHttp, application, router);
@@ -272,10 +272,9 @@ main()
 				delete(adapterHttp);
 				delete(router);
 				delete(application);
-				delete(authStorage);
 				delete(passwords);
 				delete(users);
-				delete(authLdap);
+				delete(auth);
 
 				clearMimeTypes();
 				assetPoolCleanup();
