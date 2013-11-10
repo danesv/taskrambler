@@ -67,6 +67,7 @@ _controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
 
 	*user = new(User,
 			(char *)(email->value), email->nvalue,
+			(char *)(email->value), email->nvalue,
 			(char *)(firstname->value), firstname->nvalue,
 			(char *)(surname->value), surname->nvalue);
 

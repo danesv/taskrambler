@@ -44,64 +44,86 @@ applicationLogin(
 		Credential  credential,
 		Session     session)
 {
-	size_t i;
-	Uuid   search;
-	int    authenticated = 0;
+	Uuid       search;
+	AuthModule auth_module;
 
-	User   user = new(User, NULL);
+	User user = new(User, NULL);
 
-	user->email  = CRED_PWD(credential).user;
-	user->nemail = &CRED_PWD(credential).nuser;
+	user->username  = CRED_PWD(credential).user;
+	user->nusername = &CRED_PWD(credential).nuser;
 	search = indexUuid(user, this->user_namespace);
 
-	for (i=0; i<this->nauth; i++) {
-		if (authenticate(this->auth[i], credential, search)) {
-			session->user = user;
+	auth_module = authenticate(this->auth, credential, search);
 
-			switch (credential->type) {
-				case CRED_PASSWORD:
-					{
-						char   * user_serialized;
-						size_t   nuser_serialized;
+	if (0 != auth_module) {
+		char   * user_serialized;
+		size_t   nuser_serialized;
 
-						storageGet(
-								this->users, 
-								(char *)(search->uuid).value,
-								sizeof((search->uuid).value),
-								&user_serialized,
-								&nuser_serialized);
+		session->user = user;
 
-						if (NULL != user_serialized) {
-							unserialize(
-									session->user,
-									(unsigned char *)user_serialized,
-									nuser_serialized);
-							MEM_FREE(user_serialized);
-						} else {
-							// this is a user authenticated via another method
-							// than the password database and has not yet set
-							// additional user informations.
-							session->user = NULL;
-							delete(session->user);
-							session->user = new(User,
-									CRED_PWD(credential).user,
-									CRED_PWD(credential).nuser,
-									CSTRA(""),
-									CSTRA(""));
-						}
-					}
-					break;
+		switch (credential->type) {
+			case CRED_PASSWORD:
+				storageGet(
+						this->users, 
+						(char *)(search->uuid).value,
+						sizeof((search->uuid).value),
+						&user_serialized,
+						&nuser_serialized);
 
-				default:
-					break;
-			}
+				if (NULL != user_serialized) {
+					unserialize(
+							session->user,
+							(unsigned char *)user_serialized,
+							nuser_serialized);
+					MEM_FREE(user_serialized);
+				} else {
+					/**
+					 * this is a user authenticated via another method
+					 * than the password database and has not yet
+					 * logged in.
+					 * NOTE: first we have to remove the search user and
+					 * as username is initialized with something that we
+					 * will free later here we must set it to NULL so that
+					 * the delete will not free it.
+					 */
+					session->user->username = NULL;
+					delete(session->user);
+					session->user = new(User,
+							CRED_PWD(credential).user,
+							CRED_PWD(credential).nuser,
+							CSTRA(""),
+							CSTRA(""),
+							CSTRA(""));
 
-			authenticated = 1;
-			break;
+					serialize(
+							session->user,
+							(unsigned char **)&user_serialized,
+							&nuser_serialized);
+					/**
+					 * \todo
+					 * Handle error...if this fails we have most likely
+					 * a collision.
+					 */
+					storagePut(
+							this->users, 
+							(char *)(search->uuid).value,
+							sizeof((search->uuid).value),
+							user_serialized,
+							nuser_serialized);
+					MEM_FREE(user_serialized);
+				}
+
+				session->user->auth_type = auth_module;
+				break;
+
+			default:
+				break;
 		}
+
+		return TRUE;
 	}
 
-	return authenticated;
+	return FALSE;
 }
 
 // vim: set ts=4 sw=4:

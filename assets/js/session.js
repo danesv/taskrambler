@@ -18,19 +18,20 @@ function Session(sInfo, sId, sUser)
 
 Session.prototype.loadUserJSON = function(data)
 {
+	this.username  = data.username;
 	this.email     = data.email;
 	this.firstname = data.firstname;
 	this.surname   = data.surname;
 
 	name = "";
-	if ('' == this.email) {
+	if ('' == this.username) {
 		name = "not logged in";
 		$("li.signup").removeClass("hide");
 		$("li.login").removeClass("hide");
 		$("li.logout").addClass("hide");
 	} else {
 		if ('' == this.firstname || '' == this.surname) {
-			name += this.email;
+			name += this.username;
 		} else {
 			name += this.firstname + " " + this.surname;
 		}

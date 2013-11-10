@@ -34,10 +34,12 @@ static
 int
 userCtor(void * _this, va_list * params)
 {
-	User   this  = _this;
-	char * email = va_arg(* params, char *);
+	User   this     = _this;
+	char * username = va_arg(* params, char *);
 
-	if (NULL != email) {
+	if (NULL != username) {
+		size_t   nusername  = va_arg(* params, size_t);
+		char   * email      = va_arg(* params, char *);
 		size_t   nemail     = va_arg(* params, size_t);
 		char   * firstname  = va_arg(* params, char *);
 		size_t   nfirstname = va_arg(* params, size_t);
@@ -45,12 +47,17 @@ userCtor(void * _this, va_list * params)
 		size_t   nsurname   = va_arg(* params, size_t);
 
 		size_t storage_size = 
+			nusername + 1 +
 			nemail + 1 +
 			nfirstname + 1 +
 			nsurname + 1 +
-			3 * sizeof(size_t);
+			4 * sizeof(size_t);
 
-		this->email = memMalloc(storage_size);
+		this->username = memMalloc(storage_size);
+		memcpy(this->username, username, nusername);
+		this->username[nusername] = '\0';
+
+		this->email = this->username + nusername + 1;
 		memcpy(this->email, email, nemail);
 		this->email[nemail] = '\0';
 
@@ -62,7 +69,10 @@ userCtor(void * _this, va_list * params)
 		memcpy(this->surname, surname, nsurname);
 		this->surname[nsurname] = '\0';
 
-		this->nemail  = (size_t *)(this->surname + nsurname + 1);
+		this->nusername  = (size_t *)(this->surname + nsurname + 1);
+		*this->nusername = nusername;
+
+		this->nemail  = this->nusername + 1;
 		*this->nemail = nemail;
 
 		this->nfirstname  = this->nemail + 1;
@@ -81,8 +91,8 @@ userDtor(void * _this)
 {
 	User this = _this;
 
-	if (NULL != this->email) {
-		MEM_FREE(this->email);
+	if (NULL != this->username) {
+		MEM_FREE(this->username);
 	}
 }
 
@@ -96,14 +106,15 @@ userSerialize(
 	User this = _this;
 
 	*nserialized =
+		*this->nusername + 1 +
 		*this->nemail + 1 +
 		*this->nfirstname + 1 +
 		*this->nsurname + 1 + 
-		3 * sizeof(size_t); 
+		4 * sizeof(size_t); 
 
 	*serialized = memMalloc(*nserialized);
 
-	memcpy(*serialized, this->email, *nserialized);
+	memcpy(*serialized, this->username, *nserialized);
 }
 
 static
@@ -116,16 +127,18 @@ userUnserialize(
 	User     this = _this;
 	size_t * user_data_sizes;
 
-	this->email = memMalloc(nserialized);
-	memcpy(this->email, serialized, nserialized);
+	this->username = memMalloc(nserialized);
+	memcpy(this->username, serialized, nserialized);
 
 	user_data_sizes =
-		(size_t *)(this->email + nserialized - 3 * sizeof(size_t));
+		(size_t *)(this->username + nserialized - 4 * sizeof(size_t));
 
-	this->nemail     = user_data_sizes;
-	this->nfirstname = user_data_sizes + 1;
-	this->nsurname   = user_data_sizes + 2;
+	this->nusername  = user_data_sizes;
+	this->nemail     = user_data_sizes + 1;
+	this->nfirstname = user_data_sizes + 2;
+	this->nsurname   = user_data_sizes + 3;
 
+	this->email     = this->username + *this->nusername + 1;
 	this->firstname = this->email + *this->nemail + 1;
 	this->surname   = this->firstname + *this->nfirstname + 1;
 }
@@ -137,8 +150,8 @@ userIndexUuid(void * _this, Uuid namespace)
 	User this = _this;
 
 	return uuidVersion3(
-			(unsigned char *)this->email,
-			*this->nemail,
+			(unsigned char *)this->username,
+			*this->nusername,
 			namespace);
 }
 

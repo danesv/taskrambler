@@ -27,15 +27,27 @@
 
 #include "class.h"
 #include "uuid.h"
+#include "auth.h"
 #include "storage/storage.h"
 
 CLASS(User) {
-	unsigned long   hash;
+	unsigned long hash;
+	AuthModule    auth_type;
 
+	/**
+	 * username holds the identifier of the user.
+	 * For ldap users this is the common name.
+	 * For registered users this is their email
+	 * address.
+	 * The UUID of the user is created from this
+	 * username.
+	 */
+	char          * username;
 	char          * email;
 	char          * firstname;
 	char          * surname;
 
+	size_t        * nusername;
 	size_t        * nemail;
 	size_t        * nfirstname;
 	size_t        * nsurname;

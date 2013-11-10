@@ -34,7 +34,7 @@
 
 
 #define USER_JSON \
-	"{\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
+	"{\"username\":\"%s\",\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
 
 char *
 controllerCurrentuserRead(Application app, Session sess, Hash args)
@@ -43,11 +43,13 @@ controllerCurrentuserRead(Application app, Session sess, Hash args)
 	size_t   nbuffer;
 
 	nbuffer = snprintf(NULL, 0, USER_JSON,
+			(NULL != sess->user)? sess->user->username : "",
 			(NULL != sess->user)? sess->user->email : "",
 			(NULL != sess->user)? sess->user->firstname : "",
 			(NULL != sess->user)? sess->user->surname : "");
 	buffer  = memMalloc(nbuffer);
 	nbuffer = sprintf(buffer, USER_JSON,
+			(NULL != sess->user)? sess->user->username : "",
 			(NULL != sess->user)? sess->user->email : "",
 			(NULL != sess->user)? sess->user->firstname : "",
 			(NULL != sess->user)? sess->user->surname : "");
