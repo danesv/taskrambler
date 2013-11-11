@@ -1,109 +1,81 @@
-function Session(sInfo, sId, sUser)
+function Session(idSelector, infoSelector)
 {
-	this.eUser    = $(sUser);
-	this.eId      = $(sId);
-	this.canvas   = $(sInfo + " canvas").get(0);
-	this.context  = this.canvas.getContext("2d");
+	this.idElement = $(idSelector);
+	this.canvas    = $(infoSelector + " canvas").get(0);
+	this.context   = this.canvas.getContext("2d");
 
-	this.id       = "none"
+	this._interval = null;
+
+	this.update();
+}
+
+Session.prototype.update = function() {
+	$.getJSON("/sessinfo/", $.proxy(this._update, this));
+}
+
+Session.prototype.clear = function() {
+	this.id       = "none";
 	this.timeout  = 0;
 	this.timeleft = 0;
-	this.email     = "";
-	this.firstname = "";
-	this.surname   = "";
-	this.interval = null;
 
-	//this.draw();
+	this._fraction  = 0.0;
+	this._leftWidth = 0.0;
+
+	this.idElement.empty().append(this.id);
+	this._stop();
 }
 
-Session.prototype.loadUserJSON = function(data)
+/*
+ * not real private but as a convention I use _ prefix to indicate
+ * internal use only.
+ */
+Session.prototype._update = function(data)
 {
-	this.username  = data.username;
-	this.email     = data.email;
-	this.firstname = data.firstname;
-	this.surname   = data.surname;
+	this.id        = ("0" == data.id)? "none" : data.id;
+	this.timeout   = data.timeout;
+	this.timeleft  = data.timeleft;
 
-	name = "";
-	if ('' == this.username) {
-		name = "not logged in";
-		$("li.signup").removeClass("hide");
-		$("li.login").removeClass("hide");
-		$("li.logout").addClass("hide");
-	} else {
-		if ('' == this.firstname || '' == this.surname) {
-			name += this.username;
-		} else {
-			name += this.firstname + " " + this.surname;
-		}
-		$("li.signup").addClass("hide");
-		$("li.login").addClass("hide");
-		$("li.logout").removeClass("hide");
+	this._fraction  = this.canvas.width / this.timeout;
+	this._leftWidth = this._fraction * this.timeleft;
+
+	this.idElement.empty().append(this.id);
+
+	this._start();
+}
+
+Session.prototype._start = function()
+{
+	this._draw();
+	if (0 < this.timeleft && null === this._interval) {
+		this._interval = setInterval($.proxy(this._process, this), 5000);
+	}
+}
+
+Session.prototype._process = function()
+{
+	if (0 >= this.timeleft) {
+		this.clear();
 	}
 
-	this.eUser.empty().append(name);
+	else {
+		this.timeleft-=5;
+		this._leftWidth -= 5*this._fraction;
+		this._draw();
+	}
 }
 
-Session.prototype.loadJSON = function(data)
-{
-	// this.stop();
-
-	this.id        = ("0" == data.id)? "none" : data.id;
-	this.timeout   = data.timeout * 10;
-	this.timeleft  = data.timeleft * 10;
-
-	this.eId.empty().append(this.id);
-
-	this.draw();
-	if (0 < this.timeleft)
-		this.start();
-}
-
-Session.prototype.draw = function()
-{
+Session.prototype._draw = function() {
 	this.context.fillStyle = "rgb(255, 0, 0)";
 	this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
 	this.context.fillStyle = "rgb(0, 255, 0)";
-	this.context.fillRect(0, 0,
-			this.canvas.width / this.timeout * this.timeleft,
-			this.canvas.height);
+	this.context.fillRect(0, 0, this._leftWidth, this.canvas.height);
 }
 
-Session.prototype.start = function()
+Session.prototype._stop = function()
 {
-	if (null === this.interval) {
-		this.interval = setInterval($.proxy(this.process, this), 1000);
-	}
-}
-
-Session.prototype.process = function()
-{
-	if (0 >= this.timeleft) {
-		this.stop();
-	}
-
-	else {
-		this.timeleft -= 10;
-		this.draw();
-	}
-}
-
-Session.prototype.stop = function()
-{
-	clearInterval(this.interval);
-	this.interval = null;
-	this.id       = "none";
-	this.timeout  = 0;
-	this.timeleft = 0;
-	this.username = "";
-	this.email     = "";
-	this.firstname = "";
-	this.surname   = "";
-
-	this.eId.empty().append("");
-	this.eUser.empty().append("not logged in");
-
-	this.draw();
+	clearInterval(this._interval);
+	this._interval = null;
 }
 
 // vim: set ts=4 sw=4:
