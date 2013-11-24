@@ -21,11 +21,7 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/html/_title.html \
 		     assets/html/_author.html \
 		     assets/html/_main.html \
-		     assets/html/author.html \
-		     assets/html/documentation.html \
-		     assets/html/download.html \
 		     assets/html/layout.html \
-		     assets/html/main.html \
 		     assets/html/_documentation.html \
 		     assets/html/_download.html \
 		     assets/image/waldschrat.jpg \
@@ -100,8 +96,13 @@ TR_DIRS = $(DESTDIR)/$(trdatadir)/assets/doc \
 	  $(DESTDIR)/$(trstatedir) \
 	  $(DESTDIR)/$(trdatadir)/docs/
 
+LAYOUT_PAGES = $(DESTDIR)/$(trdatadir)/assets/html/author.html \
+	       $(DESTDIR)/$(trdatadir)/assets/html/documentation.html \
+	       $(DESTDIR)/$(trdatadir)/assets/html/download.html \
+	       $(DESTDIR)/$(trdatadir)/assets/html/main.html
+
 install-data-hook:
-	$(INSTALL) -d -m 755 $(TR_DIRS)
+	$(INSTALL) -d -m 777 $(TR_DIRS)
 	if [ -d docs/api/ ]; then \
 	  cp -Rfd docs/api/ $(DESTDIR)/$(trdatadir)/docs/; \
 	fi
@@ -126,6 +127,10 @@ install-data-hook:
 	    $(DESTDIR)/$(trdatadir)/docs/coverage/$(PACKAGE_VERSION) \
 	    $(DESTDIR)/$(trdatadir)/assets/html/coverage/$(PACKAGE_VERSION); \
 	fi
+	for layout_page in $(LAYOUT_PAGES); \
+	do \
+	  $(LN_S) ./layout.html $$layout_page; \
+	done
 
 uninstall-hook:
 	rm -Rf $(varlibdir) $(varrundir) $(trdatadir)
