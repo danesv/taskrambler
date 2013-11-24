@@ -43,7 +43,7 @@ storageCtor(void * _this, va_list * params)
 			this->db_name,
 			0,
 			GDBM_WRCREAT,
-			S_IRUSR | S_IWUSR,
+			S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH,
 			NULL);
 
 	if (NULL == this->gdbm) {
