@@ -42,12 +42,15 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/image/rambler-border-tr.jpg \
 		     assets/image/rambler-logo-small.jpg \
 		     assets/image/rambler-logo2-small.jpg \
+		     assets/js/application.js \
+		     assets/js/init.js \
 		     assets/js/jquery.js \
 		     assets/js/jquery-ui.js \
 		     assets/js/jquery.ui.touch-punch.min.js \
+		     assets/js/menu.js \
 		     assets/js/serverval.js \
 		     assets/js/session.js \
-		     assets/js/init.js \
+		     assets/js/user.js \
 		     assets/other/OldNewspaperTypes.ttf \
 		     assets/other/old_typewriter.ttf \
 		     assets/style/taskrambler.css \
@@ -129,7 +132,11 @@ install-data-hook:
 	fi
 	for layout_page in $(LAYOUT_PAGES); \
 	do \
-	  $(LN_S) ./layout.html $$layout_page; \
+	  if [ ! -L $$layout_page ]; \
+	  then \
+	    rm -f $$layout_page; \
+	    $(LN_S) ./layout.html $$layout_page; \
+	  fi \
 	done
 
 uninstall-hook:
