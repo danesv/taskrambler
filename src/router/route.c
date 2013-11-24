@@ -112,6 +112,7 @@ routerRoute(
 			break;
 
 		case HTTP_PUT:
+			args = request->post;
 			strcpy(&(functionName[this->nprefix + ncommand]), "Update");
 			break;
 

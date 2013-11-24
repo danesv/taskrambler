@@ -77,7 +77,9 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			subjectNotify(this);
 
 			if (NULL == this->current_response) {
-				if (0 == strcmp("POST", this->current_request->method)) {
+				if (0 == strcmp("POST", this->current_request->method) ||
+						0 == strcmp("PUT", this->current_request->method))
+				{
 					/*
 					 * we can't do post requests on our own...
 					 */

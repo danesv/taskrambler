@@ -22,30 +22,46 @@
 
 #define _GNU_SOURCE
 
-#include "hash.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
+#include "class.h"
+#include "auth.h"
 #include "user.h"
-#include "auth/credential.h"
+#include "uuid.h"
+#include "storage/storage.h"
+#include "application/application.h"
+
+#include "interface/serializable.h"
+#include "interface/indexable.h"
 
 #include "utils/memory.h"
 #include "commons.h"
 
-User       _controllerGetUserFromArgs(Hash args);
-Credential _controllerGetCredentialFromArgs(Hash args);
-
-int
-_controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
+Uuid
+applicationUpdateUser(
+		Application this,
+		User        user)
 {
-	*user = _controllerGetUserFromArgs(args);
-	*cred = _controllerGetCredentialFromArgs(args);
-	
-	if (NULL == *user || NULL == *cred) {   
-		delete(*user);
-		delete(*cred);
+	char   * user_serialized;
+	size_t   nuser_serialized;
+	Uuid     index;
 
-		return FALSE;
+	index = indexUuid(user, this->user_namespace);
+	serialize(user, (unsigned char **)&user_serialized, &nuser_serialized);
+
+	if (SPR_OK != storageUpdate(
+				this->users,
+				(char *)(index->uuid).value,
+				sizeof((index->uuid).value),
+				user_serialized,
+				nuser_serialized))
+	{
+		return uuidZero;
 	}
 
-	return TRUE;
+	return index;
 }
 
 // vim: set ts=4 sw=4:

@@ -22,30 +22,35 @@
 
 #define _GNU_SOURCE
 
+#include "application/application.h"
+#include "session.h"
 #include "hash.h"
 #include "user.h"
-#include "auth/credential.h"
 
 #include "utils/memory.h"
 #include "commons.h"
 
-User       _controllerGetUserFromArgs(Hash args);
-Credential _controllerGetCredentialFromArgs(Hash args);
+char * controllerCurrentuserRead(Application, Session, Hash);
+int    _controllerUpdateUserFromArgs(Hash, User *);
 
-int
-_controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
+char *
+controllerUserUpdate(
+		Application application,
+		Session     session,
+		Hash        args)
 {
-	*user = _controllerGetUserFromArgs(args);
-	*cred = _controllerGetCredentialFromArgs(args);
-	
-	if (NULL == *user || NULL == *cred) {   
-		delete(*user);
-		delete(*cred);
-
-		return FALSE;
+	if (! _controllerUpdateUserFromArgs(args, &(session->user))) {
+		return NULL;
 	}
 
-	return TRUE;
+	if (0 == uuidCompare(
+				uuidZero,
+				applicationUpdateUser(application, session->user)))
+	{
+		return NULL;
+	}
+
+	return controllerCurrentuserRead(application, session, NULL);
 }
 
 // vim: set ts=4 sw=4:

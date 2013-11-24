@@ -24,6 +24,7 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/html/layout.html \
 		     assets/html/_documentation.html \
 		     assets/html/_download.html \
+		     assets/html/_myaccount.html \
 		     assets/image/waldschrat.jpg \
 		     assets/image/fav128.png \
 		     assets/image/fav16.png \

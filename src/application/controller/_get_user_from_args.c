@@ -24,28 +24,31 @@
 
 #include "hash.h"
 #include "user.h"
-#include "auth/credential.h"
 
 #include "utils/memory.h"
 #include "commons.h"
 
-User       _controllerGetUserFromArgs(Hash args);
-Credential _controllerGetCredentialFromArgs(Hash args);
 
-int
-_controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
+User
+_controllerGetUserFromArgs(Hash args)
 {
-	*user = _controllerGetUserFromArgs(args);
-	*cred = _controllerGetCredentialFromArgs(args);
-	
-	if (NULL == *user || NULL == *cred) {   
-		delete(*user);
-		delete(*cred);
+	HashValue email     = hashGet(args, CSTRA("email"));
+	HashValue firstname = hashGet(args, CSTRA("firstname"));
+	HashValue surname   = hashGet(args, CSTRA("surname"));
 
+	if (    
+			NULL == email || 
+			NULL == firstname ||
+			NULL == surname)
+	{   
 		return FALSE;
 	}
 
-	return TRUE;
+	return new(User,
+			(char *)(email->value), email->nvalue,
+			(char *)(email->value), email->nvalue,
+			(char *)(firstname->value), firstname->nvalue,
+			(char *)(surname->value), surname->nvalue);
 }
 
 // vim: set ts=4 sw=4:

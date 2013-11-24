@@ -23,29 +23,41 @@
 #define _GNU_SOURCE
 
 #include "hash.h"
-#include "user.h"
 #include "auth/credential.h"
 
 #include "utils/memory.h"
 #include "commons.h"
 
-User       _controllerGetUserFromArgs(Hash args);
-Credential _controllerGetCredentialFromArgs(Hash args);
+int _controllerValidatePasswordRepeat(char *, size_t, char *, size_t);
 
-int
-_controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
+Credential
+_controllerGetCredentialFromArgs(Hash args)
 {
-	*user = _controllerGetUserFromArgs(args);
-	*cred = _controllerGetCredentialFromArgs(args);
-	
-	if (NULL == *user || NULL == *cred) {   
-		delete(*user);
-		delete(*cred);
+	HashValue email     = hashGet(args, CSTRA("email"));
+	HashValue password  = hashGet(args, CSTRA("password"));
+	HashValue pwrepeat  = hashGet(args, CSTRA("pwrepeat"));
 
+	if (    
+			NULL == email || 
+			NULL == password ||
+			NULL == pwrepeat)
+	{   
 		return FALSE;
 	}
 
-	return TRUE;
+	if (! _controllerValidatePasswordRepeat(
+				password->value,
+				password->nvalue,
+				pwrepeat->value,
+				pwrepeat->nvalue))
+	{
+		return FALSE;
+	}
+
+	return new(Credential,
+			CRED_PASSWORD,
+			(char *)(email->value), email->nvalue,
+			(char *)(password->value), password->nvalue);
 }
 
 // vim: set ts=4 sw=4:

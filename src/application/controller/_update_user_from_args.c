@@ -24,26 +24,35 @@
 
 #include "hash.h"
 #include "user.h"
-#include "auth/credential.h"
 
 #include "utils/memory.h"
 #include "commons.h"
 
-User       _controllerGetUserFromArgs(Hash args);
-Credential _controllerGetCredentialFromArgs(Hash args);
 
 int
-_controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
+_controllerUpdateUserFromArgs(Hash args, User * user)
 {
-	*user = _controllerGetUserFromArgs(args);
-	*cred = _controllerGetCredentialFromArgs(args);
-	
-	if (NULL == *user || NULL == *cred) {   
-		delete(*user);
-		delete(*cred);
+	HashValue email     = hashGet(args, CSTRA("email"));
+	HashValue firstname = hashGet(args, CSTRA("firstname"));
+	HashValue surname   = hashGet(args, CSTRA("surname"));
+	User      new_user;
 
+	if (    
+			NULL == email || 
+			NULL == firstname ||
+			NULL == surname)
+	{   
 		return FALSE;
 	}
+
+	new_user = new(User,
+			(char *)((*user)->username), *(*user)->nusername,
+			(char *)(email->value), email->nvalue,
+			(char *)(firstname->value), firstname->nvalue,
+			(char *)(surname->value), surname->nvalue);
+
+	delete(*user);
+	*user = new_user;
 
 	return TRUE;
 }

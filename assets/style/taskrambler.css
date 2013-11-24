@@ -261,7 +261,7 @@ div.border .br {
 	vertical-align: center;
 }
 
-#login label, #signup label {
+#login label, #signup label, #myaccount label {
 	font-family: old_newspaper;
 	font-size:   15px;
 	font-weight: bold;
@@ -269,19 +269,19 @@ div.border .br {
 	display:     table-cell;
 }  
 
-#login input, #signup input {
+#login input, #signup input, #myaccount input {
 	display: table-cell;
 }  
 
-#login div, #signup div {
+#login div, #signup div, #myaccount div {
 	display: table-row;
 }  
 
-#login form, #signup form {
+#login form, #signup form, #myaccount form {
 	display: table;
 }  
 
-#login form hr, #signup form hr {
+#login form hr, #signup form hr, #myaccount form hr {
 	display: table-cell;
 }
 

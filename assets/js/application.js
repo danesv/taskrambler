@@ -25,20 +25,24 @@ Application.prototype.logout = function() {
 }
 
 Application.prototype.login = function(ev) {
-	this._sendForm("#login", "/authenticate/", ev);
+	this._sendForm("#login", "/authenticate/", "POST", ev);
 }
 
 Application.prototype.signup = function(ev) {
-	this._sendForm("#signup", "/signup/", ev);
+	this._sendForm("#signup", "/signup/", "POST", ev);
+}
+
+Application.prototype.userupdate = function(ev) {
+	this._sendForm("#myaccount", "/user/", "PUT", ev);
 }
 
 
-Application.prototype._sendForm = function(id, url, ev) {
+Application.prototype._sendForm = function(id, url, method, ev) {
 	ev.preventDefault();
 	$.ajax({
 		dataType : "json",
 		url      : url,
-		type     : "POST",
+		type     : method,
 		data     : $(id + " form").serialize(),
 		success  : $.proxy(this._formSuccess, this, id),
 		complete : $.proxy(this.session.update, this.session)

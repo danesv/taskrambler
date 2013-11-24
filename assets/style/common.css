@@ -12,6 +12,17 @@ div#randval {
     z-index:          20;
 }
 
+div#myaccount-container {
+    -moz-box-shadow:  0 4px 8px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    box-shadow:       0 4px 8px rgba(0,0,0,0.5);
+    padding:          0px;
+    position:         fixed;
+    background-image: url(/image/rambler-bg.jpg);
+    border-radius:    5px;
+    z-index:          20;
+}
+
 div#signup-container {
     -moz-box-shadow:  0 4px 8px rgba(0,0,0,0.5);
     -webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.5);

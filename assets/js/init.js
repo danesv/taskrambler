@@ -55,6 +55,19 @@ $(document).ready(function() {
 		$("#signup form").submit($.proxy(application.signup, application));
 	});
 
+	$("#myaccount").load("/_myaccount.html", function (){
+		$(function() {
+			$("#myaccount-container").draggable();
+		});
+
+		$("#myaccount-close").click(function (e) {
+			$("#myaccount-container").addClass("hide");
+		});
+
+		$("#myaccount form").submit(
+			$.proxy(application.userupdate, application));
+	});
+
 	$("#footer").load("/_footer.html", function (){
 		$.getJSON(
 			"/loc/",
