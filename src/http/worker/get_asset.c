@@ -55,10 +55,13 @@ httpWorkerGetAsset(HttpWorker this, const char * fname)
 		nmatch = (header->nvalue)[0];
 	}
 
+	/*
+	 * assets expire after 12 hours...
+	 */
 	message = (HttpMessage)httpResponseAsset(
 			fname,
 			nfname,
-			time(NULL) + 604800);
+			time(NULL) + 43200);
 
 	if (NULL == message) {
 		return (HttpMessage)httpResponse404();
