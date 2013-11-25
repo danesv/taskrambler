@@ -120,8 +120,11 @@ applicationLogin(
 				break;
 		}
 
+		delete(search);
 		return TRUE;
 	}
+
+	delete(search);
 
 	return FALSE;
 }

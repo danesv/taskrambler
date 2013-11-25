@@ -67,7 +67,7 @@ configCtor(void * _this, va_list * params)
 			key++;
 		}
 
-		if ('#' == *key) {
+		if ('#' == *key || 0 == *key) {
 			continue;
 		}
 

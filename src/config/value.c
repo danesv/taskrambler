@@ -54,7 +54,7 @@ configValueCtor(void * _this, va_list * params)
 	{
 		this->type = CONFIG_VALUE_STRING;
 		(this->value).string = memMalloc(nvalue-1);
-		(this->value).string[nvalue-1] = '\0';
+		(this->value).string[nvalue-2] = '\0';
 		memcpy((this->value).string, value+1, nvalue-2);
 		this->nvalue = nvalue;
 	} else {

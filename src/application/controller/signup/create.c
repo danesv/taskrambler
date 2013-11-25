@@ -42,14 +42,13 @@ controllerSignupCreate(
 {
 	Credential   credential;
 	User         user;
+	Uuid         user_id;
 	char       * response_data;
 
 	_controllerProcessUserCreateArgs(args, &user, &credential);
 
-	if (0 == uuidCompare(
-				uuidZero,
-				applicationCreateUser(application, credential, user)))
-	{
+	user_id = applicationCreateUser(application, credential, user);
+	if (0 == uuidCompare(uuidZero, user_id)) {
 		response_data = NULL;
 	} else {
 		applicationLogin(application, credential, session);
@@ -58,6 +57,7 @@ controllerSignupCreate(
 
 	delete(credential);
 	delete(user);
+	delete(user_id);
 
 	return response_data;
 

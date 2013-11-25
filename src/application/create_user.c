@@ -62,6 +62,8 @@ applicationCreateUser(
 		return uuidZero;
 	}
 
+	MEM_FREE(user_serialized);
+
 	if (! applicationUpdatePassword(this, cred, user)) {
 		/**
 		 * \todo

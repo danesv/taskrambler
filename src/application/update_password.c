@@ -48,8 +48,6 @@ applicationUpdatePassword(
 	unsigned char * hash = hash_data+SALT_SIZE;
 	Uuid            index;
 
-	index = indexUuid(user, this->user_namespace);
-
 	if (FALSE == hash_pw(
 				CRED_PWD(cred).pass,
 				CRED_PWD(cred).npass,
@@ -61,12 +59,14 @@ applicationUpdatePassword(
 	memcpy(hash_data, salt, SALT_SIZE);
 	MEM_FREE(salt);
 
+	index = indexUuid(user, this->user_namespace);
 	storageUpdate(
 			this->passwords,
 			(char *)(index->uuid).value,
 			sizeof((index->uuid).value),
 			(char *)hash_data,
 			SALT_SIZE + HASH_SIZE);
+	delete(index);
 
 	return TRUE;
 }

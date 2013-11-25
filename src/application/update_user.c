@@ -61,6 +61,8 @@ applicationUpdateUser(
 		return uuidZero;
 	}
 
+	MEM_FREE(user_serialized);
+
 	return index;
 }
 

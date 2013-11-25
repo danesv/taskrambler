@@ -39,16 +39,17 @@ controllerUserUpdate(
 		Session     session,
 		Hash        args)
 {
+	Uuid user_id;
+
 	if (! _controllerUpdateUserFromArgs(args, &(session->user))) {
 		return NULL;
 	}
 
-	if (0 == uuidCompare(
-				uuidZero,
-				applicationUpdateUser(application, session->user)))
-	{
+	user_id = applicationUpdateUser(application, session->user);
+	if (0 == uuidCompare(uuidZero, user_id)) {
 		return NULL;
 	}
+	delete(user_id);
 
 	return controllerCurrentuserRead(application, session, NULL);
 }
