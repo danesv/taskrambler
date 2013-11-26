@@ -153,10 +153,8 @@ main()
 					value->value     = rand() % 100;
 					sigsuspend(&pause_mask);
 				}
-
-				memCleanup();
-				_exit(EXIT_SUCCESS);
 			}
+			break;
 
 		default:
 			{
@@ -202,6 +200,11 @@ main()
 				users       = new(Storage, user_storage);
 				passwords   = new(Storage, password_storage);
 
+				if (NULL == users || NULL == passwords) {
+					puts("error opening database files...\n");
+					doShutdown = 1;
+				}
+
 				authCreate(auth, AUTH_STORAGE, passwords);
 
 				application = new(
@@ -225,11 +228,10 @@ main()
 						(int)(port->value).number,
 						SOMAXCONN);
 
-				if (NULL != server) {
+				if (NULL != server && !doShutdown) {
 					serverRun(server);
 				}
 				else {
-					doShutdown = 1;
 					kill(pid, SIGINT);
 				}
 
