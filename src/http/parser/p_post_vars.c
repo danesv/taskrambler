@@ -28,6 +28,8 @@
 #include "hash.h"
 #include "class.h"
 
+#include "utils/http.h"
+
 /**
  * \todo this is very similar to other pair parsing
  * things... key1=val1<delim>key2=val2<delim>...keyn=valn
@@ -39,6 +41,8 @@ httpParserPostVars(HttpParser this)
 	HttpRequest request = (HttpRequest)this->current;
 	char *      pair    = this->current->body;
 	ssize_t     togo    = this->current->nbody;
+
+	togo = urldecode(pair, togo);
 
 	while(NULL != pair && 0 < togo) {
 		char * key    = pair;

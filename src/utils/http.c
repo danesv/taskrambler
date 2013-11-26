@@ -22,6 +22,7 @@
 
 #include <time.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <string.h>
 
@@ -32,6 +33,10 @@
 #include "class.h"
 
 #include "commons.h"
+
+#define ALPHAVAL(x)     (tolower((x)) - 'a' + 0xa)
+#define DIGITVAL(x)     ((x) - '0')
+#define ALNUMVAL(x)     (isdigit((x))?DIGITVAL((x)):ALPHAVAL((x)))
 
 
 static const char *DAY_NAMES[] = {
@@ -66,6 +71,41 @@ rfc1123GmtNow(char * buffer, size_t _nbuf)
 	time_t t = time(NULL);
 
 	return rfc1123Gmt(buffer, _nbuf, &t);
+}
+
+/**
+ * Decode an url encoded string. This expects a valid url
+ * encoded string and it size as arguments, else the behaviour
+ * of this function is undefined.
+ * This function modifies the data in buffer. No copy is made.
+ * The reason for this is only performance.
+ */
+size_t
+urldecode(char * buffer, size_t nbuffer)
+{
+    char * buf_ptr = buffer;
+    char * res_ptr = buffer;
+
+    for(; 0 < nbuffer; nbuffer--, buf_ptr++, res_ptr++) {
+        switch(*buf_ptr) {
+            case '%':
+                *res_ptr = (ALNUMVAL(buf_ptr[1]) << 4) | ALNUMVAL(buf_ptr[2]);
+                buf_ptr += 2;
+                nbuffer -= 2;
+                break;
+
+            case '+':
+                *buf_ptr = ' ';
+                /* intended drop through */
+
+            default:
+                *res_ptr = *buf_ptr;
+                break;
+        }
+    }
+    *res_ptr = 0;
+
+    return res_ptr - buffer;
 }
 
 char
