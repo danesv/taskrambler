@@ -3,8 +3,8 @@ function Application()
 }
 
 Application.prototype.init = function(menu) {
-	this.session = new Session("#sessid", "#sessinfo");
 	this.user    = new User("#user", menu);
+	this.session = new Session("#sessid", "#sessinfo", this.user);
 
 	$(window).focus($.proxy(this.session.update, this.session));
 

@@ -1,5 +1,6 @@
-function Session(idSelector, infoSelector)
+function Session(idSelector, infoSelector, user)
 {
+	this.user      = user;
 	this.idElement = $(idSelector);
 	this.canvas    = $(infoSelector + " canvas").get(0);
 	this.context   = this.canvas.getContext("2d");
@@ -22,6 +23,9 @@ Session.prototype.clear = function() {
 	this._leftWidth = 0.0;
 
 	this.idElement.empty().append(this.id);
+
+	this.user.update();
+
 	this._stop();
 }
 
