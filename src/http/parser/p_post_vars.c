@@ -42,8 +42,6 @@ httpParserPostVars(HttpParser this)
 	char *      pair    = this->current->body;
 	ssize_t     togo    = this->current->nbody;
 
-	togo = urldecode(pair, togo);
-
 	while(NULL != pair && 0 < togo) {
 		char * key    = pair;
 		char * eqsign = memchr(key, '=', togo);
@@ -63,6 +61,7 @@ httpParserPostVars(HttpParser this)
 
 		nvalue = pair-eqsign-1;
 		value  = (0 != nvalue)? eqsign+1 : NULL;
+		nvalue = urldecode(value, nvalue);
 
 		hashAdd(request->post,
 				new(HashValue, key, eqsign-key, value, nvalue));
