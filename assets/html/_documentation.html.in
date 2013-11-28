@@ -23,6 +23,85 @@
 	<a href="/coverage/@PACKAGE_VERSION@/index.html" target="_blank">here</a>.
 </p>
 
+<a name="latest"><h2>Version 0.1.8</h2></a>
+
+<p>This one took longer than expected and still does not contain what it
+initially was meant to.</p>
+
+<p>My intention was to have at least some basic first RBAC in here, but 
+after some thinking about it I realized that it is difficult and meaningless
+to create something as long as there is nothing to manage.</p>
+
+<p>Now a lot of work regarding the user management is done. Especially
+there is the possibility to create user, modify them and in theory remove
+them again. A lot of changes toop place and its best to categorize them.</p>
+
+<h3>UI/client</h3>
+
+<ul>
+	<li>Added jQueryUi and related libs</li>
+	<li>Visually improve all popups (signup, login, my account(NEW))</li>
+	<li>Reorganize the javascript code.</li>
+	<li>Display the lines of C code at the bottom of each page.</li>
+	<li>New menu entry and popup "my account". Users can see and modify
+	their data there.</li>
+</ul>
+
+<h3>build system</h3>
+
+<ul>
+	<li>Added make target to create a ctags file for the project.</li>
+	<li>Added code to get the current number of lines of C code.</li>
+	<li>Install database files and ddirectories as world writable.
+	This is done because I notices that a fresh installation segfaulted
+	because it can't open the database files. (These segfaults should be
+	fixed also.)
+	<li>The layout symlinks are no longer copied. Instead symlinks are
+	created in the installation dir.</li>
+</ul>
+
+<h3>backend/server</h3>
+
+<ul>
+	<li>Added a little code and some comments about RBAC.</li>
+	<li>Created a Uuid class capable of handling Uuid Version1/3/5.</li>
+	<li>Added a serializable and indexable interface</li>
+	<li>Users now have a username field which is filled with the email
+	address if the user registered directly in our application and with
+	the CN if the user is authenticated via LDAP.</li>
+	<li>Now LDAP authenticated users get an entry in our database too.
+	This gives them the possibility to change some information.</li>
+	<li>Users no longer can store themself. They implement the
+	serializable and indexable interfaces and an external function uses
+	these to finally store the user.</li>
+	<li>Users are now able to change their firstname, surename and
+	email address after the have been logged in/authenticated.</li>
+	<li>Added a generic router that converts request URIs into identifier
+	for dlsym and then call this function.</li>
+	<li>All post data is now urldecoded.</li>
+	<li>All Authentication methods are not organized in an authentication
+	container. This will try every registered authenticator to authenticate
+	the user.</li>
+	<li>The class system now allows stack stored const instances.<li>
+	<li>Instances can now be created via a va_list additionally to
+	directly given the function arguments.</li>
+	<li>All static assets are not delivered with an expire header, it 
+	is currently set to 12 hours.</li>
+	<li>No RC4 is accepted for SSL connectiones...hello NSA.</li>
+	<li>The storage layer not allows the deletion of entries.</li>
+</ul>
+
+
+<h2>Version 0.1.7</h2>
+
+<ul>
+	<li>some reusable parts are now build as shared libraries</li>
+	<li>make install does what it should</li>
+	<li>generalize json responses</li>
+	<li>add support for a first basic configuration file</li>
+	<li>huge amount of changes in the build system</li>
+</ul>
+
 <h2>Version 0.1.6</h2>
 
 This is a bugfix release. No obvious visible changes at the UI.

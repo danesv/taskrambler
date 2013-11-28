@@ -1,3 +1,358 @@
+2013-11-26	Georg Hopp	georg@steffers.org
+	* M assets/js/application.js:
+	* M assets/js/session.js:
+		update user informations when session timeouts
+	* M src/http/parser/p_post_vars.c:
+		fix urldecode of post vars. I can't urldecode the whole
+		body and then start splitting it into values because the
+		urldecode can add reserved characters. I have to urldecode
+		each value by it's own. TODO: check if the keys have to be
+		urldecoded too.
+	* M include/utils/http.h:
+	* M src/http/parser/p_post_vars.c:
+	* M src/utils/http.c:
+		urldecode post values
+	* M src/taskrambler.c:
+		more valgrind indicated fixes
+
+2013-11-25	Georg Hopp	georg@steffers.org
+	* M src/http/worker/get_asset.c:
+		reduce expire for assets to 12 hours...currently I expect
+		changes even more often. At the end this is another condidate
+		for the configuration file.
+	* M src/application/controller/signup/create.c:
+	* M src/application/controller/user/create.c:
+	* M src/application/controller/user/update.c:
+	* M src/application/create_user.c:
+	* M src/application/login.c:
+	* M src/application/update_password.c:
+	* M src/application/update_user.c:
+	* M src/config/config.c:
+	* M src/config/value.c:
+		fixed various memory management issues detected with valgrind
+
+2013-11-24	Georg Hopp	georg@steffers.org
+	* D assets/js/session.orig.js:
+		remove obsolete file
+	* M Makefile.am:
+	* M assets/html/_menu.html:
+	* A assets/html/_myaccount.html:
+	* M assets/html/layout.html:
+	* M assets/js/application.js:
+	* M assets/js/init.js:
+	* M assets/js/menu.js:
+	* M assets/style/common.css:
+	* M assets/style/taskrambler.css:
+	* M include/application/application.h:
+	* M src/application/Makefile.am:
+	* A src/application/controller/_get_credential_from_args.c:
+	* A src/application/controller/_get_user_from_args.c:
+	* M src/application/controller/_process_user_create_args.c:
+	* A src/application/controller/_update_user_from_args.c:
+	* A src/application/controller/user/update.c:
+	* A src/application/update_user.c:
+	* M src/http/worker/process.c:
+	* M src/router/route.c:
+		basic user update functionality
+	* M Makefile.am:
+		add missing javascript files and optimize symlink creation
+	* M src/storage/storage.c:
+		create database files world read-/writable
+	* M Makefile.am:
+		install working directories as world read-/writeable and
+		symlink layout instead of installing the files.
+
+2013-11-11	Georg Hopp	georg@steffers.org
+	* M assets/html/layout.html:
+	* A assets/js/application.js:
+	* M assets/js/init.js:
+	* A assets/js/menu.js:
+	* M assets/js/session.js:
+	* A assets/js/session.orig.js:
+	* A assets/js/user.js:
+		some work on the javascript...
+		still I think it's not very good, but better than before.
+
+2013-11-10	Georg Hopp	georg@steffers.org
+	* M Makefile.am:
+	* M assets/html/layout.html:
+	* A assets/js/jquery.ui.touch-punch.min.js:
+		add jQuery ui touch-punch for draggable support on
+		mobile devices. Thanks to Dave Furfero.
+	* M assets/js/session.js:
+	* M include/user.h:
+	* M src/application/controller/_process_user_create_args.c:
+	* M src/application/controller/currentuser/read.c:
+	* M src/application/login.c:
+	* M src/user/user.c:
+		add username to user class. This will contain the common
+		name (cn) of an ldap authenticated user and the email
+		address of an otherwise authenticated user. This is done
+		to be able to have a good way to store an application user
+		for ldap authenticated users.
+	* M include/application/application.h:
+	* M src/application/application.c:
+	* M src/taskrambler.c:
+		use the new authentication container
+	* M include/auth/auth.h:
+	* M src/auth/Makefile.am:
+	* A src/auth/auth.c:
+	* A src/auth/create.c:
+		created an authentication container. This could initialize
+		the needed authentications and then be injected as a single
+		object into the application class
+	* M include/class/interface/class.h:
+	* M src/class/interface/i_class.c:
+		add function to create an object with a va_list pointer
+		instead of its argument list. Obviously the va_list must
+		contain the correct values for the class constructor.
+
+2013-11-09	Georg Hopp	georg@steffers.org
+	* M assets/html/_author.html:
+	* M assets/html/_login.html:
+	* M assets/html/_signup.html:
+	* M assets/html/layout.html:
+	* M assets/js/init.js:
+	* M assets/style/common.css:
+	* M assets/style/taskrambler.css:
+		make signup and login popup visually more fitting to the
+		rest of the pages.
+
+2013-11-08	Georg Hopp	georg@steffers.org
+	* M assets/html/layout.html:
+	* M assets/js/init.js:
+	* M assets/style/common.css:
+		make login and signup div draggable and cast shadows
+	* M Makefile.am:
+		install jqeury ui files
+	* A assets/js/jquery-ui-1.10.3.min.js:
+	* A assets/js/jquery-ui.js:
+	* A assets/style/images/animated-overlay.gif:
+	* A assets/style/images/ui-bg_flat_0_aaaaaa_40x100.png:
+	* A assets/style/images/ui-bg_flat_75_ffffff_40x100.png:
+	* A assets/style/images/ui-bg_glass_55_fbf9ee_1x400.png:
+	* A assets/style/images/ui-bg_glass_65_ffffff_1x400.png:
+	* A assets/style/images/ui-bg_glass_75_dadada_1x400.png:
+	* A assets/style/images/ui-bg_glass_75_e6e6e6_1x400.png:
+	* A assets/style/images/ui-bg_glass_95_fef1ec_1x400.png:
+	* A assets/style/images/ui-bg_highlight-soft_75_cccccc_1x100.png:
+	* A assets/style/images/ui-icons_222222_256x240.png:
+	* A assets/style/images/ui-icons_2e83ff_256x240.png:
+	* A assets/style/images/ui-icons_454545_256x240.png:
+	* A assets/style/images/ui-icons_888888_256x240.png:
+	* A assets/style/images/ui-icons_cd0a0a_256x240.png:
+	* A assets/style/jquery-ui-1.10.3.min.css:
+	* A assets/style/jquery-ui.css:
+		add jquery ui for nice ui effects
+	* A docs/ups-cookie_disclosure.pdf:
+	* M TODO:
+		update TODO
+
+2013-11-07	Georg Hopp	georg@steffers.org
+	* M assets/html/_footer.html:
+	* M assets/js/init.js:
+	* M include/application/application.h:
+	* M src/application/Makefile.am:
+	* M src/application/application.c:
+	* A src/application/controller/loc/read.c:
+		display lines of code in page footer
+	* M configure.ac:
+		add lines of code to config.h ...
+		make me able to display these in the application
+	* M Makefile.am:
+		add make target to measure lines of code
+	* M include/application/application.h:
+	* M src/application/Makefile.am:
+	* M src/application/create_user.c:
+	* D src/application/signup.c:
+		remove no longer used application signup method
+	* M .gitignore:
+	* M Makefile.am:
+		create make target for ctags file and ignore the generated
+		file with git
+
+2013-11-06	Georg Hopp	georg@steffers.org
+	* M assets/js/init.js:
+	* M include/application/application.h:
+	* M src/application/Makefile.am:
+	* A src/application/controller/_process_user_create_args.c:
+	* A src/application/controller/_validate_email.c:
+	* A src/application/controller/_validate_password.c:
+	* A src/application/controller/_validate_password_repeat.c:
+	* A src/application/controller/signup/create.c:
+	* M src/application/controller/user/create.c:
+	* A src/application/controller/user/read.c:
+	* A src/application/create_user.c:
+	* A src/application/get_user.c:
+	* A src/application/update_password.c:
+	* M src/router/route.c:
+		generalise user handling more so that not only signup
+		and login is possible but also password or userdata changes
+		and further administration.
+	* M include/storage/storage.h:
+	* M src/storage/Makefile.am:
+	* A src/storage/delete.c:
+		add storage delete functionality
+	* M src/testers/uuid.c:
+		test code for zeroUuid on stack
+	* M include/user.h:
+		remove unnecessary stuff in user declaration
+	* M include/permission.h:
+	* M include/role.h:
+		some more stuff in rbac files...
+		still nothing really useful, but finally I have more or
+		less an idea how to implement it
+	* M include/uuid.h:
+	* M src/uuid/uuid.c:
+		add zero uuid instance
+	* M include/class/class.h:
+		add makros to create an instance of a class on the
+		stack (ment for global constant instances that never change,
+		eg. defined NULL values)
+
+2013-11-05	Georg Hopp	georg@steffers.org
+	* M include/application/application.h:
+	* M include/auth/interface/auth.h:
+	* A include/interface/indexable.h:
+	* A include/interface/serializable.h:
+	* M src/Makefile.am:
+	* M src/application/application.c:
+	* M src/application/login.c:
+	* M src/application/session_cleanup.c:
+	* M src/application/signup.c:
+	* M src/auth/interface/auth.c:
+	* M src/auth/ldap.c:
+	* M src/auth/storage/storage.c:
+	* A src/interface/indexable.c:
+	* A src/interface/serializable.c:
+	* M src/taskrambler.c:
+	* M src/user/Makefile.am:
+	* D src/user/load.c:
+	* D src/user/save.c:
+	* M src/user/user.c:
+		remove specialized load and save from user, add serializable
+		and indexable interface and make user utilize both and store
+		a user and its credentials keyed by its uuid
+
+2013-10-27	Georg Hopp	georg@steffers.org
+	* M src/uuid/version3.c:
+	* M src/uuid/version5.c:
+		delete temporary uuid data structures.
+	* M src/server/server.c:
+		NSA makes me paranoid ...
+		try to get best supported cipher of the used browser and
+		don't use RC4 at all
+
+2013-10-25	Georg Hopp	georg@steffers.org
+	* M src/testers/uuid.c:
+		fix and test uuidCompare
+	* M configure.ac:
+	* M include/session.h
+	* M include/user.h
+	* M include/uuid.h
+	* M src/Makefile.am
+	* M src/router/route.c
+	* M src/testers/uuid.c
+	* M src/user/save.c
+	* A src/uuid/Makefile.am:
+	* A src/uuid/_format3or5.c:
+	* A src/uuid/compare.c:
+	* A src/uuid/parse.c:
+	* A src/uuid/unparse.c:
+	* A src/uuid/uuid.c:
+	* A src/uuid/version1.c:
+	* A src/uuid/version3.c:
+	* A src/uuid/version5.c:
+		add code to generate uuid version 3 and 5.
+		With this we can generate the same uuid for a given name
+		all the time
+	* A include/permission.h:
+	* D include/rbac/permission.h:
+	* D include/rbac/role.h:
+	* A include/role.h:
+		some more work on rbac
+
+2013-10-23	Georg Hopp	georg@steffers.org
+	* M assets/js/init.js:
+		remove old deactivated json request for logout
+	* A include/uuid.h:
+		start of an own uuid class. This will simply wrap existing
+		code for random uuids and add code to generate uuid for
+		namespace unique items.
+	* M assets/js/init.js:
+	* M configure.ac:
+	* M include/application/adapter/http.h:
+	* M include/http/request.h:
+	* A include/router.h:
+	* M src/Makefile.am:
+	* M src/application/Makefile.am:
+	* M src/application/adapter/http/http.c:
+	* M src/application/adapter/http/update.c:
+	* A src/application/controller/authenticate/create.c:
+	* A src/application/controller/authenticate/delete.c:
+	* A src/application/controller/currentuser/read.c:
+	* A src/application/controller/randval/read.c:
+	* A src/application/controller/sessinfo/read.c:
+	* A src/application/controller/user/create.c:
+	* A src/application/controller/version/read.c:
+	* M src/http/Makefile.am:
+	* M src/http/request.c:
+	* A src/http/request/get_method_id.c:
+	* D src/http/request/has_valid_method.c:
+	* A src/router/Makefile.am:
+	* A src/router/route.c:
+	* A src/router/router.c:
+	* M src/taskrambler.c:
+		added a generic router. This is a REST router that maps
+		urls to specific functions which it tries to find via dlsym.
+		That way the only thing to do to get a new REST
+		functionality is to add a function that fits into the
+		namesheme. All existing functionality is moved accordingly
+	* M src/server/server.c:
+		remove not used variable
+	* M src/server/run.c:
+		change indenting
+
+2013-10-22	Georg Hopp	georg@steffers.org
+	* M include/rbac/role.h:
+		small change to rbac role ...
+		this still is not really even started
+	* M TODO:
+		add note and thoughts about a distributed storage system
+
+2013-10-16	Georg Hopp	georg@steffers.org
+	* M src/server/server.c:
+		if I have a socketNonblock method I should better use it. :D
+	* D include/cbufpool.h:
+	* D src/binarytree.c:
+	* D src/cbufpool.c:
+	* D src/configtest.c:
+	* D src/hash.c:
+	* D src/mmapfiletest.c:
+	* D src/mmapfiletest2.c:
+	* D src/rbtree.c:
+	* D src/rbtree2.c:
+	* D src/usertest.c:
+	* D src/uuid.c:
+		remove the moved files... :D
+	* A src/testers/binarytree.c:
+	* A src/testers/configtest.c:
+	* A src/testers/hash.c:
+	* A src/testers/mmapfiletest.c:
+	* A src/testers/mmapfiletest2.c:
+	* A src/testers/rbtree.c:
+	* A src/testers/rbtree2.c:
+	* A src/testers/usertest.c:
+	* A src/testers/uuid.c:
+		move test programs in separate folder
+
+2013-10-13	Georg Hopp	georg@steffers.org
+	* M include/http/response.h:
+	* M src/http/response/asset.c:
+	* M src/http/worker/get_asset.c:
+		add expires header for static assets (right now 1 week
+		in the future)
+
 2013-10-09	Georg Hopp	georg@steffers.org
 	* A config/taskrambler.conf.in:
 		add forgotten taskramble.conf.in

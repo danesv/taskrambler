@@ -1,10 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
 
-#bin_PROGRAMS = create_token
-#create_token_SOURCES = base64.c createToken.c
-#create_token_LDADD   = src/libtoken.la $(LIBOBJS)
-#create_token_CFLAGS  = -Wall -I include
-
 EXTRA_DIST = include certs assets
 
 myetc_DATA = config/mime.types \
@@ -43,6 +38,7 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/image/rambler-border-tr.jpg \
 		     assets/image/rambler-logo-small.jpg \
 		     assets/image/rambler-logo2-small.jpg \
+		     assets/image/gplv3-127x51.png \
 		     assets/js/application.js \
 		     assets/js/init.js \
 		     assets/js/jquery.js \

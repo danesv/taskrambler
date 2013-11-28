@@ -45,6 +45,14 @@ div#login-container {
     z-index:          20;
 }
 
+#gplv3 {
+    opacity:  0.3;
+    filter:   alpha(opacity=30);
+    position: absolute;
+    right:    0px;
+    bottom:   0px;
+}
+
 .hide {
     top:     -500px !important;
     display: none !important;

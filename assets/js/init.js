@@ -24,7 +24,9 @@ $(document).ready(function() {
 	}
 
 	$("#title").load("/_title.html");
-	$("#main").load(asset);
+	$("#main").load(asset, function() {
+		$("#main").append('<img id="gplv3" src="image/gplv3-127x51.png" />')
+	});
 	menu.init(application);
 
 	$("#statusline").load("/_statusline.html", function() {

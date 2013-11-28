@@ -302,6 +302,10 @@ div.border .br {
 	color:           rgb(255,253,200);
 }
 
+#main {
+	position: relative;
+}
+
 #main a {
 	text-decoration: none;
 	font-weight:     bold;

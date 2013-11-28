@@ -8,24 +8,29 @@ need any third party webserver to work.
 The backend is written completely in C while the frontend will be
 JavaScript, CSS and HTML.
 
-When this is finished users will be able to connect to the server
+Users will be able to connect to the server
 via their browsers, manage their tasks there and specify policies
 who else might see their tasks, track the time spend on a specific
 task, attach tasks to projects, getting reports about their work done,
 etc.
 
-Right now for the taskmanagement stuff I think of a similar approach
+For the taskmanagement stuff I think of a similar approach
 as [taskwarrior](http://taskwarrior.org/projects/show/taskwarrior) is going.
 This is an amazing tool and I really enjoy using it.
 I started this as an experiment to implement an HTTP server, then I learned
 about taskwarrior and thought, wouldn't it be great to have this
 functionality in a multiuser environment.
 
-Right now, it is a single process HTTP server implementation that performs
-not to bad.
+Right now, this is a single process HTTP server implementation that performs
+not to bad. And some application logic for user management. Every connection
+is associated with a session and user can register, login and modify their
+user data.
 
-In the next version user will be able to create tasks and share them at
-least on a basic level.
+In the nearer future an role based access control system will be added.
+Users will be able to add tasts, (for now just a text and maybe a date or
+something) and they should be able to control who else might see a task.
+
+If this works reliable I will announce version 0.2.
 
 The main development page can be found 
 [here](http://redmine.weird-web-workers.org/projects/taskrambler).
@@ -34,7 +39,7 @@ INSTALLATION
 ------------
 
 This can be installed via the usual configure, make, make install
-cycle.
+cycle. For gentoo users am ebuild is added under docs.
 
 ### API DOC
 
@@ -47,21 +52,8 @@ neccessary. A patch is included under docs.
 
 gcov and lcov are needed to build these.
 
-*make coverage-html* creates the converage reports.
-
-### PLAY AROUND
-
-Any asset under assets could be exchanged. It should be possible to
-change the main.html there and put additionally html files and images
-under assets and everything should be deliverd.
-
-Anyway, there are a few rules.
-
-* html assets will always be loaded from assets/html.
-* all other assets are loaded directly from the assets directory.
-
-So, right now this can be used as a HTTP server for static content
-and without virtual hosts support.
+The source has to be configured with *configure --enable-gcov*.
+*make coverage-html* creates the converage reports then.
 
 
 USAGE
@@ -69,30 +61,57 @@ USAGE
 
 ### RUNNING
 
-Simply start the executable *src/taskrambler* after successfull build.
-Currently this will stay in the foreground and does logging via syslog.
+Simply start the installed executable.
+This will usually be found under */usr/local/bin/taskrambler* after
+successfull build and installation.
+
+When installed with the ebuild the executable will be */usr/bin/taskrambler*.
+
+After the executable is stared you should be able to see the staskrambler
+user interface with your browser by openening *http://localhost:11212/*.
+
+In the upper right corner you can see session and user related information.
+
+### CONFIGURATION
+
+A first configuration file is installed in your etc folder under
+*taskrambler/taskrambler.conf*. The syntax of that file is described in it.
+
+Currently there are only 5 settings that can be configured.
+
+* ldap_base: The base for the ldap Distinguished Name (DN) for user lookups.
+* ldap_host: The ldap server to connect to.
+* assets_dir: Defines where taskrambler will find its assets.
+* runtime_dir: The place where the user and credential database files are
+  stored
+* port: The port taskrambler should run on.
 
 ### PORT
 
-The server will listen on port 11212 for HTTP requests and on port 11213
-for SSL requerst.
+Taskrambler will always connect to the port specified in the config for
+HTTP connections.
 
-You can use telnet or simply start a browser and connect on localhost:11212.
-
-This should show up a very simplistic page.
-It should eneable you to start a session, get values from the server
-or login.
+A second socket will be opened on port+1 for SSL connections.
 
 ### LOGIN
 
-You can't use the login without changing the code. It's implemented using
-ldap and currently not configurable. You have to change the configuration
-in the code and compile again.
+Every user that can be authenticated either via LDAP or via taskramblers
+own database can login via the login link in the menu.
+
+### SIGNUP
+
+It is possible to create a user account by clicking the signup link.
+After a successfull signup you will be automatically logged in.
+
+### CHANGE USER DATA ###
+
+After a successfull login you have the ability to see your current account
+informations and modify them via "my account"
 
 TESTING
 -------
 
-This comes with an incomplete unit test suite.
+This comes with the start of a unit test suite.
 You can use *make test* to build and run the existent tests.
 
 ### REQUIREMENTS
@@ -105,10 +124,5 @@ CONTRIBUTION
 I would really like to see some people possibly interested in this stuff.
 I think it contains some really interesting ideas.
 
-Well, sadly i have to say that this is a spare time project. Documentation
-is sparse and Tests too.
-
 If you like to contribute anyway, make a fork, do your changes and generate
-a pull request.
-
-I will look at these as soon as possible.
+a pull request. Or simply contact me on georg@steffers.org.

@@ -1,0 +1,14 @@
+2013-11-28
+
+I am about to make a new release 0.1.8 of this. It took a long time since
+the last release. Originally this was ment to implement some kind of RBAC
+but now it improves user management to have resources (users) where
+RBAC could be used on.
+
+So, in this version you got improved user management and an improved UI.
+
+I have new hardware and with this I got really impressive result from
+ApacheBench. I can handle the simple /version/ request about 40000 times
+a second on a new Core I5. This is more than double of the result on my
+old Core2Duo, and we are still single threaded.
+
