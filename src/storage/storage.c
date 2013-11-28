@@ -41,8 +41,8 @@ storageCtor(void * _this, va_list * params)
 
 	this->gdbm = gdbm_open(
 			this->db_name,
-			0,
-			GDBM_WRCREAT,
+			2048,
+			GDBM_WRCREAT|GDBM_NOLOCK,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH,
 			NULL);
 
