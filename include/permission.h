@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "storage/storage.h"
 
 /**
@@ -45,7 +45,7 @@ typedef enum e_ResourceActions {
 } ResourceAction;
 
 
-CLASS(Permission) {
+TR_CLASS(Permission) {
 	char             id[37];
 	unsigned long    hash;
 

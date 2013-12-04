@@ -24,16 +24,13 @@
 #include <sys/types.h>
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "stream.h"
-
 #include "http/parser.h"
 #include "queue.h"
 #include "http/request.h"
 #include "http/response.h"
 #include "cbuf.h"
-
-#include "utils/memory.h"
 
 
 static
@@ -48,7 +45,7 @@ httpParserCtor(void * _this, va_list * params)
 		return -1;
 	}
 
-	this->queue = new(Queue);
+	this->queue = TR_new(Queue);
 
 	return 0;
 }
@@ -59,17 +56,17 @@ httpParserDtor(void * _this)
 {
 	HttpParser this = _this;
 
-	delete(this->queue);
+	TR_delete(this->queue);
 
 	if (TRUE == this->ourLock)
 		cbufRelease(this->buffer);
 
-	MEM_FREE(this->incomplete);
-	delete(this->current);
+	TR_MEM_FREE(this->incomplete);
+	TR_delete(this->current);
 } 
 
-INIT_IFACE(Class, httpParserCtor, httpParserDtor, NULL);
-INIT_IFACE(StreamReader, httpParserParse);
-CREATE_CLASS(HttpParser, NULL, IFACE(Class), IFACE(StreamReader));
+TR_INIT_IFACE(TR_Class, httpParserCtor, httpParserDtor, NULL);
+TR_INIT_IFACE(StreamReader, httpParserParse);
+TR_CREATE_CLASS(HttpParser, NULL, TR_IF(TR_Class), TR_IF(StreamReader));
 
 // vim: set ts=4 sw=4:

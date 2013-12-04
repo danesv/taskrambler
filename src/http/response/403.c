@@ -25,8 +25,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include "class.h"
-
+#include "trbase.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
@@ -38,7 +37,7 @@ httpResponse403()
 	HttpResponse response;
 	HttpMessage  message;
 
-	response = new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
+	response = TR_new(HttpResponse, "HTTP/1.1", 403, "Forbidden");
 	message  = (HttpMessage)response;
 
 	message->nbody = 0;

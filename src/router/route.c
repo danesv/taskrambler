@@ -35,15 +35,13 @@
 // for toupper
 #include <ctype.h>
 
+#include "trbase.h"
 #include "router.h"
 #include "hash.h"
 #include "session.h"
 #include "http/request.h"
 #include "http/response.h"
 #include "application/application.h"
-
-#include "utils/memory.h"
-#include "commons.h"
 
 
 #define COMMAND_LEN		128
@@ -102,7 +100,7 @@ routerRoute(
 	 */
 	switch (request->method_id) {
 		case HTTP_GET:
-			args = new(Hash);
+			args = request->get;
 			strcpy(&(functionName[this->nprefix + ncommand]), "Read");
 			break;
 
@@ -255,7 +253,7 @@ routerRoute(
 
 	switch (request->method_id) {
 		case HTTP_GET:
-			delete(args);
+			TR_delete(args);
 			break;
 
 		case HTTP_POST:
@@ -268,7 +266,7 @@ routerRoute(
 
 	if (NULL != response_data) {
 		response = httpResponseJson(response_data, strlen(response_data));
-		MEM_FREE(response_data);
+		TR_MEM_FREE(response_data);
 	} else {
 		response = httpResponse404();
 	}

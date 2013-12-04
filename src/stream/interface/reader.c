@@ -20,22 +20,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
-
+#include "trbase.h"
 #include "stream/stream.h"
 #include "stream/interface/reader.h"
 
-const struct interface i_StreamReader = {
-	"streamReader",
-	1
-};
+TR_CREATE_INTERFACE(StreamReader, 1);
 
 ssize_t
 streamReaderRead(void * object, Stream st)
 {
 	ssize_t ret;
 
-	RETCALL(object, StreamReader, read, ret, st);
+	TR_RETCALL(object, StreamReader, read, ret, st);
 
 	return ret;
 }

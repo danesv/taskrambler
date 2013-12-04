@@ -22,8 +22,6 @@
 
 #include "cbuf.h"
 
-#include "commons.h"
-
 Bool
 cbufIsLocked(Cbuf this)
 {

@@ -25,8 +25,8 @@
 
 #include <sys/types.h>
 
+#include "trbase.h"
 #include "hash.h"
-#include "class.h"
 
 #define MAX_CONFIG_LINE		256
 
@@ -38,7 +38,7 @@ typedef enum e_ConfigValueType {
 	CONFIG_VALUE_STRING  = 1
 } ConfigValueType;
 
-CLASS(ConfigValue) {
+TR_CLASS(ConfigValue) {
 	union {
 		char      * string;
 		long long   number;

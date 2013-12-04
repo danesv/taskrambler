@@ -42,7 +42,7 @@
 #ifndef __AUTH_AUTH_H__
 #define __AUTH_AUTH_H__
 
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
 #include "auth.h"
 #include "auth/credential.h"
@@ -55,7 +55,7 @@ typedef enum e_AuthModule {
 
 #define MAX_AUTH	AUTH_STORAGE
 
-CLASS(Auth) {
+TR_CLASS(Auth) {
 	void * auth[MAX_AUTH + 1];
 };
 

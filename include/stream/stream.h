@@ -26,14 +26,14 @@
 #include <sys/types.h>
 #include <openssl/ssl.h>
 
-#include "class.h"
+#include "trbase.h"
 
 typedef enum e_StreamHandleType {
 	STREAM_FD = 0,
 	STREAM_SSL
 } StreamHandleType;
 
-CLASS(Stream) {
+TR_CLASS(Stream) {
 	StreamHandleType type;
 	union {
 		int   fd;

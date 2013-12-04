@@ -26,12 +26,11 @@
 
 #include <sys/types.h>
 
-#include "class.h"
-#include "commons.h"
+#include "trbase.h"
 #include "hash.h"
 
 
-CLASS(Asset) {
+TR_CLASS(Asset) {
 	unsigned long hash;
 
 	char     fname[2049];

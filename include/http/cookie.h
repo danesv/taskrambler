@@ -26,9 +26,9 @@
 #include <time.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
-CLASS(HttpCookie) {
+TR_CLASS(HttpCookie) {
 	unsigned long hash;
 
 	char *        key;

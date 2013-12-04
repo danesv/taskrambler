@@ -26,15 +26,10 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "auth.h"
 #include "uuid.h"
 #include "storage/storage.h"
-
-#include "interface/serializable.h"
-#include "interface/indexable.h"
-
-#include "utils/memory.h"
 #include "application/application.h"
 
 
@@ -47,11 +42,11 @@ applicationLogin(
 	Uuid       search;
 	AuthModule auth_module;
 
-	User user = new(User, NULL);
+	User user = TR_new(User, NULL);
 
 	user->username  = CRED_PWD(credential).user;
 	user->nusername = &CRED_PWD(credential).nuser;
-	search = indexUuid(user, this->user_namespace);
+	search = TR_indexUuid(user, this->user_namespace);
 
 	auth_module = authenticate(this->auth, credential, search);
 
@@ -71,11 +66,11 @@ applicationLogin(
 						&nuser_serialized);
 
 				if (NULL != user_serialized) {
-					unserialize(
+					TR_unserialize(
 							session->user,
 							(unsigned char *)user_serialized,
 							nuser_serialized);
-					MEM_FREE(user_serialized);
+					TR_MEM_FREE(user_serialized);
 				} else {
 					/**
 					 * this is a user authenticated via another method
@@ -87,15 +82,15 @@ applicationLogin(
 					 * the delete will not free it.
 					 */
 					session->user->username = NULL;
-					delete(session->user);
-					session->user = new(User,
+					TR_delete(session->user);
+					session->user = TR_new(User,
 							CRED_PWD(credential).user,
 							CRED_PWD(credential).nuser,
 							CSTRA(""),
 							CSTRA(""),
 							CSTRA(""));
 
-					serialize(
+					TR_serialize(
 							session->user,
 							(unsigned char **)&user_serialized,
 							&nuser_serialized);
@@ -110,7 +105,7 @@ applicationLogin(
 							sizeof((search->uuid).value),
 							user_serialized,
 							nuser_serialized);
-					MEM_FREE(user_serialized);
+					TR_MEM_FREE(user_serialized);
 				}
 
 				session->user->auth_type = auth_module;
@@ -120,11 +115,11 @@ applicationLogin(
 				break;
 		}
 
-		delete(search);
+		TR_delete(search);
 		return TRUE;
 	}
 
-	delete(search);
+	TR_delete(search);
 
 	return FALSE;
 }

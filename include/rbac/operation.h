@@ -25,10 +25,10 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
 
-CLASS(RbacOperation) {
+TR_CLASS(RbacOperation) {
 	char   * name;
 	size_t   nname;
 };

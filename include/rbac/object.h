@@ -25,11 +25,11 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "storage/storage.h"
 
 
-CLASS(RbacObject) {
+TR_CLASS(RbacObject) {
 	char   * name;
 	size_t   nname;
 };

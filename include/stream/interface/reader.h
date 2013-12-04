@@ -27,15 +27,14 @@
 
 #include <sys/types.h>
 
+#include "trbase.h"
 #include "stream/stream.h"
 
 typedef ssize_t (* fptr_streamReaderRead)(void *, Stream);
 
-extern const struct interface i_StreamReader;
-
-struct i_StreamReader {
-	const struct interface * const _;
-	fptr_streamReaderRead          read;
+TR_INTERFACE(StreamReader) {
+	TR_IFID;
+	fptr_streamReaderRead read;
 };
 
 extern ssize_t streamReaderRead(void *, Stream);

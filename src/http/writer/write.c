@@ -23,14 +23,11 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "http/message.h"
 #include "queue.h"
 #include "http/writer.h"
 #include "stream.h"
-
-#include "commons.h"
-#include "utils/memory.h"
 
 
 ssize_t
@@ -51,7 +48,7 @@ httpWriterWrite(void * _this, Stream st)
 			this->written = 0;
 			this->nheader = httpMessageHeaderSizeGet(this->current);
 
-			if (this->nheader > memGetSize(this->buffer)) {
+			if (this->nheader > TR_memGetSize(this->buffer)) {
 				ssize_t size = this->nheader;
 
 				size = (0 != size%WRITER_BUF_CHUNK)?
@@ -60,10 +57,10 @@ httpWriterWrite(void * _this, Stream st)
 				size *= WRITER_BUF_CHUNK;
 
 				if (NULL != this->buffer) {
-					MEM_FREE(this->buffer);
+					TR_MEM_FREE(this->buffer);
 				}
 
-				this->buffer  = memMalloc(size);
+				this->buffer  = TR_malloc(size);
 				this->nbuffer = size;
 			}
 
@@ -138,10 +135,10 @@ httpWriterWrite(void * _this, Stream st)
 			 * underlying connection should be closed at their side.
 			 * Then we close to connection.
 			 */
-			delete(this->current);
+			TR_delete(this->current);
 			return -2;
 		}
-		delete(this->current);
+		TR_delete(this->current);
 
 		break;
 	}

@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
 #include "session.h"
 #include "hash.h"
@@ -42,7 +42,7 @@ struct randval {
 	int    value;
 };
 
-CLASS(Application) {
+TR_CLASS(Application) {
 	Hash            * active_sessions;
 	time_t            session_time_ofs;
 

@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
 #define CRED_PWD(c)		(((c)->cred).pwd)
 
@@ -34,7 +34,7 @@ typedef enum e_CredentialType {
 } CredentialType;
 
 
-CLASS(Credential) {
+TR_CLASS(Credential) {
 	CredentialType type;
 
 	union {

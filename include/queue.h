@@ -28,11 +28,10 @@
 
 #include <sys/types.h>
 
-#include "class.h"
-#include "commons.h"
+#include "trbase.h"
 
 
-CLASS(Queue) {
+TR_CLASS(Queue) {
 	void * msg;
 	Queue  next;
 

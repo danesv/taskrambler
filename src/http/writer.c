@@ -22,13 +22,10 @@
 
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "stream.h"
-
 #include "queue.h"
 #include "http/writer.h"
-
-#include "utils/memory.h"
 
 static
 int
@@ -36,7 +33,7 @@ httpWriterCtor(void * _this, va_list * params)
 {
 	HttpWriter this = _this;
 
-	this->queue = new(Queue);
+	this->queue = TR_new(Queue);
 
 	return 0;
 }
@@ -47,19 +44,19 @@ httpWriterDtor(void * _this)
 {
 	HttpWriter this = _this;
 
-	delete(this->queue);
+	TR_delete(this->queue);
 
 	if (NULL != this->buffer) {
-		MEM_FREE(this->buffer);
+		TR_MEM_FREE(this->buffer);
 	}
 
 	if (NULL != this->current) {
-		delete(this->current);
+		TR_delete(this->current);
 	}
 }
 
-INIT_IFACE(Class, httpWriterCtor, httpWriterDtor, NULL);
-INIT_IFACE(StreamWriter, httpWriterWrite);
-CREATE_CLASS(HttpWriter, NULL, IFACE(Class), IFACE(StreamWriter));
+TR_INIT_IFACE(TR_Class, httpWriterCtor, httpWriterDtor, NULL);
+TR_INIT_IFACE(StreamWriter, httpWriterWrite);
+TR_CREATE_CLASS(HttpWriter, NULL, TR_IF(TR_Class), TR_IF(StreamWriter));
 
 // vim: set ts=4 sw=4:

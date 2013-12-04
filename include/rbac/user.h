@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
 
 /**
@@ -37,7 +37,7 @@
  * tricky to find the correct interface when we want to 
  * be flexible in future.
  */
-CLASS(RbacUser) {
+TR_CLASS(RbacUser) {
 	char   * name;
 	size_t   nname;
 };

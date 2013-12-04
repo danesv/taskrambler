@@ -27,11 +27,11 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
 #define N_VALUES	128
 
-CLASS(HttpHeader) {
+TR_CLASS(HttpHeader) {
 	unsigned long hash;
 	char *        name;
 	char *        value[N_VALUES];

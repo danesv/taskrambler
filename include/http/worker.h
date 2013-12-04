@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "http/parser.h"
 #include "http/writer.h"
@@ -37,10 +37,9 @@
 #include "http/request.h"
 #include "http/response.h"
 #include "queue.h"
-#include "commons.h"
 
 
-CLASS(HttpWorker) {
+TR_CLASS(HttpWorker) {
 	char * id;
 
 	Cbuf   pbuf;

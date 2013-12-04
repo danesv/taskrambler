@@ -26,12 +26,10 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "http/message.h"
 #include "queue.h"
 #include "stream.h"
-
-#include "commons.h"
 
 
 /*
@@ -78,7 +76,7 @@ typedef enum e_HttpWriterState {
 	HTTP_WRITER_DONE
 } HttpWriterState;
 
-CLASS(HttpWriter) {
+TR_CLASS(HttpWriter) {
 	char        * buffer;
 
 	Queue         queue;

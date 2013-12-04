@@ -24,12 +24,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "http/header.h"
-
 #include "utils/hash.h"
-#include "utils/memory.h"
 
 static
 int
@@ -43,13 +41,13 @@ httpHeaderCtor(void * _this, va_list * params) {
 	value           = va_arg(* params, char *);
 	this->nvalue[0] = va_arg(* params, size_t);
 	
-	this->name              = memMalloc(this->nname + 1);
+	this->name              = TR_malloc(this->nname + 1);
 	this->name[this->nname] = 0;
 	memcpy(this->name, name, this->nname);
 
 	this->hash = sdbm((unsigned char *)name, this->nname);
 
-	(this->value)[0]                    = memMalloc((this->nvalue)[0] + 1);
+	(this->value)[0]                    = TR_malloc((this->nvalue)[0] + 1);
 	(this->value)[0][(this->nvalue)[0]] = 0;
 	memcpy((this->value)[0], value, (this->nvalue)[0]);
 	this->cvalue = 1;
@@ -65,10 +63,10 @@ httpHeaderDtor(void * _this)
 	HttpHeader this = _this;
 	size_t     i;
 
-	MEM_FREE(this->name);
+	TR_MEM_FREE(this->name);
 
 	for (i=0; i<this->cvalue; i++) {
-		MEM_FREE(this->value[i]);
+		TR_MEM_FREE(this->value[i]);
 	}
 }
 
@@ -99,8 +97,8 @@ httpHeaderHandleDouble(void * _this, void * _double)
 	(doub->value)[0] = NULL;
 }
 
-INIT_IFACE(Class, httpHeaderCtor, httpHeaderDtor, NULL);
-INIT_IFACE(Hashable, httpHeaderGetHash, httpHeaderHandleDouble);
-CREATE_CLASS(HttpHeader, NULL, IFACE(Class), IFACE(Hashable));
+TR_INIT_IFACE(TR_Class, httpHeaderCtor, httpHeaderDtor, NULL);
+TR_INIT_IFACE(Hashable, httpHeaderGetHash, httpHeaderHandleDouble);
+TR_CREATE_CLASS(HttpHeader, NULL, TR_IF(TR_Class), TR_IF(Hashable));
 
 // vim: set ts=4 sw=4:

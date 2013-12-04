@@ -24,18 +24,12 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "auth.h"
 #include "user.h"
 #include "uuid.h"
 #include "storage/storage.h"
 #include "application/application.h"
-
-#include "interface/serializable.h"
-#include "interface/indexable.h"
-
-#include "utils/memory.h"
-#include "commons.h"
 
 User
 applicationGetUser(Application this, Uuid uuid)
@@ -52,11 +46,11 @@ applicationGetUser(Application this, Uuid uuid)
 			&nuser_serialized);
 
 	if (NULL != user_serialized) {
-		unserialize(
+		TR_unserialize(
 				user,
 				(unsigned char *)user_serialized,
 				nuser_serialized);
-		MEM_FREE(user_serialized);
+		TR_MEM_FREE(user_serialized);
 	}
 
 	return user;

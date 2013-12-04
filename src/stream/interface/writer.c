@@ -20,22 +20,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
-
+#include "trbase.h"
 #include "stream/stream.h"
 #include "stream/interface/writer.h"
 
-const struct interface i_StreamWriter = {
-	"streamWriter",
-	1
-};
+TR_CREATE_INTERFACE(StreamWriter, 1);
+
 
 ssize_t
 streamWriterWrite(void * object, Stream st)
 {
 	ssize_t ret;
 
-	RETCALL(object, StreamWriter, write, ret, st);
+	TR_RETCALL(object, StreamWriter, write, ret, st);
 
 	return ret;
 }

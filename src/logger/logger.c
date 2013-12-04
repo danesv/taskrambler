@@ -22,7 +22,7 @@
 
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "logger/logger.h"
 #include "logger/interface/logger.h"
 
@@ -51,7 +51,7 @@ loggerCtor(void * _this, va_list * params)
 
 static void loggerDtor(void * _this) {}
 
-INIT_IFACE(Class, loggerCtor, loggerDtor, NULL);
-CREATE_CLASS(Logger, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, loggerCtor, loggerDtor, NULL);
+TR_CREATE_CLASS(Logger, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

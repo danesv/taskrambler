@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
+#include "trbase.h"
 #include "queue.h"
 
 void *
@@ -39,7 +39,7 @@ queueGet(Queue this)
 	if (this->first == this->last) {
 		this->last = NULL;
 	}
-	delete(this->first);
+	TR_delete(this->first);
 
 	this->next  = first;
 	this->first = first;

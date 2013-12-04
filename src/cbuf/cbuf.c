@@ -33,9 +33,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include "class.h"
-#include "utils/memory.h"
-
+#include "trbase.h"
 #include "cbuf.h"
 
 
@@ -53,15 +51,15 @@ cbufCtor(void * _this, va_list * params)
 	int    shm;
 	char * data;
 
-	this->shm_name = memMalloc(strlen(shm_name) + 7 + 2);
+	this->shm_name = TR_malloc(strlen(shm_name) + 7 + 2);
 	sprintf(this->shm_name, "/%06d_%s", getpid(), shm_name);
 
 	/**
 	 * align size at page boundary.
 	 * increase as neccessary
 	 */
-	size        = va_arg(*params, size_t);
-	size        = (0 >= size)? 1 : (0 != size%psize)? (size/psize)+1 : size/psize;
+	size = va_arg(*params, size_t);
+	size = (0 >= size)? 1 : (0 != size%psize)? (size/psize)+1 : size/psize;
 	this->bsize = psize * size;
 
 	while (-1 == state) {
@@ -110,7 +108,7 @@ cbufDtor(void * _this)
 {
 	Cbuf this = _this;
 
-	MEM_FREE(this->shm_name);
+	TR_MEM_FREE(this->shm_name);
 
 	if (NULL != this->data && MAP_FAILED != this->data) {
 		munmap(this->data, this->bsize << 1);
@@ -119,7 +117,7 @@ cbufDtor(void * _this)
 	this->data = NULL;
 }
 
-INIT_IFACE(Class, cbufCtor, cbufDtor, NULL);
-CREATE_CLASS(Cbuf, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, cbufCtor, cbufDtor, NULL);
+TR_CREATE_CLASS(Cbuf, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

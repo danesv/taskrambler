@@ -24,17 +24,15 @@
 #ifndef __HASH_INTERFACE_HASHABLE_H__
 #define __HASH_INTERFACE_HASHABLE_H__
 
-#include "class.h"
+#include "trbase.h"
 
 typedef unsigned long (* fptr_hashableGetHash)(void *);
 typedef void          (* fptr_hashableHandleDouble)(void *, void *);
 
-extern const struct interface i_Hashable;
-
-struct i_Hashable {
-	const struct interface * const _;
-	fptr_hashableGetHash           getHash;
-	fptr_hashableHandleDouble      handleDouble;
+TR_INTERFACE(Hashable) {
+	TR_IFID;
+	fptr_hashableGetHash      getHash;
+	fptr_hashableHandleDouble handleDouble;
 };
 
 extern unsigned long hashableGetHash(void *);

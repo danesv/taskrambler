@@ -25,11 +25,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "utils/hash.h"
-#include "utils/memory.h"
-#include "commons.h"
-
 #include "hash/value.h"
 #include "hash/interface/hashable.h"
 
@@ -45,14 +42,14 @@ hashValueCtor(void * _this, va_list * params)
 	value        = va_arg(* params, void*);
 	this->nvalue = va_arg(* params, size_t);
 
-	this->key = memMalloc(this->nkey + 1);
+	this->key = TR_malloc(this->nkey + 1);
 	this->key[this->nkey] = 0;
 	memcpy(this->key, key, this->nkey);
 
 	this->hash = sdbm((unsigned char *)this->key, this->nkey);
 
 	if (NULL != value) {
-		this->value = memMalloc(this->nvalue + 1);
+		this->value = TR_malloc(this->nvalue + 1);
 		((char*)this->value)[this->nvalue] = 0;
 		memcpy(this->value, value, this->nvalue);
 	}
@@ -66,8 +63,8 @@ hashValueDtor(void * _this)
 {
 	HashValue this = _this;
 
-	MEM_FREE(this->key);
-	MEM_FREE(this->value);
+	TR_MEM_FREE(this->key);
+	TR_MEM_FREE(this->value);
 }
 
 static
@@ -103,8 +100,8 @@ hashValueHandleDouble(void * _this, void * _double)
 	doub->nvalue = tmp_nvalue;
 }
 
-INIT_IFACE(Class, hashValueCtor, hashValueDtor, NULL);
-INIT_IFACE(Hashable, hashValueGetHash, hashValueHandleDouble);
-CREATE_CLASS(HashValue, NULL, IFACE(Class), IFACE(Hashable));
+TR_INIT_IFACE(TR_Class, hashValueCtor, hashValueDtor, NULL);
+TR_INIT_IFACE(Hashable, hashValueGetHash, hashValueHandleDouble);
+TR_CREATE_CLASS(HashValue, NULL, TR_IF(TR_Class), TR_IF(Hashable));
 
 // vim: set ts=4 sw=4:

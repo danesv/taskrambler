@@ -25,10 +25,9 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "storage/storage.h"
 
-#include "utils/memory.h"
 
 void
 storageGet(
@@ -36,7 +35,7 @@ storageGet(
 		char * _key, size_t nkey,
 		char ** data, size_t * ndata)
 {
-	char  * key      = memMalloc(nkey);
+	char  * key      = TR_malloc(nkey);
 	datum   gdbm_key = {key, nkey};
 	datum   value;
 
@@ -47,11 +46,11 @@ storageGet(
 
 	memcpy(key, _key, nkey);
 	value = gdbm_fetch(this->gdbm, gdbm_key);
-	MEM_FREE(key);
+	TR_MEM_FREE(key);
 
 	if (NULL != value.dptr) {
 		*ndata = value.dsize;
-		*data  = memMalloc(value.dsize);
+		*data  = TR_malloc(value.dsize);
 		memcpy(*data, value.dptr, value.dsize);
 
 		free(value.dptr);

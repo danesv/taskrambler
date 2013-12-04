@@ -27,13 +27,13 @@
 #include <sys/types.h>
 #include <user.h>
 
-#include "class.h"
+#include "trbase.h"
 
 // livetime of a session in seconds
 #define SESSION_LIVETIME	300 // 5 minutes
 
 
-CLASS(Session) {
+TR_CLASS(Session) {
 	char          id[37];
 	unsigned long hash;
 

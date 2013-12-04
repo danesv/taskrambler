@@ -22,12 +22,10 @@
 
 #define _GNU_SOURCE
 
-#include "class.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
 
-#include "utils/memory.h"
 
 char * controllerCurrentuserRead(Application, Session, Hash);
 

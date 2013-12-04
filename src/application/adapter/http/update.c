@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "trbase.h"
 #include "application/application.h"
 #include "application/adapter/http.h"
 #include "hash.h"
@@ -74,7 +75,7 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	nbuf = sprintf(buf, "sid=%s;Path=/", session->id);
 	queuePut(
 			worker->additional_headers, 
-			new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
+			TR_new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
 
 	worker->current_response = (HttpMessage)routerRoute(
 			this->router,

@@ -24,11 +24,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "class.h"
 #include "storage/storage.h"
 
-#include "utils/memory.h"
-#include "commons.h"
 
 int
 storageDelete(Storage this, char * _key, size_t nkey)

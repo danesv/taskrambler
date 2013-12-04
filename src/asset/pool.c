@@ -25,7 +25,7 @@
 
 // for strlen
 
-#include "class.h"
+#include "trbase.h"
 #include "asset.h"
 #include "hash.h"
 
@@ -36,7 +36,7 @@ inline
 void
 freeAsset(const void * _node)
 {
-	delete(_node);
+	TR_delete(_node);
 }
 
 Asset
@@ -45,13 +45,13 @@ assetPoolGet(const char * path, size_t npath)
 	Asset asset = NULL;
 
 	if (NULL == asset_pool) {
-		asset_pool = new(Hash);
+		asset_pool = TR_new(Hash);
 	} else {
 		asset = hashGet(asset_pool, path, npath);
 	}
 
 	if (NULL == asset) {
-		asset = new(Asset, path, npath);
+		asset = TR_new(Asset, path, npath);
 		if (NULL != asset) {
 			hashAdd(asset_pool, asset);
 		}
@@ -75,9 +75,11 @@ assetPoolRelease(Asset asset)
 				asset_pool, asset->fname, asset->nfname);
 
 		if (found == asset) {
-			delete(found);
+			TR_delete(found);
 		} else {
-			// this should never happen....error log...
+			/**
+			 * \todo this should never happen....error log...
+			 */
 		}
 	}
 
@@ -89,7 +91,7 @@ assetPoolCleanup(void)
 {
 	if (NULL != asset_pool) {
 		hashEach(asset_pool, freeAsset);
-		delete(asset_pool);
+		TR_delete(asset_pool);
 	}
 }
 

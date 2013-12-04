@@ -20,13 +20,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
+#include "trbase.h"
 #include "storage/storage.h"
 #include "auth.h"
 #include "uuid.h"
 #include "user.h"
-#include "commons.h"
-#include "utils/memory.h"
 
 static
 int
@@ -77,21 +75,21 @@ authStorageAuthenticate(void * _this, Credential cred, Uuid user_index)
 				CRED_PWD(cred).npass,
 				current_hash,
 				&found_hash)) {
-		MEM_FREE(found_hash);
+		TR_MEM_FREE(found_hash);
 		return FALSE;
 	}
 
 	if (0 != memcmp(current_hash, found_hash+SALT_SIZE, HASH_SIZE)) {
-		MEM_FREE(found_hash);
+		TR_MEM_FREE(found_hash);
 		return FALSE;
 	}
 
-	MEM_FREE(found_hash);
+	TR_MEM_FREE(found_hash);
 	return TRUE;
 }
 
-INIT_IFACE(Class, authStorageCtor, authStorageDtor, NULL);
-INIT_IFACE(Auth, authStorageAuthenticate);
-CREATE_CLASS(AuthStorage, NULL, IFACE(Class), IFACE(Auth));
+TR_INIT_IFACE(TR_Class, authStorageCtor, authStorageDtor, NULL);
+TR_INIT_IFACE(Auth, authStorageAuthenticate);
+TR_CREATE_CLASS(AuthStorage, NULL, TR_IF(TR_Class), TR_IF(Auth));
 
 // vim: set ts=4 sw=4:

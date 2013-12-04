@@ -27,15 +27,14 @@
 
 #include <sys/types.h>
 
+#include "trbase.h"
 #include "stream/stream.h"
 
 typedef ssize_t (* fptr_streamWriterWrite)(void *, Stream);
 
-extern const struct interface i_StreamWriter;
-
-struct i_StreamWriter {
-	const struct interface * const _;
-	fptr_streamWriterWrite         write;
+TR_INTERFACE(StreamWriter) {
+	TR_IFID;
+	fptr_streamWriterWrite write;
 };
 
 extern ssize_t streamWriterWrite(void *, Stream);

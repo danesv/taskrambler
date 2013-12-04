@@ -25,13 +25,13 @@
 #include <sys/types.h>
 #include <stdio.h>
 
+#include "trbase.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
 
-#include "utils/memory.h"
-
 #define RANDVAL_JSON	"{\"ctime\":%ld,\"vnext\":%ld,\"value\":\"%02d\"}"
+
 
 char *
 controllerRandvalRead(Application app, Session sess, Hash args)
@@ -49,7 +49,7 @@ controllerRandvalRead(Application app, Session sess, Hash args)
 			app->val->timestamp,
 			remaining,
 			app->val->value);
-	buffer  = memMalloc(nbuffer);
+	buffer  = TR_malloc(nbuffer);
 	sprintf(
 			buffer,
 			RANDVAL_JSON,

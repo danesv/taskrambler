@@ -24,13 +24,11 @@
 
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "router.h"
 #include "application/application.h"
 #include "application/adapter/http.h"
 
-#include "utils/memory.h"
-#include "interface/observer.h"
 
 static
 int
@@ -54,16 +52,16 @@ applicationAdapterHttpDtor(void * _this)
 void applicationAdapterHttpUpdate(void *, void *);
 
 
-INIT_IFACE(
-		Class,
+TR_INIT_IFACE(
+		TR_Class,
 		applicationAdapterHttpCtor,
 		applicationAdapterHttpDtor,
 		NULL);
-INIT_IFACE(Observer, applicationAdapterHttpUpdate);
-CREATE_CLASS(
+TR_INIT_IFACE(TR_Observer, applicationAdapterHttpUpdate);
+TR_CREATE_CLASS(
 		ApplicationAdapterHttp,
 		NULL, 
-		IFACE(Class),
-		IFACE(Observer));
+		TR_IF(TR_Class),
+		TR_IF(TR_Observer));
 
 // vim: set ts=4 sw=4:

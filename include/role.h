@@ -25,12 +25,12 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "ebac/permission.h"
 #include "storage/storage.h"
 
 
-CLASS(Role) {
+TR_CLASS(Role) {
 	char            id[37];
 	unsigned long   hash;
 

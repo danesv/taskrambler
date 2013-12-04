@@ -22,13 +22,12 @@
 
 #define _GNU_SOURCE
 
+#include "trbase.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
 #include "user.h"
 
-#include "utils/memory.h"
-#include "commons.h"
 
 char * controllerCurrentuserRead(Application, Session, Hash);
 int    _controllerUpdateUserFromArgs(Hash, User *);
@@ -49,7 +48,7 @@ controllerUserUpdate(
 	if (0 == uuidCompare(uuidZero, user_id)) {
 		return NULL;
 	}
-	delete(user_id);
+	TR_delete(user_id);
 
 	return controllerCurrentuserRead(application, session, NULL);
 }

@@ -24,14 +24,12 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "http/header.h"
 #include "http/parser.h"
 #include "http/message.h"
 #include "http/request.h"
 #include "hash.h"
-
-#include "utils/memory.h"
 
 void
 httpParserHeader(
@@ -57,7 +55,7 @@ httpParserHeader(
 	if (0 == strncasecmp("content-length", name, nname-1)) {
 		current->nbody = strtoul(value, NULL, 10);
 		if (0 < this->current->nbody) {
-			current->body  = memMalloc(current->nbody);
+			current->body  = TR_malloc(current->nbody);
 		}
 		current->dbody = 0;
 	}
@@ -91,7 +89,7 @@ httpParserHeader(
 			val  = (0 != nval)? eqsign+1 : NULL;
 
 			hashAdd(request->cookies,
-					new(HashValue, key, eqsign-key, val, nval));
+					TR_new(HashValue, key, eqsign-key, val, nval));
 
 			pair++;
 			togo -= (pair - eqsign);
@@ -99,7 +97,7 @@ httpParserHeader(
 	}
 
 	hashAdd(current->header,
-			new(HttpHeader, name, nname, value, lend - value));
+			TR_new(HttpHeader, name, nname, value, lend - value));
 }
 
 // vim: set ts=4 sw=4:

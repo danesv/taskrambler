@@ -25,9 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "class.h"
-#include "utils/memory.h"
-
+#include "trbase.h"
 #include "auth/credential.h"
 
 static
@@ -48,11 +46,11 @@ credentialCtor(void * _this, va_list * params)
 				pass                 = va_arg(* params, char*);
 				CRED_PWD(this).npass = va_arg(* params, size_t);
 
-				CRED_PWD(this).user  = memMalloc(CRED_PWD(this).nuser + 1);
+				CRED_PWD(this).user  = TR_malloc(CRED_PWD(this).nuser + 1);
 				CRED_PWD(this).user[CRED_PWD(this).nuser] = 0;
 				memcpy(CRED_PWD(this).user, user, CRED_PWD(this).nuser);
 
-				CRED_PWD(this).pass  = memMalloc(CRED_PWD(this).npass + 1);
+				CRED_PWD(this).pass  = TR_malloc(CRED_PWD(this).npass + 1);
 				CRED_PWD(this).pass[CRED_PWD(this).npass] = 0;
 				memcpy(CRED_PWD(this).pass, pass, CRED_PWD(this).npass);
 			}
@@ -73,13 +71,13 @@ credentialDtor(void * _this)
 
 	switch(this->type) {
 		case CRED_PASSWORD:
-			MEM_FREE(CRED_PWD(this).user);
-			MEM_FREE(CRED_PWD(this).pass);
+			TR_MEM_FREE(CRED_PWD(this).user);
+			TR_MEM_FREE(CRED_PWD(this).pass);
 			break;
 	}
 }
 
-INIT_IFACE(Class, credentialCtor, credentialDtor, NULL);
-CREATE_CLASS(Credential, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, credentialCtor, credentialDtor, NULL);
+TR_CREATE_CLASS(Credential, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

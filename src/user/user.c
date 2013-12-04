@@ -22,12 +22,7 @@
 
 #include "user.h"
 #include "uuid.h"
-#include "class.h"
-
-#include "interface/serializable.h"
-#include "interface/indexable.h"
-
-#include "utils/memory.h"
+#include "trbase.h"
 
 
 static
@@ -53,7 +48,7 @@ userCtor(void * _this, va_list * params)
 			nsurname + 1 +
 			4 * sizeof(size_t);
 
-		this->username = memMalloc(storage_size);
+		this->username = TR_malloc(storage_size);
 		memcpy(this->username, username, nusername);
 		this->username[nusername] = '\0';
 
@@ -92,7 +87,7 @@ userDtor(void * _this)
 	User this = _this;
 
 	if (NULL != this->username) {
-		MEM_FREE(this->username);
+		TR_MEM_FREE(this->username);
 	}
 }
 
@@ -112,7 +107,7 @@ userSerialize(
 		*this->nsurname + 1 + 
 		4 * sizeof(size_t); 
 
-	*serialized = memMalloc(*nserialized);
+	*serialized = TR_malloc(*nserialized);
 
 	memcpy(*serialized, this->username, *nserialized);
 }
@@ -127,7 +122,7 @@ userUnserialize(
 	User     this = _this;
 	size_t * user_data_sizes;
 
-	this->username = memMalloc(nserialized);
+	this->username = TR_malloc(nserialized);
 	memcpy(this->username, serialized, nserialized);
 
 	user_data_sizes =
@@ -144,10 +139,11 @@ userUnserialize(
 }
 
 static
-Uuid
-userIndexUuid(void * _this, Uuid namespace)
+void *
+userIndexUuid(void * _this, void * _namespace)
 {
-	User this = _this;
+	User this      = _this;
+	Uuid namespace = _namespace;
 
 	return uuidVersion3(
 			(unsigned char *)this->username,
@@ -156,9 +152,14 @@ userIndexUuid(void * _this, Uuid namespace)
 }
 
 
-INIT_IFACE(Class, userCtor, userDtor, NULL);
-INIT_IFACE(Serializable, userSerialize, userUnserialize);
-INIT_IFACE(Indexable, userIndexUuid);
-CREATE_CLASS(User, NULL, IFACE(Class), IFACE(Serializable), IFACE(Indexable));
+TR_INIT_IFACE(TR_Class, userCtor, userDtor, NULL);
+TR_INIT_IFACE(TR_Serializable, userSerialize, userUnserialize);
+TR_INIT_IFACE(TR_Indexable, userIndexUuid);
+TR_CREATE_CLASS(
+		User,
+		NULL,
+		TR_IF(TR_Class),
+		TR_IF(TR_Serializable),
+		TR_IF(TR_Indexable));
 
 // vim: set ts=4 sw=4:

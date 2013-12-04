@@ -24,11 +24,8 @@
 
 #include <sys/types.h>
 
-#include "class.h"
 #include "session.h"
 #include "application/application.h"
-
-#include "utils/memory.h"
 
 
 void

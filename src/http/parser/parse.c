@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "cbuf.h"
 #include "stream.h"
 #include "queue.h"
@@ -30,11 +30,6 @@
 #include "http/parser.h"
 #include "http/header.h"
 #include "http/interface/http_intro.h"
-
-#include "utils/memory.h"
-#include "commons.h"
-
-#define MIN(a,b)	((a)<(b)? (a) : (b))
 
 
 ssize_t
@@ -57,7 +52,7 @@ httpParserParse(void * _this, Stream st)
 
 	if (NULL != this->incomplete) {
 		cbufSetData(this->buffer, this->incomplete, this->isize);
-		MEM_FREE(this->incomplete);
+		TR_MEM_FREE(this->incomplete);
 	}
 
 	if (0 > (read = cbufRead(this->buffer, st))) {
@@ -84,7 +79,7 @@ httpParserParse(void * _this, Stream st)
 				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
 					if (! cbufIsEmpty(this->buffer)) {
 						this->isize      = this->buffer->bused;
-						this->incomplete = memMalloc(this->isize);
+						this->incomplete = TR_malloc(this->isize);
 						memcpy(this->incomplete,
 								cbufGetData(this->buffer, this->isize),
 								this->isize);
@@ -109,7 +104,7 @@ httpParserParse(void * _this, Stream st)
 				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
 					if (! cbufIsEmpty(this->buffer)) {
 						this->isize      = this->buffer->bused;
-						this->incomplete = memMalloc(this->isize);
+						this->incomplete = TR_malloc(this->isize);
 						memcpy(this->incomplete,
 								cbufGetData(this->buffer, this->isize),
 								this->isize);

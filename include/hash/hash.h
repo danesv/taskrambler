@@ -25,12 +25,12 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "tree.h"
 
 #define HASH_IS_EMPTY(h)	((h)->root)
 
-CLASS(Hash) {
+TR_CLASS(Hash) {
 	Tree root;
 };
 

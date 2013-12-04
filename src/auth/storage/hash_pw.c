@@ -25,10 +25,8 @@
 #include <openssl/evp.h>
 #include <openssl/rand.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "auth/storage.h"
-#include "utils/memory.h"
-#include "commons.h"
 
 /*
  * I have to hash the passwords, maybe this will move in
@@ -78,9 +76,9 @@ hash_pw(
 		unsigned char ** salt)
 {
 	if (NULL == *salt) {
-		*salt = memCalloc(SALT_SIZE, sizeof(unsigned char));
+		*salt = TR_calloc(SALT_SIZE, sizeof(unsigned char));
 		if (0 > RAND_pseudo_bytes(*salt, SALT_SIZE)) {
-			MEM_FREE(*salt);
+			TR_MEM_FREE(*salt);
 			return FALSE;
 		}
 	}
@@ -94,7 +92,7 @@ hash_pw(
 			EVP_sha512(),
 			HASH_SIZE,
 			hash)) {
-		MEM_FREE(*salt);
+		TR_MEM_FREE(*salt);
 		return FALSE;
 	}
 

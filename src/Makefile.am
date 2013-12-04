@@ -3,25 +3,18 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 
 TRUTILS = utils/hash.c \
-	  utils/memory.c \
 	  utils/http.c \
 	  utils/daemonize.c \
 	  utils/signalHandling.c \
 	  utils/mime_type.c
 
-TRBASESRC = interface/subject.c \
-	    interface/observer.c \
-	    interface/serializable.c \
-	    interface/indexable.c
-
-TRBASELIBS = class/libclass.la \
-	     cbuf/libcbuf.la \
-	     hash/libhash.la \
-	     queue/libqueue.la \
-	     logger/liblogger.la \
-	     tree/libtree.la \
-	     stream/libstream.la \
-	     uuid/libuuid.la
+TRCOMMONLIBS = cbuf/libcbuf.la \
+	       hash/libhash.la \
+	       queue/libqueue.la \
+	       logger/liblogger.la \
+	       tree/libtree.la \
+	       stream/libstream.la \
+	       uuid/libuuid.la
 
 TRHTTPSERVER = http/libhttp.la \
 	       asset/libasset.la \
@@ -36,21 +29,21 @@ TR = ./application/.libs/libapplication.a \
      ./config/.libs/libconfig.a \
      ./router/.libs/librouter.a
 
-TRLIBS = -ltrutils -ltrhttpserver -ltrbase
+TRLIBS = -ltrutils -ltrhttpserver -ltrcommon
 USEDLIBS = -lrt -lssl -lcrypto -lldap -lgdbm -luuid -ldl
 
 AM_CFLAGS += -I../include/
 
 bin_PROGRAMS = taskrambler
-lib_LTLIBRARIES = libtrutils.la libtrbase.la libtrhttpserver.la
+lib_LTLIBRARIES = libtrutils.la libtrcommon.la libtrhttpserver.la
 
 libtrutils_la_SOURCES = $(TRUTILS)
 libtrutils_la_CFLAGS  = $(AM_CFLAGS)
 libtrutils_la_LIBADD  =
 
-libtrbase_la_SOURCES = $(TRBASESRC)
-libtrbase_la_CFLAGS  = $(AM_CFLAGS)
-libtrbase_la_LIBADD  = $(TRBASELIBS)
+libtrcommon_la_SOURCES =
+libtrcommon_la_CFLAGS  = $(AM_CFLAGS)
+libtrcommon_la_LIBADD  = $(TRCOMMONLIBS)
 
 libtrhttpserver_la_SOURCES =
 libtrhttpserver_la_CFLAGS  = $(AM_CFLAGS)
@@ -62,6 +55,6 @@ taskrambler_LDADD   = $(TRLIBS) $(TR) $(USEDLIBS)
 taskrambler_LDFLAGS = -Wl,--export-dynamic \
 		      -Wl,--whole-archive,./application/.libs/libapplication.a,--no-whole-archive
 
-SUBDIRS = asset auth cbuf class hash queue http \
+SUBDIRS = asset auth cbuf hash queue http \
 	  logger server session socket stream tree application \
 	  storage user config router uuid

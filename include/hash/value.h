@@ -25,9 +25,9 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
-CLASS(HashValue) {
+TR_CLASS(HashValue) {
 	unsigned long hash;
 
 	char *        key;

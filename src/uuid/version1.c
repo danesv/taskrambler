@@ -23,13 +23,13 @@
 // for already available uuid functionality
 #include <uuid/uuid.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
 
 Uuid
 uuidVersion1()
 {
-	Uuid uuid = new(Uuid);
+	Uuid uuid = TR_new(Uuid);
 	uuid_generate((uuid->uuid).value);
 
 	return uuid;

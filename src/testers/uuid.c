@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <uuid/uuid.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
-
-#include "commons.h"
-#include "utils/memory.h"
 
 
 #define UUID_NS "4f947b70-6f9f-43b6-8dc1-1321977c8240"

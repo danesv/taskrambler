@@ -25,11 +25,10 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+#include "trbase.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
-
-#include "utils/memory.h"
 
 #define SESSION_JSON	"{\"id\":\"%s\",\"timeout\":%d,\"timeleft\":%ld}"
 
@@ -47,7 +46,7 @@ controllerSessinfoRead(
 			(NULL != session)? session->id : "",
 			(NULL != session)? SESSION_LIVETIME : 0,
 			(NULL != session)? session->livetime - time(NULL) : 0);
-	buffer  = memMalloc(nbuffer);
+	buffer  = TR_malloc(nbuffer);
 	sprintf(buffer, SESSION_JSON,
 			(NULL != session)? session->id : "",
 			(NULL != session)? SESSION_LIVETIME : 0,

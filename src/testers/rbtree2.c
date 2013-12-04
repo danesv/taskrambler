@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "class.h"
-#include "commons.h"
-#include "utils/memory.h"
-
+#include "tr_base.h"
 #include "tree.h"
 #include "utils/memory.h"
 
@@ -20,7 +17,7 @@ void
 freeNode(const void * data, const int depth)
 {
     printf("now free %d at %p\n", *(int*)data, data);
-    MEM_FREE(data);
+    TR_MEM_FREE(data);
 }
 
 void

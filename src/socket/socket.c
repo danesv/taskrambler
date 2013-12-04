@@ -26,7 +26,7 @@
 
 #include "socket.h"
 #include "logger.h"
-#include "class.h"
+#include "trbase.h"
 
 static
 int
@@ -72,7 +72,7 @@ socketDtor(void * _this)
 	}
 }
 
-INIT_IFACE(Class, socketCtor, socketDtor, NULL);
-CREATE_CLASS(Sock, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, socketCtor, socketDtor, NULL);
+TR_CREATE_CLASS(Sock, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

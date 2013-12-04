@@ -27,15 +27,15 @@
 #include <time.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "http/message.h"
 #include "session.h"
 #include "user.h"
 #include "asset.h"
 
 
-CLASS(HttpResponse) {
-	EXTENDS(HttpMessage);
+TR_CLASS(HttpResponse) {
+	TR_EXTENDS(HttpMessage);
 
 	unsigned int status;
 	char *       reason;

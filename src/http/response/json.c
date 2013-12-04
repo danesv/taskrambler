@@ -26,14 +26,11 @@
 #include <time.h>
 #include <sys/types.h>
 
-#include "class.h"
-
+#include "trbase.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
 #include "session.h"
-
-#include "utils/memory.h"
 #include "hash.h"
 
 HttpResponse
@@ -42,14 +39,17 @@ httpResponseJson(const char * body, size_t nbody)
 	HttpResponse response;
 	HttpMessage  message;
 
-	response = new(HttpResponse, "HTTP/1.1", 200, "OK");
+	response = TR_new(HttpResponse, "HTTP/1.1", 200, "OK");
 	message  = (HttpMessage)response;
 
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("Content-Type"), CSTRA("application/json")));
+			TR_new(
+				HttpHeader,
+				CSTRA("Content-Type"),
+				CSTRA("application/json")));
 
 	message->nbody = nbody;
-	message->body  = memMalloc(nbody);
+	message->body  = TR_malloc(nbody);
 	memcpy(message->body, body, nbody);
 
 	return response;

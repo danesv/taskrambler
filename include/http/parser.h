@@ -24,13 +24,12 @@
 #ifndef __HTTP_PARSER_H__
 #define __HTTP_PARSER_H__
 
-#include "class.h"
+#include "trbase.h"
 #include "http/message.h"
 #include "queue.h"
 #include "cbuf.h"
 #include "stream.h"
 
-#include "commons.h"
 
 #define PARSER_MAX_BUF	131072
 
@@ -44,7 +43,7 @@ typedef enum e_HttpMessageState {
 } HttpMessageState;
 
 
-CLASS(HttpParser) {
+TR_CLASS(HttpParser) {
 	Cbuf             buffer;
 	Bool             ourLock;
 

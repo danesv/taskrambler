@@ -28,9 +28,7 @@
 #include "http/request.h"
 #include "http/header.h"
 
-#include "utils/memory.h"
-
-#include "commons.h"
+#include "trbase.h"
 #include "hash.h"
 
 char

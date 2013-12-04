@@ -22,11 +22,9 @@
 
 #define _GNU_SOURCE
 
+#include "trbase.h"
 #include "hash.h"
 #include "user.h"
-
-#include "utils/memory.h"
-#include "commons.h"
 
 
 User
@@ -44,7 +42,7 @@ _controllerGetUserFromArgs(Hash args)
 		return FALSE;
 	}
 
-	return new(User,
+	return TR_new(User,
 			(char *)(email->value), email->nvalue,
 			(char *)(email->value), email->nvalue,
 			(char *)(firstname->value), firstname->nvalue,

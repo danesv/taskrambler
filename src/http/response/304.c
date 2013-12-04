@@ -22,13 +22,10 @@
 
 #include <sys/types.h>
 
-#include "class.h"
-
+#include "trbase.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
-
-#include "utils/memory.h"
 #include "hash.h"
 
 HttpResponse
@@ -40,18 +37,18 @@ httpResponse304(
 	HttpResponse response;
 	HttpMessage  message;
 
-	response = new(HttpResponse, "HTTP/1.1", 304, "Not Modified");
+	response = TR_new(HttpResponse, "HTTP/1.1", 304, "Not Modified");
 	message  = (HttpMessage)response;
 
 	message->nbody = 0;
 	message->body  = NULL;
 
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("Content-Type"), mime, nmime));
+			TR_new(HttpHeader, CSTRA("Content-Type"), mime, nmime));
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("ETag"), etag, netag));
+			TR_new(HttpHeader, CSTRA("ETag"), etag, netag));
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("Last-Modified"), mtime, nmtime));
+			TR_new(HttpHeader, CSTRA("Last-Modified"), mtime, nmtime));
 
 	return response;
 }

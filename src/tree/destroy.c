@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "trbase.h"
 #include "tree.h"
 
 void
@@ -48,7 +49,7 @@ treeDestroy(Tree * this, TreeAction action)
             action(node->data, depth);
             
             previous = node;
-			delete(node);
+			TR_delete(node);
             node = parent;
             depth--;
 

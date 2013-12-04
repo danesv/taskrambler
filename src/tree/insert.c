@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "trbase.h"
 #include "tree.h"
 
 void treeRotateLeft(Tree *, Tree);
@@ -40,7 +41,7 @@ treeInsert(Tree * this, const void * search, TreeComp comp)
 		 * if the root is NULL we simple add the element and set
 		 * node to it.
 		 */
-		*this = node = new_node = new(Tree, search);
+		*this = node = new_node = TR_new(Tree, search);
 	} else {
 		/*
 		 * first search for it and if its found return the data
@@ -78,11 +79,11 @@ treeInsert(Tree * this, const void * search, TreeComp comp)
 		 * as we have not found it now add a new element.
 		 */
 		if (0 < comparison) {
-			node->left = new(Tree, search);
+			node->left = TR_new(Tree, search);
 			TREE_LEFT(node)->parent = node;
 			node = new_node = TREE_LEFT(node);
 		} else {
-			node->right = new(Tree, search);
+			node->right = TR_new(Tree, search);
 			TREE_RIGHT(node)->parent = node;
 			node = new_node = TREE_RIGHT(node);
 		}

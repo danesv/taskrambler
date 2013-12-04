@@ -31,7 +31,7 @@
 
 #include <openssl/ssl.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "socket.h"
 #include "logger.h"
 #include "stream.h"
@@ -42,7 +42,7 @@ struct conns {
 	void * worker;
 };
 
-CLASS(Server) {
+TR_CLASS(Server) {
 	Logger          logger;
 	Sock            sock;
 	Sock            sockSSL;

@@ -27,7 +27,7 @@
 
 #include <openssl/sha.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "storage/storage.h"
 
 
@@ -35,7 +35,7 @@
 #define HASH_SIZE	SHA512_DIGEST_LENGTH
 
 
-CLASS(AuthStorage) {
+TR_CLASS(AuthStorage) {
 	Storage store;
 };
 

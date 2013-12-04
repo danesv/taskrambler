@@ -25,13 +25,10 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "http/cookie.h"
-
 #include "utils/hash.h"
-#include "utils/memory.h"
-#include "commons.h"
 
 
 static
@@ -46,11 +43,11 @@ httpCookieCtor(void * _this, va_list * params)
 	value        = va_arg(* params, char*);
 	this->nvalue = va_arg(* params, size_t);
 
-	this->key = memMalloc(this->nkey + 1);
+	this->key = TR_malloc(this->nkey + 1);
 	this->key[this->nkey] = 0;
 	memcpy(this->key, key, this->nkey);
 
-	this->value = memMalloc(this->nvalue + 1);
+	this->value = TR_malloc(this->nvalue + 1);
 	this->value[this->nvalue] = 0;
 	memcpy(this->value, value, this->nvalue);
 
@@ -65,10 +62,10 @@ httpCookieDtor(void * _this, va_list * params)
 {
 	HttpCookie this = _this;
 
-	MEM_FREE(this->key);
-	MEM_FREE(this->value);
-	MEM_FREE(this->domain);
-	MEM_FREE(this->path);
+	TR_MEM_FREE(this->key);
+	TR_MEM_FREE(this->value);
+	TR_MEM_FREE(this->domain);
+	TR_MEM_FREE(this->path);
 }
 
 static
@@ -97,8 +94,8 @@ httpCookieHandleDouble(void * _this, void * _double)
 }
 
 
-INIT_IFACE(Class, httpCookieCtor, httpCookieDtor, NULL);
-INIT_IFACE(Hashable, httpCookieGetHash, httpCookieHandleDouble);
-CREATE_CLASS(HttpCookie, NULL, IFACE(Class), IFACE(Hashable));
+TR_INIT_IFACE(TR_Class, httpCookieCtor, httpCookieDtor, NULL);
+TR_INIT_IFACE(Hashable, httpCookieGetHash, httpCookieHandleDouble);
+TR_CREATE_CLASS(HttpCookie, NULL, TR_IF(TR_Class), TR_IF(Hashable));
 
 // vim: set ts=4 sw=4:

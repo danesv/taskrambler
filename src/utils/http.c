@@ -30,9 +30,7 @@
 #include "http/request.h"
 #include "http/response.h"
 
-#include "class.h"
-
-#include "commons.h"
+#include "trbase.h"
 
 #define ALPHAVAL(x)     (tolower((x)) - 'a' + 0xa)
 #define DIGITVAL(x)     ((x) - '0')
@@ -130,14 +128,14 @@ httpGetMessage(
 		const char * part3, size_t len3)
 {
 	if (isHttpVersion(part1, len1)) {
-		return new(HttpResponse,
+		return TR_new(HttpResponse,
 				part1, len1,
 				strtoul(part2, NULL, 10),
 				part3, len3);
 	}
 
 	if (isHttpVersion(part3, len3)) {
-		return new(HttpRequest,
+		return TR_new(HttpRequest,
 				part1, len1,
 				part2, len2,
 				part3, len3);

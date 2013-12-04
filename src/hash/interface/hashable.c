@@ -24,36 +24,17 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash/interface/hashable.h"
 
-const struct interface i_Hashable = {
-	"hashable",
-	2
-};
+TR_CREATE_INTERFACE(Hashable, 2);
 
 unsigned long
 hashableGetHash(void * hashable)
 {
 	unsigned long ret;
 
-	//RETCALL(hashable, Hashable, getHash, ret);
-	do {
-		struct i_Hashable * iface;
-		//_CALL(GET_CLASS(hashable), Hashable, getHash);
-		do {
-			class_ptr class = GET_CLASS(hashable);
-			iface = (struct i_Hashable *)IFACE_GET(class, &i_Hashable);
-			while ((NULL == iface || NULL == iface->getHash) && HAS_PARENT(class)) {
-				class = class->parent;
-				iface = (struct i_Hashable *)IFACE_GET(class, &i_Hashable);
-			}
-			assert(NULL != iface->getHash);
-		} while(0);
-
-		ret = iface->getHash(hashable);
-	} while(0);
-
+	TR_RETCALL(hashable, Hashable, getHash, ret);
 
 	return ret;
 }
@@ -61,7 +42,7 @@ hashableGetHash(void * hashable)
 void
 hashableHandleDouble(void * hashable, void * new_hashable)
 {
-	CALL(hashable, Hashable, handleDouble, new_hashable);
+	TR_CALL(hashable, Hashable, handleDouble, new_hashable);
 }
 
 // vim: set ts=4 sw=4:

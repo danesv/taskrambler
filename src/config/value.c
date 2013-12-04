@@ -25,9 +25,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "config/value.h"
-#include "utils/memory.h"
 #include "utils/hash.h"
 
 static
@@ -53,7 +52,7 @@ configValueCtor(void * _this, va_list * params)
 			|| ('\'' == value[0] && '\'' == value[nvalue-1]))
 	{
 		this->type = CONFIG_VALUE_STRING;
-		(this->value).string = memMalloc(nvalue-1);
+		(this->value).string = TR_malloc(nvalue-1);
 		(this->value).string[nvalue-2] = '\0';
 		memcpy((this->value).string, value+1, nvalue-2);
 		this->nvalue = nvalue;
@@ -73,7 +72,7 @@ configValueDtor(void * _this)
 	ConfigValue this = _this;
 
 	if (CONFIG_VALUE_STRING == this->type) {
-		MEM_FREE((this->value).string);
+		TR_MEM_FREE((this->value).string);
 	}
 }
 
@@ -93,8 +92,8 @@ configValueHandleDouble(void * _this, void * _double)
 	/* right now I do nothing...but I could :D */
 }   
 
-INIT_IFACE(Class, configValueCtor, configValueDtor, NULL);
-INIT_IFACE(Hashable, configValueGetHash, configValueHandleDouble);
-CREATE_CLASS(ConfigValue, NULL, IFACE(Class), IFACE(Hashable));
+TR_INIT_IFACE(TR_Class, configValueCtor, configValueDtor, NULL);
+TR_INIT_IFACE(Hashable, configValueGetHash, configValueHandleDouble);
+TR_CREATE_CLASS(ConfigValue, NULL, TR_IF(TR_Class), TR_IF(Hashable));
 
 // vim: set ts=4 sw=4:

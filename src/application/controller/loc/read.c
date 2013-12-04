@@ -25,11 +25,10 @@
 #include <sys/types.h>
 #include <stdio.h>
 
+#include "trbase.h"
 #include "application/application.h"
 #include "hash.h"
 #include "session.h"
-
-#include "utils/memory.h"
 
 #define LOC_JSON	"{\"loc\":\"%s\"}"
 
@@ -40,7 +39,7 @@ controllerLocRead(Application app, Session sess, Hash args)
 	size_t   nbuffer;
 
 	nbuffer = snprintf(NULL, 0, LOC_JSON, app->loc? app->loc : "");
-	buffer  = memMalloc(nbuffer);
+	buffer  = TR_malloc(nbuffer);
 	sprintf(buffer, LOC_JSON, app->loc? app->loc : "");
 
 	return buffer;

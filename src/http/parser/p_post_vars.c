@@ -26,7 +26,7 @@
 #include "http/parser.h"
 #include "http/request.h"
 #include "hash.h"
-#include "class.h"
+#include "trbase.h"
 
 #include "utils/http.h"
 
@@ -64,7 +64,7 @@ httpParserPostVars(HttpParser this)
 		nvalue = urldecode(value, nvalue);
 
 		hashAdd(request->post,
-				new(HashValue, key, eqsign-key, value, nvalue));
+				TR_new(HashValue, key, eqsign-key, value, nvalue));
 
 		pair++;
 		togo -= (pair - eqsign);

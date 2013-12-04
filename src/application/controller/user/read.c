@@ -25,12 +25,10 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
-
-#include "utils/memory.h"
 
 
 #define USER_JSON \
@@ -49,7 +47,7 @@ controllerUserRead(Application app, Session sess, Hash args)
 			user->email,
 			user->firstname,
 			user->surname);
-	buffer  = memMalloc(nbuffer);
+	buffer  = TR_malloc(nbuffer);
 	nbuffer = sprintf(buffer, USER_JSON,
 			user->email,
 			user->firstname,

@@ -24,13 +24,12 @@
 
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "uuid.h"
 #include "application/application.h"
 #include "storage/storage.h"
 
-#include "utils/memory.h"
 #include "config.h"
 
 static
@@ -57,9 +56,9 @@ applicationCtor(void * _this, va_list * params)
 
 	this->auth = va_arg(*params, void *);
 
-	this->active_sessions = memCalloc(SESSION_LIVETIME, sizeof(Hash));
+	this->active_sessions = TR_calloc(SESSION_LIVETIME, sizeof(Hash));
 	for (i=0; i<SESSION_LIVETIME; i++) {
-		this->active_sessions[i] = new(Hash);
+		this->active_sessions[i] = TR_new(Hash);
 	}
 
 	this->version = VERSION;
@@ -75,18 +74,18 @@ applicationDtor(void * _this)
 	Application this = _this;
 	size_t      i;
 
-	delete(this->user_namespace);
+	TR_delete(this->user_namespace);
 
 	for (i=0; i<SESSION_LIVETIME; i++) {
-		delete(this->active_sessions[i]);
+		TR_delete(this->active_sessions[i]);
 	}
 
-	MEM_FREE(this->active_sessions);
-	MEM_FREE(this->auth);
+	TR_MEM_FREE(this->active_sessions);
+	TR_MEM_FREE(this->auth);
 }
 
 
-INIT_IFACE(Class, applicationCtor, applicationDtor, NULL);
-CREATE_CLASS(Application, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, applicationCtor, applicationDtor, NULL);
+TR_CREATE_CLASS(Application, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

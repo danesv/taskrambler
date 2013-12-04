@@ -23,7 +23,7 @@
 #include <stdarg.h>
 #include <openssl/ssl.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "stream/stream.h"
 
 
@@ -56,7 +56,7 @@ streamDtor(void * _this)
 {
 }
 
-INIT_IFACE(Class, streamCtor, streamDtor, NULL);
-CREATE_CLASS(Stream, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, streamCtor, streamDtor, NULL);
+TR_CREATE_CLASS(Stream, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

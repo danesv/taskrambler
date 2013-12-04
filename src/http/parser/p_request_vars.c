@@ -24,12 +24,10 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "trbase.h"
 #include "http/parser.h"
 #include "http/request.h"
 #include "hash.h"
-#include "class.h"
-
-#include "utils/memory.h"
 
 void
 httpParserRequestVars(HttpParser this)
@@ -41,7 +39,7 @@ httpParserRequestVars(HttpParser this)
 		delim = request->uri + strlen(request->uri);
 	}
 
-	request->path = memMalloc(delim - request->uri + 1);
+	request->path = TR_malloc(delim - request->uri + 1);
 	request->path[delim - request->uri] = 0;
 	memcpy(request->path, request->uri, delim - request->uri);
 
@@ -65,7 +63,7 @@ httpParserRequestVars(HttpParser this)
 		value  = (0 != nvalue)? eqsign+1 : NULL;
 
 		hashAdd(request->get,
-				new(HashValue, key, eqsign-key, value, nvalue));
+				TR_new(HashValue, key, eqsign-key, value, nvalue));
 	}
 }
 

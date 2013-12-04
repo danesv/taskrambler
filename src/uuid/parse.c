@@ -23,13 +23,13 @@
 // for already available uuid functionality
 #include <uuid/uuid.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
 
 Uuid
 uuidParse(const UuidString uuid_str)
 {
-	Uuid uuid = new(Uuid);
+	Uuid uuid = TR_new(Uuid);
 	uuid_parse(uuid_str, (uuid->uuid).value);
 
 	return uuid;

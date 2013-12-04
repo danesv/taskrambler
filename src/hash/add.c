@@ -23,7 +23,6 @@
 #include <search.h>
 
 #include "hash.h"
-#include "class.h"
 
 static
 inline
@@ -55,7 +54,7 @@ hashAdd(Hash this, void * operand)
 
 	if (operand != found) {
 		hashableHandleDouble(found, operand);
-		delete(operand);
+		TR_delete(operand);
 	}
 
 	return found;

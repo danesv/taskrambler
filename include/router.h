@@ -33,7 +33,7 @@
 
 #include <dlfcn.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "session.h"
 #include "http/request.h"
@@ -42,7 +42,7 @@
 
 typedef char * (* fptr_routable)(Application, Session, Hash);
 
-CLASS(Router) {
+TR_CLASS(Router) {
 	Hash        functions;
 	Application application;
 

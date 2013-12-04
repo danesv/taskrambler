@@ -22,7 +22,7 @@
 
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "queue.h"
 
 static
@@ -41,13 +41,13 @@ queueDtor(void * _this)
 	
 	while (NULL != node) {
 		Queue next = node->next;
-		delete(node->msg);
-		delete(node);
+		TR_delete(node->msg);
+		TR_delete(node);
 		node = next;
 	}
 }
 
-INIT_IFACE(Class, queueCtor, queueDtor, NULL);
-CREATE_CLASS(Queue, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, queueCtor, queueDtor, NULL);
+TR_CREATE_CLASS(Queue, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

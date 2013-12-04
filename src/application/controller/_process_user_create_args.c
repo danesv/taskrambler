@@ -22,12 +22,11 @@
 
 #define _GNU_SOURCE
 
+#include "trbase.h"
 #include "hash.h"
 #include "user.h"
 #include "auth/credential.h"
 
-#include "utils/memory.h"
-#include "commons.h"
 
 User       _controllerGetUserFromArgs(Hash args);
 Credential _controllerGetCredentialFromArgs(Hash args);
@@ -39,8 +38,8 @@ _controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
 	*cred = _controllerGetCredentialFromArgs(args);
 	
 	if (NULL == *user || NULL == *cred) {   
-		delete(*user);
-		delete(*cred);
+		TR_delete(*user);
+		TR_delete(*cred);
 
 		return FALSE;
 	}

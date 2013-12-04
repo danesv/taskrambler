@@ -34,16 +34,13 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "stream.h"
-
-#include "commons.h"
-#include "utils/memory.h"
 
 #define ECBUFOVFL		100
 
 
-CLASS(Cbuf) {
+TR_CLASS(Cbuf) {
 	char * shm_name;  // shared memory identifier
 
 	char * data;

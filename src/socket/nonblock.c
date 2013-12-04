@@ -25,7 +25,6 @@
 #include <fcntl.h>
 
 #include "socket.h"
-#include "class.h"
 #include "logger.h"
 
 void

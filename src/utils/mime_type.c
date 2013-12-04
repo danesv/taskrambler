@@ -27,11 +27,8 @@
 
 // for fopen
 #include <stdio.h>
-
 #include "hash.h"
-
-#include "class.h"
-#include "commons.h"
+#include "trbase.h"
 
 Hash mime_types = NULL;
 
@@ -45,7 +42,7 @@ readMimeTypes(void)
 			char buffer[512];
 
 			buffer[511] = '\0';
-			mime_types  = new(Hash);
+			mime_types  = TR_new(Hash);
 
 			while (NULL != fgets(buffer, 511, handle)) {
 				char * tmp;
@@ -72,7 +69,7 @@ readMimeTypes(void)
 				}   
 
 				hashAdd(mime_types,
-						new(HashValue, key, nkey, value, nvalue));
+						TR_new(HashValue, key, nkey, value, nvalue));
 			}           
 
 			fclose(handle);
@@ -105,7 +102,7 @@ getMimeType(const char * ext, size_t len)
 void
 clearMimeTypes(void)
 {
-	delete(mime_types);
+	TR_delete(mime_types);
 }
 
 // vim: set ts=4 sw=4:

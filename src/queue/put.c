@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
+#include "trbase.h"
 #include "queue.h"
 
 void
@@ -28,7 +28,7 @@ queuePut(Queue this, void * msg)
 {
 	Queue node = (this->last)? this->last : this;
 
-	node->next = new(Queue);
+	node->next = TR_new(Queue);
 	this->last = node->next;
 
 	if (node == this) {

@@ -23,14 +23,14 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
+#include "trbase.h"
 #include "hash.h"
-#include "class.h"
 #include "config/value.h"
 
 #define MAX_CONFIG_LINE		256
 
 
-CLASS(Config) {
+TR_CLASS(Config) {
 	char * cnf_file;
 	Hash   config;
 };

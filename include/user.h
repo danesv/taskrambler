@@ -25,12 +25,11 @@
 
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
 #include "auth.h"
-#include "storage/storage.h"
 
-CLASS(User) {
+TR_CLASS(User) {
 	unsigned long hash;
 	AuthModule    auth_type;
 

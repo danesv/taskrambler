@@ -24,8 +24,8 @@
 
 #include <stdarg.h>
 
+#include "trbase.h"
 #include "tree.h"
-#include "class.h"
 
 static
 int
@@ -48,7 +48,7 @@ treeDtor(void * _this)
 {
 }
 
-INIT_IFACE(Class, treeCtor, treeDtor, NULL);
-CREATE_CLASS(Tree, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, treeCtor, treeDtor, NULL);
+TR_CREATE_CLASS(Tree, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

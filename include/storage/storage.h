@@ -26,7 +26,7 @@
 #include <gdbm.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
 
 typedef enum e_StoragePutResults {
@@ -37,7 +37,7 @@ typedef enum e_StoragePutResults {
 } StoragePutResult;
 
 
-CLASS(Storage) {
+TR_CLASS(Storage) {
 	GDBM_FILE   gdbm;
 	char      * db_name;
 };

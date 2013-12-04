@@ -26,16 +26,14 @@
 
 #include <stdarg.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "logger.h"
 
 typedef void (* fptr_log)(void *, logger_level, const char * const);
 
-extern const struct interface i_Logger;
-
-struct i_Logger {
-	const struct interface * const _;
-	fptr_log                       log;
+TR_INTERFACE(Logger) {
+	TR_IFID;
+	fptr_log log;
 };
 
 extern void loggerLog(void *, logger_level, const char * const, ...);

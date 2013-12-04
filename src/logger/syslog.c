@@ -22,6 +22,7 @@
 
 #include <syslog.h>
 
+#include "trbase.h"
 #include "logger/logger.h"
 #include "logger/interface/logger.h"
 
@@ -45,7 +46,7 @@ logSyslog(void * this, logger_level level, const char * const msg)
     syslog(syslog_priority[level], "[%s] %s", logger_level_str[level], msg);
 }
 
-INIT_IFACE(Logger, logSyslog);
-CREATE_CLASS(LoggerSyslog, Logger, IFACE(Logger));
+TR_INIT_IFACE(Logger, logSyslog);
+TR_CREATE_CLASS(LoggerSyslog, Logger, TR_IF(Logger));
 
 // vim: set ts=4 sw=4:

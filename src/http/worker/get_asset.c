@@ -23,13 +23,12 @@
 #include <sys/types.h>
 #include <time.h>
 
+#include "trbase.h"
 #include "http/header.h"
 #include "http/message.h"
 #include "http/request.h"
 #include "http/response.h"
 #include "http/worker.h"
-
-#include "utils/memory.h"
 #include "hash.h"
 
 HttpMessage
@@ -76,7 +75,7 @@ httpWorkerGetAsset(HttpWorker this, const char * fname)
 				message->asset->etag, message->asset->netag,
 				message->asset->mtime, message->asset->nmtime);
 
-		delete(message);
+		TR_delete(message);
 
 		return new_message;
 	}   

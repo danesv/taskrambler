@@ -20,20 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "class.h"
+#include "trbase.h"
 #include "http/interface/http_intro.h"
 
-const struct interface i_HttpIntro = {
-	"httpIntro",
-	2
-};
+TR_CREATE_INTERFACE(HttpIntro, 2);
 
 size_t
 httpIntroSizeGet(void * object)
 {
 	size_t ret;
 
-	RETCALL(object, HttpIntro, sizeGet, ret);
+	TR_RETCALL(object, HttpIntro, sizeGet, ret);
 
 	return ret;
 }
@@ -43,7 +40,7 @@ httpIntroToString(void * object, char * string)
 {
 	char * ret;
 
-	RETCALL(object, HttpIntro, toString, ret, string);
+	TR_RETCALL(object, HttpIntro, toString, ret, string);
 
 	return ret;
 }

@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 
+#include "trbase.h"
 #include "logger/logger.h"
 #include "logger/interface/logger.h"
 
@@ -32,7 +33,7 @@ logStderr(void * this, logger_level level, const char * const msg)
 	fprintf(stderr, "[%s] %s\n", logger_level_str[level], msg);
 }
 
-INIT_IFACE(Logger, logStderr);
-CREATE_CLASS(LoggerStderr, Logger, IFACE(Logger));
+TR_INIT_IFACE(Logger, logStderr);
+TR_CREATE_CLASS(LoggerStderr, Logger, TR_IF(Logger));
 
 // vim: set ts=4 sw=4:

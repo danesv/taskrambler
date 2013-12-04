@@ -23,7 +23,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
 
 
@@ -50,10 +50,10 @@ uuidClone(void * _this, void * _base)
 	memcpy((this->uuid).value, (base->uuid).value, 16);
 }
 
-INIT_IFACE(Class, uuidCtor, uuidDtor, uuidClone);
-CREATE_CLASS(Uuid, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, uuidCtor, uuidDtor, uuidClone);
+TR_CREATE_CLASS(Uuid, NULL, TR_IF(TR_Class));
 
-INSTANCE(Uuid, uuidZero) {
+TR_INSTANCE(Uuid, uuidZero) {
 	.uuid.value = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 }};
 

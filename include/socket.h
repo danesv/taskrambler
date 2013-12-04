@@ -27,10 +27,10 @@
 
 #include <arpa/inet.h>  // for in_port_t
 
-#include "class.h"
+#include "trbase.h"
 #include "logger.h"
 
-CLASS(Sock) {
+TR_CLASS(Sock) {
 	Logger             log;
 	in_port_t          port;
 	struct sockaddr_in addr;

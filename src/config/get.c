@@ -22,7 +22,6 @@
 
 #include <sys/types.h>
 
-#include "class.h"
 #include "hash/hash.h"
 #include "config/config.h"
 #include "config/value.h"

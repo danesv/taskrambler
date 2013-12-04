@@ -24,7 +24,7 @@
 #ifndef __HTTP_REQUEST_H__
 #define __HTTP_REQUEST_H__
 
-#include "class.h"
+#include "trbase.h"
 #include "http/message.h"
 #include "hash.h"
 
@@ -43,8 +43,8 @@ typedef enum e_HttpMethod {
 	HTTP_CONNECT
 } HttpMethod;
 
-CLASS(HttpRequest) {
-	EXTENDS(HttpMessage);
+TR_CLASS(HttpRequest) {
+	TR_EXTENDS(HttpMessage);
 
 	char *     method;
 	char *     uri;

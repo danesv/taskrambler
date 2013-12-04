@@ -23,11 +23,10 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "auth.h"
 #include "auth/ldap.h"
 #include "auth/storage.h"
-#include "commons.h"
 
 int
 authCreate(Auth this, AuthModule module, ...)
@@ -35,18 +34,18 @@ authCreate(Auth this, AuthModule module, ...)
 	va_list params;
 
 	if (NULL != this->auth[module]) {
-		delete(this->auth[module]);
+		TR_delete(this->auth[module]);
 	}
 
 	va_start(params, module);
 
 	switch (module) {
 		case AUTH_LDAP:
-			this->auth[module] = newParams(AuthLdap, &params);
+			this->auth[module] = TR_newv(AuthLdap, &params);
 			break;
 
 		case AUTH_STORAGE:
-			this->auth[module] = newParams(AuthStorage, &params);
+			this->auth[module] = TR_newv(AuthStorage, &params);
 			break;
 	}
 

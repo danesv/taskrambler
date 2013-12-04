@@ -26,9 +26,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include "class.h"
-#include "utils/memory.h"
-
+#include "trbase.h"
 #include "http/response.h"
 #include "http/interface/http_intro.h"
 
@@ -40,12 +38,12 @@ httpResponseCtor(void * _this, va_list * params)
 	HttpResponse this = _this;
 	char * reason;
 
-	PARENTCALL(_this, Class, ctor, params);
+	TR_PARENTCALL(_this, TR_Class, ctor, params);
 
 	this->status = va_arg(* params, unsigned int);
 	reason       = va_arg(* params, char *);
 
-	this->reason = memCalloc(1, strlen(reason)+1);
+	this->reason = TR_calloc(1, strlen(reason)+1);
 	strcpy(this->reason, reason);
 
 	return 0;
@@ -57,9 +55,9 @@ httpResponseDtor(void * _this)
 {
 	HttpResponse this = _this;
 
-	MEM_FREE(this->reason);
+	TR_MEM_FREE(this->reason);
 
-	PARENTCALL(_this, Class, dtor);
+	TR_PARENTCALL(_this, TR_Class, dtor);
 } 
 
 static
@@ -98,12 +96,12 @@ toString(void * _this, char * string)
 	return string;
 }
 
-INIT_IFACE(Class, httpResponseCtor, httpResponseDtor, NULL);
-INIT_IFACE(HttpIntro, sizeGet, toString);
-CREATE_CLASS(
+TR_INIT_IFACE(TR_Class, httpResponseCtor, httpResponseDtor, NULL);
+TR_INIT_IFACE(HttpIntro, sizeGet, toString);
+TR_CREATE_CLASS(
 		HttpResponse,
 		HttpMessage,
-		IFACE(Class),
-		IFACE(HttpIntro));
+		TR_IF(TR_Class),
+		TR_IF(HttpIntro));
 
 // vim: set ts=4 sw=4:

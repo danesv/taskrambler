@@ -28,15 +28,15 @@
 
 #include <sys/types.h>
 
+#include "trbase.h"
+
 typedef size_t (* fptr_httpIntroSizeGet)(void *);
 typedef char * (* fptr_httpIntroToString)(void *, char *);
 
-extern const struct interface i_HttpIntro;
-
-struct i_HttpIntro {
-	const struct interface * const _;
-	fptr_httpIntroSizeGet    sizeGet;
-	fptr_httpIntroToString   toString;
+TR_INTERFACE(HttpIntro) {
+	TR_IFID;
+	fptr_httpIntroSizeGet  sizeGet;
+	fptr_httpIntroToString toString;
 };
 
 extern size_t httpIntroSizeGet(void *);

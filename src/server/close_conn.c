@@ -23,8 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "trbase.h"
 #include "server.h"
-#include "class.h"
 #include "stream.h"
 
 void
@@ -33,8 +33,8 @@ serverCloseConn(Server this, unsigned int i)
 	int    fd = (this->fds)[i].fd;
 	Stream st = (this->conns[fd]).stream;
 
-	delete((this->conns)[fd].sock);
-	delete((this->conns)[fd].worker);
+	TR_delete((this->conns)[fd].sock);
+	TR_delete((this->conns)[fd].worker);
 
 	if (NULL != st && STREAM_SSL == st->type) {
 		SSL_shutdown((st->handle).ssl);
@@ -42,7 +42,7 @@ serverCloseConn(Server this, unsigned int i)
 		(st->handle).ssl = NULL;
 	}
 
-	delete(st);
+	TR_delete(st);
 
 	memset(&(this->fds[i]), 0, sizeof(struct pollfd));
 }

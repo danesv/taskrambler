@@ -18,8 +18,9 @@ AC_CONFIG_MACRO_DIR([m4])
 m4_include([m4/gcov.m4])
 AC_TDD_GCOV
 
-m4_include([m4/memopt.m4])
-AC_MEM_OPT
+m4_include([m4/trlibs.m4])
+AC_TRLIBS_ROOT
+AC_NEED_TRBASE
 
 PWD=$(/bin/pwd)
 AC_SUBST(PWD)
@@ -86,7 +87,6 @@ AC_CONFIG_FILES([Makefile
 		 src/asset/Makefile
 		 src/auth/Makefile
 		 src/cbuf/Makefile
-		 src/class/Makefile
 		 src/hash/Makefile
 		 src/queue/Makefile
 		 src/http/Makefile

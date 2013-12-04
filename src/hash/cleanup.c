@@ -21,14 +21,14 @@
  */
 
 #include "hash/hash.h"
-#include "class.h"
+#include "trbase.h"
 
 static
 inline
 void
 tDelete(const void * node, const int depth)
 {
-	delete(node);
+	TR_delete(node);
 }
 
 void

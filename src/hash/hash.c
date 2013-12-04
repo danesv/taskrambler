@@ -26,7 +26,7 @@
 #include <stdarg.h>
 
 #include "hash/hash.h"
-#include "class.h"
+#include "trbase.h"
 
 static
 int
@@ -40,7 +40,7 @@ inline
 void
 tDelete(const void * node, const int depth)
 {
-	delete(node);
+	TR_delete(node);
 }
 
 static
@@ -52,7 +52,7 @@ hashDtor(void * _this)
 	hashCleanup(this);
 }
 
-INIT_IFACE(Class, hashCtor, hashDtor, NULL);
-CREATE_CLASS(Hash, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, hashCtor, hashDtor, NULL);
+TR_CREATE_CLASS(Hash, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

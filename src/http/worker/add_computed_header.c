@@ -22,15 +22,10 @@
 
 #include <sys/types.h>
 
-#include "class.h"
-
 #include "http/message.h"
 #include "http/header.h"
 #include "http/worker.h"
-
 #include "queue.h"
-
-#include "utils/memory.h"
 
 
 void

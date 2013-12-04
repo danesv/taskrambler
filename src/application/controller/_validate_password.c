@@ -20,11 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "trbase.h"
 #include "hash.h"
 #include "auth/credential.h"
 
-#include "utils/memory.h"
-#include "commons.h"
 
 int
 _controllerValidatePassword(

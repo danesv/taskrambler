@@ -25,12 +25,10 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "http/interface/http_intro.h"
-
 #include "http/request.h"
-#include "utils/memory.h"
 
 
 static
@@ -46,31 +44,31 @@ httpRequestCtor(void * _this, va_list * params)
 	uri    = va_arg(* params, char *);
 	ulen   = va_arg(* params, size_t);
 
-	PARENTCALL(_this, Class, ctor, params);
+	TR_PARENTCALL(_this, TR_Class, ctor, params);
 
-	this->method       = memMalloc(mlen + 1);
+	this->method       = TR_malloc(mlen + 1);
 	this->method[mlen] = 0;
 	memcpy(this->method, method, mlen);
 
-	this->uri       = memMalloc(ulen + 1);
+	this->uri       = TR_malloc(ulen + 1);
 	this->uri[ulen] = 0;
 	memcpy(this->uri, uri, ulen);
 
 	this->method_id = httpRequestGetMethodId(this);
 
 	if (-1 == this->method_id) {
-		MEM_FREE(this->uri);
-		MEM_FREE(this->method);
-		MEM_FREE(this->path); /** \todo looks like path is not used at all */
+		TR_MEM_FREE(this->uri);
+		TR_MEM_FREE(this->method);
+		TR_MEM_FREE(this->path); /** \todo looks like path is not used at all */
 
-		PARENTCALL(_this, Class, dtor);
+		TR_PARENTCALL(_this, TR_Class, dtor);
 
 		return -1;
 	}
 
-	this->get     = new(Hash);
-	this->post    = new(Hash);
-	this->cookies = new(Hash);
+	this->get     = TR_new(Hash);
+	this->post    = TR_new(Hash);
+	this->cookies = TR_new(Hash);
 
 	return 0;
 }
@@ -81,15 +79,15 @@ httpRequestDtor(void * _this)
 {
 	HttpRequest this = _this;
 
-	delete(this->get);
-	delete(this->post);
-	delete(this->cookies);
+	TR_delete(this->get);
+	TR_delete(this->post);
+	TR_delete(this->cookies);
 
-	MEM_FREE(this->uri);
-	MEM_FREE(this->method);
-	MEM_FREE(this->path);
+	TR_MEM_FREE(this->uri);
+	TR_MEM_FREE(this->method);
+	TR_MEM_FREE(this->path);
 
-	PARENTCALL(_this, Class, dtor);
+	TR_PARENTCALL(_this, TR_Class, dtor);
 } 
 
 static
@@ -128,11 +126,11 @@ toString(void * _this, char * string)
 	return string;
 }
 
-INIT_IFACE(Class, httpRequestCtor, httpRequestDtor, NULL);
-INIT_IFACE(HttpIntro, sizeGet, toString);
-CREATE_CLASS(HttpRequest,
+TR_INIT_IFACE(TR_Class, httpRequestCtor, httpRequestDtor, NULL);
+TR_INIT_IFACE(HttpIntro, sizeGet, toString);
+TR_CREATE_CLASS(HttpRequest,
 		HttpMessage,
-		IFACE(Class),
-		IFACE(HttpIntro));
+		TR_IF(TR_Class),
+		TR_IF(HttpIntro));
 
 // vim: set ts=4 sw=4:

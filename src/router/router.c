@@ -25,7 +25,7 @@
 // for dlopen, dlsym
 #include <dlfcn.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "router.h"
 #include "hash.h"
 #include "application/application.h"
@@ -39,7 +39,7 @@ routerCtor(void * _this, va_list * params)
 	Router this = _this;
 
 	this->application = va_arg(*params, Application);
-	this->functions   = new(Hash);
+	this->functions   = TR_new(Hash);
 	this->handle      = dlopen(NULL, RTLD_LAZY);
 	this->prefix      = PREFIX;
 	this->nprefix     = sizeof(PREFIX) - 1;
@@ -56,11 +56,11 @@ void
 routerDtor(void * _this) {
 	Router this = _this;
 
-	delete(this->functions);
+	TR_delete(this->functions);
 	dlclose(this->handle);
 }
 
-INIT_IFACE(Class, routerCtor, routerDtor, NULL);
-CREATE_CLASS(Router, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, routerCtor, routerDtor, NULL);
+TR_CREATE_CLASS(Router, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

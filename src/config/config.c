@@ -26,10 +26,9 @@
 #include <ctype.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "config/config.h"
 #include "config/value.h"
-#include "utils/memory.h"
 
 static
 int
@@ -42,17 +41,17 @@ configCtor(void * _this, va_list * params)
 	char   * cnf_file  = va_arg(*params, char *);
 	size_t   ncnf_file = strlen(cnf_file);
 
-	this->cnf_file = memMalloc(ncnf_file + 1);
+	this->cnf_file = TR_malloc(ncnf_file + 1);
 	memcpy(this->cnf_file, cnf_file, ncnf_file);
 	this->cnf_file[ncnf_file] = '\0';
 
 	handle = fopen(this->cnf_file, "r");
 	if (NULL == handle) {
-		MEM_FREE(this->cnf_file);
+		TR_MEM_FREE(this->cnf_file);
 		return -1;
 	}
 
-	this->config = new(Hash);
+	this->config = TR_new(Hash);
 
 	line[MAX_CONFIG_LINE] = '\0';
 
@@ -99,7 +98,7 @@ configCtor(void * _this, va_list * params)
 		if (0 != nkey && 0 != nvalue) {
 			hashAdd(
 					this->config,
-					new(ConfigValue, key, nkey, value, nvalue));
+					TR_new(ConfigValue, key, nkey, value, nvalue));
 		}
 	}
 
@@ -108,15 +107,16 @@ configCtor(void * _this, va_list * params)
 	return 0;
 }
 
-static void configDtor(void * _this)
+static
+void configDtor(void * _this)
 {
 	Config this = _this;
 
-	MEM_FREE(this->cnf_file);
-	delete(this->config);
+	TR_MEM_FREE(this->cnf_file);
+	TR_delete(this->config);
 }
 
-INIT_IFACE(Class, configCtor, configDtor, NULL);
-CREATE_CLASS(Config, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, configCtor, configDtor, NULL);
+TR_CREATE_CLASS(Config, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

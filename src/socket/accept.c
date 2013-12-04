@@ -24,8 +24,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "trbase.h"
 #include "socket.h"
-#include "class.h"
 #include "logger.h"
 
 Sock
@@ -37,7 +37,7 @@ socketAccept(Sock this, char (*remoteAddr)[16])
     // Set the size of the in-out parameter
     len = sizeof(this->addr);
 
-	sock = new(Sock, this->log, -1);
+	sock = TR_new(Sock, this->log, -1);
 
     // Wait for a client to connect
     sock->handle = accept(this->handle, (struct sockaddr *) &(sock->addr), &len);

@@ -25,17 +25,16 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "session.h"
 #include "hash.h"
 #include "application/application.h"
 
-#include "utils/memory.h"
 
 Session
 applicationSessionStart(Application this)
 {
-	Session sess = new(Session);
+	Session sess = TR_new(Session);
 
 	hashAdd((this->active_sessions)[0], sess);
 

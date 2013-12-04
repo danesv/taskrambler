@@ -26,10 +26,8 @@
 #include <stdio.h>
 #include <ldap.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
-#include "utils/memory.h"
-#include "commons.h"
 
 #include "auth.h"
 #include "auth/credential.h"
@@ -57,7 +55,7 @@ authDtor(void * _this)
 	int  i;
 
 	for (i=1; i<=MAX_AUTH; i++) {
-		delete(this->auth[i]);
+		TR_delete(this->auth[i]);
 	}
 }
 
@@ -77,8 +75,8 @@ authAuthenticate(void * _this, Credential cred, Uuid user_index)
 	return FALSE;
 }
 
-INIT_IFACE(Class, authCtor, authDtor, NULL);
-INIT_IFACE(Auth, authAuthenticate);
-CREATE_CLASS(Auth, NULL, IFACE(Class), IFACE(Auth));
+TR_INIT_IFACE(TR_Class, authCtor, authDtor, NULL);
+TR_INIT_IFACE(Auth, authAuthenticate);
+TR_CREATE_CLASS(Auth, NULL, TR_IF(TR_Class), TR_IF(Auth));
 
 // vim: set ts=4 sw=4:

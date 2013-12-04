@@ -25,7 +25,7 @@
 #ifndef __LOGGER_LOGGER_H__
 #define __LOGGER_LOGGER_H__
 
-#include "class.h"
+#include "trbase.h"
 
 typedef enum logger_level {
 	LOGGER_DEBUG=0,
@@ -40,16 +40,16 @@ typedef enum logger_level {
 
 extern const char * const logger_level_str[];
 
-CLASS(Logger) {
+TR_CLASS(Logger) {
 	logger_level min_level;
 };
 
-CLASS(LoggerStderr) {
-	EXTENDS(Logger);
+TR_CLASS(LoggerStderr) {
+	TR_EXTENDS(Logger);
 };
 
-CLASS(LoggerSyslog) {
-	EXTENDS(Logger);
+TR_CLASS(LoggerSyslog) {
+	TR_EXTENDS(Logger);
 };
 
 #endif // __LOGGER_LOGGER_H__

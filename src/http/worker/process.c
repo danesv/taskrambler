@@ -27,27 +27,18 @@
 #include <string.h>
 #include <sys/time.h>
 
-#include "class.h"
-#include "auth.h"
+#include "trbase.h"
 #include "queue.h"
-#include "session.h"
-#include "stream.h"
-#include "hash.h"
 
 #include "http/worker.h"
 #include "http/header.h"
 #include "http/message.h"
-#include "http/request.h"
 #include "http/response.h"
 #include "http/parser.h"
 #include "config/config.h"
 #include "config/value.h"
 
-#include "interface/subject.h"
-
-#include "utils/memory.h"
 #include "utils/mime_type.h"
-#include "commons.h"
 
 
 HttpMessage httpWorkerGetAsset(HttpWorker, const char *);
@@ -74,7 +65,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 			 * let our observers...application (or better their
 			 * http adapter) try to create an answer.
 			 */
-			subjectNotify(this);
+			TR_subjectNotify(this);
 
 			if (NULL == this->current_response) {
 				if (0 == strcmp("POST", this->current_request->method) ||
@@ -132,7 +123,7 @@ httpWorkerProcess(HttpWorker this, Stream st)
 
 			httpWorkerAddCommonHeader(this);
 			httpWorkerAddComputedHeader(this);
-			delete(this->current_request);
+			TR_delete(this->current_request);
 			queuePut(this->writer->queue, this->current_response);
 			this->current_response = NULL;
 		}

@@ -26,9 +26,9 @@
 #include <ldap.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 
-CLASS(AuthLdap) {
+TR_CLASS(AuthLdap) {
 	LDAP *     ldap;
 	char *     url;
 	char *     base_dn;

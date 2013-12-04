@@ -25,13 +25,10 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include "class.h"
-
+#include "trbase.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
-
-#include "utils/memory.h"
 #include "hash.h"
 
 #define RESP_DATA "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" \
@@ -49,14 +46,14 @@ httpResponse404()
 	HttpResponse response;
 	HttpMessage  message;
 
-	response = new(HttpResponse, "HTTP/1.1", 404, "Not Found");
+	response = TR_new(HttpResponse, "HTTP/1.1", 404, "Not Found");
 	message  = (HttpMessage)response;
 
 	hashAdd(message->header,
-			new(HttpHeader, CSTRA("Content-Type"), CSTRA("text/html")));
+			TR_new(HttpHeader, CSTRA("Content-Type"), CSTRA("text/html")));
 
 	message->nbody = sizeof(RESP_DATA) - 1;
-	message->body  = memMalloc(sizeof(RESP_DATA));
+	message->body  = TR_malloc(sizeof(RESP_DATA));
 	memcpy(message->body, RESP_DATA, sizeof(RESP_DATA));
 
 	return response;

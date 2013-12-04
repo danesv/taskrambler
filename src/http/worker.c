@@ -30,17 +30,13 @@
 #include <stdio.h>
 #include <search.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "stream.h"
 #include "hash.h"
 #include "queue.h"
 #include "http/worker.h"
 #include "http/parser.h"
 #include "http/writer.h"
-
-#include "utils/memory.h"
-#include "interface/subject.h"
-#include "interface/observer.h"
 
 static
 int
@@ -50,18 +46,18 @@ httpWorkerCtor(void * _this, va_list * params)
 	char *     id   = va_arg(*params, char *);
 	char       cbuf_id[100];
 
-	this->id  = memMalloc(strlen(id) + 1);
+	this->id  = TR_malloc(strlen(id) + 1);
 	strcpy(this->id, id);
 
-	this->asset_pool = new(Hash);
+	this->asset_pool = TR_new(Hash);
 
 	sprintf(cbuf_id, "%s_%s", "parser", id);
-	this->pbuf   = new(Cbuf, cbuf_id, PARSER_MAX_BUF);
+	this->pbuf   = TR_new(Cbuf, cbuf_id, PARSER_MAX_BUF);
 
-	this->additional_headers = new(Queue);
+	this->additional_headers = TR_new(Queue);
 
-	this->parser = new(HttpParser, this->pbuf);
-	this->writer = new(HttpWriter);
+	this->parser = TR_new(HttpParser, this->pbuf);
+	this->writer = TR_new(HttpWriter);
 
 	return 0;
 }
@@ -72,16 +68,16 @@ httpWorkerDtor(void * _this)
 {
 	HttpWorker this = _this;
 
-	MEM_FREE(this->id);
+	TR_MEM_FREE(this->id);
 
-	delete(this->additional_headers);
+	TR_delete(this->additional_headers);
 
-	delete(this->parser);
-	delete(this->writer);
+	TR_delete(this->parser);
+	TR_delete(this->writer);
 
 	if (NULL != this->pbuf) {
-		delete(this->asset_pool);
-		delete(this->pbuf); //!< cloned workers have NULL, so delete won't do anything
+		TR_delete(this->asset_pool);
+		TR_delete(this->pbuf); //!< cloned workers have NULL, so delete won't do anything
 	}
 }
 
@@ -95,9 +91,9 @@ httpWorkerClone(void * _this, void * _base)
 	this->asset_pool          = base->asset_pool;
 	this->application_adapter = base->application_adapter;
 
-	this->additional_headers = new(Queue);
+	this->additional_headers = TR_new(Queue);
 
-	this->parser = new(HttpParser, base->pbuf);
+	this->parser = TR_new(HttpParser, base->pbuf);
 	/*
 	 * I am pretty sure that it is not neccessary to have a
 	 * separeate writer for each connection...
@@ -117,7 +113,7 @@ httpWorkerClone(void * _this, void * _base)
 	 *   At the end I think it might be best to leave it as
 	 *   it is.
 	 */
-	this->writer = new(HttpWriter);
+	this->writer = TR_new(HttpWriter);
 }
 
 ssize_t httpWorkerProcess(void *, Stream);
@@ -130,7 +126,7 @@ httpWorkerDetach(void * _this, void * adapter)
 	HttpWorker this = (HttpWorker)_this;
 
 	if (NULL != this->application_adapter) {
-		delete(this->application_adapter);
+		TR_delete(this->application_adapter);
 	}
 }
 
@@ -158,19 +154,23 @@ httpWorkerNotify(void * _this)
 {
 	HttpWorker this = (HttpWorker)_this;
 
-	observerUpdate(this->application_adapter, _this);
+	TR_observerUpdate(this->application_adapter, _this);
 }
 
-INIT_IFACE(Class, httpWorkerCtor, httpWorkerDtor, httpWorkerClone);
-INIT_IFACE(StreamReader, httpWorkerProcess);
-INIT_IFACE(StreamWriter, httpWorkerWrite);
-INIT_IFACE(Subject, httpWorkerAttach, httpWorkerDetach, httpWorkerNotify);
-CREATE_CLASS(
+TR_INIT_IFACE(TR_Class, httpWorkerCtor, httpWorkerDtor, httpWorkerClone);
+TR_INIT_IFACE(StreamReader, httpWorkerProcess);
+TR_INIT_IFACE(StreamWriter, httpWorkerWrite);
+TR_INIT_IFACE(
+		TR_Subject,
+		httpWorkerAttach,
+		httpWorkerDetach,
+		httpWorkerNotify);
+TR_CREATE_CLASS(
 		HttpWorker,
 		NULL, 
-		IFACE(Class),
-		IFACE(StreamReader),
-		IFACE(StreamWriter),
-		IFACE(Subject));
+		TR_IF(TR_Class),
+		TR_IF(StreamReader),
+		TR_IF(StreamWriter),
+		TR_IF(TR_Subject));
 
 // vim: set ts=4 sw=4:

@@ -23,7 +23,6 @@
 // for already available uuid functionality
 #include <uuid/uuid.h>
 
-#include "class.h"
 #include "uuid.h"
 
 void

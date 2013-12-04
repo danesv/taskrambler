@@ -27,12 +27,10 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "server.h"
 #include "socket.h"
 #include "logger.h"
-
-#include "utils/memory.h"
 
 
 void serverCloseConn(Server, unsigned int);
@@ -65,13 +63,13 @@ serverCtor(void * _this, va_list * params)
 			"accept up to %zu connections",
 			this->max_fds);
 
-	this->fds   = memCalloc(sizeof(struct pollfd), this->max_fds);
-	this->conns = memCalloc(sizeof(struct conns), this->max_fds);
+	this->fds   = TR_calloc(sizeof(struct pollfd), this->max_fds);
+	this->conns = TR_calloc(sizeof(struct conns), this->max_fds);
 
-	this->sock = new(Sock, this->logger, port);
+	this->sock = TR_new(Sock, this->logger, port);
 	socketNonblock(this->sock);
 
-	this->sockSSL = new(Sock, this->logger, port+1);
+	this->sockSSL = TR_new(Sock, this->logger, port+1);
 	socketNonblock(this->sockSSL);
 
 	SSL_library_init();
@@ -117,17 +115,17 @@ serverDtor(void * _this)
 		}
     }
 
-	MEM_FREE(this->fds);
-	MEM_FREE(this->conns);
+	TR_MEM_FREE(this->fds);
+	TR_MEM_FREE(this->conns);
 
-	delete(this->sock);
-	delete(this->sockSSL);
+	TR_delete(this->sock);
+	TR_delete(this->sockSSL);
 
 	SSL_CTX_free(this->ctx);
 	ERR_free_strings();
 }
 
-INIT_IFACE(Class, serverCtor, serverDtor, NULL);
-CREATE_CLASS(Server, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, serverCtor, serverDtor, NULL);
+TR_CREATE_CLASS(Server, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

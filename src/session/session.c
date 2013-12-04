@@ -28,12 +28,10 @@
 #include <sys/types.h>
 #include <uuid/uuid.h>
 
+#include "trbase.h"
 #include "session.h"
 #include "hash.h"
-#include "class.h"
-
 #include "utils/hash.h"
-#include "utils/memory.h"
 
 
 static
@@ -58,7 +56,7 @@ sessionDtor(void * _this)
 {
 	Session this = _this;
 
-	delete(this->user);
+	TR_delete(this->user);
 }
 
 static
@@ -76,8 +74,8 @@ sessionHandleDouble(void * _this, void * _doub)
 {
 }
 
-INIT_IFACE(Class, sessionCtor, sessionDtor, NULL);
-INIT_IFACE(Hashable, sessionGetHash, sessionHandleDouble);
-CREATE_CLASS(Session, NULL, IFACE(Class), IFACE(Hashable));
+TR_INIT_IFACE(TR_Class, sessionCtor, sessionDtor, NULL);
+TR_INIT_IFACE(Hashable, sessionGetHash, sessionHandleDouble);
+TR_CREATE_CLASS(Session, NULL, TR_IF(TR_Class), TR_IF(Hashable));
 
 // vim: set ts=4 sw=4:

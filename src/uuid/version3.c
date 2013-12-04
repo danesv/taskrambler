@@ -30,7 +30,7 @@
 #include <arpa/inet.h>
 
 // for already available uuid functionality
-#include "class.h"
+#include "trbase.h"
 #include "uuid.h"
 
 void _uuidFormat3or5(Uuid uuid, unsigned char hash[16], int version);
@@ -40,8 +40,8 @@ uuidVersion3(const unsigned char * name, size_t nname, Uuid nsid)
 {
 	MD5_CTX       ctx;
 	unsigned char hash[16];
-	Uuid          net_nsid = clone(nsid);
-	Uuid          uuid     = new(Uuid);
+	Uuid          net_nsid = TR_clone(nsid);
+	Uuid          uuid     = TR_new(Uuid);
 
 	/*
 	 * put the namespace id into network byte order.
@@ -61,7 +61,7 @@ uuidVersion3(const unsigned char * name, size_t nname, Uuid nsid)
 	MD5_Update(&ctx, name, nname);
 	MD5_Final(hash, &ctx);
 
-	delete(net_nsid);
+	TR_delete(net_nsid);
 
 	_uuidFormat3or5(uuid, hash, 3);
 

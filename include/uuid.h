@@ -33,13 +33,12 @@
 #include <sys/types.h>
 #include <uuid/uuid.h>
 
-#include "class.h"
-#include "commons.h"
+#include "trbase.h"
 
 
 typedef char UuidString[37];
 
-CLASS(Uuid) {
+TR_CLASS(Uuid) {
 	union {
 		uuid_t value;
 		struct {

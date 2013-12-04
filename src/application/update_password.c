@@ -26,16 +26,12 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "auth.h"
 #include "user.h"
 #include "storage/storage.h"
 #include "application/application.h"
 
-#include "interface/indexable.h"
-
-#include "utils/memory.h"
-#include "commons.h"
 
 int
 applicationUpdatePassword(
@@ -57,16 +53,16 @@ applicationUpdatePassword(
 	}
 
 	memcpy(hash_data, salt, SALT_SIZE);
-	MEM_FREE(salt);
+	TR_MEM_FREE(salt);
 
-	index = indexUuid(user, this->user_namespace);
+	index = TR_indexUuid(user, this->user_namespace);
 	storageUpdate(
 			this->passwords,
 			(char *)(index->uuid).value,
 			sizeof((index->uuid).value),
 			(char *)hash_data,
 			SALT_SIZE + HASH_SIZE);
-	delete(index);
+	TR_delete(index);
 
 	return TRUE;
 }

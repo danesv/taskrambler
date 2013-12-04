@@ -22,17 +22,12 @@
 
 #include <sys/types.h>
 
-#include "class.h"
-
+#include "trbase.h"
 #include "http/message.h"
 #include "http/header.h"
 #include "http/worker.h"
-
 #include "hash.h"
-
-#include "utils/memory.h"
 #include "utils/http.h"
-
 #include "config.h"
 
 
@@ -44,15 +39,15 @@ httpWorkerAddCommonHeader(HttpWorker this)
 
 	if (httpMessageHasKeepAlive((HttpMessage)this->current_request)) {
 		hashAdd(this->current_response->header,
-				new(HttpHeader, CSTRA("Connection"), CSTRA("Keep-Alive")));
+				TR_new(HttpHeader, CSTRA("Connection"), CSTRA("Keep-Alive")));
 	}
 	else {
 		hashAdd(this->current_response->header,
-				new(HttpHeader, CSTRA("Connection"), CSTRA("Close")));
+				TR_new(HttpHeader, CSTRA("Connection"), CSTRA("Close")));
 	}
 
 	hashAdd(this->current_response->header,
-			new(HttpHeader, CSTRA("Server"), CSTRA(PACKAGE_STRING)));
+			TR_new(HttpHeader, CSTRA("Server"), CSTRA(PACKAGE_STRING)));
 
 	switch(((HttpResponse)this->current_response)->status) {
 		case 304:
@@ -61,12 +56,12 @@ httpWorkerAddCommonHeader(HttpWorker this)
 		default:
 			nbuf = sprintf(buffer, "%d", this->current_response->nbody);
 			hashAdd(this->current_response->header,
-					new(HttpHeader, CSTRA("Content-Length"), buffer, nbuf));
+					TR_new(HttpHeader, CSTRA("Content-Length"), buffer, nbuf));
 	}
 
 	nbuf = rfc1123GmtNow(buffer, sizeof(buffer));
 	hashAdd(this->current_response->header,
-			new(HttpHeader, CSTRA("Date"), buffer, nbuf));
+			TR_new(HttpHeader, CSTRA("Date"), buffer, nbuf));
 }
 
 // vim: set ts=4 sw=4:

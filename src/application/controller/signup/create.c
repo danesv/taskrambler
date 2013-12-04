@@ -22,13 +22,13 @@
 
 #define _GNU_SOURCE
 
+#include "trbase.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
 #include "auth/credential.h"
 #include "user.h"
 
-#include "utils/memory.h"
 
 char * controllerCurrentuserRead(Application, Session, Hash);
 int   _controllerProcessUserCreateArgs(Hash, User *, Credential *);
@@ -55,9 +55,9 @@ controllerSignupCreate(
 		response_data = controllerCurrentuserRead(application, session, NULL);
 	}
 
-	delete(credential);
-	delete(user);
-	delete(user_id);
+	TR_delete(credential);
+	TR_delete(user);
+	TR_delete(user_id);
 
 	return response_data;
 

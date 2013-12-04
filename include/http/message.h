@@ -24,12 +24,12 @@
 #ifndef __HTTP_MESSAGE__
 #define __HTTP_MESSAGE__
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "stream.h"
 #include "asset.h"
 
-CLASS(HttpMessage) {
+TR_CLASS(HttpMessage) {
 	char *          version;
 
 	Hash            header;

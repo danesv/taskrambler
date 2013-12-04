@@ -25,17 +25,14 @@
 #include "auth/credential.h"
 #include "auth/interface/auth.h"
 
-const struct interface i_Auth = {
-	"auth",
-	1
-};
+TR_CREATE_INTERFACE(Auth, 1);
 
 int
 authenticate(void * auth, Credential cred, Uuid user_index)
 {
 	int ret;
 
-	RETCALL(auth, Auth, authenticate, ret, cred, user_index);
+	TR_RETCALL(auth, Auth, authenticate, ret, cred, user_index);
 
 	return ret;
 }

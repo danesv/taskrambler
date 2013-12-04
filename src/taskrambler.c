@@ -42,15 +42,13 @@
 #include "auth.h"
 #include "application/application.h"
 #include "application/adapter/http.h"
-#include "interface/subject.h"
 #include "config/config.h"
 #include "config/value.h"
 
-#include "class.h"
+#include "trbase.h"
 #include "logger.h"
 
 #include "utils/signalHandling.h"
-#include "utils/memory.h"
 #include "utils/mime_type.h"
 
 #define DEFAULT_SECS	10
@@ -77,15 +75,15 @@ main()
 	int              shm;
 	struct randval * value;
 
-	logger = new(LoggerSyslog, LOGGER_DEBUG);
-	config = new(Config, CONFIGDIR "/taskrambler.conf");
+	logger = TR_new(LoggerSyslog, LOGGER_DEBUG);
+	config = TR_new(Config, CONFIGDIR "/taskrambler.conf");
 
 	if (NULL == config) {
 		loggerLog(logger, LOGGER_INFO,
 				"unable to load configuration file: %s\n",
 				CONFIGDIR "/taskrambler.conf");
 
-		if (! INSTANCE_OF(LoggerStderr, logger)) {
+		if (! TR_INSTANCE_OF(LoggerStderr, logger)) {
 			fprintf(stderr,
 					"unable to load configuration file: %s\n",
 					CONFIGDIR "/taskrambler.conf");
@@ -190,15 +188,15 @@ main()
 				shm_unlink("/fooshm");
 				close(shm);
 
-				auth = new(Auth);
+				auth = TR_new(Auth);
 				authCreate(
 						auth,
 						AUTH_LDAP,
 						(ldap_host->value).string,
 						CONFSTRA(ldap_base));
 
-				users       = new(Storage, user_storage);
-				passwords   = new(Storage, password_storage);
+				users       = TR_new(Storage, user_storage);
+				passwords   = TR_new(Storage, password_storage);
 
 				if (NULL == users || NULL == passwords) {
 					puts("error opening database files...\n");
@@ -207,7 +205,7 @@ main()
 
 				authCreate(auth, AUTH_STORAGE, passwords);
 
-				application = new(
+				application = TR_new(
 						Application,
 						value,
 						users,
@@ -215,13 +213,13 @@ main()
 						"14de9e60-d497-4754-be72-f3bed52541fc",
 						auth);
 
-				router      = new(Router, application);
-				adapterHttp = new(ApplicationAdapterHttp, application, router);
+				router      = TR_new(Router, application);
+				adapterHttp = TR_new(ApplicationAdapterHttp, application, router);
 
-				worker = new(HttpWorker, "taskrambler");
-				subjectAttach(worker, adapterHttp);
+				worker = TR_new(HttpWorker, "taskrambler");
+				TR_subjectAttach(worker, adapterHttp);
 
-				server = new(
+				server = TR_new(
 						Server,
 						logger,
 						worker,
@@ -269,14 +267,14 @@ main()
 					}
 				} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
-				delete(server);
-				delete(worker);
-				delete(adapterHttp);
-				delete(router);
-				delete(application);
-				delete(passwords);
-				delete(users);
-				delete(auth);
+				TR_delete(server);
+				TR_delete(worker);
+				TR_delete(adapterHttp);
+				TR_delete(router);
+				TR_delete(application);
+				TR_delete(passwords);
+				TR_delete(users);
+				TR_delete(auth);
 
 				clearMimeTypes();
 				assetPoolCleanup();
@@ -285,9 +283,9 @@ main()
 			break;
 	}
 
-	delete(config);
-	delete(logger);
-	memCleanup();
+	TR_delete(config);
+	TR_delete(logger);
+	TR_memCleanup();
 
 	return 0;
 }

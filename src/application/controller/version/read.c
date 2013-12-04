@@ -25,11 +25,10 @@
 #include <sys/types.h>
 #include <stdio.h>
 
+#include "trbase.h"
 #include "application/application.h"
 #include "hash.h"
 #include "session.h"
-
-#include "utils/memory.h"
 
 #define VERSION_JSON	"{\"version\":\"%s\"}"
 
@@ -40,7 +39,7 @@ controllerVersionRead(Application app, Session sess, Hash args)
 	size_t   nbuffer;
 
 	nbuffer = snprintf(NULL, 0, VERSION_JSON, app->version? app->version : "");
-	buffer  = memMalloc(nbuffer);
+	buffer  = TR_malloc(nbuffer);
 	sprintf(buffer, VERSION_JSON, app->version? app->version : "");
 
 	return buffer;

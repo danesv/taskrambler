@@ -26,9 +26,9 @@
 
 #include <openssl/ssl.h>
 
+#include "trbase.h"
 #include "http/worker.h"
 #include "server.h"
-#include "class.h"
 #include "logger.h"
 #include "stream.h"
 
@@ -51,7 +51,7 @@ serverHandleAccept(Server this, unsigned int i)
 		switch(i) {
 			case 0:
 				// no SSL
-				st = new(Stream, STREAM_FD, acc->handle);
+				st = TR_new(Stream, STREAM_FD, acc->handle);
 				break;
 
 			case 1:
@@ -60,7 +60,7 @@ serverHandleAccept(Server this, unsigned int i)
 					SSL * ssl = SSL_new(this->ctx);
 					SSL_set_fd(ssl, acc->handle);
 					SSL_accept(ssl);
-					st = new(Stream, STREAM_SSL, ssl);
+					st = TR_new(Stream, STREAM_SSL, ssl);
 				}
 				break;
 
@@ -73,14 +73,14 @@ serverHandleAccept(Server this, unsigned int i)
 		(this->conns)[acc->handle].sock   = acc; 
 
 		// clone worker
-		(this->conns)[acc->handle].worker = clone(this->worker);
+		(this->conns)[acc->handle].worker = TR_clone(this->worker);
 		(this->conns)[acc->handle].stream = st;
 
 		(this->fds)[this->nfds].fd        = acc->handle;
 		(this->fds)[this->nfds].events    = POLLIN;
 		this->nfds++;
 	} else {
-		delete(acc);
+		TR_delete(acc);
 
 		switch(errno) {
 			case EAGAIN|EWOULDBLOCK:

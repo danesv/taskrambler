@@ -22,13 +22,13 @@
 
 #define _GNU_SOURCE
 
+#include "trbase.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
 #include "auth/credential.h"
 #include "user.h"
 
-#include "utils/memory.h"
 
 User
 _controllerCreateUserFromArgs(Hash args)
@@ -49,7 +49,7 @@ _controllerCreateUserFromArgs(Hash args)
 		return NULL;
 	}
 
-	return new(User,
+	return TR_new(User,
 			(char *)(email->value), email->nvalue,
 			(char *)(firstname->value), firstname->nvalue,
 			(char *)(surname->value), surname->nvalue);

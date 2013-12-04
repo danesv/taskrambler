@@ -24,12 +24,9 @@
 
 #include <sys/types.h>
 
-#include "class.h"
 #include "session.h"
 #include "hash.h"
 #include "application/application.h"
-
-#include "utils/memory.h"
 
 
 Session

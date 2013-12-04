@@ -22,17 +22,16 @@
 
 #define _GNU_SOURCE
 
-#include "class.h"
+#include "trbase.h"
 #include "auth.h"
 
-#include "utils/memory.h"
 #include "application/application.h"
 
 
 void
 applicationLogout(Application this, Session session)
 {
-	delete(session->user);
+	TR_delete(session->user);
 }
 
 // vim: set ts=4 sw=4:

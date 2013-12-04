@@ -22,14 +22,13 @@
 
 #define _GNU_SOURCE
 
-#include "class.h"
+#include "trbase.h"
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
 #include "auth/credential.h"
 #include "user.h"
 
-#include "utils/memory.h"
 
 char * controllerCurrentuserRead(Application, Session, Hash);
 
@@ -56,7 +55,7 @@ controllerAuthenticateCreate(
 		return NULL;
 	}
 
-	credential = new(Credential,
+	credential = TR_new(Credential,
 			CRED_PASSWORD,
 			(char *)(username->value), username->nvalue,
 			(char *)(password->value), password->nvalue);
@@ -67,7 +66,7 @@ controllerAuthenticateCreate(
 		response_data = controllerCurrentuserRead(application, session, NULL);
 	}
 
-	delete(credential);
+	TR_delete(credential);
 
 	return response_data;
 }

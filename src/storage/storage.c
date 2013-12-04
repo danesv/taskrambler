@@ -24,10 +24,9 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "storage/storage.h"
 
-#include "utils/memory.h"
 
 static
 int
@@ -36,7 +35,7 @@ storageCtor(void * _this, va_list * params)
 	Storage   this    = _this;
 	char    * db_name = va_arg(* params, void *);
 
-	this->db_name = memMalloc(strlen(db_name) + 1);
+	this->db_name = TR_malloc(strlen(db_name) + 1);
 	strcpy(this->db_name, db_name);
 
 	this->gdbm = gdbm_open(
@@ -59,14 +58,14 @@ storageDtor(void * _this)
 {
 	Storage this = _this;
 
-	if (NULL != this->db_name) MEM_FREE(this->db_name);
+	if (NULL != this->db_name) TR_MEM_FREE(this->db_name);
 	if (NULL != this->gdbm) {
 		gdbm_close(this->gdbm);
 		this->gdbm = NULL;
 	}
 }
 
-INIT_IFACE(Class, storageCtor, storageDtor, NULL);
-CREATE_CLASS(Storage, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, storageCtor, storageDtor, NULL);
+TR_CREATE_CLASS(Storage, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

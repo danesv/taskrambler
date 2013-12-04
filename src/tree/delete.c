@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "trbase.h"
 #include "tree.h"
 
 Tree inOrderSuccessor(Tree);
@@ -100,7 +101,7 @@ treeDelete(Tree * this, const void * search, TreeComp comp)
 		if (rbBlack == node->color) {
 			if (NULL != child && rbRed == child->color) {
 				child->color = rbBlack;
-				delete(node);
+				TR_delete(node);
 				return data;
 			} else {
 				del_node = node;
@@ -113,7 +114,7 @@ treeDelete(Tree * this, const void * search, TreeComp comp)
 				}
 			}
 		} else {
-			delete(node);
+			TR_delete(node);
 			return data;
 		}
 	}
@@ -239,7 +240,7 @@ treeDelete(Tree * this, const void * search, TreeComp comp)
 		break;
 	}
 
-	delete(del_node);
+	TR_delete(del_node);
 	/*
 	 * not sure if deleting here is correct.
 	 */

@@ -30,10 +30,9 @@
 #include <stdarg.h>
 #include <unistd.h>
 
-#include "class.h"
+#include "trbase.h"
 #include "hash.h"
 #include "http/message.h"
-#include "utils/memory.h"
 
 
 static
@@ -43,10 +42,10 @@ httpMessageCtor(void * _this, va_list * params)
 	HttpMessage this    = _this;
 	char *      version = va_arg(* params, char *);
 
-	this->version = memCalloc(1, strlen(version)+1);
+	this->version = TR_calloc(1, strlen(version)+1);
 	strcpy(this->version, version);
 
-	this->header = new(Hash);
+	this->header = TR_new(Hash);
 
 	return 0;
 }
@@ -57,12 +56,11 @@ httpMessageDtor(void * _this)
 {
 	HttpMessage this = _this;
 
-	delete(this->header);
-
-	MEM_FREE(this->version);
+	TR_delete(this->header);
+	TR_MEM_FREE(this->version);
 
 	if (NULL == this->asset) {
-		MEM_FREE(this->body);
+		TR_MEM_FREE(this->body);
 	} else {
 		assetPoolRelease(this->asset);
 		this->asset = NULL;
@@ -70,7 +68,7 @@ httpMessageDtor(void * _this)
 	}
 } 
 
-INIT_IFACE(Class, httpMessageCtor, httpMessageDtor, NULL);
-CREATE_CLASS(HttpMessage, NULL, IFACE(Class));
+TR_INIT_IFACE(TR_Class, httpMessageCtor, httpMessageDtor, NULL);
+TR_CREATE_CLASS(HttpMessage, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

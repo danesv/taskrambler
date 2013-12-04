@@ -24,7 +24,6 @@
 #include <errno.h>      // for errno
 
 #include "socket.h"
-#include "class.h"
 #include "logger.h"
 
 

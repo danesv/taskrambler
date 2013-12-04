@@ -22,11 +22,9 @@
 
 #define _GNU_SOURCE
 
+#include "trbase.h"
 #include "hash.h"
 #include "user.h"
-
-#include "utils/memory.h"
-#include "commons.h"
 
 
 int
@@ -45,13 +43,13 @@ _controllerUpdateUserFromArgs(Hash args, User * user)
 		return FALSE;
 	}
 
-	new_user = new(User,
+	new_user = TR_new(User,
 			(char *)((*user)->username), *(*user)->nusername,
 			(char *)(email->value), email->nvalue,
 			(char *)(firstname->value), firstname->nvalue,
 			(char *)(surname->value), surname->nvalue);
 
-	delete(*user);
+	TR_delete(*user);
 	*user = new_user;
 
 	return TRUE;

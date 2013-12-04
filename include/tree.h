@@ -23,7 +23,7 @@
 #ifndef __TREE_H__
 #define __TREE_H__
 
-#include "class.h"
+#include "trbase.h"
 
 #define TREE_RIGHT(node)	(NULL!=(node)?(node)->right:NULL)
 #define TREE_LEFT(node)		(NULL!=(node)?(node)->left:NULL)
@@ -114,7 +114,7 @@
 
 enum rbColor {rbBlack=1, rbRed=2};
 
-CLASS(Tree) {
+TR_CLASS(Tree) {
 	void * data;
 
 	enum rbColor color;

@@ -22,11 +22,10 @@
 
 #define _GNU_SOURCE
 
+#include "trbase.h"
 #include "hash.h"
 #include "auth/credential.h"
 
-#include "utils/memory.h"
-#include "commons.h"
 
 int _controllerValidatePasswordRepeat(char *, size_t, char *, size_t);
 
@@ -54,7 +53,7 @@ _controllerGetCredentialFromArgs(Hash args)
 		return FALSE;
 	}
 
-	return new(Credential,
+	return TR_new(Credential,
 			CRED_PASSWORD,
 			(char *)(email->value), email->nvalue,
 			(char *)(password->value), password->nvalue);
