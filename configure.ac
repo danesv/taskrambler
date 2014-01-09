@@ -8,7 +8,7 @@ AC_INIT([taskrambler],
 LT_INIT
 AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
-AM_SILENT_RULES([yes])
+#AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2013 Georg Hopp])
 AC_REVISION([m4_esyscmd_s([git describe --always])])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
@@ -48,6 +48,9 @@ AM_COND_IF([HAVE_DOXYGEN],
 # 	     [AC_MSG_ERROR([json-c library not found], [1])])
 AC_CHECK_LIB([ssl], [SSL_library_init], [],
 	     [AC_MSG_ERROR([openssl not found], [1])])
+AC_CHECK_LIB([dl], [dlopen], [LIBS="-ldl"],
+	     [AC_MSG_ERROR([openssl not found], [1])])
+
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdarg.h string.h stdlib.h stdio.h unistd.h syslog.h sys/types.h json/json.h])
@@ -101,7 +104,6 @@ AC_CONFIG_FILES([Makefile
 		 src/user/Makefile
 		 src/config/Makefile
 		 src/router/Makefile
-		 src/uuid/Makefile
 		 docs/Makefile
 		 config/Makefile
 		 tests/Makefile])
