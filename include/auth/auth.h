@@ -42,8 +42,8 @@
 #ifndef __AUTH_AUTH_H__
 #define __AUTH_AUTH_H__
 
-#include "trbase.h"
-#include "uuid.h"
+#include <trbase.h>
+
 #include "auth.h"
 #include "auth/credential.h"
 

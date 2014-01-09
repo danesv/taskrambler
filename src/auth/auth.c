@@ -26,8 +26,8 @@
 #include <stdio.h>
 #include <ldap.h>
 
-#include "trbase.h"
-#include "uuid.h"
+#include <trbase.h>
+#include <trhash.h>
 
 #include "auth.h"
 #include "auth/credential.h"
@@ -61,7 +61,7 @@ authDtor(void * _this)
 
 static
 int
-authAuthenticate(void * _this, Credential cred, Uuid user_index)
+authAuthenticate(void * _this, Credential cred, TR_Uuid user_index)
 {
 	Auth this = _this;
 	int  i;

@@ -22,7 +22,9 @@
 
 #define _GNU_SOURCE
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
@@ -38,14 +40,14 @@ controllerUserUpdate(
 		Session     session,
 		Hash        args)
 {
-	Uuid user_id;
+	TR_Uuid user_id;
 
 	if (! _controllerUpdateUserFromArgs(args, &(session->user))) {
 		return NULL;
 	}
 
 	user_id = applicationUpdateUser(application, session->user);
-	if (0 == uuidCompare(uuidZero, user_id)) {
+	if (0 == TR_uuidCompare(TR_uuidZero, user_id)) {
 		return NULL;
 	}
 	TR_delete(user_id);

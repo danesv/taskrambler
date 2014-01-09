@@ -22,9 +22,10 @@
 
 #include <sys/types.h>
 
+#include <trhash.h>
+
 #include "asset.h"
 #include "hash.h"
-#include "utils/hash.h"
 
 static
 inline
@@ -47,7 +48,7 @@ hashDeleteComp(const void * a, const void * b)
 void *
 hashDelete(Hash this, const char * search, size_t nsearch)
 {
-	unsigned long   hash   = sdbm((const unsigned char *)search, nsearch);
+	unsigned long   hash   = TR_sdbm((const unsigned char *)search, nsearch);
 	void          * found = NULL;
 
 	found = treeDelete(&(this->root), &hash, hashDeleteComp);

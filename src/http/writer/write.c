@@ -23,7 +23,8 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include "trbase.h"
+#include <trbase.h>
+
 #include "http/message.h"
 #include "queue.h"
 #include "http/writer.h"
@@ -48,7 +49,7 @@ httpWriterWrite(void * _this, Stream st)
 			this->written = 0;
 			this->nheader = httpMessageHeaderSizeGet(this->current);
 
-			if (this->nheader > TR_memGetSize(this->buffer)) {
+			if (this->nheader > TR_getSize(this->buffer)) {
 				ssize_t size = this->nheader;
 
 				size = (0 != size%WRITER_BUF_CHUNK)?

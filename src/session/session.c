@@ -28,10 +28,11 @@
 #include <sys/types.h>
 #include <uuid/uuid.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "session.h"
 #include "hash.h"
-#include "utils/hash.h"
 
 
 static
@@ -45,7 +46,7 @@ sessionCtor(void * _this, va_list * params)
 	uuid_generate(uuid);
 	uuid_unparse(uuid, this->id);
 
-	this->hash = sdbm((unsigned char *)this->id, 36);
+	this->hash = TR_sdbm((unsigned char *)this->id, 36);
 
 	return 0;
 }

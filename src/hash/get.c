@@ -25,9 +25,10 @@
 #include <search.h>
 #include <sys/types.h>
 
+#include <trhash.h>
+
 #include "hash.h"
 #include "tree.h"
-#include "utils/hash.h"
 
 static
 inline
@@ -50,7 +51,7 @@ hashGetComp(const void * a, const void * b)
 void *
 hashGet(Hash this, const char * search, size_t nsearch)
 {
-	unsigned long   hash  = sdbm((const unsigned char *)search, nsearch);
+	unsigned long   hash  = TR_sdbm((const unsigned char *)search, nsearch);
 	void          * found = treeFind(this->root, &hash, hashGetComp);
 
 	return found;

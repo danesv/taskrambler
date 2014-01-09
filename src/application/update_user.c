@@ -26,24 +26,25 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "auth.h"
 #include "user.h"
-#include "uuid.h"
 #include "storage/storage.h"
 #include "application/application.h"
 
 
-Uuid
+TR_Uuid
 applicationUpdateUser(
 		Application this,
 		User        user)
 {
 	char   * user_serialized;
 	size_t   nuser_serialized;
-	Uuid     index;
+	TR_Uuid  index;
 
-	index = TR_indexUuid(user, this->user_namespace);
+	index = TR_getIndex(user);
 	TR_serialize(user, (unsigned char **)&user_serialized, &nuser_serialized);
 
 	if (SPR_OK != storageUpdate(
@@ -53,7 +54,7 @@ applicationUpdateUser(
 				user_serialized,
 				nuser_serialized))
 	{
-		return uuidZero;
+		return TR_uuidZero;
 	}
 
 	TR_MEM_FREE(user_serialized);

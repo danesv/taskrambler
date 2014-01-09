@@ -22,7 +22,9 @@
 
 #define _GNU_SOURCE
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "hash.h"
 #include "user.h"
 
@@ -44,6 +46,7 @@ _controllerUpdateUserFromArgs(Hash args, User * user)
 	}
 
 	new_user = TR_new(User,
+			TR_uuidParse("14de9e60-d497-4754-be72-f3bed52541fc"),
 			(char *)((*user)->username), *(*user)->nusername,
 			(char *)(email->value), email->nvalue,
 			(char *)(firstname->value), firstname->nvalue,

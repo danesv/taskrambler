@@ -25,7 +25,8 @@
 
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
 
 #include "session.h"
 #include "hash.h"
@@ -34,7 +35,6 @@
 #include "storage/storage.h"
 #include "session.h"
 #include "user.h"
-#include "uuid.h"
 
 
 struct randval {
@@ -54,7 +54,7 @@ TR_CLASS(Application) {
 	Storage           passwords;
 	Storage           roles;
 
-	Uuid              user_namespace;
+	TR_Uuid           user_namespace;
 
 	Hash              roles_user_index;
 	Hash              roles_resource_index;
@@ -63,12 +63,12 @@ TR_CLASS(Application) {
 	const char *      loc;
 };
 
-int  applicationLogin(Application, Credential, Session);
-void applicationLogout(Application, Session);
-Uuid applicationCreateUser(Application, Credential, User);
-Uuid applicationUpdateUser(Application, User);
-User applicationGetUser(Application, Uuid);
-int  applicationUpdatePassword(Application, Credential, User);
+int     applicationLogin(Application, Credential, Session);
+void    applicationLogout(Application, Session);
+TR_Uuid applicationCreateUser(Application, Credential, User);
+TR_Uuid applicationUpdateUser(Application, User);
+User    applicationGetUser(Application, TR_Uuid);
+int     applicationUpdatePassword(Application, Credential, User);
 
 Session applicationSessionStart(Application);
 Session applicationSessionGet(Application, const char *);

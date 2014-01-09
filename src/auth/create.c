@@ -23,7 +23,8 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+
 #include "auth.h"
 #include "auth/ldap.h"
 #include "auth/storage.h"

@@ -26,9 +26,10 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "auth.h"
-#include "uuid.h"
 #include "storage/storage.h"
 #include "application/application.h"
 
@@ -39,14 +40,14 @@ applicationLogin(
 		Credential  credential,
 		Session     session)
 {
-	Uuid       search;
+	TR_Uuid    search;
 	AuthModule auth_module;
 
-	User user = TR_new(User, NULL);
+	User user = TR_new(User, this->user_namespace, NULL);
 
 	user->username  = CRED_PWD(credential).user;
 	user->nusername = &CRED_PWD(credential).nuser;
-	search = TR_indexUuid(user, this->user_namespace);
+	search = TR_getIndex(user);
 
 	auth_module = authenticate(this->auth, credential, search);
 
@@ -84,6 +85,7 @@ applicationLogin(
 					session->user->username = NULL;
 					TR_delete(session->user);
 					session->user = TR_new(User,
+							this->user_namespace,
 							CRED_PWD(credential).user,
 							CRED_PWD(credential).nuser,
 							CSTRA(""),

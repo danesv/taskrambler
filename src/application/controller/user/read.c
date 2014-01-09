@@ -25,7 +25,9 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
@@ -40,7 +42,7 @@ controllerUserRead(Application app, Session sess, Hash args)
 	char      * buffer;
 	size_t      nbuffer;
 	HashValue   id     = hashGet(args, CSTRA("id"));
-	Uuid        search = uuidParse(id->value);
+	TR_Uuid     search = TR_uuidParse(id->value);
 	User        user   = applicationGetUser(app, search);
 
 	nbuffer = snprintf(NULL, 0, USER_JSON,

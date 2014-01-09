@@ -22,7 +22,9 @@
 
 #define _GNU_SOURCE
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "hash.h"
 #include "user.h"
 
@@ -42,7 +44,16 @@ _controllerGetUserFromArgs(Hash args)
 		return FALSE;
 	}
 
+	/**
+	 * \todo how should we inject the user namespace here...
+	 * or better, how to handle it at all...
+	 * at least this is true for every controller...
+	 * Additionally, this and the other controller functions
+	 * that create a user in this way will leak memory.
+	 * !!!IMPORTANT!!!
+	 */
 	return TR_new(User,
+			TR_uuidParse("14de9e60-d497-4754-be72-f3bed52541fc"),
 			(char *)(email->value), email->nvalue,
 			(char *)(email->value), email->nvalue,
 			(char *)(firstname->value), firstname->nvalue,

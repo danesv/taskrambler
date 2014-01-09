@@ -25,9 +25,10 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "config/value.h"
-#include "utils/hash.h"
 
 static
 int
@@ -40,7 +41,7 @@ configValueCtor(void * _this, va_list * params)
 	char   * value  = va_arg(*params, char *);
 	size_t   nvalue = va_arg(*params, size_t);
 
-	this->hash = sdbm((unsigned char *)key, nkey);
+	this->hash = TR_sdbm((unsigned char *)key, nkey);
 
 	/**
 	 * if we find the value enclosed by single or double

@@ -24,15 +24,16 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "auth.h"
 #include "user.h"
-#include "uuid.h"
 #include "storage/storage.h"
 #include "application/application.h"
 
 User
-applicationGetUser(Application this, Uuid uuid)
+applicationGetUser(Application this, TR_Uuid uuid)
 {
 	char   * user_serialized;
 	size_t   nuser_serialized;

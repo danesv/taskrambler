@@ -28,18 +28,19 @@
 #ifndef __AUTH_INTERFACE_AUTH_H__
 #define __AUTH_INTERFACE_AUTH_H__
 
-#include "trbase.h"
-#include "uuid.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "auth/credential.h"
 
-typedef int (* fptr_authenticate)(void *, Credential, Uuid);
+typedef int (* fptr_authenticate)(void *, Credential, TR_Uuid);
 
 TR_INTERFACE(Auth) {
 	TR_IFID;
 	fptr_authenticate authenticate;
 };
 
-extern int authenticate(void *, Credential, Uuid);
+extern int authenticate(void *, Credential, TR_Uuid);
 
 #endif // __AUTH_INTERFACE_AUTH_H__
 

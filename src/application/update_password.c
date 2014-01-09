@@ -26,7 +26,9 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "auth.h"
 #include "user.h"
 #include "storage/storage.h"
@@ -42,7 +44,7 @@ applicationUpdatePassword(
 	unsigned char   hash_data[SALT_SIZE+HASH_SIZE];
 	unsigned char * salt = NULL;
 	unsigned char * hash = hash_data+SALT_SIZE;
-	Uuid            index;
+	TR_Uuid         index;
 
 	if (FALSE == hash_pw(
 				CRED_PWD(cred).pass,
@@ -55,7 +57,7 @@ applicationUpdatePassword(
 	memcpy(hash_data, salt, SALT_SIZE);
 	TR_MEM_FREE(salt);
 
-	index = TR_indexUuid(user, this->user_namespace);
+	index = TR_getIndex(user);
 	storageUpdate(
 			this->passwords,
 			(char *)(index->uuid).value,

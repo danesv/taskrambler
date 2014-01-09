@@ -24,9 +24,9 @@
 
 #include <stdarg.h>
 
-#include "trbase.h"
-#include "hash.h"
-#include "uuid.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "application/application.h"
 #include "storage/storage.h"
 
@@ -52,7 +52,7 @@ applicationCtor(void * _this, va_list * params)
 	this->passwords = va_arg(*params, Storage);
 	//this->roles     = va_arg(*params, Storage);
 
-	this->user_namespace = uuidParse(va_arg(*params, char *));
+	this->user_namespace = va_arg(*params, TR_Uuid);
 
 	this->auth = va_arg(*params, void *);
 

@@ -25,9 +25,10 @@
 #include <search.h>
 #include <sys/types.h>
 
+#include <trhash.h>
+
 #include "hash.h"
 #include "tree.h"
-#include "utils/hash.h"
 
 void *
 hashGetFirst(Hash this)

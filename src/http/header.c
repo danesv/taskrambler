@@ -24,10 +24,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "hash.h"
 #include "http/header.h"
-#include "utils/hash.h"
 
 static
 int
@@ -45,7 +46,7 @@ httpHeaderCtor(void * _this, va_list * params) {
 	this->name[this->nname] = 0;
 	memcpy(this->name, name, this->nname);
 
-	this->hash = sdbm((unsigned char *)name, this->nname);
+	this->hash = TR_sdbm((unsigned char *)name, this->nname);
 
 	(this->value)[0]                    = TR_malloc((this->nvalue)[0] + 1);
 	(this->value)[0][(this->nvalue)[0]] = 0;

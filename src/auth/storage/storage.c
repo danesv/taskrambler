@@ -20,10 +20,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "storage/storage.h"
 #include "auth.h"
-#include "uuid.h"
 #include "user.h"
 
 static
@@ -45,7 +46,7 @@ authStorageDtor(void * _this)
 
 static
 int
-authStorageAuthenticate(void * _this, Credential cred, Uuid user_index)
+authStorageAuthenticate(void * _this, Credential cred, TR_Uuid user_index)
 {
 	AuthStorage this = _this;
 

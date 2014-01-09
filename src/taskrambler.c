@@ -36,6 +36,9 @@
 #include <sys/mman.h>
 #include <errno.h>
 
+#include <trbase.h>
+#include <trhash.h>
+
 #include "server.h"
 #include "logger.h"
 #include "http/worker.h"
@@ -45,7 +48,6 @@
 #include "config/config.h"
 #include "config/value.h"
 
-#include "trbase.h"
 #include "logger.h"
 
 #include "utils/signalHandling.h"
@@ -164,6 +166,7 @@ main()
 				ApplicationAdapterHttp adapterHttp;
 				HttpWorker             worker;
 				Server                 server;
+				TR_Uuid                user_namespace;
 
 				ConfigValue	ldap_base   =
 					configGet(config, CSTRA("ldap_base"));
@@ -205,12 +208,14 @@ main()
 
 				authCreate(auth, AUTH_STORAGE, passwords);
 
+				user_namespace = TR_uuidParse("14de9e60-d497-4754-be72-f3bed52541fc");
+
 				application = TR_new(
 						Application,
 						value,
 						users,
 						passwords,
-						"14de9e60-d497-4754-be72-f3bed52541fc",
+						user_namespace,
 						auth);
 
 				router      = TR_new(Router, application);
@@ -272,6 +277,7 @@ main()
 				TR_delete(adapterHttp);
 				TR_delete(router);
 				TR_delete(application);
+				TR_delete(user_namespace);
 				TR_delete(passwords);
 				TR_delete(users);
 				TR_delete(auth);
@@ -285,7 +291,7 @@ main()
 
 	TR_delete(config);
 	TR_delete(logger);
-	TR_memCleanup();
+	TR_cleanup();
 
 	return 0;
 }

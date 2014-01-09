@@ -20,7 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "uuid.h"
 #include "auth/auth.h"
 #include "auth/credential.h"
 #include "auth/interface/auth.h"
@@ -28,7 +27,7 @@
 TR_CREATE_INTERFACE(Auth, 1);
 
 int
-authenticate(void * auth, Credential cred, Uuid user_index)
+authenticate(void * auth, Credential cred, TR_Uuid user_index)
 {
 	int ret;
 

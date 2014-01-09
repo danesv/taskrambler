@@ -36,13 +36,13 @@
 // for localtime
 #include <time.h>
 
+#include <trbase.h>
+#include <trhash.h>
 
-#include "trbase.h"
 #include "asset.h"
 #include "hash.h"
 
 #include "utils/mime_type.h"
-#include "utils/hash.h"
 #include "utils/http.h"
 
 
@@ -62,7 +62,7 @@ assetCtor(void * _this, va_list * params)
 	strncpy(this->fname, fname, 2048);
 	this->fname[2048] = '\0';
 
-	this->hash = sdbm(
+	this->hash = TR_sdbm(
 			(unsigned char *)this->fname,
 			this->nfname);
 

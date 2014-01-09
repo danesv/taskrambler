@@ -20,16 +20,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "user.h"
-#include "uuid.h"
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
 
+#include "user.h"
 
 static
 int
 userCtor(void * _this, va_list * params)
 {
 	User   this     = _this;
+
+	this->namespace = va_arg(* params, TR_Uuid);
 	char * username = va_arg(* params, char *);
 
 	if (NULL != username) {
@@ -140,15 +142,14 @@ userUnserialize(
 
 static
 void *
-userIndexUuid(void * _this, void * _namespace)
+userIndexUuid(void * _this)
 {
 	User this      = _this;
-	Uuid namespace = _namespace;
 
-	return uuidVersion3(
+	return TR_uuidVersion3(
 			(unsigned char *)this->username,
 			*this->nusername,
-			namespace);
+			this->namespace);
 }
 
 

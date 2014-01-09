@@ -25,10 +25,11 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "hash.h"
 #include "http/cookie.h"
-#include "utils/hash.h"
 
 
 static
@@ -51,7 +52,7 @@ httpCookieCtor(void * _this, va_list * params)
 	this->value[this->nvalue] = 0;
 	memcpy(this->value, value, this->nvalue);
 
-	this->hash = sdbm((unsigned char *)key, nkey);
+	this->hash = TR_sdbm((unsigned char *)key, nkey);
 
 	return 0;
 }

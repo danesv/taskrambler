@@ -22,7 +22,9 @@
 
 #define _GNU_SOURCE
 
-#include "trbase.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "application/application.h"
 #include "session.h"
 #include "hash.h"
@@ -41,13 +43,13 @@ controllerUserCreate(
 {
 	Credential   credential;
 	User         user;
-	Uuid         user_id;
+	TR_Uuid      user_id;
 	char       * response_data;
 
 	_controllerProcessUserCreateArgs(args, &user, &credential);
 
 	user_id = applicationCreateUser(application, credential, user);
-	if (0 == uuidCompare(uuidZero, user_id)) {
+	if (0 == TR_uuidCompare(TR_uuidZero, user_id)) {
 		response_data = NULL;
 	} else {
 		response_data = controllerCurrentuserRead(application, session, NULL);

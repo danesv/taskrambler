@@ -25,14 +25,16 @@
 
 #include <sys/types.h>
 
-#include "trbase.h"
-#include "uuid.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "auth.h"
 
 TR_CLASS(User) {
 	unsigned long hash;
 	AuthModule    auth_type;
 
+	TR_Uuid namespace;
 	/**
 	 * username holds the identifier of the user.
 	 * For ldap users this is the common name.

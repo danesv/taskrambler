@@ -2,8 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = subdir-objects
 
 
-TRUTILS = utils/hash.c \
-	  utils/http.c \
+TRUTILS = utils/http.c \
 	  utils/daemonize.c \
 	  utils/signalHandling.c \
 	  utils/mime_type.c
@@ -13,8 +12,7 @@ TRCOMMONLIBS = cbuf/libcbuf.la \
 	       queue/libqueue.la \
 	       logger/liblogger.la \
 	       tree/libtree.la \
-	       stream/libstream.la \
-	       uuid/libuuid.la
+	       stream/libstream.la
 
 TRHTTPSERVER = http/libhttp.la \
 	       asset/libasset.la \
@@ -29,8 +27,8 @@ TR = ./application/.libs/libapplication.a \
      ./config/.libs/libconfig.a \
      ./router/.libs/librouter.a
 
-TRLIBS = -ltrutils -ltrhttpserver -ltrcommon
-USEDLIBS = -lrt -lssl -lcrypto -lldap -lgdbm -luuid -ldl
+TRLIBS = -ltrbase -ltrhashing -ltrutils -ltrhttpserver -ltrcommon
+USEDLIBS = -lrt -lssl -lcrypto -lldap -lgdbm -luuid
 
 AM_CFLAGS += -I../include/
 
@@ -57,4 +55,4 @@ taskrambler_LDFLAGS = -Wl,--export-dynamic \
 
 SUBDIRS = asset auth cbuf hash queue http \
 	  logger server session socket stream tree application \
-	  storage user config router uuid
+	  storage user config router

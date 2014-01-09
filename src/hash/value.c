@@ -25,8 +25,9 @@
 #include <string.h>
 #include <sys/types.h>
 
-#include "trbase.h"
-#include "utils/hash.h"
+#include <trbase.h>
+#include <trhash.h>
+
 #include "hash/value.h"
 #include "hash/interface/hashable.h"
 
@@ -46,7 +47,7 @@ hashValueCtor(void * _this, va_list * params)
 	this->key[this->nkey] = 0;
 	memcpy(this->key, key, this->nkey);
 
-	this->hash = sdbm((unsigned char *)this->key, this->nkey);
+	this->hash = TR_sdbm((unsigned char *)this->key, this->nkey);
 
 	if (NULL != value) {
 		this->value = TR_malloc(this->nvalue + 1);
