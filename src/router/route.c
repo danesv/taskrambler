@@ -254,7 +254,6 @@ routerRoute(
 
 	switch (request->method_id) {
 		case HTTP_GET:
-			TR_delete(args);
 			break;
 
 		case HTTP_POST:
