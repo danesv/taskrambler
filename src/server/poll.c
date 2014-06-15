@@ -24,7 +24,7 @@
 #include <errno.h>
 
 #include "server.h"
-#include "logger.h"
+#include "trio.h"
 
 #include "utils/signalHandling.h"
 
@@ -69,7 +69,7 @@ serverPoll(Server this) {
 					// DROP THROUGH
 
 				case EINTR:
-					loggerLog(this->logger, LOGGER_CRIT,
+					TR_loggerLog(this->logger, TR_LOGGER_CRIT,
 							"poll systemcall failed: [%s] - service terminated",
 							strerror(errno));
 			}

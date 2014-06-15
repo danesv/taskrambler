@@ -8,7 +8,7 @@ AC_INIT([taskrambler],
 LT_INIT
 AM_INIT_AUTOMAKE
 #AM_INIT_AUTOMAKE([subdir-objects])
-#AM_SILENT_RULES([yes])
+AM_SILENT_RULES([yes])
 AC_COPYRIGHT([Copyright © 2013 Georg Hopp])
 AC_REVISION([m4_esyscmd_s([git describe --always])])
 AC_CONFIG_SRCDIR([src/taskrambler.c])
@@ -93,11 +93,8 @@ AC_CONFIG_FILES([Makefile
 		 src/hash/Makefile
 		 src/queue/Makefile
 		 src/http/Makefile
-		 src/logger/Makefile
 		 src/server/Makefile
 		 src/session/Makefile
-		 src/socket/Makefile
-		 src/stream/Makefile
 		 src/tree/Makefile
 		 src/application/Makefile
 		 src/storage/Makefile

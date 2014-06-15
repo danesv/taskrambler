@@ -10,14 +10,11 @@ TRUTILS = utils/http.c \
 TRCOMMONLIBS = cbuf/libcbuf.la \
 	       hash/libhash.la \
 	       queue/libqueue.la \
-	       logger/liblogger.la \
-	       tree/libtree.la \
-	       stream/libstream.la
+	       tree/libtree.la
 
 TRHTTPSERVER = http/libhttp.la \
 	       asset/libasset.la \
-	       server/libserver.la \
-	       socket/libsocket.la
+	       server/libserver.la
 
 TR = ./application/.libs/libapplication.a \
      ./user/.libs/libuser.a \
@@ -27,7 +24,7 @@ TR = ./application/.libs/libapplication.a \
      ./config/.libs/libconfig.a \
      ./router/.libs/librouter.a
 
-TRLIBS = -ltrbase -ltrhashing -ltrutils -ltrhttpserver -ltrcommon
+TRLIBS = -ltrbase -ltrhashing -ltrio -ltrutils -ltrhttpserver -ltrcommon
 USEDLIBS = -lrt -lssl -lcrypto -lldap -lgdbm -luuid
 
 AM_CFLAGS += -I../include/
@@ -54,5 +51,5 @@ taskrambler_LDFLAGS = -Wl,--export-dynamic \
 		      -Wl,--whole-archive,./application/.libs/libapplication.a,--no-whole-archive
 
 SUBDIRS = asset auth cbuf hash queue http \
-	  logger server session socket stream tree application \
+	  server session tree application \
 	  storage user config router

@@ -23,7 +23,7 @@
 #include <stdarg.h>
 
 #include "trbase.h"
-#include "stream.h"
+#include "trio.h"
 #include "queue.h"
 #include "http/writer.h"
 
@@ -56,7 +56,7 @@ httpWriterDtor(void * _this)
 }
 
 TR_INIT_IFACE(TR_Class, httpWriterCtor, httpWriterDtor, NULL);
-TR_INIT_IFACE(StreamWriter, httpWriterWrite);
-TR_CREATE_CLASS(HttpWriter, NULL, TR_IF(TR_Class), TR_IF(StreamWriter));
+TR_INIT_IFACE(TR_StreamWriter, httpWriterWrite);
+TR_CREATE_CLASS(HttpWriter, NULL, TR_IF(TR_Class), TR_IF(TR_StreamWriter));
 
 // vim: set ts=4 sw=4:

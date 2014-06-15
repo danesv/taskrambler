@@ -27,31 +27,30 @@
 #include <openssl/ssl.h>
 
 #include "trbase.h"
+#include "trio.h"
 #include "http/worker.h"
 #include "server.h"
-#include "logger.h"
-#include "stream.h"
 
 int
 serverHandleAccept(Server this, unsigned int i)
 {
-	char   remoteAddr[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-	Sock   acc = NULL;
-	Stream st;
+	char      remoteAddr[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+	TR_Sock   acc = NULL;
+	TR_Stream st;
 
 	if (this->nfds >= this->max_fds) {
 		return -1;
 	}
 
-	acc = socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
+	acc = TR_socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
 
 	if (NULL != acc && -1 != acc->handle) {
-		socketNonblock(acc);
+		TR_socketNonblock(acc);
 
 		switch(i) {
 			case 0:
 				// no SSL
-				st = TR_new(Stream, STREAM_FD, acc->handle);
+				st = TR_new(TR_Stream, TR_STREAM_FD, acc->handle);
 				break;
 
 			case 1:
@@ -60,7 +59,7 @@ serverHandleAccept(Server this, unsigned int i)
 					SSL * ssl = SSL_new(this->ctx);
 					SSL_set_fd(ssl, acc->handle);
 					SSL_accept(ssl);
-					st = TR_new(Stream, STREAM_SSL, ssl);
+					st = TR_new(TR_Stream, TR_STREAM_SSL, ssl);
 				}
 				break;
 
@@ -85,15 +84,15 @@ serverHandleAccept(Server this, unsigned int i)
 		switch(errno) {
 			case EAGAIN|EWOULDBLOCK:
 			case EINTR:
-				loggerLog(this->logger,
-						LOGGER_DEBUG,
+				TR_loggerLog(this->logger,
+						TR_LOGGER_DEBUG,
 						"server accept blocks");
 				return -1;
 				break;
 
 			default:
-				loggerLog(this->logger,
-						LOGGER_DEBUG,
+				TR_loggerLog(this->logger,
+						TR_LOGGER_DEBUG,
 						"server accept error");
 				return -2;
 				break;
@@ -101,8 +100,8 @@ serverHandleAccept(Server this, unsigned int i)
 	}
 
 	if (0 == this->nfds%200) {
-		loggerLog(this->logger,
-				LOGGER_DEBUG, "paralel connections: %lu", this->nfds);
+		TR_loggerLog(this->logger,
+				TR_LOGGER_DEBUG, "paralel connections: %lu", this->nfds);
 	}
 
 	return acc->handle;

@@ -38,7 +38,7 @@ mockWorkerClone(void * _this, void * _base)
 
 static
 ssize_t
-mockWorkerRead(void * _this, Stream st)
+mockWorkerRead(void * _this, TR_Stream st)
 {
 	MockWorker this = _this;
 	size_t size;
@@ -50,19 +50,19 @@ mockWorkerRead(void * _this, Stream st)
 
 static
 ssize_t
-mockWorkerWrite(void * _this, Stream st)
+mockWorkerWrite(void * _this, TR_Stream st)
 {
 	return 0;
 }
 
 INIT_IFACE(Class, mockWorkerCtor, mockWorkerDtor, mockWorkerClone);
-INIT_IFACE(StreamReader, mockWorkerRead);
-INIT_IFACE(StreamWriter, mockWorkerWrite);
+INIT_IFACE(TR_StreamReader, mockWorkerRead);
+INIT_IFACE(TR_StreamWriter, mockWorkerWrite);
 CREATE_CLASS(
 		MockWorker,
 		NULL,
 		IFACE(Class),
-		IFACE(StreamReader),
-		IFACE(StreamWriter));
+		IFACE(TR_StreamReader),
+		IFACE(TR_StreamWriter));
 
 // vim: set ts=4 sw=4:

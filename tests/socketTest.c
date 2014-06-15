@@ -5,7 +5,7 @@
 #include "runtest.h"
 #include "class.h"
 #include "socket.h"
-#include "logger.h"
+#include "trio.h"
 #include "mock/mock_logger.h"
 
 

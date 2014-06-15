@@ -23,8 +23,7 @@
 #include <errno.h>
 
 #include "server.h"
-#include "logger.h"
-#include "stream.h"
+#include "trio.h"
 
 ssize_t
 serverWrite(Server this, unsigned int i)
@@ -32,14 +31,14 @@ serverWrite(Server this, unsigned int i)
 	int     fd = (this->fds)[i].fd;
 
 	if (NULL == (this->conns)[fd].worker) {
-		loggerLog(
+		TR_loggerLog(
 				this->logger,
-				LOGGER_INFO,
+				TR_LOGGER_INFO,
 				"initialization error: NULL worker");
 		return -2;
 	}
 
-	return streamWriterWrite(
+	return TR_streamWriterWrite(
 			(this->conns)[fd].worker,
 			(this->conns)[fd].stream);
 }

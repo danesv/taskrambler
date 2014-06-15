@@ -21,7 +21,7 @@
  */
 
 #include "server.h"
-#include "logger.h"
+#include "trio.h"
 
 #include "utils/signalHandling.h"
 
@@ -37,7 +37,7 @@ serverRun(Server this)
 {
 	int events = 0;
 
-	loggerLog(this->logger, LOGGER_INFO, "service started");
+	TR_loggerLog(this->logger, TR_LOGGER_INFO, "service started");
 
 	while (!doShutdown) //! until error or signal 
 	{

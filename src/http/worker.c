@@ -31,7 +31,7 @@
 #include <search.h>
 
 #include "trbase.h"
-#include "stream.h"
+#include "trio.h"
 #include "hash.h"
 #include "queue.h"
 #include "http/worker.h"
@@ -116,8 +116,8 @@ httpWorkerClone(void * _this, void * _base)
 	this->writer = TR_new(HttpWriter);
 }
 
-ssize_t httpWorkerProcess(void *, Stream);
-ssize_t httpWorkerWrite(void *, Stream);
+ssize_t httpWorkerProcess(void *, TR_Stream);
+ssize_t httpWorkerWrite(void *, TR_Stream);
 
 static
 void
@@ -158,8 +158,8 @@ httpWorkerNotify(void * _this)
 }
 
 TR_INIT_IFACE(TR_Class, httpWorkerCtor, httpWorkerDtor, httpWorkerClone);
-TR_INIT_IFACE(StreamReader, httpWorkerProcess);
-TR_INIT_IFACE(StreamWriter, httpWorkerWrite);
+TR_INIT_IFACE(TR_StreamReader, httpWorkerProcess);
+TR_INIT_IFACE(TR_StreamWriter, httpWorkerWrite);
 TR_INIT_IFACE(
 		TR_Subject,
 		httpWorkerAttach,
@@ -169,8 +169,8 @@ TR_CREATE_CLASS(
 		HttpWorker,
 		NULL, 
 		TR_IF(TR_Class),
-		TR_IF(StreamReader),
-		TR_IF(StreamWriter),
+		TR_IF(TR_StreamReader),
+		TR_IF(TR_StreamWriter),
 		TR_IF(TR_Subject));
 
 // vim: set ts=4 sw=4:

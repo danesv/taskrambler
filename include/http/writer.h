@@ -27,9 +27,9 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trio.h"
 #include "http/message.h"
 #include "queue.h"
-#include "stream.h"
 
 
 /*
@@ -90,7 +90,7 @@ TR_CLASS(HttpWriter) {
 	HttpWriterState state;
 };
 
-ssize_t httpWriterWrite(void *, Stream);
+ssize_t httpWriterWrite(void *, TR_Stream);
 
 #endif // __HTTP_WRITER_H__
 

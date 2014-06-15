@@ -42,7 +42,7 @@
 #include <sys/types.h>
 
 #include "trbase.h"
-#include "stream.h"
+#include "trio.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"

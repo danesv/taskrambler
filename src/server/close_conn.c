@@ -24,19 +24,19 @@
 #include <string.h>
 
 #include "trbase.h"
+#include "trio.h"
 #include "server.h"
-#include "stream.h"
 
 void
 serverCloseConn(Server this, unsigned int i)
 {
-	int    fd = (this->fds)[i].fd;
-	Stream st = (this->conns[fd]).stream;
+	int       fd = (this->fds)[i].fd;
+	TR_Stream st = (this->conns[fd]).stream;
 
 	TR_delete((this->conns)[fd].sock);
 	TR_delete((this->conns)[fd].worker);
 
-	if (NULL != st && STREAM_SSL == st->type) {
+	if (NULL != st && TR_STREAM_SSL == st->type) {
 		SSL_shutdown((st->handle).ssl);
 		SSL_free((st->handle).ssl);
 		(st->handle).ssl = NULL;

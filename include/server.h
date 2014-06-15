@@ -32,22 +32,20 @@
 #include <openssl/ssl.h>
 
 #include "trbase.h"
-#include "socket.h"
-#include "logger.h"
-#include "stream.h"
+#include "trio.h"
 
 struct conns {
-	Sock   sock;
-	Stream stream;
-	void * worker;
+	TR_Sock     sock;
+	TR_Stream   stream;
+	void      * worker;
 };
 
 TR_CLASS(Server) {
-	Logger          logger;
-	Sock            sock;
-	Sock            sockSSL;
-	SSL_CTX *       ctx;
-	void *          worker;
+	TR_Logger       logger;
+	TR_Sock         sock;
+	TR_Sock         sockSSL;
+	SSL_CTX       * ctx;
+	void          * worker;
 
 	nfds_t          nfds;
 	struct pollfd * fds;

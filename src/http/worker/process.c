@@ -48,7 +48,7 @@ void		httpWorkerAddComputedHeader(HttpWorker);
 extern Config config;
 
 ssize_t
-httpWorkerProcess(HttpWorker this, Stream st)
+httpWorkerProcess(HttpWorker this, TR_Stream st)
 {
 	ssize_t requests = httpParserParse(this->parser, st);
 

@@ -25,10 +25,10 @@
 #define __HTTP_PARSER_H__
 
 #include "trbase.h"
+#include "trio.h"
 #include "http/message.h"
 #include "queue.h"
 #include "cbuf.h"
-#include "stream.h"
 
 
 #define PARSER_MAX_BUF	131072
@@ -56,7 +56,7 @@ TR_CLASS(HttpParser) {
 	HttpMessageState state;
 };
 
-ssize_t httpParserParse(void *, Stream);
+ssize_t httpParserParse(void *, TR_Stream);
 void    httpParserRequestVars(HttpParser);
 void    httpParserHeader(HttpParser, const char *, const char *);
 void    httpParserNewMessage(HttpParser, const char *, const char * lend);

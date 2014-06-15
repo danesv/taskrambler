@@ -38,17 +38,15 @@
 
 #include <trbase.h>
 #include <trhash.h>
+#include <trio.h>
 
 #include "server.h"
-#include "logger.h"
 #include "http/worker.h"
 #include "auth.h"
 #include "application/application.h"
 #include "application/adapter/http.h"
 #include "config/config.h"
 #include "config/value.h"
-
-#include "logger.h"
 
 #include "utils/signalHandling.h"
 #include "utils/mime_type.h"
@@ -63,8 +61,8 @@ void nullhandler() {}
 
 void daemonize(void);
 
-Logger logger;
-Config config;
+TR_Logger logger;
+Config    config;
 
 int
 main()
@@ -77,15 +75,15 @@ main()
 	int              shm;
 	struct randval * value;
 
-	logger = TR_new(LoggerSyslog, LOGGER_DEBUG);
+	logger = TR_new(TR_LoggerSyslog, TR_LOGGER_DEBUG);
 	config = TR_new(Config, CONFIGDIR "/taskrambler.conf");
 
 	if (NULL == config) {
-		loggerLog(logger, LOGGER_INFO,
+		TR_loggerLog(logger, TR_LOGGER_INFO,
 				"unable to load configuration file: %s\n",
 				CONFIGDIR "/taskrambler.conf");
 
-		if (! TR_INSTANCE_OF(LoggerStderr, logger)) {
+		if (! TR_INSTANCE_OF(TR_LoggerStderr, logger)) {
 			fprintf(stderr,
 					"unable to load configuration file: %s\n",
 					CONFIGDIR "/taskrambler.conf");
@@ -255,19 +253,19 @@ main()
 
 					if (0 < w) {
 						if (WIFEXITED(status)) {
-							loggerLog(logger, LOGGER_INFO,
+							TR_loggerLog(logger, TR_LOGGER_INFO,
 									"child exited, status=%d\n",
 									WEXITSTATUS(status));
 						} else if (WIFSIGNALED(status)) {
-							loggerLog(logger, LOGGER_INFO,
+							TR_loggerLog(logger, TR_LOGGER_INFO,
 									"killed by signal %d\n",
 									WTERMSIG(status));
 						} else if (WIFSTOPPED(status)) {
-							loggerLog(logger, LOGGER_INFO,
+							TR_loggerLog(logger, TR_LOGGER_INFO,
 									"stopped by signal %d\n",
 									WSTOPSIG(status));
 						} else if (WIFCONTINUED(status)) {
-							loggerLog(logger, LOGGER_INFO, "continued\n");
+							TR_loggerLog(logger, TR_LOGGER_INFO, "continued\n");
 						}
 					}
 				} while (!WIFEXITED(status) && !WIFSIGNALED(status));

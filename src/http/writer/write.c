@@ -26,13 +26,13 @@
 #include <trbase.h>
 
 #include "http/message.h"
+#include "trio.h"
 #include "queue.h"
 #include "http/writer.h"
-#include "stream.h"
 
 
 ssize_t
-httpWriterWrite(void * _this, Stream st)
+httpWriterWrite(void * _this, TR_Stream st)
 {
 	HttpWriter this = _this;
 
@@ -94,7 +94,7 @@ httpWriterWrite(void * _this, Stream st)
 			to_write = (this->nheader + this->nbody) - this->written;
 		}
 
-		written = streamWrite(st, start, to_write);
+		written = TR_streamWrite(st, start, to_write);
 
 		if (written < 0) {
 			return written;

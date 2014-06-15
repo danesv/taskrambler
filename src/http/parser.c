@@ -25,7 +25,7 @@
 #include <stdarg.h>
 
 #include "trbase.h"
-#include "stream.h"
+#include "trio.h"
 #include "http/parser.h"
 #include "queue.h"
 #include "http/request.h"
@@ -66,7 +66,7 @@ httpParserDtor(void * _this)
 } 
 
 TR_INIT_IFACE(TR_Class, httpParserCtor, httpParserDtor, NULL);
-TR_INIT_IFACE(StreamReader, httpParserParse);
-TR_CREATE_CLASS(HttpParser, NULL, TR_IF(TR_Class), TR_IF(StreamReader));
+TR_INIT_IFACE(TR_StreamReader, httpParserParse);
+TR_CREATE_CLASS(HttpParser, NULL, TR_IF(TR_Class), TR_IF(TR_StreamReader));
 
 // vim: set ts=4 sw=4:

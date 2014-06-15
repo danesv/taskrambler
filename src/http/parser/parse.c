@@ -23,8 +23,8 @@
 #include <stdlib.h>
 
 #include "trbase.h"
+#include "trio.h"
 #include "cbuf.h"
-#include "stream.h"
 #include "queue.h"
 
 #include "http/parser.h"
@@ -33,7 +33,7 @@
 
 
 ssize_t
-httpParserParse(void * _this, Stream st)
+httpParserParse(void * _this, TR_Stream st)
 {
 	HttpParser this = _this;
 	int        cont = 1;

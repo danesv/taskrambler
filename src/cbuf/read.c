@@ -24,12 +24,12 @@
 #include <unistd.h>
 #include <errno.h>
 
+#include "trio.h"
 #include "cbuf.h"
-#include "stream.h"
 
 
 ssize_t
-cbufRead(Cbuf this, Stream st)
+cbufRead(Cbuf this, TR_Stream st)
 {
 	size_t  rsize = cbufGetFree(this);
 	ssize_t rrsize;
@@ -39,7 +39,7 @@ cbufRead(Cbuf this, Stream st)
 		return -1;
 	}
 
-	rrsize = streamRead(st, cbufGetWrite(this), rsize);
+	rrsize = TR_streamRead(st, cbufGetWrite(this), rsize);
 
 	if (0 < rrsize) {
 		cbufIncWrite(this, rrsize);

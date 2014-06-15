@@ -25,8 +25,8 @@
 #define __HTTP_MESSAGE__
 
 #include "trbase.h"
+#include "trio.h"
 #include "hash.h"
-#include "stream.h"
 #include "asset.h"
 
 TR_CLASS(HttpMessage) {

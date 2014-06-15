@@ -22,12 +22,12 @@
 
 #include <sys/types.h>
 
+#include "trio.h"
 #include "http/worker.h"
 #include "http/writer.h"
-#include "stream.h"
 
 ssize_t
-httpWorkerWrite(HttpWorker this, Stream st)
+httpWorkerWrite(HttpWorker this, TR_Stream st)
 {
 	return httpWriterWrite(this->writer, st);
 }

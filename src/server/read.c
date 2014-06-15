@@ -23,9 +23,7 @@
 #include <errno.h>
 
 #include "server.h"
-#include "logger.h"
-#include "stream.h"
-
+#include "trio.h"
 
 ssize_t
 serverRead(Server this, unsigned int i)
@@ -33,14 +31,14 @@ serverRead(Server this, unsigned int i)
 	int     fd = (this->fds)[i].fd;
 
 	if (NULL == (this->conns)[fd].worker) {
-		loggerLog(
+		TR_loggerLog(
 				this->logger,
-				LOGGER_INFO,
+				TR_LOGGER_INFO,
 				"initialization error: NULL reader");
 		return -2;
 	}
 
-	return streamReaderRead(
+	return TR_streamReaderRead(
 			(this->conns)[fd].worker,
 			(this->conns)[fd].stream);
 }

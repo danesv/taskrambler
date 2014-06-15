@@ -35,7 +35,7 @@
 #include <sys/types.h>
 
 #include "trbase.h"
-#include "stream.h"
+#include "trio.h"
 
 #define ECBUFOVFL		100
 
@@ -53,8 +53,8 @@ TR_CLASS(Cbuf) {
 	size_t read;
 };
 
-ssize_t cbufRead(Cbuf,  Stream);
-ssize_t cbufWrite(Cbuf, Stream);
+ssize_t cbufRead(Cbuf,  TR_Stream);
+ssize_t cbufWrite(Cbuf, TR_Stream);
 
 char *  cbufGetLine(Cbuf, char **);
 char *  cbufGetData(Cbuf, size_t);
