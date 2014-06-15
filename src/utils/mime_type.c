@@ -27,10 +27,11 @@
 
 // for fopen
 #include <stdio.h>
-#include "hash.h"
-#include "trbase.h"
 
-Hash mime_types = NULL;
+#include "trbase.h"
+#include "trdata.h"
+
+TR_Hash mime_types = NULL;
 
 void
 readMimeTypes(void)
@@ -42,7 +43,7 @@ readMimeTypes(void)
 			char buffer[512];
 
 			buffer[511] = '\0';
-			mime_types  = TR_new(Hash);
+			mime_types  = TR_new(TR_Hash);
 
 			while (NULL != fgets(buffer, 511, handle)) {
 				char * tmp;
@@ -68,8 +69,8 @@ readMimeTypes(void)
 					value[nvalue] = '\0';
 				}   
 
-				hashAdd(mime_types,
-						TR_new(HashValue, key, nkey, value, nvalue));
+				TR_hashAdd(mime_types,
+						TR_new(TR_HashValue, key, nkey, value, nvalue));
 			}           
 
 			fclose(handle);
@@ -80,7 +81,7 @@ readMimeTypes(void)
 char *
 getMimeType(const char * ext, size_t len)
 {
-	HashValue type;
+	TR_HashValue type;
 
 	if (NULL == mime_types) {
 		readMimeTypes();
@@ -90,7 +91,7 @@ getMimeType(const char * ext, size_t len)
 		}
 	}
 
-	type = hashGet(mime_types, ext, len);
+	type = TR_hashGet(mime_types, ext, len);
 
 	if (NULL == type) {
 		return NULL;

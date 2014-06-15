@@ -28,7 +28,7 @@
 #include <sys/time.h>
 
 #include "trbase.h"
-#include "queue.h"
+#include "trdata.h"
 
 #include "http/worker.h"
 #include "http/header.h"
@@ -57,8 +57,8 @@ httpWorkerProcess(HttpWorker this, TR_Stream st)
 	}
 
 	if (0 < requests) {
-		while (! queueEmpty(this->parser->queue)) {
-			this->current_request  = queueGet(this->parser->queue);
+		while (! TR_queueEmpty(this->parser->queue)) {
+			this->current_request  = TR_queueGet(this->parser->queue);
 			this->current_response = NULL;
 
 			/*
@@ -124,7 +124,7 @@ httpWorkerProcess(HttpWorker this, TR_Stream st)
 			httpWorkerAddCommonHeader(this);
 			httpWorkerAddComputedHeader(this);
 			TR_delete(this->current_request);
-			queuePut(this->writer->queue, this->current_response);
+			TR_queuePut(this->writer->queue, this->current_response);
 			this->current_response = NULL;
 		}
 	}

@@ -26,7 +26,7 @@
 #include <sys/types.h>
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
 #include "http/interface/http_intro.h"
 #include "http/request.h"
 
@@ -66,9 +66,9 @@ httpRequestCtor(void * _this, va_list * params)
 		return -1;
 	}
 
-	this->get     = TR_new(Hash);
-	this->post    = TR_new(Hash);
-	this->cookies = TR_new(Hash);
+	this->get     = TR_new(TR_Hash);
+	this->post    = TR_new(TR_Hash);
+	this->cookies = TR_new(TR_Hash);
 
 	return 0;
 }

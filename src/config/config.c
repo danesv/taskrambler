@@ -27,6 +27,8 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "config/config.h"
 #include "config/value.h"
 
@@ -51,7 +53,7 @@ configCtor(void * _this, va_list * params)
 		return -1;
 	}
 
-	this->config = TR_new(Hash);
+	this->config = TR_new(TR_Hash);
 
 	line[MAX_CONFIG_LINE] = '\0';
 
@@ -96,7 +98,7 @@ configCtor(void * _this, va_list * params)
 		value[nvalue] = '\0';
 
 		if (0 != nkey && 0 != nvalue) {
-			hashAdd(
+			TR_hashAdd(
 					this->config,
 					TR_new(ConfigValue, key, nkey, value, nvalue));
 		}

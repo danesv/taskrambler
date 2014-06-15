@@ -27,7 +27,7 @@
 
 #include "http/message.h"
 #include "trio.h"
-#include "queue.h"
+#include "trdata.h"
 #include "http/writer.h"
 
 
@@ -43,8 +43,8 @@ httpWriterWrite(void * _this, TR_Stream st)
 
 		case HTTP_WRITER_GET:
 
-		if (! queueEmpty(this->queue)) {
-			this->current = queueGet(this->queue);
+		if (! TR_queueEmpty(this->queue)) {
+			this->current = TR_queueGet(this->queue);
 
 			this->written = 0;
 			this->nheader = httpMessageHeaderSizeGet(this->current);

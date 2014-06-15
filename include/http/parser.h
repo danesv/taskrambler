@@ -26,9 +26,8 @@
 
 #include "trbase.h"
 #include "trio.h"
+#include "trdata.h"
 #include "http/message.h"
-#include "queue.h"
-#include "cbuf.h"
 
 
 #define PARSER_MAX_BUF	131072
@@ -44,13 +43,13 @@ typedef enum e_HttpMessageState {
 
 
 TR_CLASS(HttpParser) {
-	Cbuf             buffer;
+	TR_Cbuf          buffer;
 	Bool             ourLock;
 
 	char *           incomplete;
 	size_t           isize;
 
-	Queue            queue;
+	TR_Queue         queue;
 	HttpMessage      current;
 
 	HttpMessageState state;

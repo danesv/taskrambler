@@ -24,8 +24,7 @@
 
 #include "trbase.h"
 #include "trio.h"
-#include "cbuf.h"
-#include "queue.h"
+#include "trdata.h"
 
 #include "http/parser.h"
 #include "http/header.h"
@@ -41,22 +40,22 @@ httpParserParse(void * _this, TR_Stream st)
 	char *     line;
 	char *     line_end;
 
-	if (cbufIsLocked(this->buffer)) {
+	if (TR_cbufIsLocked(this->buffer)) {
 		if (FALSE == this->ourLock)
 			return 0;
 	}
 	else {
-		cbufLock(this->buffer);
+		TR_cbufLock(this->buffer);
 		this->ourLock = TRUE;
 	}
 
 	if (NULL != this->incomplete) {
-		cbufSetData(this->buffer, this->incomplete, this->isize);
+		TR_cbufSetData(this->buffer, this->incomplete, this->isize);
 		TR_MEM_FREE(this->incomplete);
 	}
 
-	if (0 > (read = cbufRead(this->buffer, st))) {
-		cbufRelease(this->buffer);
+	if (0 > (read = TR_cbufRead(this->buffer, st))) {
+		TR_cbufRelease(this->buffer);
 		this->ourLock = FALSE;
 		return read;
 	}
@@ -64,27 +63,27 @@ httpParserParse(void * _this, TR_Stream st)
 	while (cont) {
 		switch(this->state) {
 			case HTTP_MESSAGE_GARBAGE:
-				cbufSkipNonAlpha(this->buffer);
-				if (! cbufIsEmpty(this->buffer)) {
+				TR_cbufSkipNonAlpha(this->buffer);
+				if (! TR_cbufIsEmpty(this->buffer)) {
 					this->state = HTTP_MESSAGE_START;
 				}
 				else {
-					cbufRelease(this->buffer);
+					TR_cbufRelease(this->buffer);
 					this->ourLock = FALSE;
 					cont          = 0;
 					break;
 				}
 
 			case HTTP_MESSAGE_START:
-				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
-					if (! cbufIsEmpty(this->buffer)) {
+				if (NULL == (line = TR_cbufGetLine(this->buffer, &line_end))) {
+					if (! TR_cbufIsEmpty(this->buffer)) {
 						this->isize      = this->buffer->bused;
 						this->incomplete = TR_malloc(this->isize);
 						memcpy(this->incomplete,
-								cbufGetData(this->buffer, this->isize),
+								TR_cbufGetData(this->buffer, this->isize),
 								this->isize);
 					}
-					cbufRelease(this->buffer);
+					TR_cbufRelease(this->buffer);
 					this->ourLock = FALSE;
 					cont = 0;
 					break;
@@ -92,7 +91,7 @@ httpParserParse(void * _this, TR_Stream st)
 				
 				httpParserNewMessage(this, line, line_end);
 				if (NULL == this->current) {
-					cbufRelease(this->buffer);
+					TR_cbufRelease(this->buffer);
 					this->ourLock = FALSE;
 					return -2; // a server error occured can't process...
 				}
@@ -101,15 +100,15 @@ httpParserParse(void * _this, TR_Stream st)
 				this->state = HTTP_MESSAGE_INTRO_DONE;
 
 			case HTTP_MESSAGE_INTRO_DONE:
-				if (NULL == (line = cbufGetLine(this->buffer, &line_end))) {
-					if (! cbufIsEmpty(this->buffer)) {
+				if (NULL == (line = TR_cbufGetLine(this->buffer, &line_end))) {
+					if (! TR_cbufIsEmpty(this->buffer)) {
 						this->isize      = this->buffer->bused;
 						this->incomplete = TR_malloc(this->isize);
 						memcpy(this->incomplete,
-								cbufGetData(this->buffer, this->isize),
+								TR_cbufGetData(this->buffer, this->isize),
 								this->isize);
 					}
-					cbufRelease(this->buffer);
+					TR_cbufRelease(this->buffer);
 					this->ourLock = FALSE;
 					cont = 0;
 					break;
@@ -126,18 +125,18 @@ httpParserParse(void * _this, TR_Stream st)
 				if (this->current->dbody == this->current->nbody) {
 					this->state = HTTP_MESSAGE_DONE;
 				} else {
-					if (cbufIsEmpty(this->buffer)) {
-						cbufRelease(this->buffer);
+					if (TR_cbufIsEmpty(this->buffer)) {
+						TR_cbufRelease(this->buffer);
 						this->ourLock = FALSE;
 						cont = 0;
 						break;
 					}
 
-					cbufIncRead(
+					TR_cbufIncRead(
 							this->buffer,
 							httpParserBody(
 								this,
-								cbufGetRead(this->buffer),
+								TR_cbufGetRead(this->buffer),
 								this->buffer->bused));
 
 					break;
@@ -145,7 +144,7 @@ httpParserParse(void * _this, TR_Stream st)
 
 			case HTTP_MESSAGE_DONE:
 				{
-					HttpHeader enc = hashGet(
+					HttpHeader enc = TR_hashGet(
 							this->current->header,
 							CSTRA("content-type"));
 
@@ -164,7 +163,7 @@ httpParserParse(void * _this, TR_Stream st)
 					/**
 					 * enqueue current request
 					 */
-					queuePut(this->queue, this->current);
+					TR_queuePut(this->queue, this->current);
 					this->current = NULL;
 
 					/**

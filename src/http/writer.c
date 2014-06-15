@@ -24,7 +24,7 @@
 
 #include "trbase.h"
 #include "trio.h"
-#include "queue.h"
+#include "trdata.h"
 #include "http/writer.h"
 
 static
@@ -33,7 +33,7 @@ httpWriterCtor(void * _this, va_list * params)
 {
 	HttpWriter this = _this;
 
-	this->queue = TR_new(Queue);
+	this->queue = TR_new(TR_Queue);
 
 	return 0;
 }

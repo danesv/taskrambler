@@ -32,8 +32,6 @@
 
 #include "trbase.h"
 #include "trio.h"
-#include "hash.h"
-#include "queue.h"
 #include "http/worker.h"
 #include "http/parser.h"
 #include "http/writer.h"
@@ -49,12 +47,12 @@ httpWorkerCtor(void * _this, va_list * params)
 	this->id  = TR_malloc(strlen(id) + 1);
 	strcpy(this->id, id);
 
-	this->asset_pool = TR_new(Hash);
+	this->asset_pool = TR_new(TR_Hash);
 
 	sprintf(cbuf_id, "%s_%s", "parser", id);
-	this->pbuf   = TR_new(Cbuf, cbuf_id, PARSER_MAX_BUF);
+	this->pbuf   = TR_new(TR_Cbuf, cbuf_id, PARSER_MAX_BUF);
 
-	this->additional_headers = TR_new(Queue);
+	this->additional_headers = TR_new(TR_Queue);
 
 	this->parser = TR_new(HttpParser, this->pbuf);
 	this->writer = TR_new(HttpWriter);
@@ -91,7 +89,7 @@ httpWorkerClone(void * _this, void * _base)
 	this->asset_pool          = base->asset_pool;
 	this->application_adapter = base->application_adapter;
 
-	this->additional_headers = TR_new(Queue);
+	this->additional_headers = TR_new(TR_Queue);
 
 	this->parser = TR_new(HttpParser, base->pbuf);
 	/*

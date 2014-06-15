@@ -26,16 +26,16 @@
 #include <stdio.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 
 
 #define USER_JSON \
 	"{\"username\":\"%s\",\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
 
 char *
-controllerCurrentuserRead(Application app, Session sess, Hash args)
+controllerCurrentuserRead(Application app, Session sess, TR_Hash args)
 {
 	char   * buffer;
 	size_t   nbuffer;

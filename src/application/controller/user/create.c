@@ -24,22 +24,22 @@
 
 #include <trbase.h>
 #include <trhash.h>
+#include <trdata.h>
 
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 #include "auth/credential.h"
 #include "user.h"
 
 
-char * controllerCurrentuserRead(Application, Session, Hash);
-int   _controllerProcessUserCreateArgs(Hash, User *, Credential *);
+char * controllerCurrentuserRead(Application, Session, TR_Hash);
+int   _controllerProcessUserCreateArgs(TR_Hash, User *, Credential *);
 
 char *
 controllerUserCreate(
 		Application application,
 		Session     session,
-		Hash        args)
+		TR_Hash     args)
 {
 	Credential   credential;
 	User         user;

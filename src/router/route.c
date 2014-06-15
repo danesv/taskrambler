@@ -36,8 +36,9 @@
 #include <ctype.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "router.h"
-#include "hash.h"
 #include "session.h"
 #include "http/request.h"
 #include "http/response.h"
@@ -54,7 +55,7 @@ routerRoute(
 		Session     sess)
 {
 	char            functionName[COMMAND_LEN + this->nprefix * 10];
-	Hash            args = NULL;
+	TR_Hash         args = NULL;
 	fptr_routable   function;
 
 	char          * tmp;

@@ -24,21 +24,21 @@
 
 #include <trbase.h>
 #include <trhash.h>
+#include <trdata.h>
 
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 #include "user.h"
 
 
-char * controllerCurrentuserRead(Application, Session, Hash);
-int    _controllerUpdateUserFromArgs(Hash, User *);
+char * controllerCurrentuserRead(Application, Session, TR_Hash);
+int    _controllerUpdateUserFromArgs(TR_Hash, User *);
 
 char *
 controllerUserUpdate(
 		Application application,
 		Session     session,
-		Hash        args)
+		TR_Hash     args)
 {
 	TR_Uuid user_id;
 

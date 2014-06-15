@@ -26,8 +26,9 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "session.h"
-#include "hash.h"
 #include "application/application.h"
 
 
@@ -36,7 +37,7 @@ applicationSessionStart(Application this)
 {
 	Session sess = TR_new(Session);
 
-	hashAdd((this->active_sessions)[0], sess);
+	TR_hashAdd((this->active_sessions)[0], sess);
 
 	return sess;
 }

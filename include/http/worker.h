@@ -28,32 +28,30 @@
 #include <time.h>
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
 #include "http/parser.h"
 #include "http/writer.h"
-#include "cbuf.h"
 #include "session.h"
 
 #include "http/request.h"
 #include "http/response.h"
-#include "queue.h"
 
 
 TR_CLASS(HttpWorker) {
-	char * id;
+	char        * id;
 
-	Cbuf   pbuf;
-	Hash   asset_pool;
+	TR_Cbuf       pbuf;
+	TR_Hash       asset_pool;
 
-	void * application_adapter;
+	void        * application_adapter;
 
-	HttpRequest current_request;
-	HttpMessage current_response;
+	HttpRequest   current_request;
+	HttpMessage   current_response;
 
-	Queue  additional_headers;
+	TR_Queue      additional_headers;
 
-	HttpParser parser;
-	HttpWriter writer;
+	HttpParser    parser;
+	HttpWriter    writer;
 };
 
 #endif // __HTTP_WORKER_H__

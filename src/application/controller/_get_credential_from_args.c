@@ -23,18 +23,18 @@
 #define _GNU_SOURCE
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
 #include "auth/credential.h"
 
 
 int _controllerValidatePasswordRepeat(char *, size_t, char *, size_t);
 
 Credential
-_controllerGetCredentialFromArgs(Hash args)
+_controllerGetCredentialFromArgs(TR_Hash args)
 {
-	HashValue email     = hashGet(args, CSTRA("email"));
-	HashValue password  = hashGet(args, CSTRA("password"));
-	HashValue pwrepeat  = hashGet(args, CSTRA("pwrepeat"));
+	TR_HashValue email     = TR_hashGet(args, CSTRA("email"));
+	TR_HashValue password  = TR_hashGet(args, CSTRA("password"));
+	TR_HashValue pwrepeat  = TR_hashGet(args, CSTRA("pwrepeat"));
 
 	if (    
 			NULL == email || 

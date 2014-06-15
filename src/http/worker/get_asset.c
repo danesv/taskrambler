@@ -24,12 +24,12 @@
 #include <time.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "http/header.h"
 #include "http/message.h"
 #include "http/request.h"
 #include "http/response.h"
 #include "http/worker.h"
-#include "hash.h"
 
 HttpMessage
 httpWorkerGetAsset(HttpWorker this, const char * fname)
@@ -41,7 +41,7 @@ httpWorkerGetAsset(HttpWorker this, const char * fname)
 
 	size_t nfname = strlen(fname);
 
-	header = hashGet(
+	header = TR_hashGet(
 			((HttpMessage)this->current_request)->header,
 			CSTRA("If-None-Match"));
 

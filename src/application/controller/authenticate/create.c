@@ -23,32 +23,33 @@
 #define _GNU_SOURCE
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 #include "auth/credential.h"
 #include "user.h"
 
 
-char * controllerCurrentuserRead(Application, Session, Hash);
+char * controllerCurrentuserRead(Application, Session, TR_Hash);
 
 char *
 controllerAuthenticateCreate(
 		Application application,
 		Session     session,
-		Hash        args)
+		TR_Hash     args)
 {
-	HashValue  username;
-	HashValue  password;
-	Credential credential;
+	TR_HashValue   username;
+	TR_HashValue   password;
+	Credential     credential;
 
-	char * response_data;
+	char         * response_data;
 
-	username = hashGet(args, CSTRA("username"));
-	password = hashGet(args, CSTRA("password"));
+	username = TR_hashGet(args, CSTRA("username"));
+	password = TR_hashGet(args, CSTRA("password"));
 
 	if (NULL == username) {
-		username = hashGet(args, CSTRA("email"));
+		username = TR_hashGet(args, CSTRA("email"));
 	}
 
 	if (NULL == username || NULL == password) {

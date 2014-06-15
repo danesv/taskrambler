@@ -26,15 +26,16 @@
 #include <stdio.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 
 #define RANDVAL_JSON	"{\"ctime\":%ld,\"vnext\":%ld,\"value\":\"%02d\"}"
 
 
 char *
-controllerRandvalRead(Application app, Session sess, Hash args)
+controllerRandvalRead(Application app, Session sess, TR_Hash args)
 {
 	char   * buffer;
 	size_t   nbuffer;

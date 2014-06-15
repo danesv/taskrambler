@@ -40,7 +40,6 @@
 #include <trhash.h>
 
 #include "asset.h"
-#include "hash.h"
 
 #include "utils/mime_type.h"
 #include "utils/http.h"
@@ -139,7 +138,7 @@ assetHandleDouble(void * _this, void * _doub)
 }
 
 TR_INIT_IFACE(TR_Class, assetCtor, assetDtor, NULL);
-TR_INIT_IFACE(Hashable, assetGetHash, assetHandleDouble);
-TR_CREATE_CLASS(Asset, NULL, TR_IF(TR_Class), TR_IF(Hashable));
+TR_INIT_IFACE(TR_Hashable, assetGetHash, assetHandleDouble);
+TR_CREATE_CLASS(Asset, NULL, TR_IF(TR_Class), TR_IF(TR_Hashable));
 
 // vim: set ts=4 sw=4:

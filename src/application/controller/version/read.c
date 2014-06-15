@@ -26,14 +26,14 @@
 #include <stdio.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "application/application.h"
-#include "hash.h"
 #include "session.h"
 
 #define VERSION_JSON	"{\"version\":\"%s\"}"
 
 char *
-controllerVersionRead(Application app, Session sess, Hash args)
+controllerVersionRead(Application app, Session sess, TR_Hash args)
 {
 	char   * buffer;
 	size_t   nbuffer;

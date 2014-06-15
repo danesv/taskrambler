@@ -25,11 +25,11 @@
 
 #include <sys/types.h>
 
-#include <trbase.h>
-#include <trhash.h>
+#include "trbase.h"
+#include "trhash.h"
+#include "trdata.h"
 
 #include "session.h"
-#include "hash.h"
 #include "auth.h"
 #include "auth/credential.h"
 #include "storage/storage.h"
@@ -43,24 +43,24 @@ struct randval {
 };
 
 TR_CLASS(Application) {
-	Hash            * active_sessions;
+	TR_Hash         * active_sessions;
 	time_t            session_time_ofs;
 
 	Auth              auth;
 
-	struct randval  * val;
+	struct randval * val;
 
-	Storage           users;
-	Storage           passwords;
-	Storage           roles;
+	Storage          users;
+	Storage          passwords;
+	Storage          roles;
 
-	TR_Uuid           user_namespace;
+	TR_Uuid          user_namespace;
 
-	Hash              roles_user_index;
-	Hash              roles_resource_index;
+	TR_Hash          roles_user_index;
+	TR_Hash          roles_resource_index;
 
-	const char *      version;
-	const char *      loc;
+	const char     * version;
+	const char     * loc;
 };
 
 int     applicationLogin(Application, Credential, Session);

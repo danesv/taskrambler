@@ -34,22 +34,22 @@
 #include <dlfcn.h>
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
+
 #include "session.h"
 #include "http/request.h"
 #include "http/response.h"
 #include "application/application.h"
 
-typedef char * (* fptr_routable)(Application, Session, Hash);
+typedef char * (* fptr_routable)(Application, Session, TR_Hash);
 
 TR_CLASS(Router) {
-	Hash        functions;
+	TR_Hash     functions;
 	Application application;
 
 	void   * handle;
 	char   * prefix;
 	size_t   nprefix;
-
 };
 
 HttpResponse routerRoute(Router, HttpRequest, Session);

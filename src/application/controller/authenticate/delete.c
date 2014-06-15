@@ -22,18 +22,18 @@
 
 #define _GNU_SOURCE
 
+#include "trdata.h"
+
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 
-
-char * controllerCurrentuserRead(Application, Session, Hash);
+char * controllerCurrentuserRead(Application, Session, TR_Hash);
 
 char *
 controllerAuthenticateDelete(
 		Application application,
 		Session     session,
-		Hash        args)
+		TR_Hash     args)
 {
 	applicationLogout(application, session);
 	return controllerCurrentuserRead(application, session, NULL);

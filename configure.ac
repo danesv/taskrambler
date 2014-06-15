@@ -89,13 +89,9 @@ AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 src/asset/Makefile
 		 src/auth/Makefile
-		 src/cbuf/Makefile
-		 src/hash/Makefile
-		 src/queue/Makefile
 		 src/http/Makefile
 		 src/server/Makefile
 		 src/session/Makefile
-		 src/tree/Makefile
 		 src/application/Makefile
 		 src/storage/Makefile
 		 src/user/Makefile

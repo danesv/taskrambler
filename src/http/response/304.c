@@ -23,10 +23,10 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
-#include "hash.h"
 
 HttpResponse
 httpResponse304(
@@ -43,11 +43,11 @@ httpResponse304(
 	message->nbody = 0;
 	message->body  = NULL;
 
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("Content-Type"), mime, nmime));
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("ETag"), etag, netag));
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("Last-Modified"), mtime, nmtime));
 
 	return response;

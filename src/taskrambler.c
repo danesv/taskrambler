@@ -99,7 +99,7 @@ main()
 	setrlimit(RLIMIT_NOFILE, &limit);
 
 	init_signals();
-	daemonize();
+	//daemonize();
 
 	shm = shm_open("/fooshm", O_RDWR|O_CREAT, S_IRWXU);
 	if (-1 == ftruncate(shm, psize)) {

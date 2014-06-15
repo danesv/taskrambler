@@ -24,17 +24,17 @@
 
 #include <trbase.h>
 #include <trhash.h>
+#include <trdata.h>
 
-#include "hash.h"
 #include "user.h"
 
 
 int
-_controllerUpdateUserFromArgs(Hash args, User * user)
+_controllerUpdateUserFromArgs(TR_Hash args, User * user)
 {
-	HashValue email     = hashGet(args, CSTRA("email"));
-	HashValue firstname = hashGet(args, CSTRA("firstname"));
-	HashValue surname   = hashGet(args, CSTRA("surname"));
+	TR_HashValue email     = TR_hashGet(args, CSTRA("email"));
+	TR_HashValue firstname = TR_hashGet(args, CSTRA("firstname"));
+	TR_HashValue surname   = TR_hashGet(args, CSTRA("surname"));
 	User      new_user;
 
 	if (    

@@ -26,11 +26,10 @@
 
 #include "trbase.h"
 #include "trio.h"
+#include "trdata.h"
 #include "http/parser.h"
-#include "queue.h"
 #include "http/request.h"
 #include "http/response.h"
-#include "cbuf.h"
 
 
 static
@@ -39,13 +38,13 @@ httpParserCtor(void * _this, va_list * params)
 {
 	HttpParser this = _this;
 
-	this->buffer = va_arg(* params, Cbuf);
+	this->buffer = va_arg(* params, TR_Cbuf);
 
 	if (NULL == this->buffer) {
 		return -1;
 	}
 
-	this->queue = TR_new(Queue);
+	this->queue = TR_new(TR_Queue);
 
 	return 0;
 }
@@ -59,7 +58,7 @@ httpParserDtor(void * _this)
 	TR_delete(this->queue);
 
 	if (TRUE == this->ourLock)
-		cbufRelease(this->buffer);
+		TR_cbufRelease(this->buffer);
 
 	TR_MEM_FREE(this->incomplete);
 	TR_delete(this->current);

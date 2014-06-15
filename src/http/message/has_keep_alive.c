@@ -29,7 +29,7 @@
 #include "http/header.h"
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
 
 char
 httpMessageHasKeepAlive(HttpMessage message)
@@ -38,7 +38,7 @@ httpMessageHasKeepAlive(HttpMessage message)
 	size_t      size;
 	char *      value;
 
-	header = hashGet(message->header, CSTRA("connection"));
+	header = TR_hashGet(message->header, CSTRA("connection"));
 
 	if (NULL == header) {
 		return 0;

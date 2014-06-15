@@ -24,6 +24,8 @@
 
 #include <sys/types.h>
 
+#include "trdata.h"
+
 #include "session.h"
 #include "application/application.h"
 
@@ -35,7 +37,7 @@ applicationSessionStop(Application this, Session session)
 		(session->livetime - this->session_time_ofs);
 
 	if (SESSION_LIVETIME > index) {
-		hashDeleteByVal((this->active_sessions)[index], session->hash);
+		TR_hashDeleteByVal((this->active_sessions)[index], session->hash);
 	}
 }
 

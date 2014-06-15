@@ -24,15 +24,15 @@
 #define __CONFIG_H__
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
 #include "config/value.h"
 
 #define MAX_CONFIG_LINE		256
 
 
 TR_CLASS(Config) {
-	char * cnf_file;
-	Hash   config;
+	char    * cnf_file;
+	TR_Hash   config;
 };
 
 ConfigValue configGet(Config, const char *, size_t);

@@ -24,11 +24,11 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "trdata.h"
 #include "http/message.h"
 #include "http/response.h"
 #include "http/header.h"
 #include "http/interface/http_intro.h"
-#include "hash.h"
 
 static size_t size;
 
@@ -45,7 +45,7 @@ httpMessageHeaderSizeGet(HttpMessage message)
 {
 	size = httpIntroSizeGet(message);
 
-	hashEach(message->header, addHeaderSize);
+	TR_hashEach(message->header, addHeaderSize);
 	size += 2;
 
 	return size;

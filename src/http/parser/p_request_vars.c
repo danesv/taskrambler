@@ -25,9 +25,9 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "http/parser.h"
 #include "http/request.h"
-#include "hash.h"
 
 void
 httpParserRequestVars(HttpParser this)
@@ -62,8 +62,8 @@ httpParserRequestVars(HttpParser this)
 		nvalue = delim-eqsign-1;
 		value  = (0 != nvalue)? eqsign+1 : NULL;
 
-		hashAdd(request->get,
-				TR_new(HashValue, key, eqsign-key, value, nvalue));
+		TR_hashAdd(request->get,
+				TR_new(TR_HashValue, key, eqsign-key, value, nvalue));
 	}
 }
 

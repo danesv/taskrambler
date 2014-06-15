@@ -22,7 +22,8 @@
 
 #include <sys/types.h>
 
-#include "hash/hash.h"
+#include "trdata.h"
+
 #include "config/config.h"
 #include "config/value.h"
 
@@ -33,7 +34,7 @@ configGet(Config this, const char * key, size_t nkey)
 		return NULL;
 	}
 
-	return hashGet(this->config, key, nkey);
+	return TR_hashGet(this->config, key, nkey);
 }
 
 // vim: set ts=4 sw=4:

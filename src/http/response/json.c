@@ -27,11 +27,11 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
 #include "session.h"
-#include "hash.h"
 
 HttpResponse
 httpResponseJson(const char * body, size_t nbody)
@@ -42,7 +42,7 @@ httpResponseJson(const char * body, size_t nbody)
 	response = TR_new(HttpResponse, "HTTP/1.1", 200, "OK");
 	message  = (HttpMessage)response;
 
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(
 				HttpHeader,
 				CSTRA("Content-Type"),

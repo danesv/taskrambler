@@ -26,9 +26,10 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "application/application.h"
 #include "application/adapter/http.h"
-#include "hash.h"
 #include "http/worker.h"
 #include "http/header.h"
 #include "http/message.h"
@@ -39,9 +40,9 @@
 static
 inline
 char *
-getSessionId(Hash cookies)
+getSessionId(TR_Hash cookies)
 {
-	HashValue sidstr = hashGet(cookies, CSTRA("sid"));
+	TR_HashValue sidstr = TR_hashGet(cookies, CSTRA("sid"));
 
 	if (NULL != sidstr) {
 		return (char*)sidstr->value;
@@ -73,7 +74,7 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 
 	// send session cookie
 	nbuf = sprintf(buf, "sid=%s;Path=/", session->id);
-	queuePut(
+	TR_queuePut(
 			worker->additional_headers, 
 			TR_new(HttpHeader, CSTRA("Set-Cookie"), buf, nbuf));
 

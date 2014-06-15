@@ -25,16 +25,16 @@
 #include <trbase.h>
 #include <trhash.h>
 
-#include "hash.h"
+#include "trdata.h"
 #include "user.h"
 
 
 User
-_controllerGetUserFromArgs(Hash args)
+_controllerGetUserFromArgs(TR_Hash args)
 {
-	HashValue email     = hashGet(args, CSTRA("email"));
-	HashValue firstname = hashGet(args, CSTRA("firstname"));
-	HashValue surname   = hashGet(args, CSTRA("surname"));
+	TR_HashValue email     = TR_hashGet(args, CSTRA("email"));
+	TR_HashValue firstname = TR_hashGet(args, CSTRA("firstname"));
+	TR_HashValue surname   = TR_hashGet(args, CSTRA("surname"));
 
 	if (    
 			NULL == email || 

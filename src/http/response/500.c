@@ -26,10 +26,10 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
-#include "hash.h"
 
 #define RESP_DATA "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n" \
 	"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n" \
@@ -49,7 +49,7 @@ httpResponse500()
 	response = TR_new(HttpResponse, "HTTP/1.1", 500, "Internal Server Error");
 	message  = (HttpMessage)response;
 
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("Content-Type"), CSTRA("text/html")));
 
 	message->nbody = sizeof(RESP_DATA) - 1;

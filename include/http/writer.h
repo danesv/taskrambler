@@ -28,8 +28,8 @@
 
 #include "trbase.h"
 #include "trio.h"
+#include "trdata.h"
 #include "http/message.h"
-#include "queue.h"
 
 
 /*
@@ -79,7 +79,7 @@ typedef enum e_HttpWriterState {
 TR_CLASS(HttpWriter) {
 	char        * buffer;
 
-	Queue         queue;
+	TR_Queue      queue;
 	HttpMessage   current;
 
 	size_t        nbuffer; // size of buffer

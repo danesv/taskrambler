@@ -7,11 +7,6 @@ TRUTILS = utils/http.c \
 	  utils/signalHandling.c \
 	  utils/mime_type.c
 
-TRCOMMONLIBS = cbuf/libcbuf.la \
-	       hash/libhash.la \
-	       queue/libqueue.la \
-	       tree/libtree.la
-
 TRHTTPSERVER = http/libhttp.la \
 	       asset/libasset.la \
 	       server/libserver.la
@@ -24,21 +19,17 @@ TR = ./application/.libs/libapplication.a \
      ./config/.libs/libconfig.a \
      ./router/.libs/librouter.a
 
-TRLIBS = -ltrbase -ltrhashing -ltrio -ltrutils -ltrhttpserver -ltrcommon
+TRLIBS = -ltrbase -ltrhashing -ltrio -ltrdata -ltrutils -ltrhttpserver
 USEDLIBS = -lrt -lssl -lcrypto -lldap -lgdbm -luuid
 
 AM_CFLAGS += -I../include/
 
 bin_PROGRAMS = taskrambler
-lib_LTLIBRARIES = libtrutils.la libtrcommon.la libtrhttpserver.la
+lib_LTLIBRARIES = libtrutils.la libtrhttpserver.la
 
 libtrutils_la_SOURCES = $(TRUTILS)
 libtrutils_la_CFLAGS  = $(AM_CFLAGS)
 libtrutils_la_LIBADD  =
-
-libtrcommon_la_SOURCES =
-libtrcommon_la_CFLAGS  = $(AM_CFLAGS)
-libtrcommon_la_LIBADD  = $(TRCOMMONLIBS)
 
 libtrhttpserver_la_SOURCES =
 libtrhttpserver_la_CFLAGS  = $(AM_CFLAGS)
@@ -50,6 +41,6 @@ taskrambler_LDADD   = $(TRLIBS) $(TR) $(USEDLIBS)
 taskrambler_LDFLAGS = -Wl,--export-dynamic \
 		      -Wl,--whole-archive,./application/.libs/libapplication.a,--no-whole-archive
 
-SUBDIRS = asset auth cbuf hash queue http \
-	  server session tree application \
+SUBDIRS = asset auth http \
+	  server session application \
 	  storage user config router

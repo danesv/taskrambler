@@ -26,9 +26,10 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 
 #define SESSION_JSON	"{\"id\":\"%s\",\"timeout\":%d,\"timeleft\":%ld}"
 
@@ -37,7 +38,7 @@ char *
 controllerSessinfoRead(
 		Application application,
 		Session     session,
-		Hash        args)
+		TR_Hash     args)
 {
 	char   * buffer;
 	size_t   nbuffer;

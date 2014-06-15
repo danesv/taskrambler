@@ -24,10 +24,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "trdata.h"
 #include "http/response.h"
 #include "http/header.h"
 #include "http/interface/http_intro.h"
-#include "hash.h"
 
 static char * string;
 
@@ -46,7 +46,7 @@ httpMessageHeaderToString(HttpMessage response, char * _string)
 
 	string = httpIntroToString(response, _string);
 
-	hashEach(message->header, addHeaderString);
+	TR_hashEach(message->header, addHeaderString);
 
 	*string++ = '\r';
 	*string++ = '\n';

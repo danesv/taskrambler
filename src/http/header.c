@@ -24,10 +24,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <trbase.h>
-#include <trhash.h>
+#include "trbase.h"
+#include "trhash.h"
+#include "trdata.h"
 
-#include "hash.h"
 #include "http/header.h"
 
 static
@@ -99,7 +99,7 @@ httpHeaderHandleDouble(void * _this, void * _double)
 }
 
 TR_INIT_IFACE(TR_Class, httpHeaderCtor, httpHeaderDtor, NULL);
-TR_INIT_IFACE(Hashable, httpHeaderGetHash, httpHeaderHandleDouble);
-TR_CREATE_CLASS(HttpHeader, NULL, TR_IF(TR_Class), TR_IF(Hashable));
+TR_INIT_IFACE(TR_Hashable, httpHeaderGetHash, httpHeaderHandleDouble);
+TR_CREATE_CLASS(HttpHeader, NULL, TR_IF(TR_Class), TR_IF(TR_Hashable));
 
 // vim: set ts=4 sw=4:

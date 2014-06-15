@@ -26,7 +26,6 @@
 #include <sys/types.h>
 
 #include "trbase.h"
-#include "hash.h"
 
 #define MAX_CONFIG_LINE		256
 

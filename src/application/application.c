@@ -24,8 +24,9 @@
 
 #include <stdarg.h>
 
-#include <trbase.h>
-#include <trhash.h>
+#include "trbase.h"
+#include "trhash.h"
+#include "trdata.h"
 
 #include "application/application.h"
 #include "storage/storage.h"
@@ -56,9 +57,9 @@ applicationCtor(void * _this, va_list * params)
 
 	this->auth = va_arg(*params, void *);
 
-	this->active_sessions = TR_calloc(SESSION_LIVETIME, sizeof(Hash));
+	this->active_sessions = TR_calloc(SESSION_LIVETIME, sizeof(TR_Hash));
 	for (i=0; i<SESSION_LIVETIME; i++) {
-		this->active_sessions[i] = TR_new(Hash);
+		this->active_sessions[i] = TR_new(TR_Hash);
 	}
 
 	this->version = VERSION;

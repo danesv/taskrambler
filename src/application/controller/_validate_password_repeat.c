@@ -21,7 +21,6 @@
  */
 
 #include "trbase.h"
-#include "hash.h"
 #include "auth/credential.h"
 
 int

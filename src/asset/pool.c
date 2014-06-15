@@ -26,10 +26,10 @@
 // for strlen
 
 #include "trbase.h"
+#include "trdata.h"
 #include "asset.h"
-#include "hash.h"
 
-Hash asset_pool = NULL;
+TR_Hash asset_pool = NULL;
 
 static
 inline
@@ -45,15 +45,15 @@ assetPoolGet(const char * path, size_t npath)
 	Asset asset = NULL;
 
 	if (NULL == asset_pool) {
-		asset_pool = TR_new(Hash);
+		asset_pool = TR_new(TR_Hash);
 	} else {
-		asset = hashGet(asset_pool, path, npath);
+		asset = TR_hashGet(asset_pool, path, npath);
 	}
 
 	if (NULL == asset) {
 		asset = TR_new(Asset, path, npath);
 		if (NULL != asset) {
-			hashAdd(asset_pool, asset);
+			TR_hashAdd(asset_pool, asset);
 		}
 	} else {
 		asset->ref_count++;
@@ -71,7 +71,7 @@ assetPoolRelease(Asset asset)
 	}
 
 	if (NULL != asset) {
-		Asset found = (Asset)hashDelete(
+		Asset found = (Asset)TR_hashDelete(
 				asset_pool, asset->fname, asset->nfname);
 
 		if (found == asset) {
@@ -90,7 +90,7 @@ void
 assetPoolCleanup(void)
 {
 	if (NULL != asset_pool) {
-		hashEach(asset_pool, freeAsset);
+		TR_hashEach(asset_pool, freeAsset);
 		TR_delete(asset_pool);
 	}
 }

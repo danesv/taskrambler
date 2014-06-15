@@ -26,8 +26,9 @@
 #include <dlfcn.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "router.h"
-#include "hash.h"
 #include "application/application.h"
 
 #define PREFIX		"controller"
@@ -39,7 +40,7 @@ routerCtor(void * _this, va_list * params)
 	Router this = _this;
 
 	this->application = va_arg(*params, Application);
-	this->functions   = TR_new(Hash);
+	this->functions   = TR_new(TR_Hash);
 	this->handle      = dlopen(NULL, RTLD_LAZY);
 	this->prefix      = PREFIX;
 	this->nprefix     = sizeof(PREFIX) - 1;

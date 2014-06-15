@@ -43,11 +43,11 @@
 
 #include "trbase.h"
 #include "trio.h"
+#include "trdata.h"
 #include "http/response.h"
 #include "http/message.h"
 #include "http/header.h"
 #include "utils/http.h"
-#include "hash.h"
 
 #include "asset.h"
 
@@ -74,14 +74,14 @@ httpResponseAsset(const char * fname, size_t nfname, time_t exptime)
 
 	nexpires = rfc1123Gmt(expires, sizeof(expires), &exptime);
 
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("Content-Type"),
 				asset->mime_type, asset->nmime_type));
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("ETag"), asset->etag, asset->netag));
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("Expires"), expires, nexpires));
-	hashAdd(message->header,
+	TR_hashAdd(message->header,
 			TR_new(HttpHeader, CSTRA("Last-Modified"),
 				asset->mtime, asset->nmtime));
 

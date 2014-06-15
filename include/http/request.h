@@ -25,8 +25,8 @@
 #define __HTTP_REQUEST_H__
 
 #include "trbase.h"
+#include "trdata.h"
 #include "http/message.h"
-#include "hash.h"
 
 #define N_HTTP_METHOD	8
 
@@ -52,9 +52,9 @@ TR_CLASS(HttpRequest) {
 
 	HttpMethod method_id;
 
-	Hash       get;
-	Hash       post;
-	Hash       cookies;
+	TR_Hash    get;
+	TR_Hash    post;
+	TR_Hash    cookies;
 };
 
 HttpMethod httpRequestGetMethodId(HttpRequest);

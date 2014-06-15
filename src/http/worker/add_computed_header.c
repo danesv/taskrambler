@@ -22,20 +22,20 @@
 
 #include <sys/types.h>
 
+#include "trdata.h"
 #include "http/message.h"
 #include "http/header.h"
 #include "http/worker.h"
-#include "queue.h"
 
 
 void
 httpWorkerAddComputedHeader(HttpWorker this)
 {
-	HttpHeader header = (HttpHeader)queueGet(this->additional_headers);
+	HttpHeader header = (HttpHeader)TR_queueGet(this->additional_headers);
 
 	while(NULL != header) {
-		hashAdd(this->current_response->header, header);
-		header = (HttpHeader)queueGet(this->additional_headers);
+		TR_hashAdd(this->current_response->header, header);
+		header = (HttpHeader)TR_queueGet(this->additional_headers);
 	}
 }
 

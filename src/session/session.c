@@ -30,9 +30,9 @@
 
 #include <trbase.h>
 #include <trhash.h>
+#include <trdata.h>
 
 #include "session.h"
-#include "hash.h"
 
 
 static
@@ -76,7 +76,7 @@ sessionHandleDouble(void * _this, void * _doub)
 }
 
 TR_INIT_IFACE(TR_Class, sessionCtor, sessionDtor, NULL);
-TR_INIT_IFACE(Hashable, sessionGetHash, sessionHandleDouble);
-TR_CREATE_CLASS(Session, NULL, TR_IF(TR_Class), TR_IF(Hashable));
+TR_INIT_IFACE(TR_Hashable, sessionGetHash, sessionHandleDouble);
+TR_CREATE_CLASS(Session, NULL, TR_IF(TR_Class), TR_IF(TR_Hashable));
 
 // vim: set ts=4 sw=4:

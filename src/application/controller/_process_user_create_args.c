@@ -23,16 +23,16 @@
 #define _GNU_SOURCE
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
 #include "user.h"
 #include "auth/credential.h"
 
 
-User       _controllerGetUserFromArgs(Hash args);
-Credential _controllerGetCredentialFromArgs(Hash args);
+User       _controllerGetUserFromArgs(TR_Hash args);
+Credential _controllerGetCredentialFromArgs(TR_Hash args);
 
 int
-_controllerProcessUserCreateArgs(Hash args, User * user, Credential * cred)
+_controllerProcessUserCreateArgs(TR_Hash args, User * user, Credential * cred)
 {
 	*user = _controllerGetUserFromArgs(args);
 	*cred = _controllerGetCredentialFromArgs(args);

@@ -27,23 +27,23 @@
 
 #include <trbase.h>
 #include <trhash.h>
+#include <trdata.h>
 
 #include "application/application.h"
 #include "session.h"
-#include "hash.h"
 
 
 #define USER_JSON \
 	"{\"email\":\"%s\",\"firstname\":\"%s\",\"surname\":\"%s\"}"
 
 char *
-controllerUserRead(Application app, Session sess, Hash args)
+controllerUserRead(Application app, Session sess, TR_Hash args)
 {
-	char      * buffer;
-	size_t      nbuffer;
-	HashValue   id     = hashGet(args, CSTRA("id"));
-	TR_Uuid     search = TR_uuidParse(id->value);
-	User        user   = applicationGetUser(app, search);
+	char         * buffer;
+	size_t         nbuffer;
+	TR_HashValue   id     = TR_hashGet(args, CSTRA("id"));
+	TR_Uuid        search = TR_uuidParse(id->value);
+	User           user   = applicationGetUser(app, search);
 
 	nbuffer = snprintf(NULL, 0, USER_JSON,
 			user->email,

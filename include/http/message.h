@@ -25,20 +25,19 @@
 #define __HTTP_MESSAGE__
 
 #include "trbase.h"
-#include "trio.h"
-#include "hash.h"
+#include "trdata.h"
 #include "asset.h"
 
 TR_CLASS(HttpMessage) {
-	char *          version;
+	char    * version;
 
-	Hash            header;
+	TR_Hash   header;
 
-	Asset           asset;
-	char *          body;
+	Asset     asset;
+	char    * body;
 
-	int             nbody;
-	int             dbody;
+	int       nbody;
+	int       dbody;
 };
 
 char   httpMessageHasKeepAlive(HttpMessage);

@@ -31,7 +31,7 @@
 #include <unistd.h>
 
 #include "trbase.h"
-#include "hash.h"
+#include "trdata.h"
 #include "http/message.h"
 
 
@@ -45,7 +45,7 @@ httpMessageCtor(void * _this, va_list * params)
 	this->version = TR_calloc(1, strlen(version)+1);
 	strcpy(this->version, version);
 
-	this->header = TR_new(Hash);
+	this->header = TR_new(TR_Hash);
 
 	return 0;
 }

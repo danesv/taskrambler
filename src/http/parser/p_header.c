@@ -25,11 +25,11 @@
 #include <sys/types.h>
 
 #include "trbase.h"
+#include "trdata.h"
 #include "http/header.h"
 #include "http/parser.h"
 #include "http/message.h"
 #include "http/request.h"
-#include "hash.h"
 
 void
 httpParserHeader(
@@ -88,15 +88,15 @@ httpParserHeader(
 			nval = pair-eqsign-1;
 			val  = (0 != nval)? eqsign+1 : NULL;
 
-			hashAdd(request->cookies,
-					TR_new(HashValue, key, eqsign-key, val, nval));
+			TR_hashAdd(request->cookies,
+					TR_new(TR_HashValue, key, eqsign-key, val, nval));
 
 			pair++;
 			togo -= (pair - eqsign);
 		}
 	}
 
-	hashAdd(current->header,
+	TR_hashAdd(current->header,
 			TR_new(HttpHeader, name, nname, value, lend - value));
 }
 

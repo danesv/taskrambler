@@ -24,8 +24,9 @@
 
 #include <sys/types.h>
 
+#include "trdata.h"
+
 #include "session.h"
-#include "hash.h"
 #include "application/application.h"
 
 
@@ -40,7 +41,7 @@ applicationSessionGet(Application this, const char * sid)
 		 * now get the session if not expired
 		 */
 		for (index=0; index<SESSION_LIVETIME; index++) {
-			sess = (Session)hashDelete(
+			sess = (Session)TR_hashDelete(
 					(this->active_sessions)[index], sid, 36);
 			if (NULL != sess) {
 				break;
@@ -52,7 +53,7 @@ applicationSessionGet(Application this, const char * sid)
 		 */
 		if (NULL != sess) {
 			sess->livetime = this->session_time_ofs + SESSION_LIVETIME;
-			hashAdd((this->active_sessions)[0], sess);
+			TR_hashAdd((this->active_sessions)[0], sess);
 		}
 	}
 

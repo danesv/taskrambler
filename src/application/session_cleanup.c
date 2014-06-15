@@ -25,9 +25,10 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include "trdata.h"
+
 #include "trbase.h"
 #include "session.h"
-#include "hash.h"
 #include "application/application.h"
 
 
@@ -42,23 +43,23 @@ applicationSessionCleanup(Application this, time_t now)
 	}
 
 	if (0 < expired && SESSION_LIVETIME > expired) {
-		Hash * tmp_buf = TR_calloc(SESSION_LIVETIME, sizeof(Hash));
+		TR_Hash * tmp_buf = TR_calloc(SESSION_LIVETIME, sizeof(TR_Hash));
 
 		memcpy(
 				&(tmp_buf[expired]),
 				this->active_sessions,
-				(SESSION_LIVETIME - expired) * sizeof(Hash));
+				(SESSION_LIVETIME - expired) * sizeof(TR_Hash));
 		memcpy(
 				tmp_buf,
 				&(this->active_sessions[SESSION_LIVETIME - expired]),
-				expired * sizeof(Hash));
+				expired * sizeof(TR_Hash));
 				
 		TR_MEM_FREE(this->active_sessions);
 		this->active_sessions = tmp_buf;
 	}
 
 	for (i=0; i<expired; i++) {
-		hashCleanup(this->active_sessions[i]);
+		TR_hashCleanup(this->active_sessions[i]);
 	}
 
 	this->session_time_ofs = now;

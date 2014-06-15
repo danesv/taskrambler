@@ -27,7 +27,6 @@
 #include <sys/types.h>
 
 #include "trbase.h"
-#include "hash.h"
 
 
 TR_CLASS(Asset) {

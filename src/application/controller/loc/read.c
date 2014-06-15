@@ -26,14 +26,15 @@
 #include <stdio.h>
 
 #include "trbase.h"
+#include "trdata.h"
+
 #include "application/application.h"
-#include "hash.h"
 #include "session.h"
 
 #define LOC_JSON	"{\"loc\":\"%s\"}"
 
 char *
-controllerLocRead(Application app, Session sess, Hash args)
+controllerLocRead(Application app, Session sess, TR_Hash args)
 {
 	char   * buffer;
 	size_t   nbuffer;
