@@ -69,7 +69,8 @@ nobase_trdata_DATA = assets/html/example.html \
 		     assets/style/images/ui-icons_cd0a0a_256x240.png \
 		     assets/favicon.ico
 
-SUBDIRS = src tests docs config
+#SUBDIRS = src tests docs config
+SUBDIRS = src docs config
 
 .PHONY: docs coverage-html
 
