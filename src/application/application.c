@@ -75,8 +75,6 @@ applicationDtor(void * _this)
 	Application this = _this;
 	size_t      i;
 
-	TR_delete(this->user_namespace);
-
 	for (i=0; i<SESSION_LIVETIME; i++) {
 		TR_delete(this->active_sessions[i]);
 	}
