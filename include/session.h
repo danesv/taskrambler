@@ -32,6 +32,43 @@
 // livetime of a session in seconds
 #define SESSION_LIVETIME	300 // 5 minutes
 
+/**
+ * Having only a session livetime is not enough.
+ * An attacker might create a client that never sends a session id
+ * back and continuously sends requests. This will then result
+ * in newly created sessions.
+ * The session class uses 57 bytes
+ * But there is also a user object created all the time.
+ * This uses 80 bytes.
+ * Each user in turn contains a uuid which is 37 bytes.
+ * Each of these are a class which adds another 221 bytes to each.
+ * So the following is allocated for these three objects:
+ * Session: 57 + 221 = 278
+ * User:    80 + 221 = 301
+ * Uuid:    37 + 221 = 258
+ * My allocater only allocates power of 2 sizes to optimize
+ * memory management so we end up with 512 bytes per object which is
+ * 1536 bytes per created session.
+ * The current code is able to handle more than 25000 request per 
+ * second if there is no session id provided on my hardware.
+ * This sums up to 10GB of used memory within the 5 minutes
+ * session livetime.
+ *
+ * @TODO
+ * One possible solution is to prevent the creation of sessions
+ * for subsequent requests from the same connection or ip within
+ * a given time range. This time range should be the session
+ * livetime. This would effectively prevent such malicious requests
+ * from doing harm but also prevents non attackers that did a
+ * first request from another client (lets say telnet) from getting
+ * a session in their browser. This might be accaptable if the user
+ * gets a fitting error message.
+ * To prevent this we could associate the session with the ip it was
+ * created on. If there then is a subsequent request from the same ip
+ * without a sessionid, the old session can be removed and a new one
+ * can be created. This might give a small but acceptable performance
+ * hit.
+ */
 
 TR_CLASS(Session) {
 	char          id[37];

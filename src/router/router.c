@@ -42,6 +42,7 @@ routerCtor(void * _this, va_list * params)
 	this->application = va_arg(*params, Application);
 	this->functions   = TR_new(TR_Hash);
 	this->handle      = dlopen(NULL, RTLD_LAZY);
+	dlerror();
 	this->prefix      = PREFIX;
 	this->nprefix     = sizeof(PREFIX) - 1;
 
@@ -58,6 +59,7 @@ routerDtor(void * _this) {
 	Router this = _this;
 
 	TR_delete(this->functions);
+	dlerror();
 	dlclose(this->handle);
 }
 

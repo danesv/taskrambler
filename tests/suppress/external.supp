@@ -43,3 +43,10 @@
 	fun:ldap_open_defconn
 }
 
+{
+	Ignore dlopen bug.
+	Memcheck:Leak
+	...
+	fun:_dl_open
+	...
+}
