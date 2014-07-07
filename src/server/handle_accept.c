@@ -69,14 +69,21 @@ serverHandleAccept(Server this, unsigned int i)
 		}
 
 		// save the socket handle
-		(this->conns)[acc->handle].sock   = acc; 
+		(this->conns)[acc->handle].sock = acc; 
 
 		// clone worker
-		(this->conns)[acc->handle].worker = TR_clone(this->worker);
-		(this->conns)[acc->handle].stream = st;
+		(this->conns)[acc->handle].worker        = TR_clone(this->worker);
+		/**
+		 * TODO
+		 * workers need an interface to set the socket within them...
+		 * as I currently only have http workers I do a cast here
+		 * but this is not future save.
+		 */
+		((HttpWorker)(this->conns)[acc->handle].worker)->socket = acc;
+		(this->conns)[acc->handle].stream        = st;
 
-		(this->fds)[this->nfds].fd        = acc->handle;
-		(this->fds)[this->nfds].events    = POLLIN;
+		(this->fds)[this->nfds].fd     = acc->handle;
+		(this->fds)[this->nfds].events = POLLIN;
 		this->nfds++;
 	} else {
 		TR_delete(acc);

@@ -57,9 +57,11 @@ applicationCtor(void * _this, va_list * params)
 
 	this->auth = va_arg(*params, void *);
 
-	this->active_sessions = TR_calloc(SESSION_LIVETIME, sizeof(TR_Hash));
+	this->active_sessions = TR_calloc(
+			SESSION_LIVETIME,
+			sizeof(struct sessinfo));
 	for (i=0; i<SESSION_LIVETIME; i++) {
-		this->active_sessions[i] = TR_new(TR_Hash);
+		this->active_sessions[i].sessions = TR_new(TR_Hash);
 	}
 
 	this->version = VERSION;
@@ -76,7 +78,8 @@ applicationDtor(void * _this)
 	size_t      i;
 
 	for (i=0; i<SESSION_LIVETIME; i++) {
-		TR_delete(this->active_sessions[i]);
+		TR_delete(this->active_sessions[i].sessions);
+		TR_delete(this->active_sessions[i].ip_index);
 	}
 
 	TR_MEM_FREE(this->active_sessions);

@@ -24,6 +24,7 @@
 #define __SESSION_H__
 
 #include <time.h>
+#include <stdint.h>
 #include <sys/types.h>
 #include <user.h>
 
@@ -54,16 +55,7 @@
  * This sums up to 10GB of used memory within the 5 minutes
  * session livetime.
  *
- * @TODO
- * One possible solution is to prevent the creation of sessions
- * for subsequent requests from the same connection or ip within
- * a given time range. This time range should be the session
- * livetime. This would effectively prevent such malicious requests
- * from doing harm but also prevents non attackers that did a
- * first request from another client (lets say telnet) from getting
- * a session in their browser. This might be accaptable if the user
- * gets a fitting error message.
- * To prevent this we could associate the session with the ip it was
+ * To prevent this I associate the session with the ip it was
  * created on. If there then is a subsequent request from the same ip
  * without a sessionid, the old session can be removed and a new one
  * can be created. This might give a small but acceptable performance
@@ -73,6 +65,7 @@
 TR_CLASS(Session) {
 	char          id[37];
 	unsigned long hash;
+	uint32_t      ip;
 
 	time_t        livetime;
 	User          user;

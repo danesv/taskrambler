@@ -23,6 +23,7 @@
 #include <time.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -47,6 +48,7 @@ sessionCtor(void * _this, va_list * params)
 	uuid_unparse(uuid, this->id);
 
 	this->hash = TR_sdbm((unsigned char *)this->id, 36);
+	this->ip   = va_arg(*params, uint32_t);
 
 	return 0;
 }

@@ -23,6 +23,7 @@
 #define _GNU_SOURCE
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 #include "trbase.h"
@@ -32,12 +33,35 @@
 #include "application/application.h"
 
 
-Session
-applicationSessionStart(Application this)
+static
+inline
+int
+sessionIpIndexComp(const void * a, const void * b)
 {
-	Session sess = TR_new(Session);
+	Session sess_a = (Session)a;
+	Session sess_b = (Session)b;
 
-	TR_hashAdd((this->active_sessions)[0], sess);
+	if (sess_a->ip < sess_b->ip) {
+		return -1;
+	}
+
+	if (sess_a->ip > sess_b->ip) {
+		return 1;
+	}
+
+	return 0;
+}
+
+Session
+applicationSessionStart(Application this, uint32_t ip)
+{
+	Session sess = TR_new(Session, ip);
+
+	TR_hashAdd((this->active_sessions)[0].sessions, sess);
+	TR_treeInsert(
+			&((this->active_sessions)[0].ip_index),
+			sess,
+			sessionIpIndexComp);
 
 	return sess;
 }

@@ -23,10 +23,12 @@
 #define _GNU_SOURCE
 
 #include <stdio.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 #include "trbase.h"
 #include "trdata.h"
+#include "trio.h"
 
 #include "application/application.h"
 #include "application/adapter/http.h"
@@ -58,6 +60,7 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	HttpWorker             worker  = (HttpWorker)subject;
 	Session                session = NULL;
 	time_t                 now     = time(NULL);
+	uint32_t               ip      = TR_socketGetIp(worker->socket);
 
 	char   * sid;
 	char     buf[1000];
@@ -66,10 +69,10 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	applicationSessionCleanup(this->application, now);
 
 	sid = getSessionId(worker->current_request->cookies);
-	session = applicationSessionGet(this->application, sid);
+	session = applicationSessionGet(this->application, sid, ip);
 
 	if (NULL == session) {
-		session = applicationSessionStart(this->application);
+		session = applicationSessionStart(this->application, ip);
 	}
 
 	// send session cookie

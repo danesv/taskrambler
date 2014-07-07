@@ -29,6 +29,24 @@
 #include "session.h"
 #include "application/application.h"
 
+static
+inline
+int
+sessionIpIndexComp(const void * a, const void * b)
+{
+	Session sess_a = (Session)a;
+	Session sess_b = (Session)b;
+
+	if (sess_a->ip < sess_b->ip) {
+		return -1;
+	}
+
+	if (sess_a->ip > sess_b->ip) {
+		return 1;
+	}
+
+	return 0;
+}
 
 void
 applicationSessionStop(Application this, Session session)
@@ -37,7 +55,12 @@ applicationSessionStop(Application this, Session session)
 		(session->livetime - this->session_time_ofs);
 
 	if (SESSION_LIVETIME > index) {
-		TR_hashDeleteByVal((this->active_sessions)[index], session->hash);
+		TR_hashDeleteByVal(
+				(this->active_sessions)[index].sessions,
+				session->hash);
+		TR_treeDelete(
+				&((this->active_sessions)[index].ip_index),
+				session, sessionIpIndexComp);
 	}
 }
 

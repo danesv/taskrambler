@@ -42,25 +42,30 @@ struct randval {
 	int    value;
 };
 
+struct sessinfo {
+	TR_Hash sessions;
+	TR_Tree ip_index;
+};
+
 TR_CLASS(Application) {
-	TR_Hash         * active_sessions;
+	struct sessinfo * active_sessions;
 	time_t            session_time_ofs;
 
 	Auth              auth;
 
-	struct randval * val;
+	struct randval  * val;
 
-	Storage          users;
-	Storage          passwords;
-	Storage          roles;
+	Storage           users;
+	Storage           passwords;
+	Storage           roles;
 
-	TR_Uuid          user_namespace;
+	TR_Uuid           user_namespace;
 
-	TR_Hash          roles_user_index;
-	TR_Hash          roles_resource_index;
+	TR_Hash           roles_user_index;
+	TR_Hash           roles_resource_index;
 
-	const char     * version;
-	const char     * loc;
+	const char      * version;
+	const char      * loc;
 };
 
 int     applicationLogin(Application, Credential, Session);
@@ -70,8 +75,8 @@ TR_Uuid applicationUpdateUser(Application, User);
 User    applicationGetUser(Application, TR_Uuid);
 int     applicationUpdatePassword(Application, Credential, User);
 
-Session applicationSessionStart(Application);
-Session applicationSessionGet(Application, const char *);
+Session applicationSessionStart(Application, uint32_t);
+Session applicationSessionGet(Application, const char *, uint32_t);
 void    applicationSessionStop(Application, Session);
 void    applicationSessionCleanup(Application, time_t);
 

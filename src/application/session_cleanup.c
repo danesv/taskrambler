@@ -23,6 +23,7 @@
 #define _GNU_SOURCE
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <sys/types.h>
 
 #include "trdata.h"
@@ -43,23 +44,26 @@ applicationSessionCleanup(Application this, time_t now)
 	}
 
 	if (0 < expired && SESSION_LIVETIME > expired) {
-		TR_Hash * tmp_buf = TR_calloc(SESSION_LIVETIME, sizeof(TR_Hash));
+		struct sessinfo * tmp_buf = TR_calloc(
+				SESSION_LIVETIME,
+				sizeof(struct sessinfo));
 
 		memcpy(
 				&(tmp_buf[expired]),
 				this->active_sessions,
-				(SESSION_LIVETIME - expired) * sizeof(TR_Hash));
+				(SESSION_LIVETIME - expired) * sizeof(struct sessinfo));
 		memcpy(
 				tmp_buf,
 				&(this->active_sessions[SESSION_LIVETIME - expired]),
-				expired * sizeof(TR_Hash));
+				expired * sizeof(struct sessinfo));
 				
 		TR_MEM_FREE(this->active_sessions);
 		this->active_sessions = tmp_buf;
 	}
 
 	for (i=0; i<expired; i++) {
-		TR_hashCleanup(this->active_sessions[i]);
+		TR_treeDestroy(&(this->active_sessions[i].ip_index), NULL);
+		TR_hashCleanup(this->active_sessions[i].sessions);
 	}
 
 	this->session_time_ofs = now;

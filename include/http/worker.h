@@ -29,6 +29,7 @@
 
 #include "trbase.h"
 #include "trdata.h"
+#include "trio.h"
 #include "http/parser.h"
 #include "http/writer.h"
 #include "session.h"
@@ -39,6 +40,7 @@
 
 TR_CLASS(HttpWorker) {
 	char        * id;
+	TR_Sock       socket;
 
 	TR_Cbuf       pbuf;
 	TR_Hash       asset_pool;
