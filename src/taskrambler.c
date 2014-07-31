@@ -226,8 +226,7 @@ main()
 						Server,
 						logger,
 						worker,
-						(int)(port->value).number,
-						SOMAXCONN);
+						(int)(port->value).number);
 
 				if (NULL != server && !doShutdown) {
 					serverRun(server);

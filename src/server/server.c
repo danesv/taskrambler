@@ -41,7 +41,6 @@ serverCtor(void * _this, va_list * params)
 {
 	Server       this = _this;
 	in_port_t    port;
-	unsigned int backlog;
 
 	this->max_fds = sysconf(_SC_OPEN_MAX);
 	if (this->max_fds <= 10) {	// reserve 10 handles for internal use.
@@ -55,7 +54,6 @@ serverCtor(void * _this, va_list * params)
 	this->logger = va_arg(* params, TR_Logger);
 	this->worker = va_arg(* params, void *);
 	port         = va_arg(* params, int);
-	backlog      = va_arg(* params, unsigned int);
 
 	TR_loggerLog(this->logger,
 			TR_LOGGER_INFO,
@@ -66,12 +64,12 @@ serverCtor(void * _this, va_list * params)
 	this->conns = TR_calloc(sizeof(struct conns), this->max_fds);
 
 	this->sock = TR_new(TR_TcpSocket, this->logger, "0.0.0.0", port, 0);
-	TR_socketNonblock(this->sock);
 	TR_socketBind((TR_Socket)this->sock);
+	TR_socketNonblock(this->sock);
 
 	this->sockSSL = TR_new(TR_TcpSocket, this->logger, "0.0.0.0", port+1, 0);
-	TR_socketNonblock(this->sockSSL);
 	TR_socketBind((TR_Socket)this->sockSSL);
+	TR_socketNonblock(this->sockSSL);
 
 	SSL_library_init();
 	OpenSSL_add_all_algorithms();
