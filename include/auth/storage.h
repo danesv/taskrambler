@@ -38,6 +38,7 @@
 TR_CLASS(AuthStorage) {
 	Storage store;
 };
+TR_INSTANCE_INIT(AuthStorage);
 
 /**
  * \todo In future this should use a more general purpose hash

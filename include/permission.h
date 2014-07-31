@@ -52,6 +52,7 @@ TR_CLASS(Permission) {
 	char           * resource;
 	ResourceAction   action;
 };
+TR_INSTANCE_INIT(Permission);
 
 #endif // __PERMISSION_H__
 

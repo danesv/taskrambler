@@ -32,6 +32,7 @@ TR_CLASS(RbacOperation) {
 	char   * name;
 	size_t   nname;
 };
+TR_INSTANCE_INIT(RbacOperation);
 
 
 #endif // __RBAC_OPERATION_H__

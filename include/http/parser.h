@@ -54,6 +54,7 @@ TR_CLASS(HttpParser) {
 
 	HttpMessageState state;
 };
+TR_INSTANCE_INIT(HttpParser);
 
 ssize_t httpParserParse(void *, TR_Stream);
 void    httpParserRequestVars(HttpParser);

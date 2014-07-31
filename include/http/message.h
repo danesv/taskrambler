@@ -39,6 +39,7 @@ TR_CLASS(HttpMessage) {
 	int       nbody;
 	int       dbody;
 };
+TR_INSTANCE_INIT(HttpMessage);
 
 char   httpMessageHasKeepAlive(HttpMessage);
 size_t httpMessageHeaderSizeGet(HttpMessage);

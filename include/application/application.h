@@ -67,6 +67,7 @@ TR_CLASS(Application) {
 	const char      * version;
 	const char      * loc;
 };
+TR_INSTANCE_INIT(Application);
 
 int     applicationLogin(Application, Credential, Session);
 void    applicationLogout(Application, Session);

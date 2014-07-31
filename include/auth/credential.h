@@ -48,6 +48,7 @@ TR_CLASS(Credential) {
 
 	} cred;
 };
+TR_INSTANCE_INIT(Credential);
 
 #endif // __AUTH_CREDENTIAL_H__
 

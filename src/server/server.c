@@ -65,11 +65,13 @@ serverCtor(void * _this, va_list * params)
 	this->fds   = TR_calloc(sizeof(struct pollfd), this->max_fds);
 	this->conns = TR_calloc(sizeof(struct conns), this->max_fds);
 
-	this->sock = TR_new(TR_Sock, this->logger, port);
+	this->sock = TR_new(TR_TcpSocket, this->logger, "0.0.0.0", port, 0);
 	TR_socketNonblock(this->sock);
+	TR_socketBind((TR_Socket)this->sock);
 
-	this->sockSSL = TR_new(TR_Sock, this->logger, port+1);
+	this->sockSSL = TR_new(TR_TcpSocket, this->logger, "0.0.0.0", port+1, 0);
 	TR_socketNonblock(this->sockSSL);
+	TR_socketBind((TR_Socket)this->sockSSL);
 
 	SSL_library_init();
 	OpenSSL_add_all_algorithms();
@@ -87,9 +89,6 @@ serverCtor(void * _this, va_list * params)
 			this->ctx,
 			CONFIGDIR "/taskrambler.pem",
 			SSL_FILETYPE_PEM);
-
-	TR_socketListen(this->sock, backlog);
-	TR_socketListen(this->sockSSL, backlog);
 
 	(this->fds)[0].fd     = this->sock->handle;
 	(this->fds)[0].events = POLLIN;

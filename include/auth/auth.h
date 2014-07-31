@@ -58,6 +58,7 @@ typedef enum e_AuthModule {
 TR_CLASS(Auth) {
 	void * auth[MAX_AUTH + 1];
 };
+TR_INSTANCE_INIT(Auth);
 
 int authCreate(Auth, AuthModule, ...);
 

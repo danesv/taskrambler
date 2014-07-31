@@ -56,6 +56,7 @@ TR_CLASS(HttpRequest) {
 	TR_Hash    post;
 	TR_Hash    cookies;
 };
+TR_INSTANCE_INIT(HttpRequest);
 
 HttpMethod httpRequestGetMethodId(HttpRequest);
 

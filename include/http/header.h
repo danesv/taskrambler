@@ -40,6 +40,7 @@ TR_CLASS(HttpHeader) {
 	size_t        cvalue;			//!< count of values up to N_VALUE
 	size_t        size;				//!< full size of this header
 };
+TR_INSTANCE_INIT(HttpHeader);
 
 size_t     httpHeaderToString(HttpHeader, char *);
 

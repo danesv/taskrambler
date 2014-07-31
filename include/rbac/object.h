@@ -33,6 +33,7 @@ TR_CLASS(RbacObject) {
 	char   * name;
 	size_t   nname;
 };
+TR_INSTANCE_INIT(RbacObject);
 
 #endif // __RBAC_OBJECT_H__
 

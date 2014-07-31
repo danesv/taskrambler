@@ -48,6 +48,7 @@ TR_CLASS(ConfigValue) {
 
 	unsigned long   hash;
 };
+TR_INSTANCE_INIT(ConfigValue);
 
 #endif // __CONFIG_VALUE_H__
 

@@ -35,6 +35,7 @@ TR_CLASS(AuthLdap) {
 	int        version;
 	size_t     nbase_dn;
 };
+TR_INSTANCE_INIT(AuthLdap);
 
 #endif // __AUTH_LDAP_H__
 

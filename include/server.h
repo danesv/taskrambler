@@ -35,15 +35,15 @@
 #include "trio.h"
 
 struct conns {
-	TR_Sock     sock;
+	TR_Socket   sock;
 	TR_Stream   stream;
 	void      * worker;
 };
 
 TR_CLASS(Server) {
 	TR_Logger       logger;
-	TR_Sock         sock;
-	TR_Sock         sockSSL;
+	TR_Socket       sock;
+	TR_Socket       sockSSL;
 	SSL_CTX       * ctx;
 	void          * worker;
 
@@ -53,6 +53,7 @@ TR_CLASS(Server) {
 
 	struct conns  * conns;
 };
+TR_INSTANCE_INIT(Server);
 
 void serverRun(Server this);
 

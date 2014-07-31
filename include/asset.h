@@ -49,6 +49,7 @@ TR_CLASS(Asset) {
 
 	size_t   ref_count;
 };
+TR_INSTANCE_INIT(Asset);
 
 Asset  assetPoolGet(const char *, size_t);
 size_t assetPoolRelease(Asset);

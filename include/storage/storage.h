@@ -41,6 +41,7 @@ TR_CLASS(Storage) {
 	GDBM_FILE   gdbm;
 	char      * db_name;
 };
+TR_INSTANCE_INIT(Storage);
 
 StoragePutResult storagePut(Storage, char *, size_t, char *, size_t);
 StoragePutResult storageUpdate(Storage, char *, size_t, char *, size_t);

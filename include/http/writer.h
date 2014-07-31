@@ -89,6 +89,7 @@ TR_CLASS(HttpWriter) {
 
 	HttpWriterState state;
 };
+TR_INSTANCE_INIT(HttpWriter);
 
 ssize_t httpWriterWrite(void *, TR_Stream);
 

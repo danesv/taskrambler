@@ -34,6 +34,7 @@ TR_CLASS(Config) {
 	char    * cnf_file;
 	TR_Hash   config;
 };
+TR_INSTANCE_INIT(Config);
 
 ConfigValue configGet(Config, const char *, size_t);
 

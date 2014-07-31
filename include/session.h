@@ -70,6 +70,7 @@ TR_CLASS(Session) {
 	time_t        livetime;
 	User          user;
 };
+TR_INSTANCE_INIT(Session);
 
 #endif // __SESSION_H__
 

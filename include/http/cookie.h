@@ -42,6 +42,7 @@ TR_CLASS(HttpCookie) {
 	size_t        nkey;
 	size_t        nvalue;
 };
+TR_INSTANCE_INIT(HttpCookie);
 
 char * httpCookieToString(HttpCookie);
 HttpCookie httpStringToCookie(const char *);

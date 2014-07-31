@@ -51,6 +51,7 @@ TR_CLASS(Router) {
 	char   * prefix;
 	size_t   nprefix;
 };
+TR_INSTANCE_INIT(Router);
 
 HttpResponse routerRoute(Router, HttpRequest, Session);
 

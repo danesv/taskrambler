@@ -40,7 +40,7 @@
 
 TR_CLASS(HttpWorker) {
 	char        * id;
-	TR_Sock       socket;
+	TR_Socket     socket;
 
 	TR_Cbuf       pbuf;
 	TR_Hash       asset_pool;
@@ -55,6 +55,7 @@ TR_CLASS(HttpWorker) {
 	HttpParser    parser;
 	HttpWriter    writer;
 };
+TR_INSTANCE_INIT(HttpWorker);
 
 #endif // __HTTP_WORKER_H__
 

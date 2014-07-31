@@ -32,6 +32,7 @@ TR_CLASS(ApplicationAdapterHttp) {
 	Application application;
 	Router      router;
 };
+TR_INSTANCE_INIT(ApplicationAdapterHttp);
 
 #endif // __APPLICATION_ADAPTER_HTTP_H__
 

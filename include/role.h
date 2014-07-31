@@ -95,7 +95,9 @@ TR_CLASS(Role) {
 
 	User          * users;
 	Hash            users_idx;
+	// end og ROLE definition.
 };
+TR_INSTANCE_INIT(Role);
 
 #endif // __ROLE_H__
 

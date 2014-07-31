@@ -41,6 +41,7 @@ TR_CLASS(RbacUser) {
 	char   * name;
 	size_t   nname;
 };
+TR_INSTANCE_INIT(RbacUser);
 
 // void userSerialize(User, void **, size_t *);
 // void userDeserialize(User, void *, size_t);

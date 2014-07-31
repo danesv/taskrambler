@@ -40,6 +40,7 @@ TR_CLASS(HttpResponse) {
 	unsigned int status;
 	char *       reason;
 };
+TR_INSTANCE_INIT(HttpResponse);
 
 HttpResponse httpResponse304(
 		const char *, size_t,

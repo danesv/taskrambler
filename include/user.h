@@ -53,6 +53,7 @@ TR_CLASS(User) {
 	size_t        * nfirstname;
 	size_t        * nsurname;
 };
+TR_INSTANCE_INIT(User);
 
 #endif // __USER_H__
 

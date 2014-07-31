@@ -34,15 +34,16 @@
 int
 serverHandleAccept(Server this, unsigned int i)
 {
-	char      remoteAddr[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-	TR_Sock   acc = NULL;
-	TR_Stream st;
+	TR_Socket acc = NULL;
+	TR_Stream    st;
 
 	if (this->nfds >= this->max_fds) {
 		return -1;
 	}
 
-	acc = TR_socketAccept((0 == i)? this->sock : this->sockSSL, &remoteAddr);
+	acc = (TR_Socket)TR_socketAccept((0 == i)
+			? (TR_TcpSocket)this->sock
+			: (TR_TcpSocket)this->sockSSL);
 
 	if (NULL != acc && -1 != acc->handle) {
 		TR_socketNonblock(acc);
