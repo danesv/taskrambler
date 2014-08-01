@@ -60,7 +60,7 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	HttpWorker             worker  = (HttpWorker)subject;
 	Session                session = NULL;
 	time_t                 now     = time(NULL);
-	uint32_t               ip      = TR_socketGetIp(worker->socket);
+	uint32_t               ip      = TR_socketAddrIp(worker->socket);
 
 	char   * sid;
 	char     buf[1000];
