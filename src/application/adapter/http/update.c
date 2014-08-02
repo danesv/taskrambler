@@ -60,11 +60,15 @@ applicationAdapterHttpUpdate(void * _this, void * subject)
 	HttpWorker             worker  = (HttpWorker)subject;
 	Session                session = NULL;
 	time_t                 now     = time(NULL);
-	uint32_t               ip      = TR_socketAddrIp(worker->socket);
 
-	char   * sid;
-	char     buf[1000];
-	size_t   nbuf;
+	uint32_t   ip;
+	char     * sid;
+	char       buf[1000];
+	size_t     nbuf;
+
+	ip = TR_sdbm(
+			TR_socketAddrIp(worker->socket),
+			TR_socketAddrIplen(worker->socket));
 
 	applicationSessionCleanup(this->application, now);
 

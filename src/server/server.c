@@ -63,11 +63,11 @@ serverCtor(void * _this, va_list * params)
 	this->fds   = TR_calloc(sizeof(struct pollfd), this->max_fds);
 	this->conns = TR_calloc(sizeof(struct conns), this->max_fds);
 
-	this->sock = TR_new(TR_TcpSocket, this->logger, "0.0.0.0", port, 0);
+	this->sock = TR_new(TR_TcpSocket, this->logger, "::", port, 0);
 	TR_socketBind((TR_Socket)this->sock);
 	TR_socketNonblock(this->sock);
 
-	this->sockSSL = TR_new(TR_TcpSocket, this->logger, "0.0.0.0", port+1, 0);
+	this->sockSSL = TR_new(TR_TcpSocket, this->logger, "::", port+1, 0);
 	TR_socketBind((TR_Socket)this->sockSSL);
 	TR_socketNonblock(this->sockSSL);
 
