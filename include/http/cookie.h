@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ TR_CLASS(HttpCookie) {
 	size_t        nvalue;
 };
 TR_INSTANCE_INIT(HttpCookie);
+TR_CLASSVARS_DECL(HttpCookie) {};
 
 char * httpCookieToString(HttpCookie);
 HttpCookie httpStringToCookie(const char *);

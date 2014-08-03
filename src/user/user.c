@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -158,6 +158,7 @@ TR_INIT_IFACE(TR_Serializable, userSerialize, userUnserialize);
 TR_INIT_IFACE(TR_Indexable, userIndexUuid);
 TR_CREATE_CLASS(
 		User,
+		NULL,
 		NULL,
 		TR_IF(TR_Class),
 		TR_IF(TR_Serializable),

@@ -5,7 +5,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ TR_CLASS(HttpRequest) {
 	TR_Hash    cookies;
 };
 TR_INSTANCE_INIT(HttpRequest);
+TR_CLASSVARS_DECL(HttpRequest) {};
 
 HttpMethod httpRequestGetMethodId(HttpRequest);
 

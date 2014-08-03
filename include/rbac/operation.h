@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ TR_CLASS(RbacOperation) {
 	size_t   nname;
 };
 TR_INSTANCE_INIT(RbacOperation);
+TR_CLASSVARS_DECL(RbacOperation) {};
 
 
 #endif // __RBAC_OPERATION_H__

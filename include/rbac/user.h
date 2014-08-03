@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ TR_CLASS(RbacUser) {
 	size_t   nname;
 };
 TR_INSTANCE_INIT(RbacUser);
+TR_CLASSVARS_DECL(RbacUser) {};
 
 // void userSerialize(User, void **, size_t *);
 // void userDeserialize(User, void *, size_t);

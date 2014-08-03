@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,6 +42,7 @@ TR_CLASS(Storage) {
 	char      * db_name;
 };
 TR_INSTANCE_INIT(Storage);
+TR_CLASSVARS_DECL(Storage) {};
 
 StoragePutResult storagePut(Storage, char *, size_t, char *, size_t);
 StoragePutResult storageUpdate(Storage, char *, size_t, char *, size_t);

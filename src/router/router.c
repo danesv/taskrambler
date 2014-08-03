@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2013  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,6 +64,6 @@ routerDtor(void * _this) {
 }
 
 TR_INIT_IFACE(TR_Class, routerCtor, routerDtor, NULL);
-TR_CREATE_CLASS(Router, NULL, TR_IF(TR_Class));
+TR_CREATE_CLASS(Router, NULL, NULL, TR_IF(TR_Class));
 
 // vim: set ts=4 sw=4:

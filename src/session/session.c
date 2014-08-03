@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,6 +79,6 @@ sessionHandleDouble(void * _this, void * _doub)
 
 TR_INIT_IFACE(TR_Class, sessionCtor, sessionDtor, NULL);
 TR_INIT_IFACE(TR_Hashable, sessionGetHash, sessionHandleDouble);
-TR_CREATE_CLASS(Session, NULL, TR_IF(TR_Class), TR_IF(TR_Hashable));
+TR_CREATE_CLASS(Session, NULL, NULL, TR_IF(TR_Class), TR_IF(TR_Hashable));
 
 // vim: set ts=4 sw=4:

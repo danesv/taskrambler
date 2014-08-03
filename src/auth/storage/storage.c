@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,6 +91,6 @@ authStorageAuthenticate(void * _this, Credential cred, TR_Uuid user_index)
 
 TR_INIT_IFACE(TR_Class, authStorageCtor, authStorageDtor, NULL);
 TR_INIT_IFACE(Auth, authStorageAuthenticate);
-TR_CREATE_CLASS(AuthStorage, NULL, TR_IF(TR_Class), TR_IF(Auth));
+TR_CREATE_CLASS(AuthStorage, NULL, NULL, TR_IF(TR_Class), TR_IF(Auth));
 
 // vim: set ts=4 sw=4:

@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,6 @@ httpParserDtor(void * _this)
 
 TR_INIT_IFACE(TR_Class, httpParserCtor, httpParserDtor, NULL);
 TR_INIT_IFACE(TR_StreamReader, httpParserParse);
-TR_CREATE_CLASS(HttpParser, NULL, TR_IF(TR_Class), TR_IF(TR_StreamReader));
+TR_CREATE_CLASS(HttpParser, NULL, NULL, TR_IF(TR_Class), TR_IF(TR_StreamReader));
 
 // vim: set ts=4 sw=4:

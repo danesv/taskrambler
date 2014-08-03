@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,6 +96,6 @@ configValueHandleDouble(void * _this, void * _double)
 
 TR_INIT_IFACE(TR_Class, configValueCtor, configValueDtor, NULL);
 TR_INIT_IFACE(TR_Hashable, configValueGetHash, configValueHandleDouble);
-TR_CREATE_CLASS(ConfigValue, NULL, TR_IF(TR_Class), TR_IF(TR_Hashable));
+TR_CREATE_CLASS(ConfigValue, NULL, NULL, TR_IF(TR_Class), TR_IF(TR_Hashable));
 
 // vim: set ts=4 sw=4:

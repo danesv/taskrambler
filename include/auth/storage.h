@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ TR_CLASS(AuthStorage) {
 	Storage store;
 };
 TR_INSTANCE_INIT(AuthStorage);
+TR_CLASSVARS_DECL(AuthStorage) {};
 
 /**
  * \todo In future this should use a more general purpose hash

@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ TR_CLASS(Permission) {
 	ResourceAction   action;
 };
 TR_INSTANCE_INIT(Permission);
+TR_CLASSVARS_DECL(Permission);
 
 #endif // __PERMISSION_H__
 

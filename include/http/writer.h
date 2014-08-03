@@ -5,7 +5,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,6 +90,7 @@ TR_CLASS(HttpWriter) {
 	HttpWriterState state;
 };
 TR_INSTANCE_INIT(HttpWriter);
+TR_CLASSVARS_DECL(HttpWriter) {};
 
 ssize_t httpWriterWrite(void *, TR_Stream);
 

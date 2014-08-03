@@ -6,7 +6,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2012  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ TR_CLASS(HttpHeader) {
 	size_t        size;				//!< full size of this header
 };
 TR_INSTANCE_INIT(HttpHeader);
+TR_CLASSVARS_DECL(HttpHeader) {};
 
 size_t     httpHeaderToString(HttpHeader, char *);
 

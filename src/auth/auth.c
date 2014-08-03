@@ -4,7 +4,7 @@
  * \author	Georg Hopp
  *
  * \copyright
- * Copyright © 2013  Georg Hopp
+ * Copyright © 2014 Georg Hopp
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,6 +77,6 @@ authAuthenticate(void * _this, Credential cred, TR_Uuid user_index)
 
 TR_INIT_IFACE(TR_Class, authCtor, authDtor, NULL);
 TR_INIT_IFACE(Auth, authAuthenticate);
-TR_CREATE_CLASS(Auth, NULL, TR_IF(TR_Class), TR_IF(Auth));
+TR_CREATE_CLASS(Auth, NULL, NULL, TR_IF(TR_Class), TR_IF(Auth));
 
 // vim: set ts=4 sw=4:
