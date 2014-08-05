@@ -35,7 +35,7 @@ static size_t size;
 static
 inline
 void
-addHeaderSize(const void * node)
+addHeaderSize(const void * node, const void * data)
 {
 	size += ((HttpHeader)node)->size;
 }
@@ -45,7 +45,7 @@ httpMessageHeaderSizeGet(HttpMessage message)
 {
 	size = httpIntroSizeGet(message);
 
-	TR_hashEach(message->header, addHeaderSize);
+	TR_hashEach(message->header, addHeaderSize, NULL);
 	size += 2;
 
 	return size;

@@ -34,7 +34,7 @@ static char * string;
 static
 inline
 void
-addHeaderString(const void * node)
+addHeaderString(const void * node, const void * data)
 {
 	string += httpHeaderToString((HttpHeader)node, string);
 }
@@ -46,7 +46,7 @@ httpMessageHeaderToString(HttpMessage response, char * _string)
 
 	string = httpIntroToString(response, _string);
 
-	TR_hashEach(message->header, addHeaderString);
+	TR_hashEach(message->header, addHeaderString, NULL);
 
 	*string++ = '\r';
 	*string++ = '\n';

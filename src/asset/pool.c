@@ -34,7 +34,7 @@ TR_Hash asset_pool = NULL;
 static
 inline
 void
-freeAsset(const void * _node)
+freeAsset(const void * _node, const void * data)
 {
 	TR_delete(_node);
 }
@@ -90,7 +90,7 @@ void
 assetPoolCleanup(void)
 {
 	if (NULL != asset_pool) {
-		TR_hashEach(asset_pool, freeAsset);
+		TR_hashEach(asset_pool, freeAsset, NULL);
 		TR_delete(asset_pool);
 	}
 }
