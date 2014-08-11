@@ -44,7 +44,7 @@ httpRequestCtor(void * _this, va_list * params)
 	uri    = va_arg(* params, char *);
 	ulen   = va_arg(* params, size_t);
 
-	TR_PARENTCALL(_this, TR_Class, ctor, params);
+	TR_PARENTCALL(HttpRequest, _this, TR_Class, ctor, params);
 
 	this->method       = TR_malloc(mlen + 1);
 	this->method[mlen] = 0;
@@ -61,7 +61,7 @@ httpRequestCtor(void * _this, va_list * params)
 		TR_MEM_FREE(this->method);
 		TR_MEM_FREE(this->path); /** \todo looks like path is not used at all */
 
-		TR_PARENTCALL(_this, TR_Class, dtor);
+		TR_PARENTCALL(HttpRequest, _this, TR_Class, dtor);
 
 		return -1;
 	}
@@ -87,7 +87,7 @@ httpRequestDtor(void * _this)
 	TR_MEM_FREE(this->method);
 	TR_MEM_FREE(this->path);
 
-	TR_PARENTCALL(_this, TR_Class, dtor);
+	TR_PARENTCALL(HttpRequest, _this, TR_Class, dtor);
 } 
 
 static

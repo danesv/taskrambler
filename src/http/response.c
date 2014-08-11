@@ -38,7 +38,7 @@ httpResponseCtor(void * _this, va_list * params)
 	HttpResponse this = _this;
 	char * reason;
 
-	TR_PARENTCALL(_this, TR_Class, ctor, params);
+	TR_PARENTCALL(TR_Response, _this, TR_Class, ctor, params);
 
 	this->status = va_arg(* params, unsigned int);
 	reason       = va_arg(* params, char *);
@@ -57,7 +57,7 @@ httpResponseDtor(void * _this)
 
 	TR_MEM_FREE(this->reason);
 
-	TR_PARENTCALL(_this, TR_Class, dtor);
+	TR_PARENTCALL(TR_Response, _this, TR_Class, dtor);
 } 
 
 static
